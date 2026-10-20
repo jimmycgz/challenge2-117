@@ -1,5 +1,8 @@
 # High-Level Design (HLD): Chicago Food Rescue Agent (Track 1)
 
+**Planning draft, written before the build.** What is deployed is described in [DESIGN.md](../DESIGN.md), which lists where it differs from this draft and the decisions the team still has to make. Kept as the record of the plan; where the two disagree, DESIGN.md is right.
+
+
 ## 1. End-to-End Ecosystem & User Touchpoints
 
 To ensure complete end-to-end coverage, this diagram shows how external actors (Grocers, Pantries, Volunteer Drivers) interact with our primary user (**The Coordinator**) and how the system handles both live brokering and batch auditing.

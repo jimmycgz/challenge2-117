@@ -51,13 +51,18 @@ recipients, a 6-hour spinach offer left this many viable recipients after the fi
 | 40 | 3 |
 | 80 | 12 |
 
-A pool of 15 gives one choice and no fallback, even though good recipients exist further down the list.
+A pool of 15 leaves one viable recipient and no fallback. Forty is enough to find the best matches (the nearest three viable
+recipients are the same at 40 and at 80); 80 is what gives a coordinator nine more to call when the first ones decline.
 The closest recipients by meaning are often the wrong ones. For that spinach offer the three nearest were all
 removed: two could not collect in time, and Greenline Community Pantry (an invented case in the challenge corpus)
-wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The first recipients
-that pass the filters sit at positions 50, 54 and 63 in the search. [demo-tracks.txt](../../docs/evidence/demo-tracks.txt)
-shows it, with each recipient's rank by meaning. So the
-pool is wide and the filters do the narrowing. The challenge brief warns that at least one organization looks
+wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest recipient
+that passes the filters is 11th by meaning. The three the ranking puts first sit at 50th, 54th and 63rd, because the
+ranking prefers sturdier cold storage and a comfortable margin over closeness. That is deliberate: the nearest passing
+recipient (Deborahs Place) has a household fridge and one hour of slack, and the agent's picks have two or three hours and,
+for the first, a refrigerated vehicle. Closeness by meaning measures how a profile reads, not whether the food arrives
+safely, so the ranking spends it last. [pool-study.txt](../../docs/evidence/pool-study.txt)
+and [demo-tracks.txt](../../docs/evidence/demo-tracks.txt) show it with each recipient's rank by meaning (searched with the raw
+posting text). So the pool is wide and the filters do the narrowing. The challenge brief warns that at least one organization looks
 perfect and cannot store the food; the offline selfcheck plants that decoy and fails if it gets through.
 
 ### The Match Brief
@@ -93,17 +98,18 @@ reach the model. A full answer now takes about 22 seconds locally and about 13 o
 ## Results and limits
 
 [EQUITY-AUDIT.md](EQUITY-AUDIT.md) runs the matcher over the ten postings and counts the result three ways, because the
-answer changes with the count. Per posting, the matches sit in higher-need tracts than the corpus. Per distinct
-recipient they sit lower, because one pantry was the top match for three of the four retail offers (spinach, dairy,
-deli). Weighted by estimated volume they sit in tracts with much less assistance (9%, against a corpus mean of 20%),
-because the large loads can only go to the 17 recipients with room. With ten postings and eight distinct recipients the
+answer changes with the count. Per posting, the matches are close to the corpus with no consistent direction. Per distinct
+recipient they sit lower on all three measures, because one pantry was the top match for three of the four retail offers (spinach, dairy,
+deli). Weighted by estimated volume they sit in tracts with much less assistance (9%, against a corpus mean of 19%),
+because the large loads can only go to the 14 recipients with room. With ten postings and eight distinct recipients the
 audit cannot separate a real skew from noise, and it searches with the raw posting text where the live agent searches
 with a rewrite. It does not show why that one pantry won three times; the matcher keeps no record of who received food
 recently.
 
 Known limits:
 
-- Recipient names and addresses are real; their cold storage, pallet capacity and pickup times are generated. The
+- Recipient names and addresses are real (IRS records), except nine invented teaching cases the challenge adds to the
+  corpus, which have no real street or ZIP. Everyone's cold storage, pallet capacity and pickup times are generated. The
   agent presents them as the profile on file and suggests confirming by phone.
 - Shelf life is USDA consumer guidance, not a cold-chain guarantee.
 - Locations are ZIP-level, so the tract figures describe the surrounding area.
@@ -158,15 +164,19 @@ the live service is in [docs/evidence](../../docs/evidence/README.md).
    WHERE embedded.status = '';
    ```
 
-4. **Set the two guard settings** to your project id and the ending of your account's address
-   (`A4I_EXPECTED_PROJECT`, `A4I_EXPECTED_PRINCIPAL_SUFFIX`), then run `bash agent/deploy.sh`. Without them the script
-   refuses, by design.
+4. **Change the project settings** at the top of `agent/lab.env` to your project id, project number and the ending of
+   your account's address, then run `bash agent/deploy.sh`. If they do not match the account you are signed in as, the
+   script refuses, by design.
 
 Two things to know about the deployed service. ADK's chat page lists sessions, so anyone with the address can see
 other people's test conversations: type nothing personal into it. And if a page on another origin will call the
 service, set `A4I_ALLOW_ORIGINS` to that origin by name, not `*`.
 
 ## Settings
+
+The values for the lab project are in [lab.env](../lab.env): no secrets, shared so anyone on the team can run or deploy.
+Load them with `set -a; source agent/lab.env; set +a`; `deploy.sh` reads the file for anything you have not set.
+The table below says what each one does.
 
 | Variable | What it does | Default in code |
 |---|---|---|
@@ -191,6 +201,6 @@ service, set `A4I_ALLOW_ORIGINS` to that origin by name, not `*`.
 | The agent end to end with Gemini on Vertex AI | Verified: ran |
 | Cloud Run service, open to the public | Verified: deployed, answered full questions with no credentials, chat page loads |
 | Offline selfcheck | Verified: passes |
-| BigQuery MCP toolset | Verified: locally and on Cloud Run, a free-form question made two `execute_sql` calls and the agent's count (13 of 192) matched a direct query |
+| BigQuery MCP toolset | Verified: locally and on Cloud Run, a free-form question made two `execute_sql` calls and the agent's count matched a direct query. That first check counted all 192 rows (13 walk-in); seven of those are invented cases, so the real figure is 6 of 183 |
 | A browser front end | Not verified: none has been run against the agent |
 | Equity audit | Limited: one metro, ten postings |

@@ -1,0 +1,9 @@
+Pool-size study, lab tables, captured 2026-10-20 12:16 EDT. Recipient names are real (IRS records), except nine invented teaching cases the challenge adds to the corpus; everyone's storage, capacity and pickup times are generated.
+
+Posting: '10 crates of spinach, harvested yesterday, needs cold storage'; clock 6 h, 0.5 pallet, cold: True
+
+| Pool (top_k) | Viable after filters | Meaning ranks of the first three viable |
+|---|---|---|
+| 15 | 1 | #11 |
+| 40 | 3 | #11, #19, #26 |
+| 80 | 12 | #11, #19, #26 |

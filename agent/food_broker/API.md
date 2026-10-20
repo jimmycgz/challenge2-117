@@ -38,7 +38,8 @@ A full answer took about 22 seconds on a laptop (one measurement). Use `/run_sse
 ## The Match Brief
 
 The six parts from the challenge sheet are the first six keys. `ranked` lists up to three options in order.
-This example is illustrative: the organizations are invented.
+This example is illustrative: its organizations are among the nine invented teaching cases the challenge adds to the
+corpus, not real ones.
 
 ```json
 {

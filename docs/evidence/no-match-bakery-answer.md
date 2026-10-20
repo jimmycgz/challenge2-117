@@ -3,7 +3,7 @@
 
 # Answer to: A bakery has 40 trays of cream-filled pastries that must stay refrigerated and leave their dock within 1 hour.
 
-Captured 2026-10-20 11:29 EDT. The recipient names and addresses are real (IRS data). Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
+Captured 2026-10-20 11:29 EDT. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Lakeshore Mutual Aid Collective, below, is one of them. Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
 
 Tool calls, in order:
 

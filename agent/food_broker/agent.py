@@ -7,6 +7,7 @@ the constraint filter decides, Gemini writes the message a coordinator sends.
 import os
 
 from google.adk.agents import Agent
+from google.genai import types
 
 from .identity_guard import assert_lab_identity
 from .tools import explain_candidate, find_matches, lookup_shelf_life
@@ -29,6 +30,8 @@ Work in this order for every posting:
    donor's deadline and the shelf life. Say which one set the clock. If the result has a
    caution, or the posting says the product is sealed or gives its own expiry, trust the donor's
    figure over the shelf life and say so.
+   If the result has `closest` instead of an hours figure, pick the entry that fits the product as sold (for
+   spinach, a leafy-greens entry, not canned goods), use its hours, and say which entry you used.
 3. Call find_matches once. Give it the posting rewritten as plain language that describes what a
    good recipient looks like (storage, kind of food, scale) as search_text, the hours remaining,
    whether it must stay cold, the load in pallets, the load in a few words and the donor in a few
@@ -67,6 +70,10 @@ Follow-up questions in the same conversation:
   last): answer from the brief earlier in this conversation. No new search.
 
 Rules that matter more than being helpful:
+- Each recipient carries profile_source. Where it is "planted", that organization is an invented teaching case in the
+  challenge data, not a real organization with a real address: say so the first time you name it (for example
+  "Greenline Community Pantry, an invented teaching case"). "generated" means a real organization whose storage,
+  capacity and pickup details are generated.
 - If nobody is viable, say so plainly and show the closest rejections with their reasons. Never
   recommend a recipient the filter eliminated.
 - Say when a margin is thin. A match with 20 minutes of slack is a warning, not a win.
@@ -77,7 +84,7 @@ Rules that matter more than being helpful:
   generated text and the number can disagree.
 - If the match needs a driver because the recipient has no refrigerated transport, say that.
 - The operational details of each recipient (cold storage, pallets, pickup times) are
-  generated, not verified. The organization names and addresses are real. When you describe
+  generated, not verified. The organization names and addresses are real except for recipients whose profile_source is "planted". When you describe
   what a recipient "has", present it as the profile on file, and suggest confirming by phone
   before the truck moves.
 - Shelf life is consumer guidance, not a cold-chain guarantee. Do not state it as one.
@@ -144,6 +151,9 @@ projectId and write tables as `project.dataset.table`). Do not guess other proje
 - surplus_postings: posting_id, track, posting_text, foodkeeper_product, storage_state, hours_available,
   shelf_life_hours, hours_remaining
 - shelf_life: product_name, category, refrigerated_hours, pantry_hours
+The recipients table has 192 rows: 183 real organizations and 9 rows whose profile_source is 'planted', invented teaching
+cases that are not real. When you count or list recipients, leave the planted ones out (profile_source != 'planted')
+unless you are asked to include them, and say that you left nine out.
 If a query fails, read the error, call get_table_info if a column is in doubt, and try once more. State the query
 you ran. Recipient cold storage, capacity and pickup figures are generated, so say so when you quote them.
 """
@@ -153,6 +163,12 @@ def _instruction() -> str:
     return INSTRUCTION + (MCP_INSTRUCTION if os.environ.get("A4I_MCP") == "1" else "")
 
 
+# How much the model thinks before answering. Newer Gemini models think a lot by default, which made a full answer take
+# well over a minute; MINIMAL, LOW, MEDIUM or HIGH. Unset leaves the model's default.
+_THINKING = os.environ.get("A4I_THINKING_LEVEL", "").strip().upper()
+_GENERATE_CONFIG = (types.GenerateContentConfig(thinking_config=types.ThinkingConfig(thinking_level=_THINKING))
+                    if _THINKING else None)
+
 root_agent = Agent(
     name="food_broker",
     model=MODEL,
@@ -160,4 +176,5 @@ root_agent = Agent(
     instruction=_instruction(),
     tools=_tools(),
     before_agent_callback=_identity_gate,
+    generate_content_config=_GENERATE_CONFIG,
 )

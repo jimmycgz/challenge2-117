@@ -56,7 +56,7 @@ def vector_candidates(posting_text: str, top_k: int = 80) -> list[dict]:
       base.cold_storage, base.frozen_storage, base.loading_dock, base.refrigerated_transport,
       base.max_pallets, base.pickup_window_hours, base.weekly_households,
       base.populations_served, base.service_days, base.profile_text,
-      base.latitude, base.longitude, distance
+      base.latitude, base.longitude, base.profile_source, distance
     FROM VECTOR_SEARCH(
       TABLE `{DATASET}.recipient_embeddings`, 'embedding',
       (SELECT AI.EMBED(@posting, endpoint => '{EMBED_ENDPOINT}').result AS embedding),
@@ -87,26 +87,62 @@ def _shelf_caution(hours) -> Optional[str]:
     return None
 
 
+def shape_shelf_result(product: str, storage_state: str, rows: list[dict]) -> dict:
+    """Turn the lookup's rows into the tool result. Pure, so it is tested without BigQuery.
+
+    `rows` are product matches, best first, each {product_name, product_subtitle, hours, note, is_exact}.
+    """
+    exact = [r for r in rows if r.get("is_exact")]
+    if exact:
+        r = exact[0]
+        result = {"product": r["product_name"], "storage_state": storage_state, "hours": r["hours"],
+                  "note": r["note"]}
+        caution = _shelf_caution(r["hours"])
+        if caution:
+            result["caution"] = caution
+        return result
+    if rows:
+        return {
+            "product": product, "storage_state": storage_state, "hours": None,
+            "note": "No FoodKeeper entry is named exactly that. The closest entries are in `closest`: pick the one "
+                    "that fits the product as sold (not canned or processed unless the posting says so), use its "
+                    "hours, and say which entry you used.",
+            "closest": [{"product_name": r["product_name"], "product_subtitle": r.get("product_subtitle"),
+                         "hours": r["hours"]} for r in rows[:4]],
+        }
+    return {"product": product, "storage_state": storage_state, "hours": None,
+            "note": "Nothing in FoodKeeper matches that name or keywords."}
+
+
 def lookup_shelf_life(product_name: str, storage_state: str = "refrigerated") -> dict:
     """USDA FoodKeeper shelf life for a product, in hours (consumer guidance, not cold-chain science).
 
+    Matches the exact product name first. If there is none (FoodKeeper lists spinach under "Bagged greens" and
+    "Lettuce", for example) it returns the closest entries by name, subtitle or keyword for the caller to choose from.
+
     Args:
-        product_name: FoodKeeper product name, e.g. "Lettuce", "Milk", "Bread".
+        product_name: A product, e.g. "Lettuce", "Milk", "Bread", "Spinach".
         storage_state: "refrigerated" or "pantry".
 
     Returns:
-        {"product", "storage_state", "hours", "note"}; hours is None when FoodKeeper has no figure.
-        A "caution" key is added when the figure is under 2 hours (likely an opened-container figure).
+        {"product", "storage_state", "hours", "note"}; hours is None when FoodKeeper has no figure. A "caution" key is
+        added when the figure is under 2 hours (likely an opened-container figure). With no exact entry, `closest`
+        lists up to four candidate entries {product_name, product_subtitle, hours}.
     """
     from google.cloud import bigquery
 
     column = "refrigerated_hours" if storage_state == "refrigerated" else "pantry_hours"
     note_column = "refrigerated_note" if storage_state == "refrigerated" else "pantry_note"
     sql = f"""
-    SELECT product_name, {column} AS hours, {note_column} AS note
+    SELECT product_name, product_subtitle, {column} AS hours, {note_column} AS note,
+           LOWER(product_name) = LOWER(@product) AS is_exact
     FROM `{DATASET}.shelf_life`
     WHERE LOWER(product_name) = LOWER(@product)
-    LIMIT 1
+       OR LOWER(product_name) LIKE CONCAT('%', LOWER(@product), '%')
+       OR LOWER(IFNULL(product_subtitle, '')) LIKE CONCAT('%', LOWER(@product), '%')
+       OR LOWER(IFNULL(keywords, '')) LIKE CONCAT('%', LOWER(@product), '%')
+    ORDER BY is_exact DESC, hours IS NULL, LENGTH(product_name)
+    LIMIT 6
     """
     job = _client().query(
         sql,
@@ -114,17 +150,7 @@ def lookup_shelf_life(product_name: str, storage_state: str = "refrigerated") ->
             query_parameters=[bigquery.ScalarQueryParameter("product", "STRING", product_name)]
         ),
     )
-    rows = list(job.result())
-    if not rows:
-        return {"product": product_name, "storage_state": storage_state, "hours": None,
-                "note": "product not in FoodKeeper under that name"}
-    r = rows[0]
-    result = {"product": r.product_name, "storage_state": storage_state, "hours": r.hours,
-              "note": r.note}
-    caution = _shelf_caution(r.hours)
-    if caution:
-        result["caution"] = caution
-    return result
+    return shape_shelf_result(product_name, storage_state, [dict(r) for r in job.result()])
 
 
 def _pallets(n) -> str:
@@ -317,7 +343,7 @@ def build_match_brief(
     picked += others[: 3 - len(picked)]
     shown = sorted(picked, key=lambda e: e.get("semantic_rank", 0))
     rejected = [{"name": e["name"], "because": e["eliminated_because"],
-                 "semantic_rank": e.get("semantic_rank")} for e in shown]
+                 "semantic_rank": e.get("semantic_rank"), "profile_source": e.get("profile_source")} for e in shown]
     if not viable:
         return {
             "organization_and_why": None, "what_they_can_take": None,
@@ -334,6 +360,7 @@ def build_match_brief(
 
     def card(rank: int, v: dict) -> dict:
         return {"rank": rank, "meaning_rank": v.get("semantic_rank"), "name": v["name"], "address": address(v),
+                "profile_source": v.get("profile_source"),
                 "why": v["why_viable"], "margin_hours": v["margin_hours"],
                 "needs_driver": v["needs_driver"]}
 
@@ -341,7 +368,7 @@ def build_match_brief(
     ranked = [card(i + 1, v) for i, v in enumerate(viable[:3])]
     return {
         "organization_and_why": {
-            "name": top["name"], "address": address(top),
+            "name": top["name"], "address": address(top), "profile_source": top.get("profile_source"),
             "why": top["why_viable"],
             "profile_excerpt": _excerpt(top.get("profile_text") or ""),
         },
@@ -404,10 +431,11 @@ def explain_candidate(
         for e in result["eliminated"]:
             if fragment in e["name"].lower():
                 found.append({"name": e["name"], "semantic_rank": e["semantic_rank"], "outcome": "removed",
-                              "detail": e["eliminated_because"]})
+                              "profile_source": e.get("profile_source"), "detail": e["eliminated_because"]})
         for place, v in enumerate(result["viable"], 1):
             if fragment in v["name"].lower():
                 found.append({"name": v["name"], "semantic_rank": v["semantic_rank"], "outcome": "viable",
+                              "profile_source": v.get("profile_source"),
                               "detail": f"passed every filter and ranked {place} of {len(result['viable'])} "
                                         f"viable; {v['why_viable']}"})
         found.sort(key=lambda f: f["semantic_rank"])

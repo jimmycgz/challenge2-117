@@ -40,9 +40,9 @@ Point at, in this order:
    a match with 20 minutes of slack is a warning, not a win.
 3. Part 6, the next two options and the "closest rejected matches", each with its rank by meaning. This is the moment
    to slow down, and to say it in your own words. The facts to land: in the saved run, the three nearest recipients by
-   meaning were all removed; two could not collect in time; one, Greenline Community Pantry at rank 3, writes that its
-   families ask for fresh greens and that it has no refrigeration of any kind; the recipients that work sit down at
-   positions 50 to 63. A live run can pick a different recipient for the rejected list, so read what is on screen;
+   meaning were all removed; two could not collect in time; one, Greenline Community Pantry at rank 3 (an invented teaching case in the challenge data), writes that its
+   families ask for fresh greens and that it has no refrigeration of any kind; the nearest recipient that works is
+   11th by meaning, and the ranking's top three sit at 50th to 63rd. A live run can pick a different recipient for the rejected list, so read what is on screen;
    the saved version is in [demo-tracks.txt](evidence/demo-tracks.txt).
 4. Part 5, the outreach message: ready to send, with the driver sentence if the recipient has no cold transport.
 
@@ -84,9 +84,10 @@ Point at: it skips the recipient who declined and briefs the next one, with a ne
 Why them and not the big food bank downtown?
 ```
 
-Point at: it finds the Greater Chicago Food Depository, says where it ranked by meaning and why it was removed (it needs
-36 hours to collect and the food has 6). Names and ranks can differ run to run; read what is on screen. Saved version:
-[follow-ups transcript](evidence/follow-ups-transcript.md).
+Point at: it searches for "food bank" (and "food depository"), finds a large food bank, says where it ranked by meaning
+and why it was removed (for example, no room for the load, or a collection time of 36 or 41 hours against 6). Which
+organization it finds varies run to run (the Greater Chicago Food Depository in some runs, Americas Food Bank in the
+saved one); read what is on screen. Saved version: [follow-ups transcript](evidence/follow-ups-transcript.md).
 
 ## When nobody can take it (20 seconds)
 
@@ -105,24 +106,25 @@ can.
 Type:
 
 ```text
-How many recipients in the corpus have walk-in cold storage, and what share of all recipients is that?
+Not counting the invented teaching cases (profile_source 'planted'), how many recipients have walk-in cold storage, and what share is that?
 ```
 
-Point at: it answers 13 of 192, about 6.8%, and states the query. Say: this goes through Google's managed BigQuery MCP
+Point at: it answers 6 of 183, about 3.3%, states the query, and says it left nine invented cases out. Say that only six
+of the 183 real recipients have a walk-in cooler, which is why the cold-storage filter matters. Say: this goes through Google's managed BigQuery MCP
 server, read-only. Matching a posting never goes through free-form SQL, so the filters cannot be skipped.
 
 ## The audit (20 seconds, one slide or the audit page)
 
 Show the group table in [the equity audit](../agent/food_broker/EQUITY-AUDIT.md). Say the honest result: counted per
-posting, the matches sit in higher-need tracts than the corpus; counted per recipient, they sit lower, because one
-pantry won three postings; weighted by volume, assistance is 9% against 20% (compared as means). The audit searches with
+posting, the matches are close to the corpus with no consistent direction; counted per recipient, they sit lower on all three, because one
+pantry won three postings; weighted by volume, assistance is 9% against a corpus mean of 19% (compared as means). The audit searches with
 the raw posting text, while the live agent searches with a rewrite Gemini writes. Ten postings cannot separate a real
-skew from noise. The big farm loads can only go to the 17 recipients with room, who sit in somewhat lower-need areas.
+skew from noise. The big farm loads can only go to the 14 recipients with room; their tracts show lower need on the means but not the medians.
 
 ## The close (15 seconds)
 
-Say what is real and what is generated: recipient names and addresses are real, their storage, capacity and pickup times
-are generated, shelf life is consumer guidance, and locations are ZIP-level. Then say what comes next: remembering who
+Say what is real and what is generated: recipient names and addresses are real, except nine invented teaching cases the challenge
+adds, and everyone's storage, capacity and pickup times are generated, shelf life is consumer guidance, and locations are ZIP-level. Then say what comes next: remembering who
 received food recently so one pantry is not asked every time.
 
 ## If the live page is slow or gone

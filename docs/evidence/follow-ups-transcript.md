@@ -3,7 +3,7 @@
 
 # One conversation, six turns
 
-Captured 2026-10-20 11:29 EDT from the deployed service, in a single session. The recipient names and addresses are real (IRS data). Their cold storage, pallet capacity and pickup times are generated, as the README says. Names and ranks can differ from run to run.
+Captured 2026-10-20 11:29 EDT from the deployed service, in a single session. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Greenline Community Pantry, below, is one of them. Their cold storage, pallet capacity and pickup times are generated, as the README says. Names and ranks can differ from run to run.
 
 ## You: A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.
 

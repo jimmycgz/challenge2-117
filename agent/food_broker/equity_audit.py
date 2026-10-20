@@ -28,6 +28,9 @@ PALLETS = {1: 0.5, 2: 1, 3: 2, 4: 0.5, 5: 5, 6: 10, 7: 15, 8: 2, 9: 1, 10: 0.5}
 # prints both, so the override is visible in the output.
 CLOCK_OVERRIDE = {8: 168}
 DEFAULT_HOURS = 24  # used only if the table has no clock for a posting; printed if it ever applies
+# The challenge plants nine invented teaching cases in the corpus. They have no real address and sit at the metro centre,
+# so their tract figures describe a point, not a neighborhood. The audit leaves them out of the corpus and the matches.
+INCLUDE_PLANTED = False
 DOCK_PALLETS = 5    # a recipient with a loading dock or at least this many pallets of room counts as large
 RATES = ("poverty_rate", "no_vehicle_rate", "assistance_rate")
 
@@ -56,6 +59,7 @@ def _corpus() -> list[dict]:
     CROSS JOIN (SELECT * FROM `{DATASET}.tract_demographics`
                 WHERE tract_lat IS NOT NULL AND tract_lon IS NOT NULL) t
     WHERE r.latitude IS NOT NULL AND r.longitude IS NOT NULL
+      AND ({'TRUE' if INCLUDE_PLANTED else "r.profile_source != 'planted'"})
     GROUP BY r.recipient_id, r.loading_dock, r.max_pallets"""
     out = []
     for row in _client().query(sql).result():
@@ -108,7 +112,10 @@ def main():
         pallets = PALLETS.get(pid, 1)
         table_clock = p["hours_remaining"]
         hours = CLOCK_OVERRIDE.get(pid, table_clock if table_clock is not None else DEFAULT_HOURS)
-        out = apply_constraints(vector_candidates(p["posting_text"], top_k=80), hours, needs_cold, pallets)
+        pool = vector_candidates(p["posting_text"], top_k=80)
+        if not INCLUDE_PLANTED:
+            pool = [c for c in pool if c.get("profile_source") != "planted"]
+        out = apply_constraints(pool, hours, needs_cold, pallets)
         viable = len(out["viable"])
         if not viable:
             refused.append(pid)
@@ -153,7 +160,7 @@ def main():
                "mean", pallets_used))
     if refused:
         print(f"\nPostings with nobody viable: {refused}")
-    print(f"\nClock overrides: {CLOCK_OVERRIDE}. Pallet sizes are estimates (PALLETS in equity_audit.py). "
+    print(f"\n{'Planted teaching cases included.' if INCLUDE_PLANTED else 'The nine invented teaching cases the challenge plants in the corpus are left out of the corpus and the matches.'} Clock overrides: {CLOCK_OVERRIDE}. Pallet sizes are estimates (PALLETS in equity_audit.py). "
           "The audit searches with the raw posting text; the deployed agent searches with a rewrite the language "
           "model writes, so this audits the matcher, not that exact query. Tracts are the nearest tract by internal "
           "point to a ZIP-level location, so they describe the surrounding area.")

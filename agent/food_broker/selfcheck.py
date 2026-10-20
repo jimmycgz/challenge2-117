@@ -186,6 +186,40 @@ def main():
     assert _shelf_caution(1.0) and _shelf_caution(2.0), "a 1 or 2 hour shelf life must carry a caution"
     assert _shelf_caution(168.0) is None and _shelf_caution(None) is None
 
+    # Shelf life: an exact entry wins; with none, the closest entries are returned for the caller to choose from.
+    from food_broker.tools import shape_shelf_result
+    exact = shape_shelf_result("Lettuce", "refrigerated", [
+        {"product_name": "Lettuce", "product_subtitle": "leaf", "hours": 168.0, "note": "ok", "is_exact": True},
+        {"product_name": "Bagged greens", "product_subtitle": "leaf, spinach", "hours": 120.0, "note": "ok",
+         "is_exact": False}])
+    assert exact["hours"] == 168.0 and "closest" not in exact, exact
+    near = shape_shelf_result("Spinach", "refrigerated", [
+        {"product_name": "Bagged greens", "product_subtitle": "leaf, spinach, lettuce", "hours": 120.0, "note": "ok",
+         "is_exact": False},
+        {"product_name": "Lettuce", "product_subtitle": "leaf, spinach", "hours": 168.0, "note": "ok",
+         "is_exact": False}])
+    assert near["hours"] is None and [c["product_name"] for c in near["closest"]] == ["Bagged greens", "Lettuce"], near
+    assert shape_shelf_result("Zzz", "pantry", [])["hours"] is None
+    short = shape_shelf_result("Formula", "pantry", [
+        {"product_name": "Formula", "product_subtitle": "", "hours": 1.0, "note": "ok", "is_exact": True}])
+    assert "caution" in short, "a 1-hour exact figure must still carry the caution"
+
+    # profile_source reaches the brief, the rejections and the explanation, so a planted teaching case can be labelled.
+    planted = dict(row("Invented Teaching Case", "walk-in", 10, 2, 0.05), profile_source="planted")
+    real = dict(row("Real Organization", "walk-in", 10, 3, 0.10), profile_source="generated")
+    pout = apply_constraints([planted, real], hours_remaining=6, needs_cold=True, pallets=0.5)
+    pb = build_match_brief("x", 6, pout["viable"], pout["eliminated"], pallets=0.5)
+    assert pb["organization_and_why"]["profile_source"] == "planted", pb["organization_and_why"]
+    assert [r["profile_source"] for r in pb["ranked"]] == ["planted", "generated"], pb["ranked"]
+    import food_broker.tools as T2
+    keep = T2.vector_candidates
+    try:
+        T2.vector_candidates = lambda text, top_k=80: [dict(planted, semantic_rank=1)]
+        ex = T2.explain_candidate("invented", "x", 6, True, 0.5)["matches"]
+        assert ex and ex[0]["profile_source"] == "planted", ex
+    finally:
+        T2.vector_candidates = keep
+
     print("selfcheck passed:", len(CANDIDATES), "candidates,", len(viable), "viable for spinach")
 
 

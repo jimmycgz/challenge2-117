@@ -1,5 +1,8 @@
 # Product Requirements Document (PRD): Chicago Food Rescue Agent (Track 1)
 
+**Planning draft, written before the build.** What is deployed is described in [DESIGN.md](../DESIGN.md), which lists where it differs from this draft and the decisions the team still has to make. Kept as the record of the plan; where the two disagree, DESIGN.md is right.
+
+
 ## 1. Product Vision & Problem Statement
 
 **The Problem:** Perfectly good retail food (produce, dairy, prepared meals) is thrown away because making a match requires knowing—in the same minute—what just became available, who could use it, what they can physically store, how it will get there, and how long the food has left. By the time a human manually cross-references spreadsheets to answer this, the food is spoiled.

@@ -6,6 +6,7 @@ enough, the results and the limits.
 - [Demo script](docs/DEMO-SCRIPT.md) and [captured output from the live service](docs/evidence/README.md)
 - [Equity audit](agent/food_broker/EQUITY-AUDIT.md)
 - [How to call the agent and what comes back](agent/food_broker/API.md)
+- [Design as built](docs/DESIGN.md) and [test cases](docs/TEST-CASES.md)
 - [Submission checklist](docs/SUBMISSION.md)
 
 The organizers' challenge brief follows, unchanged.

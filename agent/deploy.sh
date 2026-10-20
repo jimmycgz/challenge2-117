@@ -6,7 +6,7 @@
 # Refuses to deploy unless gcloud is signed in as the lab account, on the lab project, and the same
 # identity guard the agent runs with accepts the credentials. A deploy as the wrong identity stops here.
 #
-# Required settings (no defaults, so a missing one stops the script):
+# Required settings (from the environment or from lab.env next to this script; a missing one stops the script):
 #   A4I_EXPECTED_PROJECT           the lab project id
 #   A4I_EXPECTED_PRINCIPAL_SUFFIX  how the lab account's address ends
 # Optional: REGION (default us-east1), VERTEX_LOCATION (default us-central1), SERVICE (default food-broker),
@@ -18,13 +18,21 @@
 
 set -euo pipefail
 
+HERE="$(cd "$(dirname "$0")" && pwd)"
+
+# Settings shared with the team: lab.env fills in anything you have not set yourself. It holds no secrets.
+if [[ -f "${HERE}/lab.env" ]]; then
+  while IFS='=' read -r key value; do
+    [[ -z "${!key:-}" ]] && export "${key}=${value}"
+  done < <(grep -E '^[A-Z0-9_]+=' "${HERE}/lab.env")
+fi
+
 : "${A4I_EXPECTED_PROJECT:?set A4I_EXPECTED_PROJECT to the lab project id}"
 : "${A4I_EXPECTED_PRINCIPAL_SUFFIX:?set A4I_EXPECTED_PRINCIPAL_SUFFIX to the lab account suffix}"
 REGION="${REGION:-us-east1}"
-VERTEX_LOCATION="${VERTEX_LOCATION:-us-central1}"
+VERTEX_LOCATION="${VERTEX_LOCATION:-${GOOGLE_CLOUD_LOCATION:-us-central1}}"
 SERVICE="${SERVICE:-food-broker}"
 PYTHON="${PYTHON:-python3}"
-HERE="$(cd "$(dirname "$0")" && pwd)"
 
 command -v gcloud >/dev/null 2>&1 || { echo "gcloud not found" >&2; exit 1; }
 

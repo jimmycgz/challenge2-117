@@ -1,11 +1,12 @@
 # Submission checklist
 
-Navigation: [demo script](DEMO-SCRIPT.md) · [deck outline](DECK-OUTLINE.md) · [captured evidence](evidence/README.md) ·
+Navigation: [3-minute video script](VIDEO-SCRIPT-3MIN.md) · [long demo script](DEMO-SCRIPT.md) · [deck outline](DECK-OUTLINE.md) · [captured evidence](evidence/README.md) ·
 [agent README](../agent/food_broker/README.md).
 
-The portal is <https://portal.angelhack.com/a4i-console>. It takes four things before the facilitator's deadline: the
-repository link, the Google Skills project link, the pitch deck and the pitch video. Judges read these after the event
-and cannot ask questions. Someone on the team pastes them; nothing here submits.
+Submit at <http://goo.gle/A4I-Submission> by 16:59 EDT. The organizers' notice names four items: the Pitch Deck, the
+Environment Link, the Pitch Video (under 3 minutes) and the GitHub Link. Edits are allowed before the deadline through
+the link in the confirmation email. Judges read these after the event and cannot ask questions. Someone on the team
+pastes them; nothing here submits.
 
 ## Before pasting anything
 
@@ -25,12 +26,12 @@ and cannot ask questions. Someone on the team pastes them; nothing here submits.
 
 ## The four fields
 
-| Field | Draft answer |
+| Field (the organizers' name) | Draft answer |
 |---|---|
-| Repository link | <https://github.com/jimmycgz/challenge2-117> (tag `submission` once merged) |
-| Google Skills project link | Paste the lab link from the Skills page. It names the lab project, so it goes in the portal, not in this repository |
-| Pitch deck | The team's deck, built from the [outline](DECK-OUTLINE.md). Needs to answer the rigor questions in its own slides |
-| Pitch video | A screen share of about three minutes, one person narrating, following the [demo script](DEMO-SCRIPT.md) |
+| GitHub Link | <https://github.com/jimmycgz/challenge2-117> (tag `submission` once merged) |
+| Environment Link | Paste the lab link from the Skills page. It names the lab project, so it goes in the portal, not in this repository |
+| Pitch Deck | The team's deck, built from the [outline](DECK-OUTLINE.md). It must answer the rigor questions in its own slides |
+| Pitch Video (under 3 minutes) | A screen share with a person on camera at the start, following the [3-minute script](VIDEO-SCRIPT-3MIN.md). The [long script](DEMO-SCRIPT.md) is the fuller version |
 
 ## Extra links, if the portal has a notes field
 
@@ -49,4 +50,5 @@ and cannot ask questions. Someone on the team pastes them; nothing here submits.
 
 A food-rescue broker for Chicago: a coordinator describes a surplus offer, and the agent finds recipients by meaning with
 BigQuery vector search, removes the ones that cannot store or collect it in time, and returns a Match Brief with a
-message ready to send. Recipient names and addresses are real; their storage, capacity and pickup times are generated.
+message ready to send. Recipient names and addresses are real (IRS records), except nine invented teaching cases the challenge adds to the
+corpus; their storage, capacity and pickup times, and everyone else's, are generated.
