@@ -111,6 +111,10 @@ def lookup_shelf_life(product_name: str, storage_state: str = "refrigerated") ->
             "note": r.note}
 
 
+def _pallets(n) -> str:
+    return f"{n} pallet" if n == 1 else f"{n} pallets"
+
+
 def apply_constraints(
     candidates: list[dict],
     hours_remaining: float,
@@ -159,9 +163,9 @@ def apply_constraints(
             "margin_hours": margin,
             "needs_driver": needs_driver,
             "why_viable": (
-                f"{cold} cold storage, takes up to {c.get('max_pallets')} pallets, "
+                f"{cold} cold storage, takes up to {_pallets(c.get('max_pallets'))}, "
                 f"collects within {lead}h" if lead is not None else
-                f"{cold} cold storage, takes up to {c.get('max_pallets')} pallets, "
+                f"{cold} cold storage, takes up to {_pallets(c.get('max_pallets'))}, "
                 "collection time not stated"
             ),
         })
@@ -340,3 +344,60 @@ def build_match_brief(
         "rejected_but_close": rejected,
         "refusal": None,
     }
+
+
+def find_matches(
+    search_text: str,
+    hours_remaining: float,
+    needs_cold: bool,
+    pallets: float = 1.0,
+    load_description: str = "surplus food",
+    donor_description: str = "A local donor",
+    top_k: int = 80,
+) -> dict:
+    """Find recipients for a posting and return the finished Match Brief, in one step.
+
+    Searches wide on meaning, applies the hard filters (storage, capacity, the clock), ranks, looks up
+    the top match's neighborhood and assembles the brief. The candidate rows stay inside this function
+    on purpose: passing 80 profiles through the language model made each of its calls take over a minute.
+
+    Args:
+        search_text: The posting rewritten as plain language describing a good recipient (storage, kind
+            of food, scale). This is what gets embedded for the semantic search.
+        hours_remaining: Hours the food has left, already capped by the donor's own deadline.
+        needs_cold: True if the food must stay cold.
+        pallets: Size of the load in pallets (a crate-sized load is a fraction of 1).
+        load_description: The load in a few words, e.g. "ten crates of spinach".
+        donor_description: Who is giving it, e.g. "A grocer on the north side".
+        top_k: Size of the semantic pool before filtering. Keep it wide.
+
+    Returns:
+        The brief from build_match_brief, plus `search` with the pool size and how many survived the
+        filters. On failure: {"error": {"code", "message"}} where code is "identity_refused" or
+        "search_failed". An empty result is not an error: it is a brief with `refusal` set.
+    """
+    from .identity_guard import WrongIdentity
+
+    try:
+        candidates = vector_candidates(search_text, top_k=top_k)
+        result = apply_constraints(candidates, hours_remaining, needs_cold, pallets)
+        neighborhood = None
+        if result["viable"]:
+            top = result["viable"][0]
+            try:
+                neighborhood = lookup_neighborhood(top["latitude"], top["longitude"])
+            except WrongIdentity:
+                raise
+            except Exception:  # noqa: BLE001  (the brief is still useful without the tract figures)
+                neighborhood = None
+        brief = build_match_brief(
+            search_text, hours_remaining, result["viable"], result["eliminated"],
+            load_description=load_description, donor_description=donor_description,
+            pallets=pallets, neighborhood=neighborhood)
+        brief["search"] = {"candidates_searched": len(candidates),
+                           "viable_after_filters": len(result["viable"])}
+        return brief
+    except WrongIdentity as exc:
+        return {"error": {"code": "identity_refused", "message": str(exc)}}
+    except Exception as exc:  # noqa: BLE001
+        return {"error": {"code": "search_failed", "message": f"{type(exc).__name__}: {exc}"}}

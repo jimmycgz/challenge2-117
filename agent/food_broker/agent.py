@@ -9,13 +9,7 @@ import os
 from google.adk.agents import Agent
 
 from .identity_guard import assert_lab_identity
-from .tools import (
-    apply_constraints,
-    build_match_brief,
-    lookup_neighborhood,
-    lookup_shelf_life,
-    vector_candidates,
-)
+from .tools import find_matches, lookup_shelf_life
 
 # Model is configuration, not code: set A4I_MODEL to whatever the lab project has enabled.
 MODEL = os.environ.get("A4I_MODEL", "gemini-2.5-flash")
@@ -33,17 +27,15 @@ Work in this order for every posting:
    changes the answer, ask one short question. Do not guess a deadline.
 2. If the product is a food, call lookup_shelf_life. hours_remaining is the smaller of the
    donor's deadline and the shelf life. Say which one set the clock.
-3. Call vector_candidates with the posting rewritten as plain language that describes what a
-   good recipient looks like (storage, kind of food, scale). This is the semantic search. It
-   proposes candidates by meaning only, so some will be wrong. Ask for a wide pool (the default
-   of 80): the next step removes most of them, and a narrow pool can leave nobody.
-4. Call apply_constraints with those candidates. It removes recipients that cannot store the
-   food, cannot hold the load, or cannot collect inside the clock, and says why.
-5. Call lookup_neighborhood with the top match's latitude and longitude. This describes who
-   the area serves. Use it for the brief, never to rank recipients.
-6. Call build_match_brief with the viable list, the eliminated list, the load in a few words,
-   the donor in a few words, the load size in pallets and the neighborhood. Then give the
-   coordinator the Match Brief as exactly these six labelled parts, in this order:
+3. Call find_matches once. Give it the posting rewritten as plain language that describes what a
+   good recipient looks like (storage, kind of food, scale) as search_text, the hours remaining,
+   whether it must stay cold, the load in pallets, the load in a few words and the donor in a few
+   words. It searches wide by meaning, removes recipients that cannot store the food, cannot hold
+   the load or cannot collect inside the clock, ranks the rest, looks up the top match's
+   neighborhood and returns the finished Match Brief. The neighborhood describes who the area
+   serves; it is never used to rank. If it returns an error, say so plainly and stop; do not
+   invent a match.
+4. Give the coordinator the Match Brief as exactly these six labelled parts, in this order:
    1. Who, and why - the organization by name and address, and the sentence that made it the fit.
    2. What they can actually take - capacity and storage against this load.
    3. The clock - hours the food has, the recipient's collection lead time, your margin, and
@@ -87,8 +79,7 @@ def _mcp_headers(_context=None) -> dict:
 
 
 def _tools() -> list:
-    tools = [vector_candidates, lookup_shelf_life, apply_constraints,
-             lookup_neighborhood, build_match_brief]
+    tools = [lookup_shelf_life, find_matches]
     # The managed MCP server is the coordinator's free-form door into the tables (tract
     # demographics, "how many pantries have a walk-in"). It is switched on by A4I_MCP=1 because
     # it has not been run against the lab project yet; flip it on once it has.

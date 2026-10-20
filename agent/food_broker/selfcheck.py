@@ -12,7 +12,8 @@ def row(name, cold, pallets, lead, distance, **kw):
     return {"name": name, "cold_storage": cold, "max_pallets": pallets,
             "pickup_window_hours": lead, "distance": distance,
             "refrigerated_transport": kw.get("transport", False),
-            "street": "", "city": "Chicago", "state": "IL", "zip_code": ""}
+            "street": "", "city": "Chicago", "state": "IL", "zip_code": "",
+            "latitude": 41.9, "longitude": -87.7}
 
 
 CANDIDATES = [
@@ -106,6 +107,39 @@ def main():
         "foreign service account accepted because the project env var was set to the lab"
     assert "student@labs.example" in check_identity("student@labs.example", P, False, P, S)
     assert "service account" in check_identity(f"svc@{P}.iam.gserviceaccount.com", P, True, P, S)
+
+    # find_matches: the one-call path the agent uses. Search and neighborhood are faked here so the
+    # wiring, the brief shape and the error shape are checked without a cloud project.
+    import food_broker.tools as T
+
+    real_search, real_nb = T.vector_candidates, T.lookup_neighborhood
+    try:
+        T.vector_candidates = lambda text, top_k=80: CANDIDATES
+        T.lookup_neighborhood = lambda lat, lon: {"poverty_rate": 0.31, "no_vehicle_rate": 0.22,
+                                                  "assistance_rate": 0.18}
+        fm = T.find_matches("cold produce, small load", 6, True, 0.5,
+                            load_description="ten crates of spinach",
+                            donor_description="A grocer on the north side")
+        assert "error" not in fm, fm
+        assert [k for k in SIX if not fm.get(k)] == [], "find_matches brief is missing parts"
+        assert [r["rank"] for r in fm["ranked"]] == [1, 2, 3]
+        assert fm["search"] == {"candidates_searched": 5, "viable_after_filters": 3}, fm["search"]
+        assert "31%" in fm["whose_neighborhood"]["tract"]
+
+        def boom(text, top_k=80):
+            raise RuntimeError("bigquery unavailable")
+        T.vector_candidates = boom
+        err = T.find_matches("x", 6, True)
+        assert err == {"error": {"code": "search_failed",
+                                 "message": "RuntimeError: bigquery unavailable"}}, err
+
+        def refused_search(text, top_k=80):
+            raise WrongIdentity("wrong account")
+        T.vector_candidates = refused_search
+        err = T.find_matches("x", 6, True)
+        assert err["error"]["code"] == "identity_refused", err
+    finally:
+        T.vector_candidates, T.lookup_neighborhood = real_search, real_nb
 
     print("selfcheck passed:", len(CANDIDATES), "candidates,", len(viable), "viable for spinach")
 

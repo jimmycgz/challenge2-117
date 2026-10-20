@@ -11,13 +11,19 @@ Vector search proposes candidates by meaning; the constraint filter decides who 
 
 ## Tools
 
+The agent has two tools. The candidate rows stay inside `find_matches`: passing 80 profiles through the language
+model made each of its calls take over a minute, and a full answer now takes about 22 seconds.
+
 | Tool | Job |
 |---|---|
-| `vector_candidates` | BigQuery `VECTOR_SEARCH` over `recipient_embeddings`. Meaning only |
 | `lookup_shelf_life` | USDA FoodKeeper hours for a product (consumer guidance, not cold-chain) |
-| `apply_constraints` | Drops recipients with no cold storage, too little capacity, or a collection time past the clock; says why |
-| `build_match_brief` | Top match, next two options, close-but-rejected, the clock; refuses when nobody is viable |
+| `find_matches` | One call that runs the whole pipeline below and returns the finished Match Brief, or an error |
 | BigQuery MCP (optional) | Google's managed MCP server, for free-form questions over the tables. Off until `A4I_MCP=1` |
+
+Inside `find_matches`, in order: `vector_candidates` (BigQuery `VECTOR_SEARCH` over `recipient_embeddings`, meaning
+only), `apply_constraints` (drops recipients with no cold storage, too little capacity, or a collection time past
+the clock, and says why), `lookup_neighborhood` (nearest census tract, for the brief only, never for ranking), then
+`build_match_brief`. What the response looks like, and how to call the agent, is in [API.md](API.md).
 
 ## Why a top-k search alone is not enough
 
