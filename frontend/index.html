@@ -3448,7 +3448,7 @@
     }
 
     async function loadGoogleMapsSdk() {
-      let apiKey = localStorage.getItem("RESCUE_MAPS_KEY") || RUNTIME_GCP_MAPS_KEY;
+      let apiKey = RUNTIME_GCP_MAPS_KEY;
       if (!apiKey) {
         try {
           const resp = await fetch("/api/config", { method: "GET" });
@@ -3462,6 +3462,9 @@
         } catch (err) {
           // Fallback to CARTO/Leaflet if offline
         }
+      }
+      if (!apiKey) {
+        apiKey = localStorage.getItem("RESCUE_MAPS_KEY") || "";
       }
       if (!apiKey) return;
       const script = document.createElement("script");
