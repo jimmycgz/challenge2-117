@@ -1,0 +1,38 @@
+test_all_10_original_surplus_postings_present (__main__.TestCatalogIntegrity.test_all_10_original_surplus_postings_present) ... ok
+test_all_9_planted_recipients_present (__main__.TestCatalogIntegrity.test_all_9_planted_recipients_present) ... ok
+test_guardrails_followups_and_mcp_cases_present (__main__.TestCatalogIntegrity.test_guardrails_followups_and_mcp_cases_present) ... ok
+test_impossible_clock_refuses_safely (__main__.TestLiveAgentEndToEnd.test_impossible_clock_refuses_safely)
+GUARD-01: Agent refuses 1-hour bakery posting and shows closest rejected candidates. ... /opt/venv/lib/python3.14/site-packages/google/adk/tools/function_tool.py:95: UserWarning: [EXPERIMENTAL] feature FeatureName.JSON_SCHEMA_FOR_FUNC_DECL is enabled.
+  build_function_declaration(
+/opt/venv/lib/python3.14/site-packages/google/genai/_api_client.py:1023: DeprecationWarning: Inheritance class AiohttpClientSession from ClientSession is discouraged
+  class AiohttpClientSession(aiohttp.ClientSession):  # type: ignore[misc]
+/opt/venv/lib/python3.14/site-packages/google/genai/_api_client.py:1023: DeprecationWarning: Inheritance class AiohttpClientSession from ClientSession is discouraged
+  class AiohttpClientSession(aiohttp.ClientSession):  # type: ignore[misc]
+ok
+test_missing_deadline_asks_clarifying_question (__main__.TestLiveAgentEndToEnd.test_missing_deadline_asks_clarifying_question)
+GUARD-04: Agent must ask for the missing pickup deadline instead of guessing. ... ok
+test_all_10_original_surplus_postings_match_ground_truth (__main__.TestLiveBigQuerySuite.test_all_10_original_surplus_postings_match_ground_truth)
+Verifies ORIG-01 through ORIG-10 against live BigQuery vector search, constraints, and FoodKeeper. ... ok
+test_live_guardrail_cases_refusal_and_filtering (__main__.TestLiveBigQuerySuite.test_live_guardrail_cases_refusal_and_filtering)
+Verifies GUARD-01 (1h pastries refusal), GUARD-02 (3p dairy domestic cutoff), GUARD-03 (60p refusal), GUARD-05 (halal). ... ok
+test_mcp_walk_in_cold_storage_corpus_query (__main__.TestLiveBigQuerySuite.test_mcp_walk_in_cold_storage_corpus_query)
+Verifies MCP-01 ground truth: 13 of 192 recipients (6.8%) have walk-in cold storage. ... ok
+test_multi_turn_follow_up_progression_and_explanations (__main__.TestLiveBigQuerySuite.test_multi_turn_follow_up_progression_and_explanations)
+Verifies FOLLOWUP-01 through FOLLOWUP-05 on live BigQuery ('They said no' + 'Why not X'). ... ok
+test_impossible_clock_and_over_capacity_produce_refusal (__main__.TestOfflinePlantedAndGuardrailCases.test_impossible_clock_and_over_capacity_produce_refusal)
+GUARD-01 & GUARD-03: 1-hour deadline or 60-pallet load produces explicit refusal with closest rejections. ... ok
+test_planted_contradictory_profile_uses_structured_columns (__main__.TestOfflinePlantedAndGuardrailCases.test_planted_contradictory_profile_uses_structured_columns)
+PLANTED-02: Harborview Neighbors Trust prose contradicts itself; structured columns decide. ... ok
+test_planted_genuine_ties_both_viable_and_ordered (__main__.TestOfflinePlantedAndGuardrailCases.test_planted_genuine_ties_both_viable_and_ordered)
+PLANTED-03: Cedar Street and Maple Street Produce Alliances have identical capabilities. ... ok
+test_planted_near_miss_decoy_eliminated_and_shown_in_rejected (__main__.TestOfflinePlantedAndGuardrailCases.test_planted_near_miss_decoy_eliminated_and_shown_in_rejected)
+PLANTED-01: Greenline Community Pantry ranks #1 by meaning for greens but has cold_storage='none'. ... ok
+test_planted_vocabulary_mismatch_and_domestic_fridge_cutoff (__main__.TestOfflinePlantedAndGuardrailCases.test_planted_vocabulary_mismatch_and_domestic_fridge_cutoff)
+PLANTED-04 & GUARD-02: Domestic fridge accepts 0.5 pallets of cold food but rejects >1 pallet. ... ok
+test_sealed_formula_opened_container_caution_trigger (__main__.TestOfflinePlantedAndGuardrailCases.test_sealed_formula_opened_container_caution_trigger)
+ORIG-08: Shelf life <= 2h triggers _shelf_caution so the agent uses the donor's sealed expiry. ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 40.127s
+
+OK

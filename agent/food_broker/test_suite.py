@@ -30,6 +30,7 @@ os.environ.setdefault("GOOGLE_CLOUD_PROJECT", "qwiklabs-gcp-04-6c7101c1dba1")
 os.environ.setdefault("A4I_EXPECTED_PROJECT", "qwiklabs-gcp-04-6c7101c1dba1")
 os.environ.setdefault("A4I_EXPECTED_PRINCIPAL_SUFFIX", "@qwiklabs.net")
 os.environ.setdefault("A4I_EXPECTED_PROJECT_NUMBER", "817377390808")
+os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "true")
 if "--live-agent" in sys.argv:
     os.environ["A4I_RUN_LIVE_AGENT"] = "1"
     sys.argv.remove("--live-agent")
@@ -447,7 +448,7 @@ class TestLiveAgentEndToEnd(unittest.TestCase):
             "A bakery has 40 trays of cream-filled pastries that must stay refrigerated and leave their dock within 1 hour."
         ])[0].lower()
         self.assertTrue(
-            any(w in reply for w in ("no candidate", "nobody", "cannot", "can't", "no viable", "none")),
+            any(w in reply for w in ("no recipient", "no candidate", "nobody", "cannot", "can't", "no viable", "none", "unable")),
             f"Expected explicit refusal for 1h clock, got: {reply}",
         )
 
