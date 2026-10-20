@@ -25,7 +25,9 @@ Inputs that are estimates, all visible in the output below:
 
 - The table has no load size, so pallets per posting are guesses (`PALLETS` in `equity_audit.py`).
 - Posting 8 (sealed infant formula, 8 months to expiry) has a clock of 1 hour in the table, because the loader took
-  FoodKeeper's opened-container figure. The audit uses the donor's own 168 hours and prints both.
+  FoodKeeper's opened-container figure. The audit uses the posting's own pickup deadline from the table (168 hours, the
+  `hours_available` field), which is shorter than the product's 8-month expiry, and prints both. The live agent, given a
+  typed posting that states only the expiry, used the 8 months.
 - The audit searches with the raw posting text. The deployed agent searches with a rewrite the language model writes,
   so this audits the matcher, not that exact query.
 
@@ -68,8 +70,10 @@ Weighted figures are compared with the corpus as means; the medians are in the r
 
 ## What the numbers say
 
-- **Counting per posting, the matches sit above the corpus; counting per recipient, they sit below it.** Per
-  posting the medians are 17%, 23% and 16% against the corpus's 15%, 25% and 12%. One recipient (Shakespear Rose
+- **Counted per posting, the matches have more poverty than the corpus and the other two measures are mixed; counted per
+  recipient, they sit below the corpus on all three.** Per posting the means are 22%, 31% and 20% against the corpus's
+  19%, 27% and 20% (more poverty, fewer cars, assistance level). The medians are 17%, 23% and 16% against 15%, 25% and
+  12% (more poverty and assistance, but fewer households without a vehicle, 23% against 25%). One recipient (Shakespear Rose
   Community Table) was ranked first for postings 1, 2 and 4, in a tract with 45% poverty and 52% of households
   without a vehicle. Counting each recipient once, the medians are 14%, 20% and 11%, below the corpus on all three
   measures. The per-posting gap comes from that one recipient.

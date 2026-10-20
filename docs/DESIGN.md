@@ -2,8 +2,8 @@
 
 Navigation: [test cases](TEST-CASES.md) · [agent README](../agent/food_broker/README.md) · [API](../agent/food_broker/API.md) ·
 [equity audit](../agent/food_broker/EQUITY-AUDIT.md) · [captured evidence](evidence/README.md) · the planning
-documents this compares against: [high-level design](<high_level_design_hld (1).md>),
-[product requirements](<product_requirements_document (1).md>), [project plan](track_1_project_plan_checklist.md).
+documents this compares against: [high-level design](planning/high-level-design-draft.md),
+[product requirements](planning/product-requirements-draft.md), [project plan](planning/project-plan-draft.md).
 
 This describes what is deployed, so the team can agree it, change it through a pull request, or overrule it. Section 8
 lists every place it differs from the planning documents, with the reason and a default. Section 9 lists the decisions
@@ -67,7 +67,8 @@ Follow-ups: `find_matches` takes `exclude_names`, so after "they said no" the ne
 ## 5. Why these choices (each is measured)
 
 - **Pool of 80, not 20.** For a 6-hour spinach offer on this corpus, a pool of 15 left 1 viable recipient, 40 left 3, 80
-  left 12. The three nearest by meaning were all removed, and the first that pass sit at meaning rank 50, 54 and 63.
+  left 12. The three nearest by meaning were all removed, the nearest one that passes is 11th by meaning, and the ranking's top three sit at 50th, 54th and 63rd
+  ([pool study](evidence/pool-study.txt)).
 - **One agent.** Latency fell from over 3 minutes to about 13 to 22 seconds.
 - **No tract data in the ranking.** The audit then measures the matcher instead of what the ranking was told to favor.
 - **Tools never skipped.** Matching a posting always goes through `find_matches`, so the filters cannot be talked around.

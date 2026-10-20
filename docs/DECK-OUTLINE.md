@@ -28,9 +28,11 @@ on Cloud Run.
 ## 4. Why meaning is not enough
 
 For the spinach offer, the three closest recipients by meaning were all wrong. Two could not collect in time. One,
-ranked third, wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The first
-recipients that pass sit at positions 50, 54 and 63. Pool of 15 left 1 viable recipient, 40 left 3, 80 left 12.
-Use the [captured output](evidence/demo-tracks.txt) as the screenshot. The cold-storage rule is tested with a case that
+ranked third, wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest
+one that passes is 11th by meaning; the three our ranking puts first sit at 50th, 54th and 63rd, because it prefers
+sturdier cold storage and a comfortable margin over closeness. Pool of 15 left 1 viable recipient, 40 left 3, 80 left 12.
+Sources: [pool study](evidence/pool-study.txt) for the pool numbers, [demo-tracks.txt](evidence/demo-tracks.txt) for the ranks.
+Use the captured output as the screenshot. The cold-storage rule is tested with a case that
 fails when the rule is switched off; our first version had a sorting bug and that test caught it. Say so in one line.
 
 ## 5. One corpus, three tracks
@@ -46,8 +48,8 @@ posting. A guard refuses to run under any account but the lab's.
 
 ## 7. The equity audit
 
-Did the food go where the need is, or where the loading docks are? Counted per posting, the matches sit in higher-need
-tracts than the corpus. Counted per recipient, they sit lower, because one pantry won three postings. Weighted by volume,
+Did the food go where the need is, or where the loading docks are? Counted per posting, the matches have more poverty
+than the corpus and the other two measures are mixed. Counted per recipient, they sit lower, because one pantry won three postings. Weighted by volume,
 assistance is 9% against 20%, because the big farm loads can only go to the 17 recipients with room, who sit in
 somewhat lower-need areas (weighted figures are compared with the corpus as means). The audit searches with the raw
 posting text; the live agent searches with a rewrite Gemini writes. Ten postings cannot separate a real skew from noise. We found this by having the first version

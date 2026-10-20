@@ -7,6 +7,7 @@ the constraint filter decides, Gemini writes the message a coordinator sends.
 import os
 
 from google.adk.agents import Agent
+from google.genai import types
 
 from .identity_guard import assert_lab_identity
 from .tools import explain_candidate, find_matches, lookup_shelf_life
@@ -155,6 +156,12 @@ def _instruction() -> str:
     return INSTRUCTION + (MCP_INSTRUCTION if os.environ.get("A4I_MCP") == "1" else "")
 
 
+# How much the model thinks before answering. Newer Gemini models think a lot by default, which made a full answer take
+# well over a minute; MINIMAL, LOW, MEDIUM or HIGH. Unset leaves the model's default.
+_THINKING = os.environ.get("A4I_THINKING_LEVEL", "").strip().upper()
+_GENERATE_CONFIG = (types.GenerateContentConfig(thinking_config=types.ThinkingConfig(thinking_level=_THINKING))
+                    if _THINKING else None)
+
 root_agent = Agent(
     name="food_broker",
     model=MODEL,
@@ -162,4 +169,5 @@ root_agent = Agent(
     instruction=_instruction(),
     tools=_tools(),
     before_agent_callback=_identity_gate,
+    generate_content_config=_GENERATE_CONFIG,
 )

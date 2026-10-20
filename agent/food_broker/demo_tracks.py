@@ -27,9 +27,13 @@ def main():
         out = apply_constraints(cands, hours, needs_cold, pallets)
         print(f"\n[{track}] {text}")
         print(f"  semantic candidates: {len(cands)}   viable after constraints: {len(out['viable'])}")
-        for v in out["viable"][:3]:
-            print(f"  + {v['name']} (meaning rank #{v['semantic_rank']}, {v['cold_storage']}, "
-                  f"room for {_pallets(v['max_pallets'])}, margin {v['margin_hours']}h)")
+        for pick, v in enumerate(out["viable"][:3], 1):
+            print(f"  + agent's pick {pick}: {v['name']} (meaning rank #{v['semantic_rank']}, "
+                  f"{v['cold_storage']}, room for {_pallets(v['max_pallets'])}, margin {v['margin_hours']}h)")
+        if out["viable"]:
+            nearest = min(out["viable"], key=lambda v: v["semantic_rank"])
+            print(f"  = nearest by meaning that passed the filters: {nearest['name']} "
+                  f"(meaning rank #{nearest['semantic_rank']})")
         cold = [e for e in out["eliminated"] if "no cold storage" in e["eliminated_because"]]
         shown = sorted(cold[:1] + [e for e in out["eliminated"] if e not in cold[:1]][:2],
                        key=lambda e: e["semantic_rank"])

@@ -1,5 +1,8 @@
 # Project Plan & 6-Person Team Allocation: Chicago Track 1
 
+**Planning draft, written before the build.** What is deployed is described in [DESIGN.md](../DESIGN.md), which lists where it differs from this draft and the decisions the team still has to make. Kept as the record of the plan; where the two disagree, DESIGN.md is right.
+
+
 **Scenario Statement (Write this on a whiteboard now):**
 > *"We coordinate food rescue in Chicago. A local retail grocer has just offered us 10 crates of fresh spinach, and it has to move within 6 hours. Here is who we'd have to call, and here is what we don't know about them."*
 

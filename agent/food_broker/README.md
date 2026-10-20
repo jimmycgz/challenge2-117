@@ -54,10 +54,11 @@ recipients, a 6-hour spinach offer left this many viable recipients after the fi
 A pool of 15 gives one choice and no fallback, even though good recipients exist further down the list.
 The closest recipients by meaning are often the wrong ones. For that spinach offer the three nearest were all
 removed: two could not collect in time, and Greenline Community Pantry (an invented case in the challenge corpus)
-wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The first recipients
-that pass the filters sit at positions 50, 54 and 63 in the search. [demo-tracks.txt](../../docs/evidence/demo-tracks.txt)
-shows it, with each recipient's rank by meaning. So the
-pool is wide and the filters do the narrowing. The challenge brief warns that at least one organization looks
+wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest recipient
+that passes the filters is 11th by meaning. The three the ranking puts first sit at 50th, 54th and 63rd, because the
+ranking prefers sturdier cold storage and a comfortable margin over closeness. [pool-study.txt](../../docs/evidence/pool-study.txt)
+and [demo-tracks.txt](../../docs/evidence/demo-tracks.txt) show it with each recipient's rank by meaning (searched with the raw
+posting text). So the pool is wide and the filters do the narrowing. The challenge brief warns that at least one organization looks
 perfect and cannot store the food; the offline selfcheck plants that decoy and fails if it gets through.
 
 ### The Match Brief
@@ -93,7 +94,7 @@ reach the model. A full answer now takes about 22 seconds locally and about 13 o
 ## Results and limits
 
 [EQUITY-AUDIT.md](EQUITY-AUDIT.md) runs the matcher over the ten postings and counts the result three ways, because the
-answer changes with the count. Per posting, the matches sit in higher-need tracts than the corpus. Per distinct
+answer changes with the count. Per posting, the matches have more poverty than the corpus and the other two measures are mixed. Per distinct
 recipient they sit lower, because one pantry was the top match for three of the four retail offers (spinach, dairy,
 deli). Weighted by estimated volume they sit in tracts with much less assistance (9%, against a corpus mean of 20%),
 because the large loads can only go to the 17 recipients with room. With ten postings and eight distinct recipients the
@@ -158,15 +159,19 @@ the live service is in [docs/evidence](../../docs/evidence/README.md).
    WHERE embedded.status = '';
    ```
 
-4. **Set the two guard settings** to your project id and the ending of your account's address
-   (`A4I_EXPECTED_PROJECT`, `A4I_EXPECTED_PRINCIPAL_SUFFIX`), then run `bash agent/deploy.sh`. Without them the script
-   refuses, by design.
+4. **Change the project settings** at the top of `agent/lab.env` to your project id, project number and the ending of
+   your account's address, then run `bash agent/deploy.sh`. If they do not match the account you are signed in as, the
+   script refuses, by design.
 
 Two things to know about the deployed service. ADK's chat page lists sessions, so anyone with the address can see
 other people's test conversations: type nothing personal into it. And if a page on another origin will call the
 service, set `A4I_ALLOW_ORIGINS` to that origin by name, not `*`.
 
 ## Settings
+
+The values for the lab project are in [lab.env](../lab.env): no secrets, shared so anyone on the team can run or deploy.
+Load them with `set -a; source agent/lab.env; set +a`; `deploy.sh` reads the file for anything you have not set.
+The table below says what each one does.
 
 | Variable | What it does | Default in code |
 |---|---|---|

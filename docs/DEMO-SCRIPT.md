@@ -41,8 +41,8 @@ Point at, in this order:
 3. Part 6, the next two options and the "closest rejected matches", each with its rank by meaning. This is the moment
    to slow down, and to say it in your own words. The facts to land: in the saved run, the three nearest recipients by
    meaning were all removed; two could not collect in time; one, Greenline Community Pantry at rank 3, writes that its
-   families ask for fresh greens and that it has no refrigeration of any kind; the recipients that work sit down at
-   positions 50 to 63. A live run can pick a different recipient for the rejected list, so read what is on screen;
+   families ask for fresh greens and that it has no refrigeration of any kind; the nearest recipient that works is
+   11th by meaning, and the ranking's top three sit at 50th to 63rd. A live run can pick a different recipient for the rejected list, so read what is on screen;
    the saved version is in [demo-tracks.txt](evidence/demo-tracks.txt).
 4. Part 5, the outreach message: ready to send, with the driver sentence if the recipient has no cold transport.
 
@@ -114,7 +114,7 @@ server, read-only. Matching a posting never goes through free-form SQL, so the f
 ## The audit (20 seconds, one slide or the audit page)
 
 Show the group table in [the equity audit](../agent/food_broker/EQUITY-AUDIT.md). Say the honest result: counted per
-posting, the matches sit in higher-need tracts than the corpus; counted per recipient, they sit lower, because one
+posting, the matches have more poverty than the corpus and the other two measures are mixed; counted per recipient, they sit lower, because one
 pantry won three postings; weighted by volume, assistance is 9% against 20% (compared as means). The audit searches with
 the raw posting text, while the live agent searches with a rewrite Gemini writes. Ten postings cannot separate a real
 skew from noise. The big farm loads can only go to the 17 recipients with room, who sit in somewhat lower-need areas.
