@@ -112,10 +112,91 @@
     }
 
     .splash-hero {
-      max-width: 860px;
+      max-width: 980px;
+      width: 100%;
       margin: auto;
       text-align: center;
-      padding: 32px 0;
+      padding: 20px 0;
+    }
+
+    .splash-chatbot-shell {
+      max-width: 880px;
+      margin: 0 auto 28px;
+      background: var(--surface);
+      border: 1px solid var(--primary-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      text-align: left;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .splash-chat-header {
+      padding: 12px 16px;
+      background: var(--primary-soft);
+      border-bottom: 1px solid var(--primary-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .splash-chat-feed {
+      max-height: 290px;
+      min-height: 175px;
+      overflow-y: auto;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #fcfcfd;
+    }
+
+    .splash-match-bar {
+      padding: 10px 16px;
+      background: var(--accent-soft);
+      border-top: 1px solid var(--accent-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 12.5px;
+      color: var(--accent-dark);
+    }
+
+    .splash-chat-composer {
+      padding: 12px 16px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .splash-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .splash-input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+    }
+    .splash-input:focus {
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
     }
 
     .splash-badge {
@@ -833,7 +914,7 @@
         Match expiring food donations to nearby pantries with open cooler space, coordinate driver routes, and confirm deliveries in seconds.
       </p>
 
-      <div class="splash-cta-row">
+      <div class="splash-cta-row" style="margin-bottom:22px;">
         <button class="btn-hero" onclick="dismissSplash('dispatch')">
           Open Live Dispatch →
         </button>
@@ -843,6 +924,69 @@
         <button class="btn-hero-secondary" onclick="dismissSplash('routes')">
           Plan Multi-Stop Routes
         </button>
+      </div>
+
+      <!-- LIVE CONVERSATIONAL CHATBOT ON SPLASH PAGE -->
+      <div class="splash-chatbot-shell">
+        <div class="splash-chat-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="dot" id="splashConnDot"></span>
+            <span style="font-size:13px; font-weight:700; color:var(--primary);">Live Food Rescue Chatbot</span>
+            <span style="font-size:11.5px; color:var(--text-secondary);">· Ask anything or match a donation right here</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-size:11px; color:var(--text-muted);" id="splashLatencyBadge">Ready</span>
+            <button class="btn-sm" onclick="loadSampleCratePhoto(); dismissSplash('dispatch');" title="Try matching from a box label photo">
+              📷 Scan Box Label
+            </button>
+            <button class="btn-sm" onclick="dismissSplash('dispatch')" style="border-color:var(--primary-border); color:var(--primary); font-weight:600;">
+              Open Full Console & Map →
+            </button>
+          </div>
+        </div>
+
+        <div class="splash-chat-feed" id="splashChatFeed">
+          <div class="chat-bubble agent">
+            <div class="agent-msg-p">Hi! I'm the <strong>Chicago Food Rescue Assistant</strong>. You can chat with me right here on the home screen to match a food donation, switch to a backup pantry, or check cooler space across our 183 verified partner pantries.</div>
+            <div class="agent-msg-p">Try clicking one of the quick questions below or type your own message:</div>
+          </div>
+        </div>
+
+        <!-- Live Match Summary Strip inside Splash Chatbot -->
+        <div class="splash-match-bar" id="splashMatchBar">
+          <div>
+            <strong>Current Best Match:</strong>
+            <span id="splashMatchedOrgName">Habibi Care (6346 N. Ridge Ave.)</span> ·
+            <span id="splashMatchedMeta">4.0h pickup · +2.0h buffer before 6h deadline</span>
+          </div>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <button class="btn-sm btn-green" onclick="acceptAndConfirmDelivery()">✓ Confirm Delivery</button>
+            <button class="btn-sm" onclick="submitSplashPrompt('They said no. Who\\'s next?')">✗ They Said No (Next Backup)</button>
+            <button class="btn-sm" onclick="dismissSplash('dispatch')">🗺 View on Map →</button>
+          </div>
+        </div>
+
+        <div class="splash-chat-composer">
+          <div class="chip-row" style="margin-bottom:2px;">
+            <button class="chip" onclick="submitSplashPrompt('A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold. Who should we call first?')">🥬 10 crates spinach · 6h left</button>
+            <button class="chip" onclick="submitSplashPrompt('They said no. Who\\'s next?')">🔄 They said no — who's next?</button>
+            <button class="chip" onclick="submitSplashPrompt('Why didn\\'t you pick Greenline Community Pantry?')">❓ Why not Greenline?</button>
+            <button class="chip" onclick="submitSplashPrompt('How many verified partner pantries in Chicago have walk-in coolers, and what share of our network is that?')">❄️ Walk-in coolers in Chicago?</button>
+            <button class="chip" onclick="submitSplashPrompt('For the 10-pallet farm blueberry load (12 hours left), find our top 2 walk-in cooler pantries in Chicago so we can split 8 pallets and 2 pallets.')">🫐 Split 10-pallet blueberries</button>
+          </div>
+          <div class="splash-input-row">
+            <input
+              type="text"
+              id="splashPromptInput"
+              class="splash-input"
+              placeholder="Ask the Food Rescue Chatbot anything (e.g., 'We have 3 pallets of milk expiring in 4 hours — who has a walk-in cooler?')..."
+              onkeydown="if(event.key==='Enter'){event.preventDefault();submitSplashPrompt();}"
+            />
+            <button class="btn-primary" id="splashSendBtn" onclick="submitSplashPrompt()" style="padding:10px 18px; font-weight:600;">
+              Send →
+            </button>
+          </div>
+        </div>
       </div>
 
       <div style="margin-top:26px; text-align:left; width:100%; max-width:920px;">
@@ -2796,25 +2940,41 @@
 
     function appendChatBubble(role, text) {
       if (!text) return;
-      const feed = document.getElementById("chatFeed");
-      const div = document.createElement("div");
-      div.className = `chat-bubble ${role}`;
-      if (role === "agent") {
-        div.innerHTML = renderAgentMessageHtml(text);
-      } else {
-        div.textContent = text;
-      }
-      feed.appendChild(div);
-      feed.scrollTop = feed.scrollHeight;
+      ["chatFeed", "splashChatFeed"].forEach((id) => {
+        const feed = document.getElementById(id);
+        if (!feed) return;
+        const div = document.createElement("div");
+        div.className = `chat-bubble ${role}`;
+        if (role === "agent") {
+          div.innerHTML = renderAgentMessageHtml(text);
+        } else {
+          div.textContent = text;
+        }
+        feed.appendChild(div);
+        feed.scrollTop = feed.scrollHeight;
+      });
     }
 
     function appendToolPill(label) {
-      const feed = document.getElementById("chatFeed");
-      const div = document.createElement("div");
-      div.className = "chat-tool-pill";
-      div.textContent = `✓ ${label}`;
-      feed.appendChild(div);
-      feed.scrollTop = feed.scrollHeight;
+      ["chatFeed", "splashChatFeed"].forEach((id) => {
+        const feed = document.getElementById(id);
+        if (!feed) return;
+        const div = document.createElement("div");
+        div.className = "chat-tool-pill";
+        div.textContent = `✓ ${label}`;
+        feed.appendChild(div);
+        feed.scrollTop = feed.scrollHeight;
+      });
+    }
+
+    async function submitSplashPrompt(overrideText) {
+      const splashInput = document.getElementById("splashPromptInput");
+      const text = (overrideText || (splashInput ? splashInput.value : "")).trim();
+      if (!text) return;
+      if (!overrideText && splashInput) splashInput.value = "";
+      const mainInput = document.getElementById("promptInput");
+      if (mainInput) mainInput.value = text;
+      await submitPrompt(text);
     }
 
     function toggleProblemMenu(e) {
@@ -3291,6 +3451,11 @@
         `Recommended #1 of ${s.viable_after_filters} fitting pantries`;
       document.getElementById("lastDeliveryBadge").textContent = `Last delivery: ${tState.lastDelivery}`;
       document.getElementById("orgExcerpt").textContent = `"${org.profile_excerpt || org.why}"`;
+
+      const splashOrg = document.getElementById("splashMatchedOrgName");
+      const splashMeta = document.getElementById("splashMatchedMeta");
+      if (splashOrg) splashOrg.textContent = `${org.name} (${org.address || "Chicago"})`;
+      if (splashMeta) splashMeta.textContent = `${clk.collection_lead_hours || 2}h pickup · +${clk.margin_hours || 2}h buffer before ${clk.hours_remaining || 6}h deadline`;
 
       document.getElementById("kpiStorage").textContent = formatCoolerName(cap.cold_storage);
 
@@ -4467,21 +4632,26 @@
       }
 
       const sendBtn = document.getElementById("sendBtn");
+      const splashSendBtn = document.getElementById("splashSendBtn");
       const latencyBadge = document.getElementById("latencyBadge");
+      const splashLatencyBadge = document.getElementById("splashLatencyBadge");
       const cardLoader = document.getElementById("cardLoadingBanner");
 
       // Replay mode covers every send: nothing goes to the agent, and nothing is made up in its place.
       if (!document.getElementById("liveApiToggle").checked) {
         handleOfflineFallback(text, "Live Matching is paused in the top bar");
         latencyBadge.textContent = "Paused";
+        if (splashLatencyBadge) splashLatencyBadge.textContent = "Paused";
         return;
       }
 
       const postingAtSend = currentPosting;
       sendBtn.disabled = true;
+      if (splashSendBtn) splashSendBtn.disabled = true;
       if (cardLoader) cardLoader.style.display = "flex";
       const t0 = performance.now();
       latencyBadge.textContent = "Matching...";
+      if (splashLatencyBadge) splashLatencyBadge.textContent = "Thinking...";
       setLiveStatus("");
 
       try {
@@ -4527,6 +4697,7 @@
         const events = await resp.json();
         const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
         latencyBadge.textContent = `Done in ${elapsed}s`;
+        if (splashLatencyBadge) splashLatencyBadge.textContent = `Answered in ${elapsed}s`;
         document.getElementById("connBadge").textContent = "Assistant Online";
         document.getElementById("connDot").className = "dot";
 
@@ -4571,10 +4742,12 @@
       } catch (err) {
         handleOfflineFallback(text, `could not reach the live assistant (${err && err.message ? err.message : "offline"})`);
         latencyBadge.textContent = "Offline";
+        if (splashLatencyBadge) splashLatencyBadge.textContent = "Offline";
         document.getElementById("connBadge").textContent = "Assistant Offline";
         document.getElementById("connDot").className = "dot amber";
       } finally {
         sendBtn.disabled = false;
+        if (splashSendBtn) splashSendBtn.disabled = false;
         if (cardLoader) cardLoader.style.display = "none";
       }
     }
