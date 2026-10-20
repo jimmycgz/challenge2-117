@@ -30,7 +30,8 @@ on Cloud Run.
 For the spinach offer, the three closest recipients by meaning were all wrong. Two could not collect in time. One,
 ranked third, wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest
 one that passes is 11th by meaning; the three our ranking puts first sit at 50th, 54th and 63rd, because it prefers
-sturdier cold storage and a comfortable margin over closeness. Pool of 15 left 1 viable recipient, 40 left 3, 80 left 12.
+sturdier cold storage and a comfortable margin over closeness (the nearest passing recipient has a household fridge and one
+hour of slack; the picks have two or three hours and, for the first, a refrigerated vehicle). Pool of 15 left 1 viable recipient, 40 left 3, 80 left 12.
 Sources: [pool study](evidence/pool-study.txt) for the pool numbers, [demo-tracks.txt](evidence/demo-tracks.txt) for the ranks.
 Use the captured output as the screenshot. The rule that always shows a cold-storage rejection is
 tested with a case that fails when the rule is switched off; our first version had a sorting bug and that test caught it. Say so in one line.

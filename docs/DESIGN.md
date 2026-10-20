@@ -67,8 +67,11 @@ Follow-ups: `find_matches` takes `exclude_names`, so after "they said no" the ne
 ## 5. Why these choices (each is measured)
 
 - **Pool of 80, not 20.** For a 6-hour spinach offer on this corpus, a pool of 15 left 1 viable recipient, 40 left 3, 80
-  left 12. The three nearest by meaning were all removed, the nearest one that passes is 11th by meaning, and the ranking's top three sit at 50th, 54th and 63rd
-  ([pool study](evidence/pool-study.txt)).
+  left 12. The nearest three viable are the same at 40 and 80, so 40 finds the best matches; 80 gives nine more to call
+  when the first ones decline. The three nearest by meaning were all removed, the nearest one that passes is 11th by meaning, and the ranking's top three sit at 50th, 54th and 63rd
+  ([pool study](evidence/pool-study.txt)). That is deliberate: the nearest passing recipient has a household fridge and one
+  hour of slack; the picks have two or three hours and, for the first, a refrigerated vehicle. Closeness by meaning is
+  how a profile reads, not whether the food arrives safely, so it is spent last.
 - **One agent.** Latency fell from over 3 minutes to about 13 to 22 seconds.
 - **No tract data in the ranking.** The audit then measures the matcher instead of what the ranking was told to favor.
 - **Tools never skipped.** Matching a posting always goes through `find_matches`, so the filters cannot be talked around.

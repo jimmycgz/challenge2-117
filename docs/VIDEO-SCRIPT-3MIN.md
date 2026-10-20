@@ -79,7 +79,9 @@ Slow down here; this is the beat judges should remember. Say these facts, in thi
 4. The nearest recipient that passes the filters is eleventh by meaning.
 5. Switch to [pool-study.txt](evidence/pool-study.txt): a pool of fifteen left one viable recipient, forty left three,
    eighty left twelve.
-6. One line: the rule that always shows a cold-storage rejection is tested with a case that fails when the rule is
+6. Only if there is time, and the first thing to drop here: the agent still picks a safer recipient than the nearest
+   passing one, which has a household fridge and one hour of slack, while its picks have two or three hours.
+7. One line: the rule that always shows a cold-storage rejection is tested with a case that fails when the rule is
    switched off, and that test caught a sorting bug in our first version.
 
 Leave out where the agent's own top three sit. In the saved run they are 50th, 54th and 63rd by meaning, because the

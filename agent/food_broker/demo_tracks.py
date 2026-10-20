@@ -33,7 +33,8 @@ def main():
         if out["viable"]:
             nearest = min(out["viable"], key=lambda v: v["semantic_rank"])
             print(f"  = nearest by meaning that passed the filters: {nearest['name']} "
-                  f"(meaning rank #{nearest['semantic_rank']})")
+                  f"(meaning rank #{nearest['semantic_rank']}, {nearest['cold_storage']}, "
+                  f"room for {_pallets(nearest['max_pallets'])}, margin {nearest['margin_hours']}h)")
         cold = [e for e in out["eliminated"] if "no cold storage" in e["eliminated_because"]]
         shown = sorted(cold[:1] + [e for e in out["eliminated"] if e not in cold[:1]][:2],
                        key=lambda e: e["semantic_rank"])

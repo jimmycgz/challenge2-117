@@ -51,12 +51,16 @@ recipients, a 6-hour spinach offer left this many viable recipients after the fi
 | 40 | 3 |
 | 80 | 12 |
 
-A pool of 15 gives one choice and no fallback, even though good recipients exist further down the list.
+A pool of 15 leaves one viable recipient and no fallback. Forty is enough to find the best matches (the nearest three viable
+recipients are the same at 40 and at 80); 80 is what gives a coordinator nine more to call when the first ones decline.
 The closest recipients by meaning are often the wrong ones. For that spinach offer the three nearest were all
 removed: two could not collect in time, and Greenline Community Pantry (an invented case in the challenge corpus)
 wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest recipient
 that passes the filters is 11th by meaning. The three the ranking puts first sit at 50th, 54th and 63rd, because the
-ranking prefers sturdier cold storage and a comfortable margin over closeness. [pool-study.txt](../../docs/evidence/pool-study.txt)
+ranking prefers sturdier cold storage and a comfortable margin over closeness. That is deliberate: the nearest passing
+recipient (Deborahs Place) has a household fridge and one hour of slack, and the agent's picks have two or three hours and,
+for the first, a refrigerated vehicle. Closeness by meaning measures how a profile reads, not whether the food arrives
+safely, so the ranking spends it last. [pool-study.txt](../../docs/evidence/pool-study.txt)
 and [demo-tracks.txt](../../docs/evidence/demo-tracks.txt) show it with each recipient's rank by meaning (searched with the raw
 posting text). So the pool is wide and the filters do the narrowing. The challenge brief warns that at least one organization looks
 perfect and cannot store the food; the offline selfcheck plants that decoy and fails if it gets through.
