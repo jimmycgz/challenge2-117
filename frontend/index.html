@@ -4385,7 +4385,7 @@
         if (!excludedOrgs.includes(org)) excludedOrgs.push(org);
         addLogEntry("DECLINED", `${org} could not take "${currentPosting.title}". Switching to next backup pantry...`);
         try {
-          await fetch("/api/state/decline", {
+          fetch("/api/state/decline", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -4394,41 +4394,65 @@
               reason: "They said no / unavailable today",
               session_id: sessionId
             })
-          });
+          }).catch(() => {});
         } catch (_) {}
       }
       renderLocksAndDeclines();
       computeLoadSplit();
 
-      // If we have next_two_options in the current brief and Live Agent is off (or for instant UI feedback), promote Backup #2
-      if (!document.getElementById("liveApiToggle").checked && currentBrief?.next_two_options?.length > 0) {
+      // Immediately promote Backup #2 from the current Match Brief (<10ms) so the UI never hangs
+      if (currentBrief?.next_two_options?.length > 0) {
         const nextOpt = currentBrief.next_two_options.shift();
+        const coordsInfo = window.RECIPIENT_COORDS?.[nextOpt.name] || {};
         currentBrief.organization_and_why = {
           name: nextOpt.name,
-          address: nextOpt.address,
+          address: nextOpt.address || coordsInfo.address || "Chicago, IL",
           why: nextOpt.why,
           profile_excerpt: nextOpt.why,
-          profile_source: nextOpt.profile_source
+          profile_source: nextOpt.profile_source || coordsInfo.profile_source || "irs990"
         };
-        if (currentBrief.the_clock) {
-          currentBrief.the_clock.margin_hours = nextOpt.margin_hours;
-          currentBrief.the_clock.needs_driver = nextOpt.needs_driver;
+        if (currentBrief.what_they_can_take) {
+          if (coordsInfo.cold_storage) currentBrief.what_they_can_take.cold_storage = coordsInfo.cold_storage;
+          if (coordsInfo.max_pallets) currentBrief.what_they_can_take.max_pallets = coordsInfo.max_pallets;
         }
+        if (currentBrief.the_clock) {
+          const hrsLeft = currentBrief.the_clock.hours_remaining || currentPosting.hours || 6;
+          const margin = nextOpt.margin_hours ?? Math.max(1, hrsLeft - (coordsInfo.pickup_window_hours || 3));
+          currentBrief.the_clock.margin_hours = margin;
+          currentBrief.the_clock.collection_lead_hours = Math.max(1, hrsLeft - margin);
+          currentBrief.the_clock.needs_driver = nextOpt.needs_driver ?? !coordsInfo.refrigerated_transport;
+        }
+        const hrsLeft = currentBrief.the_clock?.hours_remaining || currentPosting.hours || 6;
+        const slackHrs = currentBrief.the_clock?.margin_hours ?? 2;
+        currentBrief.outreach_message =
+          `Hello ${nextOpt.name} team,\n\n` +
+          `We have ${currentPosting.title} ready to move within ${hrsLeft} hours (leaving you roughly ${slackHrs} hours of slack to collect). ` +
+          `Can you take it? Reply YES with your pickup contact, or NO so we can move to the next backup pantry.\n\nThank you,\n[Coordinator name]`;
+
         showWorkflowStatusBanner(
-          `Switched to Backup #${nextOpt.rank} (${nextOpt.name}) as the new Best Match.`,
-          "Backup Selected",
+          `✓ Skipped ${org || "previous pantry"} (declined) and promoted Backup #${nextOpt.rank || 2}: ${nextOpt.name} (+${slackHrs}h safety cushion).`,
+          "Backup Selected ✓",
           false
+        );
+        appendToolPill(`Skipped ${org || "previous"} → Promoted ${nextOpt.name}`);
+        appendChatBubble(
+          "agent",
+          `**Switched to Backup Pantry: ${nextOpt.name}** (${nextOpt.address || "Chicago, IL"}).\n` +
+          `- **Skipped:** ${excludedOrgs.join(", ")} (recorded in *Reserved Space & Declines*)\n` +
+          `- **Why ${nextOpt.name}:** ${nextOpt.why}\n` +
+          `- **Outreach Message:** Updated and ready to copy on the Match Card.`
         );
         renderBrief(currentBrief, currentAnswer);
         return;
       }
 
+      // Only if both pre-computed backups were already exhausted, query the live agent with full posting context
       showWorkflowStatusBanner(
-        `Skipped ${org || "previous pantry"} and finding the next available backup pantry...`,
+        `Skipped ${excludedOrgs.join(", ")} — querying live agent for additional backups...`,
         "Finding Backup...",
         true
       );
-      await quickFollowUp(`They said no (${org || "the first pantry"} cannot take this load). Please skip ${excludedOrgs.join(", ")} and recommend the next backup pantry.`);
+      await quickFollowUp(`${currentPosting.prompt} Note: ${excludedOrgs.join(", ")} said no and cannot take this load. Please exclude them and return the Match Brief for the next best recipient.`);
     }
 
     async function requestDonorExtension() {
@@ -5016,6 +5040,10 @@
 
     async function handleConversationalUiCommand(text) {
       const lower = text.toLowerCase();
+      if ((lower === "they said no. who's next?" || lower === "they said no") && currentBrief?.next_two_options?.length > 0) {
+        await promoteNextViableMatch();
+        return true;
+      }
       if (lower.includes("accept and confirm") || lower === "accept delivery" || lower === "confirm delivery") {
         acceptAndConfirmDelivery();
         const org = currentBrief?.organization_and_why?.name || "the recommended pantry";
