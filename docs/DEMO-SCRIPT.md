@@ -6,20 +6,18 @@ This guide provides **exact step-by-step mouse click instructions**, **on-screen
 
 ---
 
-## 🛠️ Pre-Flight Setup (Do This 2 Minutes Before Recording)
+## 🛠️ Pre-Flight Setup (Do This 1 Minute Before Recording)
 
-1. **Start the Local Coordinator Dispatch Console (recommended for full UI):**
-   ```bash
-   cd /home/krishanr/challenge2-117
-   python3 frontend/serve.py
-   ```
-   Open **`http://127.0.0.1:8090`** in Chrome.
+You do **not** need to start anything locally — the Coordinator Dispatch Console is live on Cloud Run!
+
+1. **Open the Live Cloud Run Coordinator Dispatch Console:**
+   - **`https://food-broker-ui-817377390808.us-east1.run.app`**
 2. **Open Supporting Tabs in the Same Browser Window (Left to Right):**
-   - **Tab 1 — Visual Pitch Deck:** Open `docs/pitch-deck.html` (or serve via `python3 -m http.server 8091` and open `http://127.0.0.1:8091/docs/pitch-deck.html`).
-   - **Tab 2 — Coordinator Dispatch Console:** `http://127.0.0.1:8090` (starts on the **RescueBroker Splash Screen**).
+   - **Tab 1 — Visual Pitch Deck:** [`docs/pitch-deck.html`](pitch-deck.html)
+   - **Tab 2 — Live Coordinator Dispatch Console (Cloud Run):** `https://food-broker-ui-817377390808.us-east1.run.app` (starts on the **RescueBroker Splash Screen**).
    - **Tab 3 — Live Cloud Run ADK Dev UI (Optional backup view):** `https://food-broker-817377390808.us-east1.run.app/dev-ui/` (select `food_broker`).
-   - **Tab 4 — Captured Evidence & Equity Audit:** `agent/food_broker/EQUITY-AUDIT.md` and `docs/evidence/pool-study.txt`.
-3. **Choose Your Timing Mode in Tab 2 (`http://127.0.0.1:8090`):**
+   - **Tab 4 — Captured Evidence & Equity Audit:** [`agent/food_broker/EQUITY-AUDIT.md`](../agent/food_broker/EQUITY-AUDIT.md) and [`docs/evidence/pool-study.txt`](evidence/pool-study.txt).
+3. **Choose Your Timing Mode in Tab 2 (`https://food-broker-ui-817377390808.us-east1.run.app`):**
    - **Live Cloud Run Mode (Default):** Keep **`Live Matching`** checked in the top bar. Each live call to `gemini-3.8-flash` (low thinking) takes **`~20 seconds`** on Cloud Run — talk over the first 10–12 seconds and trim the remaining wait in your video editor.
    - **Instant Saved-Run Mode (Zero Wait):** Uncheck **`Live Matching`** in the top bar when switching between Spinach, Potatoes, Sealed Formula, and Cream Pastries to display the authentic captured Cloud Run Match Briefs instantaneously (`<50ms`).
 
@@ -30,7 +28,7 @@ This guide provides **exact step-by-step mouse click instructions**, **on-screen
 ### Beat 1 — The Problem & Entering the Dispatch Console (`0:00 – 0:20` | 20s)
 
 #### 🖱️ Exact Click Instructions
-1. Start recording on **Tab 2 (`http://127.0.0.1:8090`)** showing the **RescueBroker Splash Overlay** with the 3 Persona Entry Cards (*Rescue Coordinator*, *Pantry Manager*, *Driver & Route Planner*).
+1. Start recording on **Tab 2 (`https://food-broker-ui-817377390808.us-east1.run.app`)** showing the **RescueBroker Splash Overlay** with the 3 Persona Entry Cards (*Rescue Coordinator*, *Pantry Manager*, *Driver & Route Planner*).
 2. At **`0:08`**, click the green button **`[ Launch as Rescue Coordinator → ]`** (or **`[ Launch Live Dispatch → ]`** at the top right).
 3. Move your cursor across the 3 workspace columns:
    - **Left Column:** *Donations Waiting (`11`)* sorted by urgency (`1.0h` red to `10d` green).
