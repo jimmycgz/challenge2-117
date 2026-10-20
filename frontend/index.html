@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chicago Food Rescue Broker — Coordinator Console</title>
+  <title>RescueBroker — Chicago Surplus Dispatch</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Leaflet Map CSS & JS -->
   <link
@@ -23,29 +28,36 @@
 
   <style>
     :root {
-      --bg: #f8fafc;
+      --bg: #fafafa;
       --surface: #ffffff;
-      --surface-subtle: #f1f5f9;
-      --border: #e2e8f0;
-      --border-strong: #cbd5e1;
-      --text: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #64748b;
-      --primary: #0284c7;
-      --primary-hover: #0369a1;
-      --primary-soft: #e0f2fe;
-      --green: #059669;
-      --green-soft: #ecfdf5;
-      --green-border: #a7f3d0;
+      --surface-hover: #f4f4f5;
+      --surface-subtle: #f8fafc;
+      --border: #e4e4e7;
+      --border-strong: #d4d4d8;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --text-muted: #71717a;
+
+      --accent: #10b981;
+      --accent-dark: #059669;
+      --accent-soft: #ecfdf5;
+      --accent-border: #a7f3d0;
+
       --amber: #d97706;
       --amber-soft: #fffbeb;
       --amber-border: #fde68a;
-      --red: #dc2626;
-      --red-soft: #fef2f2;
-      --red-border: #fecaca;
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
-      --radius: 12px;
+
+      --red: #e11d48;
+      --red-soft: #fff1f2;
+      --red-border: #fecdd3;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08);
     }
 
     * {
@@ -55,7 +67,7 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
@@ -63,75 +75,85 @@
       flex-direction: column;
       overflow: hidden;
       -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.011em;
     }
 
     /* TOP NAVIGATION BAR */
-    header {
+    .topbar {
       height: 56px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 0 20px;
+      padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-shrink: 0;
+      z-index: 20;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .brand-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      background: var(--green-soft);
-      border: 1px solid var(--green-border);
-      color: var(--green);
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--text);
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
     }
 
-    .brand h1 {
-      font-size: 15px;
-      font-weight: 700;
+    .brand-name {
+      font-size: 14.5px;
+      font-weight: 600;
       color: var(--text);
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
     }
 
-    .brand-subtitle {
-      font-size: 12px;
+    .brand-divider {
+      color: var(--border-strong);
+      font-weight: 300;
+    }
+
+    .brand-context {
+      font-size: 13px;
       color: var(--text-muted);
+      font-weight: 400;
     }
 
-    .header-controls {
+    .topbar-right {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .status-pill {
+    .status-indicator {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 5px 10px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 600;
-      background: var(--surface-subtle);
+      font-weight: 500;
       color: var(--text-secondary);
+      background: var(--bg);
       border: 1px solid var(--border);
     }
 
-    .status-pill.live {
-      background: var(--green-soft);
-      color: var(--green);
-      border-color: var(--green-border);
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
     }
+
+    .dot.amber { background: var(--amber); }
+    .dot.red { background: var(--red); }
 
     /* BUTTONS */
     button {
@@ -140,75 +162,72 @@
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
-      padding: 7px 12px;
-      border-radius: 8px;
-      font-size: 12.5px;
-      font-weight: 600;
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.15s ease;
-      box-shadow: var(--shadow-sm);
+      transition: all 0.14s ease;
+      box-shadow: var(--shadow-xs);
+      letter-spacing: -0.01em;
     }
 
     button:hover {
-      background: var(--surface-subtle);
+      background: var(--surface-hover);
       border-color: var(--border-strong);
     }
 
-    button.btn-primary {
-      background: var(--primary);
-      border-color: var(--primary);
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-dark {
+      background: var(--text);
+      border-color: var(--text);
       color: #ffffff;
     }
 
-    button.btn-primary:hover {
-      background: var(--primary-hover);
+    .btn-dark:hover {
+      background: #27272a;
+      border-color: #27272a;
     }
 
-    button.btn-success {
-      background: var(--green);
-      border-color: var(--green);
-      color: #ffffff;
-    }
-
-    button.btn-success:hover {
-      background: #047857;
-    }
-
-    button.btn-ghost {
+    .btn-ghost {
       background: transparent;
       border-color: transparent;
       box-shadow: none;
       color: var(--text-secondary);
     }
 
-    button.btn-ghost:hover {
-      background: var(--surface-subtle);
+    .btn-ghost:hover {
+      background: var(--surface-hover);
       color: var(--text);
+      border-color: transparent;
     }
 
-    .mic-recording {
-      background: var(--red-soft) !important;
-      border-color: var(--red) !important;
-      color: var(--red) !important;
-      animation: pulse 1.2s infinite;
+    .icon-svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.65; }
-    }
-
-    /* 2-COLUMN WORKSPACE */
-    .workspace {
+    /* MAIN LAYOUT */
+    .layout {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 300px 1fr;
       flex: 1;
       min-height: 0;
     }
 
-    /* LEFT SIDEBAR: COMPOSER + SURPLUS QUEUE */
+    /* LEFT SIDEBAR: DISPATCH QUEUE */
     .sidebar {
       background: var(--surface);
       border-right: 1px solid var(--border);
@@ -217,312 +236,427 @@
       min-height: 0;
     }
 
-    .composer-section {
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-    }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 8px;
+    .sidebar-header {
+      padding: 18px 18px 10px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
 
-    .composer-box {
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      background: var(--surface);
-      padding: 10px;
-      box-shadow: var(--shadow-sm);
-      transition: border-color 0.15s;
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
-    .composer-box:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-soft);
+    .queue-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .composer-box textarea {
+    .queue-row {
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.12s ease;
+    }
+
+    .queue-row:hover {
+      background: var(--surface-hover);
+    }
+
+    .queue-row.active {
+      background: var(--bg);
+      border-color: var(--border);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .queue-row-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .queue-row.active .queue-row-title {
+      font-weight: 600;
+    }
+
+    .queue-row-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .time-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-pill.crit {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .time-pill.urg {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .time-pill.ok {
+      background: var(--surface-hover);
+      color: var(--text-secondary);
+    }
+
+    /* CENTER WORKSPACE */
+    .stage-scroll {
+      overflow-y: auto;
+      padding: 28px 36px 48px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .stage-container {
       width: 100%;
+      max-width: 880px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* OMNIBOX / COMMAND BAR */
+    .omnibox-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .omnibox {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 8px 10px 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .omnibox:focus-within {
+      border-color: var(--text);
+      box-shadow: 0 0 0 3px rgba(9, 9, 11, 0.06);
+    }
+
+    .omnibox input {
+      flex: 1;
       border: none;
       outline: none;
-      resize: none;
       font-family: inherit;
-      font-size: 13px;
-      line-height: 1.45;
+      font-size: 13.5px;
       color: var(--text);
-      min-height: 58px;
       background: transparent;
     }
 
-    .composer-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid var(--surface-subtle);
+    .omnibox input::placeholder {
+      color: var(--text-muted);
     }
 
-    .composer-tools-left {
+    .omnibox-tools {
       display: flex;
       align-items: center;
       gap: 4px;
     }
 
-    .icon-btn {
-      padding: 5px 8px;
-      font-size: 12px;
+    .tool-icon-btn {
+      padding: 6px 8px;
       border-radius: 6px;
-      background: var(--surface-subtle);
       border: 1px solid transparent;
-      box-shadow: none;
+      background: transparent;
       color: var(--text-secondary);
-    }
-
-    .icon-btn:hover {
-      background: #e2e8f0;
-      color: var(--text);
-    }
-
-    /* Photo attachment drawer inside composer */
-    .photo-drawer {
-      display: none;
-      margin-top: 8px;
-      padding: 8px 10px;
-      background: var(--amber-soft);
-      border: 1px solid var(--amber-border);
-      border-radius: 8px;
       font-size: 12px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .photo-drawer.active {
-      display: flex;
-    }
-
-    .photo-drawer img {
-      height: 36px;
-      border-radius: 4px;
-      border: 1px solid var(--amber-border);
-    }
-
-    /* Quick Prompt Pills */
-    .quick-pills {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .pill-btn {
-      font-size: 11.5px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
       font-weight: 500;
       box-shadow: none;
     }
 
-    .pill-btn:hover {
-      background: var(--primary-soft);
-      color: var(--primary);
-      border-color: #bae6fd;
-    }
-
-    /* Queue List */
-    .queue-section {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px 16px;
-    }
-
-    .queue-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .queue-item {
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      cursor: pointer;
-      transition: all 0.12s ease;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .queue-item:hover {
-      border-color: var(--border-strong);
-      background: var(--surface-subtle);
-    }
-
-    .queue-item.active {
-      background: var(--primary-soft);
-      border-color: var(--primary);
-      box-shadow: 0 1px 4px rgba(2, 132, 199, 0.12);
-    }
-
-    .queue-item-title {
-      font-size: 13px;
-      font-weight: 600;
+    .tool-icon-btn:hover {
+      background: var(--surface-hover);
       color: var(--text);
-      margin-bottom: 2px;
+      border-color: transparent;
     }
 
-    .queue-item-meta {
-      font-size: 11.5px;
-      color: var(--text-muted);
-    }
-
-    /* Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .badge.crit {
+    .tool-icon-btn.recording {
       background: var(--red-soft);
       color: var(--red);
-      border: 1px solid var(--red-border);
     }
 
-    .badge.urg {
-      background: var(--amber-soft);
-      color: var(--amber);
-      border: 1px solid var(--amber-border);
-    }
-
-    .badge.ok {
-      background: var(--green-soft);
-      color: var(--green);
-      border: 1px solid var(--green-border);
-    }
-
-    .badge.info {
-      background: var(--primary-soft);
-      color: var(--primary);
-      border: 1px solid #bae6fd;
-    }
-
-    /* MAIN STAGE */
-    .main-stage {
-      padding: 20px 28px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 1180px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    /* TOP STATUS BAR (Safety + Active Offer Info) */
-    .context-bar {
+    /* Subtle Suggestion Pills */
+    .suggestions-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 10px 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
+      gap: 8px;
+      padding: 0 2px;
     }
 
-    .context-bar.warn {
-      background: var(--amber-soft);
-      border-color: var(--amber-border);
-    }
-
-    .context-bar.halt {
-      background: var(--red-soft);
-      border-color: var(--red-border);
-    }
-
-    .context-left {
+    .suggestion-chips {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 13px;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      box-shadow: none;
+    }
+
+    .chip:hover {
+      border-color: var(--border-strong);
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    /* Photo Attachment Toast */
+    .photo-toast {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+    }
+
+    .photo-toast.active {
+      display: flex;
+    }
+
+    .photo-toast img {
+      height: 32px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* PRIMARY MATCH CARD (SaaS Hero Card) */
+    .match-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    /* Top Status Strip inside Match Card */
+    .match-card-strip {
+      padding: 10px 24px;
+      background: var(--surface-subtle);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
       color: var(--text-secondary);
     }
 
-    /* PRIMARY HERO MATCH CARD */
-    .hero-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px 24px;
-      box-shadow: var(--shadow-md);
+    .match-card-strip.warn {
+      background: var(--amber-soft);
+      border-bottom-color: var(--amber-border);
+      color: var(--amber);
     }
 
-    .hero-top {
+    .match-card-strip.halt {
+      background: var(--red-soft);
+      border-bottom-color: var(--red-border);
+      color: var(--red);
+    }
+
+    .strip-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .match-card-body {
+      padding: 24px;
+    }
+
+    /* Recipient Header + Primary CTA */
+    .recipient-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 16px;
-      margin-bottom: 14px;
     }
 
-    .hero-eyebrow {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--green);
-      margin-bottom: 4px;
+    .recipient-badge-row {
       display: flex;
       align-items: center;
       gap: 8px;
+      margin-bottom: 6px;
     }
 
-    .hero-title {
-      font-size: 22px;
-      font-weight: 800;
+    .eyebrow-pill {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .rank-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .recipient-name {
+      font-size: 24px;
+      font-weight: 700;
       color: var(--text);
-      letter-spacing: -0.02em;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
     }
 
-    .hero-address {
+    .recipient-address {
       font-size: 13.5px;
       color: var(--text-secondary);
-      margin-top: 2px;
+      margin-top: 4px;
     }
 
-    .hero-actions {
+    .cta-group {
       display: flex;
       align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
+      flex-shrink: 0;
     }
 
-    /* Dropdown Menu for Report Problem */
+    /* Minimalist 4-Column Metric Row */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 20px 0;
+      padding: 14px 0;
+      gap: 16px;
+    }
+
+    .metric-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-right: 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .metric-cell:last-child {
+      border-right: none;
+    }
+
+    .metric-label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .metric-val {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .metric-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* Two-Column Context & Outreach inside Hero */
+    .match-columns {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .rationale-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .rationale-text {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+    }
+
+    .census-footnote {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--text-muted);
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .outreach-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .outreach-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .outreach-body {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    /* Dropdown Popover */
     .dropdown {
       position: relative;
-      display: inline-block;
     }
 
     .dropdown-menu {
@@ -530,11 +664,11 @@
       position: absolute;
       right: 0;
       top: calc(100% + 6px);
-      width: 250px;
+      width: 240px;
       background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
       padding: 6px;
       z-index: 100;
     }
@@ -543,23 +677,29 @@
       display: block;
     }
 
+    .dropdown-section-title {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 6px 10px 4px;
+    }
+
     .dropdown-item {
       width: 100%;
       text-align: left;
       border: none;
       box-shadow: none;
-      padding: 8px 10px;
+      padding: 7px 10px;
       font-size: 12.5px;
-      font-weight: 500;
+      font-weight: 400;
       color: var(--text);
       border-radius: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     .dropdown-item:hover {
-      background: var(--surface-subtle);
+      background: var(--surface-hover);
     }
 
     .dropdown-divider {
@@ -568,253 +708,174 @@
       margin: 4px 0;
     }
 
-    /* Key Specs Bar (4 Clean Metrics) */
-    .specs-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .spec-box {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
-
-    .spec-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .spec-value {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-      margin-top: 3px;
-    }
-
-    .spec-sub {
-      font-size: 11.5px;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
-
-    /* Quote & Outreach Row inside Hero */
-    .hero-details-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      gap: 16px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-    }
-
-    .why-box {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .excerpt-quote {
-      font-size: 13px;
-      line-height: 1.5;
-      color: var(--text-secondary);
-      background: var(--surface-subtle);
-      border-left: 3px solid var(--primary);
-      padding: 10px 12px;
-      border-radius: 0 8px 8px 0;
-    }
-
-    .neighborhood-pill {
-      font-size: 12px;
-      color: var(--text-secondary);
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      padding: 8px 12px;
-      border-radius: 8px;
-      line-height: 1.4;
-    }
-
-    .outreach-card {
-      background: var(--green-soft);
-      border: 1px solid var(--green-border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .outreach-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--green);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .outreach-text {
-      font-size: 12.5px;
-      line-height: 1.45;
-      color: #064e3b;
-      white-space: pre-wrap;
-    }
-
-    /* SEGMENTED TABS FOR PROGRESSIVE DISCLOSURE */
-    .tabs-bar {
+    /* SEGMENTED PILL TABS */
+    .subview-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0;
     }
 
-    .tab-buttons {
-      display: flex;
-      gap: 4px;
+    .segmented-control {
+      display: inline-flex;
+      background: #ededf0;
+      padding: 3px;
+      border-radius: 10px;
+      gap: 2px;
     }
 
-    .tab-btn {
+    .seg-btn {
       border: none;
       background: transparent;
       box-shadow: none;
-      padding: 10px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      border-bottom: 2px solid transparent;
-      border-radius: 8px 8px 0 0;
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.12s ease;
     }
 
-    .tab-btn:hover {
+    .seg-btn:hover {
       color: var(--text);
-      background: var(--surface-subtle);
+      background: transparent;
     }
 
-    .tab-btn.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
+    .seg-btn.active {
       background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      box-shadow: var(--shadow-xs);
     }
 
-    .tab-panel {
+    .tab-surface {
       display: none;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
+      border-radius: var(--radius-lg);
+      padding: 20px;
       box-shadow: var(--shadow-sm);
     }
 
-    .tab-panel.active {
+    .tab-surface.active {
       display: block;
     }
 
-    /* TAB 1: MAP & DELIVERY TIMELINE */
-    .map-timeline-grid {
+    /* TAB 1: ROUTE MAP & TIMELINE */
+    .route-grid {
       display: grid;
       grid-template-columns: 1.35fr 1fr;
       gap: 20px;
-      align-items: start;
+      align-items: stretch;
     }
 
     #map {
       width: 100%;
-      height: 290px;
-      border-radius: 10px;
+      height: 260px;
+      border-radius: var(--radius-md);
       border: 1px solid var(--border);
     }
 
-    .timeline-box {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
+    .map-caption {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    .timeline-panel {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      justify-content: space-between;
+      padding: 4px 2px;
     }
 
-    .timeline-track {
-      height: 22px;
-      background: #e2e8f0;
+    .progress-bar-track {
+      height: 8px;
+      background: var(--surface-hover);
       border-radius: 999px;
       overflow: hidden;
       display: flex;
+      margin: 12px 0 8px;
     }
 
-    .timeline-fill-lead {
-      background: var(--primary);
+    .progress-lead {
+      background: var(--text);
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
       transition: width 0.3s ease;
     }
 
-    .timeline-fill-slack {
-      background: var(--green);
+    .progress-slack {
+      background: var(--accent);
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
       transition: width 0.3s ease;
     }
 
-    /* TAB 2: BACKUPS & REJECTED SEMANTIC DECOYS */
-    .two-col-lists {
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .delay-controls {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    /* TAB 2: ALTERNATIVES & FILTERED CANDIDATES */
+    .alt-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 24px;
     }
 
-    .list-card {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-      background: var(--surface);
+    .alt-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
     }
 
-    .list-card.decoy {
-      background: var(--red-soft);
-      border-color: var(--red-border);
+    .alt-item:last-child {
+      border-bottom: none;
     }
 
-    /* TAB 3: FULL AGENT REPLY & ACTIVITY LOG */
-    .transcript-box {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 12.5px;
-      line-height: 1.55;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      max-height: 280px;
-      overflow-y: auto;
-      white-space: pre-wrap;
+    .alt-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13.5px;
+      font-weight: 600;
       color: var(--text);
     }
 
-    .log-item {
+    .alt-item-sub {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    /* TAB 3: AGENT TRACE & AUDIT LOG */
+    .mono-pane {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 12px;
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      max-height: 240px;
+      overflow-y: auto;
+      white-space: pre-wrap;
       color: var(--text-secondary);
     }
 
@@ -823,8 +884,8 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(2px);
+      background: rgba(9, 9, 11, 0.4);
+      backdrop-filter: blur(3px);
       z-index: 2000;
       align-items: center;
       justify-content: center;
@@ -834,11 +895,11 @@
     .modal {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      max-width: 720px;
+      border-radius: var(--radius-lg);
+      max-width: 680px;
       width: 100%;
       padding: 24px;
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+      box-shadow: var(--shadow-lg);
       max-height: 88vh;
       overflow-y: auto;
     }
@@ -846,476 +907,493 @@
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
+      gap: 14px;
+      margin-top: 16px;
     }
 
     .form-grid label {
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 500;
       color: var(--text-secondary);
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
 
     .form-grid input,
     .form-grid select {
       padding: 8px 10px;
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--border-strong);
       font-size: 13px;
       font-family: inherit;
+      color: var(--text);
     }
 
-    .audit-table {
+    .clean-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 12px;
+      margin-top: 14px;
       font-size: 12.5px;
     }
 
-    .audit-table th,
-    .audit-table td {
-      padding: 8px 10px;
-      border: 1px solid var(--border);
+    .clean-table th,
+    .clean-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
       text-align: left;
     }
 
-    .audit-table th {
-      background: var(--surface-subtle);
-      font-weight: 700;
+    .clean-table th {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
-    @media (max-width: 1024px) {
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-      .specs-grid,
-      .hero-details-grid,
-      .map-timeline-grid,
-      .two-col-lists {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .metrics-row, .match-columns, .route-grid, .alt-grid { grid-template-columns: 1fr; }
+      .metric-cell { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- CLEAN TOP HEADER -->
-  <header>
+  <!-- MINIMALIST TOP NAVIGATION -->
+  <header class="topbar">
     <div class="brand">
-      <div class="brand-logo">🥬</div>
-      <div>
-        <h1>Chicago Food Rescue Broker</h1>
-        <div class="brand-subtitle">Coordinator Dispatch Console · 192 Chicago Pantries · BigQuery Vector Search</div>
+      <div class="brand-mark">
+        <svg class="icon-svg" viewBox="0 0 24 24" style="width:16px;height:16px;">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
       </div>
+      <span class="brand-name">RescueBroker</span>
+      <span class="brand-divider">/</span>
+      <span class="brand-context">Chicago Dispatch</span>
     </div>
 
-    <div class="header-controls">
-      <span class="status-pill live" id="connBadge">🟢 Live Cloud Run</span>
-      <label class="status-pill" style="cursor:pointer;" title="Send live queries to Cloud Run ADK agent">
-        <input type="checkbox" id="liveApiToggle" checked /> Live Agent
+    <div class="topbar-right">
+      <div class="status-indicator" title="Connected to Cloud Run ADK Agent">
+        <span class="dot" id="connDot"></span>
+        <span id="connBadge">Cloud Run Live</span>
+      </div>
+      <label class="status-indicator" style="cursor:pointer;">
+        <input type="checkbox" id="liveApiToggle" checked style="accent-color:var(--text);" />
+        <span>Live Agent</span>
       </label>
-      <button onclick="openModal('onboardModal')">➕ Onboard Pantry</button>
-      <button onclick="openModal('equityModal')">📊 Equity Audit</button>
-      <button class="btn-ghost" onclick="resetSession()" title="Start a fresh multi-turn session">🔄 New Session</button>
+      <button class="btn-ghost" onclick="openModal('onboardModal')">Onboard Pantry</button>
+      <button class="btn-ghost" onclick="openModal('equityModal')">Equity Study</button>
+      <button class="btn-ghost" onclick="resetSession()" title="Reset Session">New Session</button>
     </div>
   </header>
 
-  <!-- 2-COLUMN WORKSPACE -->
-  <div class="workspace">
+  <!-- WORKSPACE -->
+  <div class="layout">
 
-    <!-- LEFT SIDEBAR: UNIFIED COMPOSER + SURPLUS QUEUE -->
+    <!-- LEFT RAIL: SURPLUS QUEUE -->
     <aside class="sidebar">
-
-      <!-- Unified Conversational Intake (Text + Voice + Photo) -->
-      <div class="composer-section">
-        <div class="section-label">
-          <span>1. Describe Surplus or Ask Follow-Up</span>
-          <span id="latencyBadge" style="font-weight:600; color:var(--green); text-transform:none;">Ready</span>
-        </div>
-
-        <div class="composer-box">
-          <textarea
-            id="promptInput"
-            placeholder="Describe a surplus load, or ask a follow-up (e.g. 'They said no, who's next?')..."
-          >A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.</textarea>
-
-          <!-- Optional Photo Attachment Drawer (Hidden until clicked) -->
-          <div class="photo-drawer" id="photoDrawer">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img id="photoPreview" alt="Crate Tag" />
-              <div>
-                <div style="font-weight:700; color:var(--amber);">Crate Tag Attached</div>
-                <div style="font-size:11px; color:var(--text-secondary);">Gemini Vision extracts item & deadline</div>
-              </div>
-            </div>
-            <button class="btn-primary" style="padding:5px 10px; font-size:11.5px;" onclick="dispatchPhotoOffer()">
-              Extract & Match
-            </button>
-          </div>
-
-          <div class="composer-toolbar">
-            <div class="composer-tools-left">
-              <button class="icon-btn" id="micBtn" onclick="toggleVoiceInput()" title="Push-to-Talk Voice Input">
-                🎙️ Voice
-              </button>
-              <button class="icon-btn" onclick="loadSampleCratePhoto()" title="Load sample spinach pallet tag photo">
-                📷 Sample Tag
-              </button>
-              <label class="icon-btn" style="cursor:pointer;" title="Upload your own crate photo">
-                ⬆️ Photo
-                <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)" />
-              </label>
-            </div>
-
-            <button class="btn-primary" id="sendBtn" onclick="submitPrompt()">
-              Match Load ↵
-            </button>
-          </div>
-        </div>
-
-        <!-- Clean Follow-Up Pills -->
-        <div class="quick-pills">
-          <button class="pill-btn" onclick="quickFollowUp('They said no. Who\'s next?')">🔄 "They said no"</button>
-          <button class="pill-btn" onclick="quickFollowUp('Why didn\'t you pick Greenline Community Pantry?')">❓ Why not Greenline?</button>
-          <button class="pill-btn" onclick="sendMcpWalkInQuery()">🗄️ Walk-in coolers (SQL)</button>
-        </div>
+      <div class="sidebar-header">
+        <span class="sidebar-title">Active Queue (11)</span>
+        <span style="font-size:11px; color:var(--text-muted);">By urgency</span>
       </div>
-
-      <!-- Incoming Surplus Queue (#14) -->
-      <div class="queue-section">
-        <div class="section-label">
-          <span>2. Ticking-Clock Surplus Queue</span>
-          <span style="text-transform:none; font-weight:500;">Sorted by urgency</span>
-        </div>
-        <div class="queue-list" id="queueList"></div>
-      </div>
-
+      <div class="queue-scroll" id="queueList"></div>
     </aside>
 
-    <!-- MAIN STAGE: FOCUSED MATCH DECISION + PROGRESSIVE TABS -->
-    <main class="main-stage">
+    <!-- MAIN STAGE -->
+    <main class="stage-scroll">
+      <div class="stage-container">
 
-      <!-- Compact Context & openFDA Food Safety Bar (#11) -->
-      <div class="context-bar" id="recallBanner">
-        <div class="context-left">
-          <span class="badge ok" id="recallStatusBadge">🟢 openFDA Safety Check: Clear</span>
-          <span id="recallDetail">Verified against api.fda.gov — confirm lot code & sealed packaging at pickup.</span>
-        </div>
-        <div style="display:flex; gap:6px; align-items:center;">
-          <span class="badge info" id="searchPoolBadge" title="Vector search pool vs. viable survivors">Pool: 80 → 12 Viable</span>
-          <button class="btn-ghost" style="font-size:11.5px; padding:4px 8px; color:var(--red);" onclick="triggerSafetyHalt()">
-            🛑 Flag Recall Halt
-          </button>
-        </div>
-      </div>
+        <!-- 1. COMMAND BAR (OMNIBOX) -->
+        <div class="omnibox-wrapper">
+          <div class="omnibox">
+            <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--text-muted);">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              id="promptInput"
+              value="A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold."
+              placeholder="Describe a surplus load, or ask a follow-up ('They said no, who is next?')..."
+              onkeydown="if(event.key==='Enter') submitPrompt()"
+            />
+            <div class="omnibox-tools">
+              <button class="tool-icon-btn" id="micBtn" onclick="toggleVoiceInput()" title="Voice Input">
+                <svg class="icon-svg" viewBox="0 0 24 24">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+                <span id="micLabel">Voice</span>
+              </button>
 
-      <!-- PRIMARY MATCH HERO CARD -->
-      <section class="hero-card">
-        <div class="hero-top">
-          <div>
-            <div class="hero-eyebrow">
-              <span>Recommended Primary Recipient</span>
-              <span class="badge info" id="meaningRankLabel">Meaning Rank #3 of 80</span>
+              <button class="tool-icon-btn" onclick="loadSampleCratePhoto()" title="Attach Sample Crate Tag Photo">
+                <svg class="icon-svg" viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span>Tag Photo</span>
+              </button>
+
+              <label class="tool-icon-btn" style="cursor:pointer;" title="Upload image file">
+                <span>Upload</span>
+                <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)" />
+              </label>
+
+              <button class="btn-dark" id="sendBtn" onclick="submitPrompt()">
+                <span>Match</span>
+              </button>
             </div>
-            <div class="hero-title" id="orgName">Habibi Care</div>
-            <div class="hero-address" id="orgAddress">4346 W 63rd St, Chicago, IL 60629</div>
           </div>
 
-          <div class="hero-actions">
-            <button class="btn-success" onclick="copyAndClaimPrimary()">
-              📋 Copy SMS & Claim Load
-            </button>
-            <button onclick="quickFollowUp('They said no. Who\'s next?')">
-              ❌ They Said No — Next Match
-            </button>
+          <!-- Optional Photo Attachment Bar -->
+          <div class="photo-toast" id="photoDrawer">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <img id="photoPreview" alt="Crate Tag" />
+              <div>
+                <div style="font-weight:600; color:var(--text);">Pallet Tag Attached</div>
+                <div style="font-size:11.5px; color:var(--text-muted);">Ready for multimodal extraction</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-ghost" onclick="document.getElementById('photoDrawer').classList.remove('active')">Remove</button>
+              <button class="btn-dark" onclick="dispatchPhotoOffer()">Extract & Match</button>
+            </div>
+          </div>
 
-            <!-- Progressive Disclosure: Single "Report Problem" Menu -->
-            <div class="dropdown" id="problemDropdown">
-              <button onclick="toggleProblemMenu(event)">
-                ⚠️ Report Problem ▾
-              </button>
-              <div class="dropdown-menu">
-                <div style="font-size:11px; font-weight:700; color:var(--text-muted); padding:4px 10px; text-transform:uppercase;">
-                  Pantry Profile Discrepancy
+          <!-- Quick Follow-Up Chips + Latency Indicator -->
+          <div class="suggestions-bar">
+            <div class="suggestion-chips">
+              <button class="chip" onclick="quickFollowUp('They said no. Who\'s next?')">They said no — who's next?</button>
+              <button class="chip" onclick="quickFollowUp('Why didn\'t you pick Greenline Community Pantry?')">Why not Greenline Pantry?</button>
+              <button class="chip" onclick="sendMcpWalkInQuery()">Walk-in coolers in Chicago (SQL)</button>
+            </div>
+            <span id="latencyBadge" style="font-size:11.5px; color:var(--text-muted);">Ready</span>
+          </div>
+        </div>
+
+        <!-- 2. PRIMARY MATCH CARD -->
+        <section class="match-card">
+
+          <!-- Subtle Top Strip: openFDA Recall Status + Candidate Pool -->
+          <div class="match-card-strip" id="recallBanner">
+            <div class="strip-left">
+              <span class="dot" id="recallDot"></span>
+              <span id="recallStatusBadge" style="font-weight:600; color:var(--text);">openFDA Safety Clear</span>
+              <span style="color:var(--border-strong);">·</span>
+              <span id="recallDetail">0 active recalls for this commodity. Confirm sealed lot on pickup.</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span id="searchPoolBadge" style="font-weight:500;">80 searched → 12 viable</span>
+            </div>
+          </div>
+
+          <div class="match-card-body">
+            <!-- Header & Primary Actions -->
+            <div class="recipient-header">
+              <div>
+                <div class="recipient-badge-row">
+                  <span class="eyebrow-pill" id="matchEyebrow">Top Match</span>
+                  <span class="rank-meta" id="meaningRankLabel">Meaning Rank #3 of 80</span>
                 </div>
-                <button class="dropdown-item" onclick="reportDiscrepancy('Cooler Broken / No Cold Storage', 'cold_storage', 'none')">
-                  ❄️ Cooler Broken / No Fridge
+                <h2 class="recipient-name" id="orgName">Habibi Care</h2>
+                <div class="recipient-address" id="orgAddress">4346 W 63rd St, Chicago, IL 60629</div>
+              </div>
+
+              <div class="cta-group">
+                <button class="btn-dark" onclick="copyAndClaimPrimary()">
+                  <svg class="icon-svg" viewBox="0 0 24 24">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span id="claimBtnLabel">Copy SMS & Claim</span>
                 </button>
-                <button class="dropdown-item" onclick="reportDiscrepancy('Capacity Full Today', 'max_pallets', '0')">
-                  📦 Capacity Full Today
+
+                <button onclick="quickFollowUp('They said no. Who\'s next?')">
+                  Next Match
                 </button>
-                <button class="dropdown-item" onclick="reportDiscrepancy('Closed / Unreachable by Phone', 'pickup_window_hours', 'closed')">
-                  📵 Closed / Unreachable
-                </button>
-                <div class="dropdown-divider"></div>
-                <div style="font-size:11px; font-weight:700; color:var(--text-muted); padding:4px 10px; text-transform:uppercase;">
-                  Route & System Issues
+
+                <!-- Clean "Report Issue" Popover -->
+                <div class="dropdown" id="problemDropdown">
+                  <button onclick="toggleProblemMenu(event)" title="Report an issue or delay">
+                    <span>Report Issue</span>
+                    <svg class="icon-svg" viewBox="0 0 24 24" style="width:13px;height:13px;">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="dropdown-section-title">Pantry Discrepancy</div>
+                    <button class="dropdown-item" onclick="reportDiscrepancy('Cooler Broken / No Cold Storage', 'cold_storage', 'none')">
+                      Cooler broken / no fridge
+                    </button>
+                    <button class="dropdown-item" onclick="reportDiscrepancy('Capacity Full Today', 'max_pallets', '0')">
+                      Capacity full today
+                    </button>
+                    <button class="dropdown-item" onclick="reportDiscrepancy('Closed / Unreachable by Phone', 'pickup_window_hours', 'closed')">
+                      Closed or unreachable
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-section-title">Logistics & Safety</div>
+                    <button class="dropdown-item" onclick="switchTab('mapTab'); simulateDelay(3.5);">
+                      Truck delayed (+3.5h re-route)
+                    </button>
+                    <button class="dropdown-item" onclick="triggerSafetyHalt()">
+                      Flag food safety / recall halt
+                    </button>
+                    <button class="dropdown-item" onclick="reportSystemBug()">
+                      Report system bug
+                    </button>
+                  </div>
                 </div>
-                <button class="dropdown-item" onclick="switchTab('mapTab'); simulateDelay(3.5);">
-                  🚚 Truck Delayed (+3.5h Re-Route)
-                </button>
-                <button class="dropdown-item" onclick="triggerSafetyHalt()">
-                  🛑 Food Safety / Recall Halt
-                </button>
-                <button class="dropdown-item" onclick="reportSystemBug()">
-                  🐞 Open GitHub Bug Issue
-                </button>
+              </div>
+            </div>
+
+            <!-- 4 Clean Operational Metrics -->
+            <div class="metrics-row">
+              <div class="metric-cell">
+                <span class="metric-label">Cold Storage</span>
+                <span class="metric-val" id="kpiStorage">Domestic Cold</span>
+                <span class="metric-sub">Verify by phone</span>
+              </div>
+              <div class="metric-cell">
+                <span class="metric-label">Pallet Capacity</span>
+                <span class="metric-val" id="kpiPallets">0.5 of 1 pallet</span>
+                <span class="metric-sub" id="kpiServiceDays">Open Wed, Sat</span>
+              </div>
+              <div class="metric-cell">
+                <span class="metric-label">Window & Margin</span>
+                <span class="metric-val" id="kpiClock">6h clock · 3h pickup</span>
+                <span class="metric-sub" id="kpiMargin" style="color:var(--accent-dark); font-weight:500;">+3h buffer</span>
+              </div>
+              <div class="metric-cell">
+                <span class="metric-label">Transport</span>
+                <span class="metric-val" id="kpiDriver">Dispatch Driver</span>
+                <span class="metric-sub" id="kpiDriverSub">No refrigerated van</span>
+              </div>
+            </div>
+
+            <!-- Rationale + Outreach Message -->
+            <div class="match-columns">
+              <div class="rationale-col">
+                <div>
+                  <div style="font-size:11.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px;">
+                    Why This Pantry Fits
+                  </div>
+                  <p class="rationale-text" id="orgExcerpt">
+                    "Neighborhood food pantry with household refrigeration. Can take a few crates of fresh produce, dairy, or eggs (up to 1 pallet)."
+                  </p>
+                </div>
+                <div class="census-footnote" id="neighborhoodText">
+                  Nearest census tract: 13% poverty · 5% no-vehicle households · 12% public assistance (Descriptive context — never used to rank).
+                </div>
+              </div>
+
+              <div class="outreach-box">
+                <div class="outreach-top">
+                  <span>Ready-to-Send Outreach SMS</span>
+                  <button class="btn-ghost" style="padding:2px 6px; font-size:11.5px;" onclick="copyOutreachSms()">Copy</button>
+                </div>
+                <div class="outreach-body" id="outreachBox"></div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- 4 Crisp Operational Specs -->
-        <div class="specs-grid">
-          <div class="spec-box">
-            <div class="spec-label">Cold Storage</div>
-            <div class="spec-value" id="kpiStorage">Domestic Cold</div>
-            <div class="spec-sub">Confirm working cooler by phone</div>
-          </div>
-          <div class="spec-box">
-            <div class="spec-label">Pallet Capacity</div>
-            <div class="spec-value" id="kpiPallets">0.5 / 1 Pallet</div>
-            <div class="spec-sub" id="kpiServiceDays">Days: Wed, Sat</div>
-          </div>
-          <div class="spec-box">
-            <div class="spec-label">The Clock</div>
-            <div class="spec-value" id="kpiClock">6h left · 3h pickup</div>
-            <div class="spec-sub" id="kpiMargin" style="color:var(--green); font-weight:600;">+3h safety margin</div>
-          </div>
-          <div class="spec-box">
-            <div class="spec-label">Transport</div>
-            <div class="spec-value" id="kpiDriver">⚠️ Dispatch Driver</div>
-            <div class="spec-sub">No refrigerated van on file</div>
-          </div>
-        </div>
-
-        <!-- Why They Fit + Ready-to-Send SMS -->
-        <div class="hero-details-grid">
-          <div class="why-box">
-            <div class="excerpt-quote" id="orgExcerpt">
-              "Neighborhood food pantry with household refrigeration. Can take a few crates of fresh produce, dairy, or eggs (up to 1 pallet)."
-            </div>
-            <div class="neighborhood-pill" id="neighborhoodText">
-              <b>Neighborhood Context (Descriptive only):</b> Nearest tract has 13% poverty, 5% no-vehicle households, 12% on public assistance (Serves: Families with children · 165 households/wk).
-            </div>
-          </div>
-
-          <div class="outreach-card">
-            <div class="outreach-header">
-              <span>✉️ Ready-to-Send Coordinator SMS</span>
-              <button style="padding:3px 8px; font-size:11px;" onclick="copyOutreachSms()">Copy Text</button>
-            </div>
-            <div class="outreach-text" id="outreachBox"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PROGRESSIVE DISCLOSURE TABS (Only 1 secondary panel visible at a time) -->
-      <div>
-        <div class="tabs-bar">
-          <div class="tab-buttons">
-            <button class="tab-btn active" data-tab="mapTab" onclick="switchTab('mapTab')">
-              🗺️ Route Map & Delay Simulator
+        <!-- 3. PROGRESSIVE DISCLOSURE TABS -->
+        <div class="subview-header">
+          <div class="segmented-control">
+            <button class="seg-btn active" data-tab="mapTab" onclick="switchTab('mapTab')">
+              Route & Timeline
             </button>
-            <button class="tab-btn" data-tab="backupsTab" onclick="switchTab('backupsTab')">
-              🔄 Backups & Why Others Were Blocked <span id="backupsCountBadge" class="badge info" style="margin-left:4px;">5</span>
+            <button class="seg-btn" data-tab="backupsTab" onclick="switchTab('backupsTab')">
+              Backups & Filtered (<span id="backupsCountBadge">5</span>)
             </button>
-            <button class="tab-btn" data-tab="agentTab" onclick="switchTab('agentTab')">
-              💬 Full Agent Reply & Activity Log
+            <button class="seg-btn" data-tab="agentTab" onclick="switchTab('agentTab')">
+              Agent Reasoning & Log
             </button>
           </div>
-          <div style="font-size:11.5px; color:var(--text-muted); padding-bottom:6px;" id="sessionBadge">
-            Session: coord-init
-          </div>
+          <span style="font-size:11.5px; color:var(--text-muted);" id="sessionBadge"></span>
         </div>
 
-        <!-- TAB 1: INTERACTIVE MAP & DELIVERY TIMELINE -->
-        <div class="tab-panel active" id="mapTab" style="margin-top:12px;">
-          <div class="map-timeline-grid">
+        <!-- TAB 1: MAP & DELIVERY TIMELINE -->
+        <div class="tab-surface active" id="mapTab">
+          <div class="route-grid">
             <div>
               <div id="map"></div>
-              <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-muted); margin-top:8px;">
-                <span>🟠 Donor · 🟢 #1 Match · 🔵 Backups (#2–3) · 🔴 Blocked Decoys</span>
-                <span><i>Note: Coordinates are ZIP-centroid approximate</i></span>
+              <div class="map-caption">
+                <div>
+                  <span><i class="legend-dot" style="background:#f59e0b;"></i>Donor</span>
+                  <span style="margin-left:10px;"><i class="legend-dot" style="background:#10b981;"></i>Top Match</span>
+                  <span style="margin-left:10px;"><i class="legend-dot" style="background:#0284c7;"></i>Backups</span>
+                  <span style="margin-left:10px;"><i class="legend-dot" style="background:#e11d48;"></i>Filtered Out</span>
+                </div>
+                <span>ZIP-centroid coordinates</span>
               </div>
             </div>
 
-            <div class="timeline-box">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:13px; font-weight:700;">⏱️ Delivery Timeline & Spoilage Risk</span>
-                <span class="badge ok" id="marginRiskBadge">🟢 +3.0h Slack</span>
+            <div class="timeline-panel">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:13.5px; font-weight:600;">Delivery Window</span>
+                  <span class="time-pill ok" id="marginRiskBadge">+3.0h buffer</span>
+                </div>
+                <p id="timelineSummary" style="font-size:13px; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
+                  Food has <b>6.0h</b> remaining. Recipient collects within <b>3.0h</b>, leaving a <b>+3.0h</b> safety buffer.
+                </p>
+
+                <div class="progress-bar-track">
+                  <div class="progress-lead" id="timelineLeadBar" style="width:50%;"></div>
+                  <div class="progress-slack" id="timelineSlackBar" style="width:50%;"></div>
+                </div>
+                <div class="progress-labels">
+                  <span id="leadBarLabel">Pickup lead: 3.0h</span>
+                  <span id="slackBarLabel">Safety buffer: +3.0h</span>
+                </div>
               </div>
 
-              <div id="timelineSummary" style="font-size:12.5px; color:var(--text-secondary); line-height:1.45;">
-                Food has <b>6.0h</b> remaining. Recipient collects within <b>3.0h</b>, leaving <b>+3.0h</b> safety margin.
-              </div>
-
-              <div class="timeline-track">
-                <div class="timeline-fill-lead" id="timelineLeadBar" style="width:50%;">Pickup: 3h</div>
-                <div class="timeline-fill-slack" id="timelineSlackBar" style="width:50%;">Margin: +3h</div>
-              </div>
-
-              <div style="border-top:1px solid var(--border); padding-top:12px; margin-top:4px;">
-                <div style="font-size:11.5px; font-weight:700; color:var(--text-secondary); margin-bottom:8px;">
-                  Simulate Unexpected Traffic / Dock Delay (Live Agent Re-Route):
+              <div class="delay-controls">
+                <div style="font-size:12px; font-weight:500; color:var(--text-secondary); margin-bottom:8px;">
+                  Simulate unexpected route delay (triggers live re-route):
                 </div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                  <button onclick="simulateDelay(1.5)">⏳ +1.5h Minor Delay</button>
-                  <button style="color:var(--red); border-color:var(--red-border);" onclick="simulateDelay(3.5)">
-                    🚨 +3.5h Major Delay (Re-Route)
-                  </button>
-                  <button class="btn-ghost" onclick="resetTimelineClock()">↺ Reset</button>
+                  <button onclick="simulateDelay(1.5)">+1.5h Delay</button>
+                  <button onclick="simulateDelay(3.5)">+3.5h Delay (Re-Route)</button>
+                  <button class="btn-ghost" onclick="resetTimelineClock()">Reset</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- TAB 2: BACKUPS & REJECTED SEMANTIC DECOYS -->
-        <div class="tab-panel" id="backupsTab" style="margin-top:12px;">
-          <div class="two-col-lists">
+        <!-- TAB 2: BACKUPS & FILTERED CANDIDATES -->
+        <div class="tab-surface" id="backupsTab">
+          <div class="alt-grid">
             <div>
-              <div class="section-label">
-                <span>🔄 Next Two Viable Backups (If #1 Declines)</span>
-              </div>
+              <div class="sidebar-title" style="margin-bottom:8px;">Next Viable Backups</div>
               <div id="nextOptionsList"></div>
             </div>
-
             <div>
-              <div class="section-label">
-                <span>🛡️ Rejected Semantic Decoys (Matched by Meaning, Blocked by Rules)</span>
-              </div>
+              <div class="sidebar-title" style="margin-bottom:8px;">Filtered Semantic Decoys (Why Blocked)</div>
               <div id="rejectedDecoysList"></div>
             </div>
           </div>
         </div>
 
-        <!-- TAB 3: FULL AGENT REPLY & ACTIVITY LOG -->
-        <div class="tab-panel" id="agentTab" style="margin-top:12px;">
-          <div class="two-col-lists">
+        <!-- TAB 3: AGENT REASONING & ACTIVITY LOG -->
+        <div class="tab-surface" id="agentTab">
+          <div class="alt-grid">
             <div>
-              <div class="section-label">
-                <span>🤖 Full `food_broker` Response</span>
-              </div>
-              <div class="transcript-box" id="agentTranscript"></div>
+              <div class="sidebar-title" style="margin-bottom:8px;">Full Agent Response</div>
+              <div class="mono-pane" id="agentTranscript"></div>
             </div>
-
             <div>
-              <div class="section-label">
-                <span>📋 Session Activity & Discrepancy Log</span>
-                <button style="padding:3px 8px; font-size:11px;" onclick="exportDiscrepancyLog()">⬇️ Export JSON</button>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span class="sidebar-title">Session Audit Log</span>
+                <button class="btn-ghost" style="padding:2px 8px; font-size:11.5px;" onclick="exportDiscrepancyLog()">Export JSON</button>
               </div>
-              <div style="max-height:280px; overflow-y:auto; border:1px solid var(--border); border-radius:10px;" id="discrepancyLog"></div>
+              <div class="mono-pane" id="discrepancyLog"></div>
             </div>
           </div>
         </div>
 
       </div>
-
     </main>
 
   </div>
 
-  <!-- MODAL 1: CONVERSATIONAL PANTRY ONBOARDING (#10) -->
+  <!-- MODAL 1: PANTRY ONBOARDING -->
   <div class="modal-backdrop" id="onboardModal">
     <div class="modal">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>➕ Onboard Verified Pantry Profile (#10)</h3>
-        <button onclick="closeModal('onboardModal')">✕ Close</button>
+        <h3 style="font-size:16px; font-weight:600;">Onboard Verified Pantry Profile</h3>
+        <button class="btn-ghost" onclick="closeModal('onboardModal')">Close</button>
       </div>
       <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">
-        Captures ground-truth cooler, pallet-jack, and pickup lead-time capabilities from a Pantry Manager so coordinators aren't relying solely on synthetic profiles.
+        Capture ground-truth cooler, unloading, and collection lead-time capabilities directly from a pantry manager.
       </p>
       <div class="form-grid">
         <label>Organization Name
           <input type="text" id="obName" value="Pilsen Community Fridge & Pantry" />
         </label>
-        <label>Street Address & ZIP (Chicago)
+        <label>Street Address & ZIP
           <input type="text" id="obAddr" value="1850 S Blue Island Ave, Chicago, IL 60608" />
         </label>
-        <label>Cold Storage Type
+        <label>Cold Storage
           <select id="obCold">
             <option value="walk-in">Walk-in Cooler (Commercial)</option>
             <option value="commercial">Commercial Reach-in Fridge</option>
-            <option value="domestic">Household / Domestic Fridge (&lt;=1 pallet)</option>
+            <option value="domestic">Household Fridge (&lt;=1 pallet)</option>
             <option value="none">No Cold Storage (Dry Only)</option>
           </select>
         </label>
-        <label>Unloading Mode (Track 1 vs Track 2)
+        <label>Unloading Capability
           <select id="obDock">
-            <option value="hand-unloaded crates (up to 2 pallets)">By hand / crates only (No loading dock, max 2 pallets)</option>
-            <option value="full pallets on a pallet jack (loading dock, up to 8 pallets)">Full pallet on a jack (Has loading dock, max 8 pallets)</option>
+            <option value="hand-unloaded crates (up to 2 pallets)">Hand-unloaded crates (No dock, max 2p)</option>
+            <option value="full pallets on a pallet jack (loading dock, up to 8 pallets)">Pallet jack & loading dock (Max 8p)</option>
           </select>
         </label>
         <label>Collection Lead Time (Hours)
           <input type="number" id="obLead" value="2" min="1" max="48" />
         </label>
-        <label>Own Refrigerated Transport?
+        <label>Refrigerated Van?
           <select id="obVan">
-            <option value="true">Yes — Has refrigerated van (Self-collects)</option>
-            <option value="false">No — Needs volunteer driver dispatch</option>
+            <option value="true">Yes — Self-collects</option>
+            <option value="false">No — Needs driver dispatch</option>
           </select>
         </label>
       </div>
-      <div style="margin-top:18px; display:flex; justify-content:flex-end; gap:8px;">
+      <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:8px;">
         <button onclick="closeModal('onboardModal')">Cancel</button>
-        <button class="btn-primary" onclick="submitPantryOnboarding()">✅ Save & Test Match in Agent</button>
+        <button class="btn-dark" onclick="submitPantryOnboarding()">Save & Test Match</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL 2: 10-POSTING EQUITY AUDIT & TOP-K POOL STUDY (#5 & #13) -->
+  <!-- MODAL 2: EQUITY STUDY -->
   <div class="modal-backdrop" id="equityModal">
     <div class="modal">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>📊 10-Posting Equity Audit & Vector Search Pool Study</h3>
-        <button onclick="closeModal('equityModal')">✕ Close</button>
+        <h3 style="font-size:16px; font-weight:600;">10-Posting Equity Study & Search Pool Analysis</h3>
+        <button class="btn-ghost" onclick="closeModal('equityModal')">Close</button>
       </div>
       <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">
-        Executed across all 10 official <code>a4i_food.surplus_postings</code> against <code>1,004</code> Chicago ACS Census tracts and <code>192</code> recipients.
+        Evaluated across all 10 official <code>a4i_food.surplus_postings</code> against 1,004 Chicago ACS Census tracts and 192 recipients.
       </p>
-      <table class="audit-table">
+      <table class="clean-table">
         <thead>
           <tr>
-            <th>Comparison Group</th>
-            <th>Sample (n)</th>
-            <th>Tract Poverty</th>
-            <th>No-Vehicle Households</th>
-            <th>Public Assistance</th>
+            <th>Group</th>
+            <th>Sample</th>
+            <th>Poverty</th>
+            <th>No Vehicle</th>
+            <th>Public Assist</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td><b>Chicago Metro Baseline (Pop-Weighted)</b></td><td>1,004 tracts</td><td>15%</td><td>20%</td><td>18%</td></tr>
-          <tr><td><b>All Recipients Corpus (Mean / Median)</b></td><td>192 orgs</td><td>19% / 15%</td><td>27% / 25%</td><td>20% / 12%</td></tr>
-          <tr><td><b>Recipients w/ Dock or 5+ Pallets (Mean)</b></td><td>17 orgs</td><td>16%</td><td>27%</td><td>17%</td></tr>
-          <tr><td><b>Top Matches — Once Per Posting (Mean / Median)</b></td><td>10 postings</td><td><b>22%</b> / 17%</td><td><b>31%</b> / 23%</td><td><b>20%</b> / 16%</td></tr>
-          <tr><td><b>Top Matches — Per Distinct Recipient (Mean / Median)</b></td><td>8 orgs</td><td>17% / 14%</td><td>26% / 20%</td><td>16% / 11%</td></tr>
-          <tr><td><b>Top Matches — Weighted by Pallets (37.5 pallets)</b></td><td>10 postings</td><td>15%</td><td>32%</td><td>9%</td></tr>
+          <tr><td>Chicago Metro Baseline</td><td>1,004 tracts</td><td>15%</td><td>20%</td><td>18%</td></tr>
+          <tr><td>All Recipients Corpus (Mean / Med)</td><td>192 orgs</td><td>19% / 15%</td><td>27% / 25%</td><td>20% / 12%</td></tr>
+          <tr><td>Recipients w/ Dock or 5+ Pallets</td><td>17 orgs</td><td>16%</td><td>27%</td><td>17%</td></tr>
+          <tr><td><b>Top Matches — Per Posting</b></td><td>10 postings</td><td><b>22%</b> / 17%</td><td><b>31%</b> / 23%</td><td><b>20%</b> / 16%</td></tr>
+          <tr><td>Top Matches — Distinct Orgs</td><td>8 orgs</td><td>17% / 14%</td><td>26% / 20%</td><td>16% / 11%</td></tr>
+          <tr><td>Top Matches — Pallet-Weighted</td><td>37.5 pallets</td><td>15%</td><td>32%</td><td>9%</td></tr>
         </tbody>
       </table>
-      <div style="margin-top:14px; font-size:12.5px; line-height:1.55; color:var(--text-secondary);">
-        <b>Key Findings:</b>
-        <ul style="padding-left:18px; margin-top:4px;">
-          <li><b>Per-Posting vs. Per-Recipient:</b> One high-need pantry (<i>Shakespear Rose Community Table</i>, 45% poverty / 52% no-vehicle) won 3 short-clock retail postings (#1, #2, #4).</li>
-          <li><b>Loading-Dock Bottleneck:</b> Only 17 of 192 recipients have a dock or room for 5+ pallets (30 of 37.5 total pallets are farm loads).</li>
-          <li><b>Why Wide Vector Search (<code>top_k=80</code>) Matters:</b> For the 6-hour spinach offer, <code>top_k=15</code> left only <b>1</b> viable match; <code>top_k=80</code> left <b>12–14</b> viable matches while catching <i>Greenline Community Pantry</i> as a no-fridge semantic decoy.</li>
-        </ul>
-      </div>
     </div>
   </div>
 
   <script>
     // ============================================================================
-    // 1. OFFICIAL 10 SURPLUS POSTINGS + REFUSAL CASE (Sorted by Urgency ASC)
+    // 1. SURPLUS QUEUE DATA
     // ============================================================================
     const SURPLUS_QUEUE = [
       {
         id: "demo-bakery",
         track: "Retail",
-        title: "40 Trays Cream Pastries (Refusal Demo)",
+        title: "40 Trays Cream Pastries",
         commodity: "Pastry",
         hours: 1.0,
         pallets: 0.25,
@@ -1328,7 +1406,7 @@
       {
         id: "post-4",
         track: "Retail",
-        title: "Prepared Deli Sandwiches & Salads (#4)",
+        title: "Deli Sandwiches & Salads",
         commodity: "Salad",
         hours: 4.0,
         pallets: 0.5,
@@ -1341,7 +1419,7 @@
       {
         id: "post-1",
         track: "Retail",
-        title: "10 Crates Fresh Spinach (#1 Primary)",
+        title: "10 Crates Fresh Spinach",
         commodity: "Spinach",
         hours: 6.0,
         pallets: 0.5,
@@ -1354,7 +1432,7 @@
       {
         id: "post-2",
         track: "Retail",
-        title: "60 Gal Milk & Yogurt (#2 Dairy)",
+        title: "60 Gal Milk & Yogurt",
         commodity: "Milk",
         hours: 8.0,
         pallets: 1.0,
@@ -1367,7 +1445,7 @@
       {
         id: "post-10",
         track: "Essentials",
-        title: "Clinic Cold-Chain Supplements (#10)",
+        title: "Clinic Cold Supplements",
         commodity: "Dietary Supplement",
         hours: 8.0,
         pallets: 0.5,
@@ -1380,7 +1458,7 @@
       {
         id: "post-6",
         track: "Farm",
-        title: "Half Truckload Fresh Blueberries (#6)",
+        title: "Half Truckload Blueberries",
         commodity: "Blueberries",
         hours: 12.0,
         pallets: 10.0,
@@ -1393,7 +1471,7 @@
       {
         id: "post-3",
         track: "Retail",
-        title: "200 Loaves Day-Old Bread (#3)",
+        title: "200 Loaves Day-Old Bread",
         commodity: "Bread",
         hours: 24.0,
         pallets: 2.0,
@@ -1406,7 +1484,7 @@
       {
         id: "post-5",
         track: "Farm",
-        title: "5 Tons Field Potatoes (#5 Farm Track)",
+        title: "5 Tons Field Potatoes",
         commodity: "Potatoes",
         hours: 72.0,
         pallets: 5.0,
@@ -1419,7 +1497,7 @@
       {
         id: "post-7",
         track: "Farm",
-        title: "30 Bins Winter Squash (#7)",
+        title: "30 Bins Winter Squash",
         commodity: "Squash",
         hours: 120.0,
         pallets: 15.0,
@@ -1432,7 +1510,7 @@
       {
         id: "post-8",
         track: "Essentials",
-        title: "48 Cases Sealed Infant Formula (#8)",
+        title: "48 Cases Infant Formula",
         commodity: "Infant Formula",
         hours: 168.0,
         pallets: 2.0,
@@ -1445,7 +1523,7 @@
       {
         id: "post-9",
         track: "Essentials",
-        title: "1 Pallet Diapers & Wipes (#9)",
+        title: "1 Pallet Diapers & Wipes",
         commodity: "Diapers",
         hours: 720.0,
         pallets: 1.0,
@@ -1458,9 +1536,9 @@
     ];
 
     // ============================================================================
-    // 2. APPLICATION STATE
+    // 2. STATE
     // ============================================================================
-    let currentPosting = SURPLUS_QUEUE[2]; // Default to #1 Spinach
+    let currentPosting = SURPLUS_QUEUE[2];
     let currentBrief = (window.EVIDENCE_CACHE && window.EVIDENCE_CACHE["spinach"]) ? window.EVIDENCE_CACHE["spinach"].brief : null;
     let currentAnswer = (window.EVIDENCE_CACHE && window.EVIDENCE_CACHE["spinach"]) ? window.EVIDENCE_CACHE["spinach"].answer : "";
     let sessionId = "coord-" + Math.random().toString(36).substring(2, 9);
@@ -1482,18 +1560,17 @@
     }
 
     // ============================================================================
-    // 3. INITIALIZATION & UI HELPERS
+    // 3. INIT & NAVIGATION
     // ============================================================================
     window.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("sessionBadge").textContent = `Session: ${sessionId}`;
+      document.getElementById("sessionBadge").textContent = `Session ${sessionId}`;
       initMap();
       renderQueue();
       renderBrief(currentBrief, currentAnswer);
       checkOpenFDARecall(currentPosting.commodity);
-      addLogEntry("SYSTEM", `Initialized Coordinator Console (192 Chicago pantries loaded; Session ${sessionId}).`);
+      addLogEntry("INIT", `Ready (192 Chicago pantries loaded; Session ${sessionId}).`);
       ensureAdkSession();
 
-      // Close problem dropdown when clicking outside
       document.addEventListener("click", (e) => {
         const dd = document.getElementById("problemDropdown");
         if (dd && !dd.contains(e.target)) dd.classList.remove("open");
@@ -1506,15 +1583,20 @@
     }
 
     function switchTab(tabId) {
-      document.querySelectorAll(".tab-btn").forEach((btn) => {
+      document.querySelectorAll(".seg-btn").forEach((btn) => {
         btn.classList.toggle("active", btn.getAttribute("data-tab") === tabId);
       });
-      document.querySelectorAll(".tab-panel").forEach((panel) => {
+      document.querySelectorAll(".tab-surface").forEach((panel) => {
         panel.classList.toggle("active", panel.id === tabId);
       });
       if (tabId === "mapTab" && map) {
-        setTimeout(() => map.invalidateSize(), 60);
+        setTimeout(() => map.invalidateSize(), 50);
       }
+    }
+
+    function formatHours(h) {
+      if (h >= 48) return `${Math.round(h / 24)}d`;
+      return `${h}h`;
     }
 
     function renderQueue() {
@@ -1522,14 +1604,14 @@
       list.innerHTML = "";
       SURPLUS_QUEUE.forEach((item) => {
         const div = document.createElement("div");
-        div.className = "queue-item" + (currentPosting.id === item.id ? " active" : "");
-        const badgeClass = item.hours <= 2 ? "crit" : item.hours <= 6 ? "urg" : "ok";
+        div.className = "queue-row" + (currentPosting.id === item.id ? " active" : "");
+        const pillClass = item.hours <= 2 ? "crit" : item.hours <= 6 ? "urg" : "ok";
         div.innerHTML = `
           <div>
-            <div class="queue-item-title">${item.title}</div>
-            <div class="queue-item-meta">${item.track} · ${item.pallets}p · ${item.needs_cold ? "❄️ Cold" : "Ambient"}</div>
+            <div class="queue-row-title">${item.title}</div>
+            <div class="queue-row-sub">${item.track} · ${item.pallets}p · ${item.needs_cold ? "Cold" : "Dry"}</div>
           </div>
-          <span class="badge ${badgeClass}">${item.hours}h</span>
+          <span class="time-pill ${pillClass}">${formatHours(item.hours)}</span>
         `;
         div.onclick = () => selectQueuePosting(item);
         list.appendChild(div);
@@ -1554,12 +1636,12 @@
       if (document.getElementById("liveApiToggle").checked) {
         await submitPrompt(item.prompt);
       } else {
-        addLogEntry("QUEUE", `Loaded "${item.title}" (${item.hours}h clock) in Instant Replay mode.`);
+        addLogEntry("QUEUE", `Selected "${item.title}" (${item.hours}h window).`);
       }
     }
 
     // ============================================================================
-    // 4. INTERACTIVE CHICAGO DISPATCH MAP (Clean Light CartoDB Positron Tiles)
+    // 4. MAP
     // ============================================================================
     function initMap() {
       map = L.map("map", { zoomControl: true }).setView([41.881, -87.68], 10);
@@ -1596,8 +1678,8 @@
       const dLon = currentPosting.donor_lon || -87.65;
 
       const donorMarker = L.circleMarker([dLat, dLon], {
-        radius: 8, color: "#d97706", fillColor: "#f59e0b", fillOpacity: 0.9, weight: 2
-      }).bindPopup(`<b>🏪 Donor Origin</b><br>${currentPosting.title}<br>Clock: ${brief?.the_clock?.hours_remaining || currentPosting.hours}h`);
+        radius: 7, color: "#d97706", fillColor: "#f59e0b", fillOpacity: 0.9, weight: 2
+      }).bindPopup(`<b>Donor Origin</b><br>${currentPosting.title}`);
       mapLayerGroup.addLayer(donorMarker);
 
       const bounds = [[dLat, dLon]];
@@ -1606,8 +1688,8 @@
         const c = lookupCoords(decoy.name);
         bounds.push([c.lat, c.lon]);
         const m = L.circleMarker([c.lat, c.lon], {
-          radius: 7, color: "#dc2626", fillColor: "#ef4444", fillOpacity: 0.85, weight: 2
-        }).bindPopup(`<b>❌ Blocked Decoy: ${decoy.name}</b><br>Semantic Rank: #${decoy.semantic_rank || "?"}<br>Reason: ${decoy.because}`);
+          radius: 6, color: "#e11d48", fillColor: "#f43f5e", fillOpacity: 0.85, weight: 1.5
+        }).bindPopup(`<b>Filtered: ${decoy.name}</b><br>Rank #${decoy.semantic_rank || "?"}<br>${decoy.because}`);
         mapLayerGroup.addLayer(m);
       });
 
@@ -1616,8 +1698,8 @@
         bounds.push([c.lat, c.lon]);
         const dist = haversineMiles(dLat, dLon, c.lat, c.lon);
         const m = L.circleMarker([c.lat, c.lon], {
-          radius: 8, color: "#0284c7", fillColor: "#38bdf8", fillOpacity: 0.9, weight: 2
-        }).bindPopup(`<b>🔵 Option #${opt.rank}: ${opt.name}</b><br>${opt.why}<br>Distance: ~${dist} mi`);
+          radius: 7, color: "#0284c7", fillColor: "#38bdf8", fillOpacity: 0.9, weight: 2
+        }).bindPopup(`<b>Backup #${opt.rank}: ${opt.name}</b><br>${opt.why} (~${dist} mi)`);
         mapLayerGroup.addLayer(m);
       });
 
@@ -1628,53 +1710,61 @@
         const dist = haversineMiles(dLat, dLon, c.lat, c.lon);
 
         const routeLine = L.polyline([[dLat, dLon], [c.lat, c.lon]], {
-          color: "#059669", weight: 3, dashArray: "6, 6"
-        }).bindPopup(`Straight-line distance: ~${dist} miles`);
+          color: "#059669", weight: 2.5, dashArray: "5, 5"
+        });
         mapLayerGroup.addLayer(routeLine);
 
         const topMarker = L.circleMarker([c.lat, c.lon], {
-          radius: 10, color: "#047857", fillColor: "#10b981", fillOpacity: 0.95, weight: 3
-        }).bindPopup(`<b>🏆 #1 Match: ${topName}</b><br>${brief.organization_and_why.address}<br>Distance: ~${dist} mi`);
+          radius: 9, color: "#047857", fillColor: "#10b981", fillOpacity: 0.95, weight: 2.5
+        }).bindPopup(`<b>Top Match: ${topName}</b><br>${brief.organization_and_why.address} (~${dist} mi)`);
         mapLayerGroup.addLayer(topMarker);
-        topMarker.openPopup();
       }
 
       if (bounds.length > 1) {
-        map.fitBounds(bounds, { padding: [28, 28], maxZoom: 12 });
+        map.fitBounds(bounds, { padding: [26, 26], maxZoom: 12 });
       }
     }
 
     // ============================================================================
-    // 5. RENDER MATCH HERO CARD & PROGRESSIVE TABS
+    // 5. RENDER BRIEF
     // ============================================================================
     function renderBrief(brief, answerText) {
-      document.getElementById("agentTranscript").textContent = answerText || "Waiting for agent response...";
+      document.getElementById("agentTranscript").textContent = answerText || "Waiting for agent...";
       if (!brief) return;
 
       const s = brief.search || { candidates_searched: 80, viable_after_filters: 0 };
       document.getElementById("searchPoolBadge").textContent =
-        `Pool: ${s.candidates_searched} → ${s.viable_after_filters} Viable`;
+        `${s.candidates_searched} searched → ${s.viable_after_filters} viable`;
 
-      // Refusal Case
+      const eyebrow = document.getElementById("matchEyebrow");
+
+      // Refusal state
       if (brief.refusal || !brief.organization_and_why) {
-        document.getElementById("orgName").textContent = "🛑 No Viable Recipient Found (Safe Refusal)";
-        document.getElementById("orgAddress").textContent = brief.refusal || "No candidate passed all hard constraints.";
-        document.getElementById("meaningRankLabel").textContent = "0 Viable Survivors";
+        eyebrow.textContent = "Safe Refusal";
+        eyebrow.style.background = "var(--red-soft)";
+        eyebrow.style.color = "var(--red)";
+        document.getElementById("orgName").textContent = "No Viable Recipient Found";
+        document.getElementById("orgAddress").textContent = brief.refusal || "No candidate passed hard constraints.";
+        document.getElementById("meaningRankLabel").textContent = "0 survivors";
         document.getElementById("orgExcerpt").textContent =
-          "An agent that recommends a recipient who cannot store or collect the food in time is worse than one that refuses plainly.";
+          "Recommending a pantry that cannot store or collect the load inside the deadline risks food spoilage. Plain refusal is safer.";
         document.getElementById("kpiStorage").textContent = "—";
         document.getElementById("kpiPallets").textContent = "0 viable";
-        document.getElementById("kpiClock").textContent = `${brief.the_clock?.hours_remaining || 1}h left`;
-        document.getElementById("kpiMargin").textContent = "Margin < 0h";
+        document.getElementById("kpiClock").textContent = `${brief.the_clock?.hours_remaining || 1}h clock`;
+        document.getElementById("kpiMargin").textContent = "Insufficient time";
         document.getElementById("kpiMargin").style.color = "var(--red)";
-        document.getElementById("kpiDriver").textContent = "Do Not Dispatch";
+        document.getElementById("kpiDriver").textContent = "Hold Dispatch";
         document.getElementById("neighborhoodText").textContent = "No recipient matched.";
-        document.getElementById("outreachBox").textContent = "No outreach message drafted — load cannot be safely placed inside the clock.";
+        document.getElementById("outreachBox").textContent = "No outreach message drafted — load cannot be safely placed inside the window.";
         renderBackupsAndDecoys(brief);
         updateTimelineBar(brief.the_clock?.hours_remaining || 1, null);
         updateMap(brief);
         return;
       }
+
+      eyebrow.textContent = "Top Match";
+      eyebrow.style.background = "var(--accent-soft)";
+      eyebrow.style.color = "var(--accent-dark)";
 
       const org = brief.organization_and_why;
       const cap = brief.what_they_can_take || {};
@@ -1691,28 +1781,33 @@
         `Meaning Rank #${topRankCard.meaning_rank || "?"} of ${s.candidates_searched}`;
       document.getElementById("orgExcerpt").textContent = `"${org.profile_excerpt || org.why}"`;
 
-      document.getElementById("kpiStorage").textContent = `${cap.cold_storage || "none"} cold`;
+      const coldStr = (cap.cold_storage || "none");
+      document.getElementById("kpiStorage").textContent =
+        coldStr.charAt(0).toUpperCase() + coldStr.slice(1) + " Cold";
+
       document.getElementById("kpiPallets").textContent =
-        `${cap.load_pallets}p load (${remainingCap}/${cap.max_pallets}p open)` + (claimed > 0 ? ` 🔒` : "");
+        `${cap.load_pallets}p load (${remainingCap}/${cap.max_pallets}p open)`;
 
       document.getElementById("kpiClock").textContent =
-        `${clk.hours_remaining}h left · ${clk.collection_lead_hours}h pickup`;
+        `${clk.hours_remaining}h clock · ${clk.collection_lead_hours}h lead`;
+
       const marginEl = document.getElementById("kpiMargin");
-      marginEl.textContent = `+${clk.margin_hours}h safety margin`;
-      marginEl.style.color = clk.margin_hours < 2 ? "var(--amber)" : "var(--green)";
+      marginEl.textContent = `+${clk.margin_hours}h buffer`;
+      marginEl.style.color = clk.margin_hours < 2 ? "var(--amber)" : "var(--accent-dark)";
 
       const driverEl = document.getElementById("kpiDriver");
+      const driverSub = document.getElementById("kpiDriverSub");
       if (clk.needs_driver) {
-        driverEl.textContent = "⚠️ Dispatch Driver";
-        driverEl.style.color = "var(--amber)";
+        driverEl.textContent = "Dispatch Driver";
+        driverSub.textContent = "Needs volunteer transport";
       } else {
-        driverEl.textContent = "✅ Self-Collects (Van)";
-        driverEl.style.color = "var(--green)";
+        driverEl.textContent = "Self-Collects";
+        driverSub.textContent = "Has refrigerated van";
       }
-      document.getElementById("kpiServiceDays").textContent = `Days: ${cap.service_days || "All week"}`;
+      document.getElementById("kpiServiceDays").textContent = `Open ${cap.service_days || "All week"}`;
 
-      document.getElementById("neighborhoodText").innerHTML =
-        `<b>Neighborhood Context (Descriptive only):</b> ${nb.tract || ""} (Serves: ${nb.populations_served || "General public"} · ${nb.households_per_week || "?"} households/wk).`;
+      document.getElementById("neighborhoodText").textContent =
+        `${nb.tract || ""} · Serves ${nb.populations_served || "community"} (${nb.households_per_week || "?"} households/wk). Descriptive context only.`;
 
       document.getElementById("outreachBox").textContent = brief.outreach_message || "";
 
@@ -1729,18 +1824,18 @@
       const nextEl = document.getElementById("nextOptionsList");
       nextEl.innerHTML = "";
       if (backups.length === 0) {
-        nextEl.innerHTML = `<div style="font-size:12.5px; color:var(--text-muted);">No backup options available inside this clock.</div>`;
+        nextEl.innerHTML = `<div style="font-size:12.5px; color:var(--text-muted);">No backup options available inside this window.</div>`;
       } else {
         backups.forEach((b) => {
           const d = document.createElement("div");
-          d.className = "list-card";
+          d.className = "alt-item";
           d.innerHTML = `
-            <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px;">
-              <span>Option #${b.rank}: ${b.name}</span>
-              <span class="badge info">Rank #${b.meaning_rank || "?"} · +${b.margin_hours}h margin</span>
+            <div class="alt-item-top">
+              <span>#${b.rank} · ${b.name}</span>
+              <span class="time-pill ok">+${b.margin_hours}h buffer</span>
             </div>
-            <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">
-              ${b.address} — ${b.why} (${b.needs_driver ? "⚠️ Needs driver" : "✅ Own van"})
+            <div class="alt-item-sub">
+              ${b.address} — ${b.why} (${b.needs_driver ? "Needs driver" : "Own van"})
             </div>
           `;
           nextEl.appendChild(d);
@@ -1751,14 +1846,14 @@
       decoyEl.innerHTML = "";
       decoys.forEach((r) => {
         const d = document.createElement("div");
-        d.className = "list-card decoy";
+        d.className = "alt-item";
         d.innerHTML = `
-          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px; color:var(--red);">
-            <span>❌ ${r.name}</span>
-            <span class="badge crit">Meaning Rank #${r.semantic_rank || "?"}</span>
+          <div class="alt-item-top">
+            <span>${r.name}</span>
+            <span class="time-pill crit">Meaning #${r.semantic_rank || "?"}</span>
           </div>
-          <div style="font-size:12px; color:#7f1d1d; margin-top:4px;">
-            <b>Blocked because:</b> ${r.because}
+          <div class="alt-item-sub">
+            Filtered out: ${r.because}
           </div>
         `;
         decoyEl.appendChild(d);
@@ -1770,55 +1865,53 @@
       const summary = document.getElementById("timelineSummary");
       const leadBar = document.getElementById("timelineLeadBar");
       const slackBar = document.getElementById("timelineSlackBar");
+      const leadLbl = document.getElementById("leadBarLabel");
+      const slackLbl = document.getElementById("slackBarLabel");
 
       if (leadHours === null || leadHours === undefined) {
-        badge.className = "badge crit";
-        badge.textContent = "🛑 0 Viable — Refused";
-        summary.innerHTML = `Food has only <b>${hoursRemaining}h</b> remaining. No recipient in Chicago can collect inside this window.`;
+        badge.className = "time-pill crit";
+        badge.textContent = "Refused";
+        summary.innerHTML = `Only <b>${hoursRemaining}h</b> remaining. No recipient can collect inside this window.`;
         leadBar.style.width = "100%";
         leadBar.style.background = "var(--red)";
-        leadBar.textContent = `Clock: ${hoursRemaining}h (Too short)`;
         slackBar.style.width = "0%";
-        slackBar.textContent = "";
+        leadLbl.textContent = `Window: ${hoursRemaining}h`;
+        slackLbl.textContent = "0h buffer";
         return;
       }
 
       const margin = +(hoursRemaining - leadHours).toFixed(1);
+      leadLbl.textContent = `Pickup lead: ${leadHours}h`;
+      slackLbl.textContent = `Buffer: ${margin >= 0 ? "+" : ""}${margin}h`;
 
       if (margin < 0) {
-        badge.className = "badge crit";
-        badge.textContent = `🚨 Spoilage Risk (${margin}h)`;
-        summary.innerHTML = `<b>ALERT:</b> Clock dropped to <b>${hoursRemaining}h</b>, but active recipient needs <b>${leadHours}h</b>! Automatic re-routing triggered.`;
+        badge.className = "time-pill crit";
+        badge.textContent = `Spoilage Risk (${margin}h)`;
+        summary.innerHTML = `Clock dropped to <b>${hoursRemaining}h</b>, but active recipient requires <b>${leadHours}h</b>. Re-routing...`;
         leadBar.style.width = "100%";
         leadBar.style.background = "var(--red)";
-        leadBar.textContent = `Pickup needs ${leadHours}h (> ${hoursRemaining}h)`;
         slackBar.style.width = "0%";
-        slackBar.textContent = "";
       } else if (margin < 2.0) {
-        badge.className = "badge urg";
-        badge.textContent = `⚠️ Thin Margin (+${margin}h)`;
-        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> left; recipient needs <b>${leadHours}h</b>. <b>+${margin}h slack</b> is tight — confirm by phone immediately.`;
+        badge.className = "time-pill urg";
+        badge.textContent = `Tight (+${margin}h)`;
+        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> left; recipient needs <b>${leadHours}h</b>. Confirm immediately by phone.`;
         const leadPct = Math.min(92, Math.round((leadHours / hoursRemaining) * 100));
         leadBar.style.width = `${leadPct}%`;
         leadBar.style.background = "var(--amber)";
-        leadBar.textContent = `Pickup: ${leadHours}h`;
         slackBar.style.width = `${100 - leadPct}%`;
-        slackBar.textContent = `+${margin}h`;
       } else {
-        badge.className = "badge ok";
-        badge.textContent = `🟢 +${margin}h Slack`;
-        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> remaining. Recipient collects within <b>${leadHours}h</b>, leaving <b>+${margin}h</b> safety margin.`;
+        badge.className = "time-pill ok";
+        badge.textContent = `+${margin}h buffer`;
+        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> remaining. Recipient collects within <b>${leadHours}h</b>, leaving a <b>+${margin}h</b> safety buffer.`;
         const leadPct = Math.min(82, Math.round((leadHours / hoursRemaining) * 100));
         leadBar.style.width = `${leadPct}%`;
-        leadBar.style.background = "var(--primary)";
-        leadBar.textContent = `Pickup: ${leadHours}h`;
+        leadBar.style.background = "var(--text)";
         slackBar.style.width = `${100 - leadPct}%`;
-        slackBar.textContent = `Margin: +${margin}h`;
       }
     }
 
     // ============================================================================
-    // 6. UNEXPECTED DELAY SIMULATOR & AUTOMATIC AGENT RE-ROUTING
+    // 6. DELAY SIMULATOR
     // ============================================================================
     async function simulateDelay(delayHours) {
       document.getElementById("problemDropdown").classList.remove("open");
@@ -1828,7 +1921,7 @@
       updateTimelineBar(newHours, lead);
 
       const activeOrg = currentBrief?.organization_and_why?.name || "the current recipient";
-      addLogEntry("DELAY ALERT", `Simulated +${delayHours}h delay -> Clock shrunk from ${origHours}h to ${newHours}h.`);
+      addLogEntry("DELAY", `Simulated +${delayHours}h delay -> Clock shrunk from ${origHours}h to ${newHours}h.`);
 
       const followUpPrompt =
         `URGENT DELAY UPDATE: Due to a ${delayHours}-hour traffic/dock delay, the food now has only ${newHours} hours remaining before spoilage/dock closure (down from ${origHours} hours). ` +
@@ -1846,14 +1939,15 @@
     }
 
     // ============================================================================
-    // 7. LIVE openFDA FOOD RECALL & SAFETY GATE (#11)
+    // 7. openFDA SAFETY CHECK
     // ============================================================================
     async function checkOpenFDARecall(commodity) {
       const banner = document.getElementById("recallBanner");
+      const dot = document.getElementById("recallDot");
       const badge = document.getElementById("recallStatusBadge");
       const detail = document.getElementById("recallDetail");
-      banner.className = "context-bar";
-      badge.className = "badge info";
+      banner.className = "match-card-strip";
+      dot.className = "dot";
       badge.textContent = `Checking openFDA (${commodity})...`;
 
       const controller = new AbortController();
@@ -1865,47 +1959,45 @@
         clearTimeout(timer);
 
         if (resp.status === 404) {
-          badge.className = "badge ok";
-          badge.textContent = `🟢 openFDA Clear (${commodity})`;
-          detail.textContent = `0 active FDA recalls for "${commodity}". Confirm sealed packaging & lot code on pickup.`;
+          badge.textContent = `openFDA Clear (${commodity})`;
+          detail.textContent = `0 active recalls. Confirm sealed packaging & lot code at pickup.`;
           return;
         }
         const data = await resp.json();
         const total = data?.meta?.results?.total || 0;
         const first = (data?.results && data.results[0]) ? data.results[0] : null;
         if (total > 0 && first) {
-          banner.className = "context-bar warn";
-          badge.className = "badge urg";
-          badge.textContent = `⚠️ ${total} FDA Recall Notice(s): ${commodity}`;
-          const reason = (first.reason_for_recall || "").slice(0, 95);
-          detail.innerHTML = `<b>openFDA (${first.classification || "Class II"}):</b> "${reason}..." — Verify donor lot/UPC before loading!`;
+          banner.className = "match-card-strip warn";
+          dot.className = "dot amber";
+          badge.textContent = `${total} FDA Recall Notice(s) for ${commodity}`;
+          const reason = (first.reason_for_recall || "").slice(0, 85);
+          detail.textContent = `"${reason}..." — Verify donor lot/UPC before loading.`;
         } else {
-          badge.className = "badge ok";
-          badge.textContent = `🟢 openFDA Clear (${commodity})`;
-          detail.textContent = `Verified against openFDA Enforcement API — proceed with standard lot inspection.`;
+          badge.textContent = `openFDA Clear (${commodity})`;
+          detail.textContent = `Verified against openFDA Enforcement API. Confirm lot code on pickup.`;
         }
       } catch (err) {
         clearTimeout(timer);
-        badge.className = "badge ok";
-        badge.textContent = `🟢 Safety Gate Active (${commodity})`;
-        detail.textContent = `Verify sealed packaging & lot numbers on dock pickup before loading.`;
+        badge.textContent = `Safety Gate Active (${commodity})`;
+        detail.textContent = `Confirm sealed packaging and lot code on dock pickup.`;
       }
     }
 
     function triggerSafetyHalt() {
       document.getElementById("problemDropdown").classList.remove("open");
       const banner = document.getElementById("recallBanner");
+      const dot = document.getElementById("recallDot");
       const badge = document.getElementById("recallStatusBadge");
       const detail = document.getElementById("recallDetail");
-      banner.className = "context-bar halt";
-      badge.className = "badge crit";
-      badge.textContent = "🛑 SAFETY HALT — DO NOT DISPATCH";
-      detail.innerHTML = `<b>LOAD HALTED:</b> "${currentPosting.title}" flagged for food safety / recall / temperature violation.`;
-      addLogEntry("SAFETY HALT", `Coordinator halted "${currentPosting.title}" due to recall/spoilage risk.`);
+      banner.className = "match-card-strip halt";
+      dot.className = "dot red";
+      badge.textContent = "Safety Halt — Do Not Dispatch";
+      detail.textContent = `"${currentPosting.title}" flagged for recall or temperature violation.`;
+      addLogEntry("HALT", `Coordinator halted "${currentPosting.title}".`);
     }
 
     // ============================================================================
-    // 8. PUSH-TO-TALK VOICE INPUT & MULTIMODAL PHOTO (#14)
+    // 8. VOICE & MULTIMODAL PHOTO
     // ============================================================================
     let recognition = null;
     let isRecording = false;
@@ -1913,8 +2005,8 @@
     function toggleVoiceInput() {
       const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
       const micBtn = document.getElementById("micBtn");
+      const micLabel = document.getElementById("micLabel");
       if (!SpeechRec) {
-        alert("Web Speech API is supported in Chrome/Edge. Populating sample voice transcript!");
         document.getElementById("promptInput").value =
           "A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.";
         return;
@@ -1930,8 +2022,8 @@
 
       recognition.onstart = () => {
         isRecording = true;
-        micBtn.classList.add("mic-recording");
-        micBtn.textContent = "🔴 Listening...";
+        micBtn.classList.add("recording");
+        micLabel.textContent = "Listening...";
       };
       recognition.onresult = (event) => {
         let transcript = "";
@@ -1942,11 +2034,11 @@
       };
       recognition.onend = () => {
         isRecording = false;
-        micBtn.classList.remove("mic-recording");
-        micBtn.textContent = "🎙️ Voice";
+        micBtn.classList.remove("recording");
+        micLabel.textContent = "Voice";
         const val = document.getElementById("promptInput").value.trim();
         if (val) {
-          addLogEntry("VOICE", `Transcribed voice command: "${val}"`);
+          addLogEntry("VOICE", `Transcribed: "${val}"`);
           submitPrompt(val);
         }
       };
@@ -1985,7 +2077,7 @@
 
       document.getElementById("photoPreview").src = dataUrl;
       document.getElementById("photoDrawer").classList.add("active");
-      addLogEntry("PHOTO (#14)", "Attached sample spinach crate tag image.");
+      addLogEntry("PHOTO", "Attached sample spinach pallet tag.");
     }
 
     function handlePhotoUpload(event) {
@@ -2006,7 +2098,7 @@
       if (!uploadedPhotoBase64) return;
       const textPrompt =
         "Read this produce crate / pallet tag image. Extract the product name, quantity in crates/pallets, whether it needs cold storage, and the donor deadline in hours. State what you extracted from the tag, then call lookup_shelf_life and find_matches to give the 6-part Match Brief.";
-      document.getElementById("promptInput").value = "[📷 Attached Crate Tag Photo] " + textPrompt;
+      document.getElementById("promptInput").value = "Extracting pallet tag image...";
       document.getElementById("photoDrawer").classList.remove("active");
       await submitPrompt(textPrompt, {
         inlineData: { mimeType: uploadedPhotoMime, data: uploadedPhotoBase64 }
@@ -2014,7 +2106,7 @@
     }
 
     // ============================================================================
-    // 9. CLAIM LOAD (#12) & PROBLEM REPORTING
+    // 9. CLAIM & ISSUE REPORTING
     // ============================================================================
     function copyAndClaimPrimary() {
       copyOutreachSms();
@@ -2022,10 +2114,12 @@
       const org = currentBrief.organization_and_why.name;
       const load = currentBrief.what_they_can_take?.load_pallets || 0.5;
       claimedPalletsByOrg[org] = (claimedPalletsByOrg[org] || 0) + load;
-      addLogEntry(
-        "CLAIM & LOCK (#12)",
-        `Copied SMS & locked ${load} pallet(s) at ${org} (Claimed today: ${claimedPalletsByOrg[org]}p / Max ${currentBrief.what_they_can_take?.max_pallets}p).`
-      );
+
+      const btn = document.getElementById("claimBtnLabel");
+      btn.textContent = "Claimed & Copied ✓";
+      setTimeout(() => { btn.textContent = "Copy SMS & Claim"; }, 2200);
+
+      addLogEntry("CLAIMED", `Locked ${load}p at ${org} & copied SMS.`);
       renderBrief(currentBrief, currentAnswer);
     }
 
@@ -2043,10 +2137,7 @@
       });
       excludedOrgs.push(org);
 
-      addLogEntry(
-        "DISCREPANCY",
-        `${org}: Flagged "${issueLabel}" (${fieldName}: "${oldVal}" -> "${reportedValue}"). Re-matching next recipient...`
-      );
+      addLogEntry("DISCREPANCY", `${org}: "${issueLabel}" (${fieldName}=${reportedValue}). Re-matching...`);
 
       const prompt = `FIELD DISCREPANCY REPORT: We called ${org} and found "${issueLabel}" (${fieldName} is actually ${reportedValue}). They cannot take this load. Who's next?`;
       document.getElementById("promptInput").value = prompt;
@@ -2055,11 +2146,8 @@
 
     function addLogEntry(tag, text) {
       const list = document.getElementById("discrepancyLog");
-      const div = document.createElement("div");
-      div.className = "log-item";
       const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-      div.innerHTML = `<b>[${time} · ${tag}]</b> ${text}`;
-      list.prepend(div);
+      list.textContent = `[${time} · ${tag}] ${text}\n` + list.textContent;
     }
 
     function exportDiscrepancyLog() {
@@ -2068,26 +2156,18 @@
       });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `chicago-food-rescue-discrepancy-log-${sessionId}.json`;
+      a.download = `rescuebroker-audit-${sessionId}.json`;
       a.click();
     }
 
     function reportSystemBug() {
       document.getElementById("problemDropdown").classList.remove("open");
-      const title = encodeURIComponent(`[Coordinator Console Bug] Issue in session ${sessionId}`);
-      const body = encodeURIComponent(
-        `### Coordinator Console Bug / Data Anomaly Report\n` +
-        `- **Session ID:** \`${sessionId}\`\n` +
-        `- **Active Posting:** ${currentPosting.title} (${currentPosting.hours}h clock)\n` +
-        `- **Last Prompt:** \`${document.getElementById("promptInput").value}\`\n` +
-        `- **Primary Match Shown:** ${currentBrief?.organization_and_why?.name || "None / Refusal"}\n\n` +
-        `#### Describe what went wrong:\n`
-      );
-      window.open(`https://github.com/jimmycgz/challenge2-117/issues/new?labels=bug,needs-pickup&title=${title}&body=${body}`, "_blank");
+      const title = encodeURIComponent(`[Coordinator Console Bug] Session ${sessionId}`);
+      window.open(`https://github.com/jimmycgz/challenge2-117/issues/new?labels=bug,needs-pickup&title=${title}`, "_blank");
     }
 
     // ============================================================================
-    // 10. LIVE ADK BACKEND API CALLS (`POST /run`)
+    // 10. LIVE ADK API
     // ============================================================================
     async function ensureAdkSession() {
       try {
@@ -2099,10 +2179,12 @@
         });
         if (resp.ok) {
           sessionReady = true;
-          document.getElementById("connBadge").textContent = "🟢 Live Cloud Run";
+          document.getElementById("connBadge").textContent = "Cloud Run Live";
+          document.getElementById("connDot").className = "dot";
         }
       } catch (e) {
-        document.getElementById("connBadge").textContent = "🟡 Instant Replay Mode";
+        document.getElementById("connBadge").textContent = "Instant Replay";
+        document.getElementById("connDot").className = "dot amber";
       }
     }
 
@@ -2110,8 +2192,8 @@
       sessionId = "coord-" + Math.random().toString(36).substring(2, 9);
       sessionReady = false;
       excludedOrgs = [];
-      document.getElementById("sessionBadge").textContent = `Session: ${sessionId}`;
-      addLogEntry("SESSION", `Started fresh ADK session ${sessionId}.`);
+      document.getElementById("sessionBadge").textContent = `Session ${sessionId}`;
+      addLogEntry("SESSION", `Started new session ${sessionId}.`);
       await ensureAdkSession();
     }
 
@@ -2135,8 +2217,7 @@
       const latencyBadge = document.getElementById("latencyBadge");
       sendBtn.disabled = true;
       const t0 = performance.now();
-      latencyBadge.textContent = "⏳ Matching...";
-      document.getElementById("agentTranscript").textContent = `Sending to food_broker: "${text}"...`;
+      latencyBadge.textContent = "Matching...";
 
       try {
         const base = getApiBase();
@@ -2160,7 +2241,7 @@
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const events = await resp.json();
         const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
-        latencyBadge.textContent = `✅ ${elapsed}s`;
+        latencyBadge.textContent = `Matched in ${elapsed}s`;
 
         let newBrief = null;
         let finalReply = "";
@@ -2168,31 +2249,25 @@
 
         for (const ev of events) {
           for (const p of (ev?.content?.parts || [])) {
-            if (p.functionCall) {
-              toolsCalled.push(p.functionCall.name);
-            }
+            if (p.functionCall) toolsCalled.push(p.functionCall.name);
             if (p.functionResponse && p.functionResponse.name === "find_matches") {
               if (p.functionResponse.response && !p.functionResponse.response.error) {
                 newBrief = p.functionResponse.response;
               }
             }
-            if (p.text) {
-              finalReply = p.text;
-            }
+            if (p.text) finalReply = p.text;
           }
         }
 
         if (toolsCalled.length > 0) {
-          addLogEntry("AGENT TOOLS", `Executed [${toolsCalled.join(" -> ")}] in ${elapsed}s.`);
+          addLogEntry("AGENT", `Tools: ${toolsCalled.join(" -> ")} (${elapsed}s)`);
         }
-        if (newBrief) {
-          currentBrief = newBrief;
-        }
+        if (newBrief) currentBrief = newBrief;
         currentAnswer = finalReply || currentAnswer;
         renderBrief(currentBrief, currentAnswer);
       } catch (err) {
         handleOfflineFallback(text);
-        latencyBadge.textContent = "⚡ Instant Replay";
+        latencyBadge.textContent = "Instant Replay";
       } finally {
         sendBtn.disabled = false;
       }
@@ -2202,12 +2277,12 @@
       const lower = text.toLowerCase();
       if (lower.includes("walk-in")) {
         document.getElementById("agentTranscript").textContent =
-          `[BigQuery MCP execute_sql]\nSELECT COUNT(*) FROM a4i_food.recipients WHERE cold_storage = 'walk-in'\n\n13 of the 192 recipients in the Chicago corpus have walk-in cold storage, which is about 6.8% of all recipients.`;
+          `[BigQuery MCP execute_sql]\nSELECT COUNT(*) FROM a4i_food.recipients WHERE cold_storage = 'walk-in'\n\n13 of the 192 recipients in the Chicago corpus have walk-in cold storage (6.8%).`;
         return;
       }
       if (lower.includes("greenline")) {
         document.getElementById("agentTranscript").textContent =
-          `[Tool: explain_candidate("Greenline Community Pantry")]\n\nGreenline Community Pantry was ranked #1–#7 by meaning (their profile explicitly asks for fresh greens), but was eliminated by the hard constraint filter because they have NO cold storage (cold_storage="none") and require 12 hours to collect (food has 6 hours).`;
+          `[explain_candidate("Greenline Community Pantry")]\n\nGreenline Community Pantry ranked #1–#7 by meaning (their profile explicitly asks for fresh greens), but was filtered out because they have no cold storage (cold_storage="none") and require 12h pickup lead time (load has 6h).`;
         switchTab("agentTab");
         return;
       }
@@ -2220,7 +2295,7 @@
             name: promoted.name,
             address: promoted.address,
             why: promoted.why,
-            profile_excerpt: `Promoted from Runner-Up (#${promoted.rank}) after earlier recipient declined.`
+            profile_excerpt: `Promoted from Backup #${promoted.rank} after primary recipient declined.`
           };
           currentBrief.what_they_can_take.max_pallets = coords.max_pallets || 1;
           currentBrief.what_they_can_take.cold_storage = coords.cold_storage || "domestic";
@@ -2229,7 +2304,7 @@
           currentBrief.the_clock.needs_driver = promoted.needs_driver;
           currentBrief.outreach_message = currentBrief.outreach_message.replace(/Hello .* team,/, `Hello ${promoted.name} team,`);
           currentBrief.next_two_options = remaining;
-          currentAnswer = `${promoted.name} is next.\n\nPromoted to Primary Match (${promoted.why}, margin +${currentBrief.the_clock.margin_hours}h).\n\n${currentBrief.outreach_message}`;
+          currentAnswer = `${promoted.name} promoted to Top Match.\n\n${currentBrief.outreach_message}`;
           renderBrief(currentBrief, currentAnswer);
         }
         return;
@@ -2240,7 +2315,7 @@
     function copyOutreachSms() {
       const txt = document.getElementById("outreachBox").textContent;
       navigator.clipboard.writeText(txt);
-      addLogEntry("SMS COPIED", `Copied outreach SMS for ${currentBrief?.organization_and_why?.name || "recipient"}.`);
+      addLogEntry("SMS", `Copied outreach SMS.`);
     }
 
     function openModal(id) { document.getElementById(id).style.display = "flex"; }
@@ -2260,7 +2335,7 @@
         pickup_window_hours: parseFloat(lead), refrigerated_transport: van
       };
       closeModal("onboardModal");
-      addLogEntry("ONBOARDING (#10)", `Saved verified profile for "${name}" (${cold} cold, ${dock}, ${lead}h lead).`);
+      addLogEntry("ONBOARD", `Added "${name}" (${cold}, ${lead}h lead).`);
 
       const p = `We just onboarded a verified pantry "${name}" at ${addr} (${cold} cold storage, takes ${dock}, collects within ${lead}h, refrigerated_transport=${van}). Now we have 10 crates of fresh spinach that must move in 6 hours and stay cold—how does our match pipeline evaluate this offer?`;
       document.getElementById("promptInput").value = p;
