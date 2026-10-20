@@ -21,7 +21,7 @@ POSTINGS = [
 
 def main():
     for track, text, needs_cold, pallets, hours in POSTINGS:
-        cands = vector_candidates(text, top_k=15)
+        cands = vector_candidates(text, top_k=80)
         out = apply_constraints(cands, hours, needs_cold, pallets)
         print(f"\n[{track}] {text}")
         print(f"  semantic candidates: {len(cands)}   viable after constraints: {len(out['viable'])}")

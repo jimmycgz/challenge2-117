@@ -64,6 +64,9 @@ misses the clock, nobody viable) and the identity decisions. It needs no credent
 ## Known limits
 
 - Recipient names and addresses are real; cold storage, pallets and pickup times are generated.
-- `pickup_window_hours` is read as the lead time a recipient needs to collect. Confirm against the real table.
+- `pickup_window_hours` is read as the lead time a recipient needs to collect. The data fits that reading
+  (small pantries 2 to 6 hours, regional food banks 14 to 45) and the challenge brief compares it directly
+  with the hours the food has left, but the generator does not define it in words.
 - Shelf life is consumer guidance, not a guarantee. Locations are ZIP-level.
-- The MCP toolset and the BigQuery calls have not yet run against the lab project.
+- The vector search, shelf-life, neighborhood and brief calls have run against the lab tables (Chicago, 192
+  recipients). The MCP toolset and the deployed service have not.

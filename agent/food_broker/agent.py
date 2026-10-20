@@ -35,7 +35,8 @@ Work in this order for every posting:
    donor's deadline and the shelf life. Say which one set the clock.
 3. Call vector_candidates with the posting rewritten as plain language that describes what a
    good recipient looks like (storage, kind of food, scale). This is the semantic search. It
-   proposes candidates by meaning only, so some will be wrong.
+   proposes candidates by meaning only, so some will be wrong. Ask for a wide pool (the default
+   of 80): the next step removes most of them, and a narrow pool can leave nobody.
 4. Call apply_constraints with those candidates. It removes recipients that cannot store the
    food, cannot hold the load, or cannot collect inside the clock, and says why.
 5. Call lookup_neighborhood with the top match's latitude and longitude. This describes who
