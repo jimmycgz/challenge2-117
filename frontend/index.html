@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RescueBroker — Chicago Surplus Dispatch</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet Map CSS & JS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- Real 192 Recipient Coordinates & Pre-Cached Cloud Run Evidence -->
+  <script src="recipients_data.js"></script>
+
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --surface-hover: #f4f4f5;
+      --surface-subtle: #f8fafc;
+      --border: #e4e4e7;
+      --border-strong: #d4d4d8;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --text-muted: #71717a;
+
+      --accent: #10b981;
+      --accent-dark: #059669;
+      --accent-soft: #ecfdf5;
+      --accent-border: #a7f3d0;
+
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --amber-border: #fde68a;
+
+      --red: #e11d48;
+      --red-soft: #fff1f2;
+      --red-border: #fecdd3;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.011em;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .topbar {
+      height: 56px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--text);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-name {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-divider {
+      color: var(--border-strong);
+      font-weight: 300;
+    }
+
+    .brand-context {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .dot.amber { background: var(--amber); }
+    .dot.red { background: var(--red); }
+
+    /* BUTTONS */
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.14s ease;
+      box-shadow: var(--shadow-xs);
+      letter-spacing: -0.01em;
+    }
+
+    button:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-strong);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-dark {
+      background: var(--text);
+      border-color: var(--text);
+      color: #ffffff;
+    }
+
+    .btn-dark:hover {
+      background: #27272a;
+      border-color: #27272a;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+      border-color: transparent;
+    }
+
+    .icon-svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* MAIN LAYOUT */
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* LEFT SIDEBAR: DISPATCH QUEUE */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .sidebar-header {
+      padding: 18px 18px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .queue-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .queue-row {
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.12s ease;
+    }
+
+    .queue-row:hover {
+      background: var(--surface-hover);
+    }
+
+    .queue-row.active {
+      background: var(--bg);
+      border-color: var(--border);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .queue-row-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .queue-row.active .queue-row-title {
+      font-weight: 600;
+    }
+
+    .queue-row-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .time-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-pill.crit {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .time-pill.urg {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .time-pill.ok {
+      background: var(--surface-hover);
+      color: var(--text-secondary);
+    }
+
+    /* CENTER WORKSPACE */
+    .stage-scroll {
+      overflow-y: auto;
+      padding: 28px 36px 48px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .stage-container {
+      width: 100%;
+      max-width: 880px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* OMNIBOX / COMMAND BAR */
+    .omnibox-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .omnibox {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 8px 10px 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .omnibox:focus-within {
+      border-color: var(--text);
+      box-shadow: 0 0 0 3px rgba(9, 9, 11, 0.06);
+    }
+
+    .omnibox input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 13.5px;
+      color: var(--text);
+      background: transparent;
+    }
+
+    .omnibox input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .omnibox-tools {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tool-icon-btn {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      box-shadow: none;
+    }
+
+    .tool-icon-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+      border-color: transparent;
+    }
+
+    .tool-icon-btn.recording {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    /* Subtle Suggestion Pills */
+    .suggestions-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 2px;
+    }
+
+    .suggestion-chips {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      box-shadow: none;
+    }
+
+    .chip:hover {
+      border-color: var(--border-strong);
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    /* Photo Attachment Toast */
+    .photo-toast {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+    }
+
+    .photo-toast.active {
+      display: flex;
+    }
+
+    .photo-toast img {
+      height: 32px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* PRIMARY MATCH CARD (SaaS Hero Card) */
+    .match-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    /* Top Status Strip inside Match Card */
+    .match-card-strip {
+      padding: 10px 24px;
+      background: var(--surface-subtle);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .match-card-strip.warn {
+      background: var(--amber-soft);
+      border-bottom-color: var(--amber-border);
+      color: var(--amber);
+    }
+
+    .match-card-strip.halt {
+      background: var(--red-soft);
+      border-bottom-color: var(--red-border);
+      color: var(--red);
+    }
+
+    .strip-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .match-card-body {
+      padding: 24px;
+    }
+
+    /* Recipient Header + Primary CTA */
+    .recipient-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .recipient-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .eyebrow-pill {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .rank-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .recipient-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+
+    .recipient-address {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .cta-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Minimalist 4-Column Metric Row */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 20px 0;
+      padding: 14px 0;
+      gap: 16px;
+    }
+
+    .metric-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-right: 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .metric-cell:last-child {
+      border-right: none;
+    }
+
+    .metric-label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .metric-val {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .metric-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* Two-Column Context & Outreach inside Hero */
+    .match-columns {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .rationale-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .rationale-text {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+    }
+
+    .census-footnote {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--text-muted);
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .outreach-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .outreach-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .outreach-body {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    /* Dropdown Popover */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 240px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: 6px;
+      z-index: 100;
+    }
+
+    .dropdown.open .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-section-title {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 6px 10px 4px;
+    }
+
+    .dropdown-item {
+      width: 100%;
+      text-align: left;
+      border: none;
+      box-shadow: none;
+      padding: 7px 10px;
+      font-size: 12.5px;
+      font-weight: 400;
+      color: var(--text);
+      border-radius: 6px;
+    }
+
+    .dropdown-item:hover {
+      background: var(--surface-hover);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0;
+    }
+
+    /* SEGMENTED PILL TABS */
+    .subview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .segmented-control {
+      display: inline-flex;
+      background: #ededf0;
+      padding: 3px;
+      border-radius: 10px;
+      gap: 2px;
+    }
+
+    .seg-btn {
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.12s ease;
+    }
+
+    .seg-btn:hover {
+      color: var(--text);
+      background: transparent;
+    }
+
+    .seg-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .tab-surface {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tab-surface.active {
+      display: block;
+    }
+
+    /* TAB 1: ROUTE MAP & TIMELINE */
+    .route-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    #map {
+      width: 100%;
+      height: 260px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    .map-caption {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    .timeline-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 4px 2px;
+    }
+
+    .progress-bar-track {
+      height: 8px;
+      background: var(--surface-hover);
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      margin: 12px 0 8px;
+    }
+
+    .progress-lead {
+      background: var(--text);
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-slack {
+      background: var(--accent);
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .delay-controls {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    /* TAB 2: ALTERNATIVES & FILTERED CANDIDATES */
+    .alt-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .alt-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .alt-item:last-child {
+      border-bottom: none;
+    }
+
+    .alt-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .alt-item-sub {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    /* TAB 3: AGENT TRACE & AUDIT LOG */
+    .mono-pane {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      max-height: 240px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      color: var(--text-secondary);
+    }
+
+    /* MODALS */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 9, 11, 0.4);
+      backdrop-filter: blur(3px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      max-width: 680px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .form-grid label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-grid input,
+    .form-grid select {
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text);
+    }
+
+    .clean-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 12.5px;
+    }
+
+    .clean-table th,
+    .clean-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .clean-table th {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .metrics-row, .match-columns, .route-grid, .alt-grid { grid-template-columns: 1fr; }
+      .metric-cell { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MINIMALIST TOP NAVIGATION -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg class="icon-svg" viewBox="0 0 24 24" style="width:16px;height:16px;">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+      </div>
+      <span class="brand-name">RescueBroker</span>
+      <span class="brand-divider">/</span>
+      <span class="brand-context">Chicago Dispatch</span>
+    </div>
+
+    <div class="topbar-right">
+      <div class="status-indicator" title="Connected to Cloud Run ADK Agent">
+        <span class="dot" id="connDot"></span>
+        <span id="connBadge">Cloud Run Live</span>
+      </div>
+      <label class="status-indicator" style="cursor:pointer;">
+        <input type="checkbox" id="liveApiToggle" checked style="accent-color:var(--text);" />
+        <span>Live Agent</span>
+      </label>
+      <button class="btn-ghost" onclick="openModal('onboardModal')">Onboard Pantry</button>
+      <button class="btn-ghost" onclick="openModal('equityModal')">Equity Study</button>
+      <button class="btn-ghost" onclick="resetSession()" title="Reset Session">New Session</button>
+    </div>
+  </header>
+
+  <!-- WORKSPACE -->
+  <div class="layout">
+
+    <!-- LEFT RAIL: SURPLUS QUEUE -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Active Queue (11)</span>
+        <span style="font-size:11px; color:var(--text-muted);">By urgency</span>
+      </div>
+      <div class="queue-scroll" id="queueList"></div>
+    </aside>
+
+    <!-- MAIN STAGE -->
+    <main class="stage-scroll">
+      <div class="stage-container">
+
+        <!-- 1. COMMAND BAR (OMNIBOX) -->
+        <div class="omnibox-wrapper">
+          <div class="omnibox">
+            <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--text-muted);">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              id="promptInput"
+              value="A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold."
+              placeholder="Describe a surplus load, or ask a follow-up ('They said no, who is next?')..."
+              onkeydown="if(event.key==='Enter') submitPrompt()"
+            />
+            <div class="omnibox-tools">
+              <button class="tool-icon-btn" id="micBtn" onclick="toggleVoiceInput()" title="Voice Input">
+                <svg class="icon-svg" viewBox="0 0 24 24">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+                <span id="micLabel">Voice</span>
+              </button>
+
+              <button class="tool-icon-btn" onclick="loadSampleCratePhoto()" title="Attach Sample Crate Tag Photo">
+                <svg class="icon-svg" viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span>Tag Photo</span>
+              </button>
+
+              <label class="tool-icon-btn" style="cursor:pointer;" title="Upload image file">
+                <span>Upload</span>
+                <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)" />
+              </label>
+
+              <button class="btn-dark" id="sendBtn" onclick="submitPrompt()">
+                <span>Match</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Optional Photo Attachment Bar -->
+          <div class="photo-toast" id="photoDrawer">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <img id="photoPreview" alt="Crate Tag" />
+              <div>
+                <div style="font-weight:600; color:var(--text);">Pallet Tag Attached</div>
+                <div style="font-size:11.5px; color:var(--text-muted);">Ready for multimodal extraction</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-ghost" onclick="document.getElementById('photoDrawer').classList.remove('active')">Remove</button>
+              <button class="btn-dark" onclick="dispatchPhotoOffer()">Extract & Match</button>
+            </div>
+          </div>
+
+          <!-- Quick Follow-Up Chips + Latency Indicator -->
+          <div class="suggestions-bar">
+            <div class="suggestion-chips">
+              <button class="chip" onclick="quickFollowUp('They said no. Who\'s next?')">They said no — who's next?</button>
+              <button class="chip" onclick="quickFollowUp('Why didn\'t you pick Greenline Community Pantry?')">Why not Greenline Pantry?</button>
+              <button class="chip" onclick="sendMcpWalkInQuery()">Walk-in coolers in Chicago (SQL)</button>
+            </div>
+            <span id="latencyBadge" style="font-size:11.5px; color:var(--text-muted);">Ready</span>
+          </div>
+        </div>
+
+        <!-- 2. PRIMARY MATCH CARD -->
+        <section class="match-card">
+
+          <!-- Subtle Top Strip: openFDA Recall Status + Candidate Pool -->
+          <div class="match-card-strip" id="recallBanner">
+            <div class="strip-left">
+              <span class="dot" id="recallDot"></span>
+              <span id="recallStatusBadge" style="font-weight:600; color:var(--text);">openFDA Safety Clear</span>
+              <span style="color:var(--border-strong);">·</span>
+              <span id="recallDetail">0 active recalls for this commodity. Confirm sealed lot on pickup.</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span id="searchPoolBadge" style="font-weight:500;">80 searched → 12 viable</span>
+            </div>
+          </div>
+
+          <div class="match-card-body">
+            <!-- Header & Primary Actions -->
+            <div class="recipient-header">
+              <div>
+                <div class="recipient-badge-row">
+                  <span class="eyebrow-pill" id="matchEyebrow">Top Match</span>
+                  <span class="rank-meta" id="meaningRankLabel">Meaning Rank #3 of 80</span>
+                </div>
+                <h2 class="recipient-name" id="orgName">Habibi Care</h2>
+                <div class="recipient-address" id="orgAddress">4346 W 63rd St, Chicago, IL 60629</div>
+              </div>
+
+              <div class="cta-group">
+                <button class="btn-dark" onclick="copyAndClaimPrimary()">
+                  <svg class="icon-svg" viewBox="0 0 24 24">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span id="claimBtnLabel">Copy SMS & Claim</span>
+                </button>
+
+                <button onclick="quickFollowUp('They said no. Who\'s next?')">
+                  Next Match
+                </button>
+
+                <!-- Clean "Report Issue" Popover -->
+                <div class="dropdown" id="problemDropdown">
+                  <button onclick="toggleProblemMenu(event)" title="Report an issue or delay">
+                    <span>Report Issue</span>
+                    <svg class="icon-svg" viewBox="0 0 24 24" style="width:13px;height:13px;">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="dropdown-section-title">Pantry Discrepancy</div>
+                    <button class="dropdown-item" onclick="reportDiscrepancy('Cooler Broken / No Cold Storage', 'cold_storage', 'none')">
+                      Cooler broken / no fridge
+                    </button>
+                    <button class="dropdown-item" onclick="reportDiscrepancy('Capacity Full Today', 'max_pallets', '0')">
+                      Capacity full today
+                    </button>
+                    <button class="dropdown-item" onclick="reportDiscrepancy('Closed / Unreachable by Phone', 'pickup_window_hours', 'closed')">
+                      Closed or unreachable
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-section-title">Logistics & Safety</div>
+                    <button class="dropdown-item" onclick="switchTab('mapTab'); simulateDelay(3.5);">
+                      Truck delayed (+3.5h re-route)
+                    </button>
+                    <button class="dropdown-item" onclick="triggerSafetyHalt()">
+                      Flag food safety / recall halt
+                    </button>
+                    <button class="dropdown-item" onclick="reportSystemBug()">
+                      Report system bug
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Clean Operational Metrics -->
+            <div class="metrics-row">
+              <div class="metric-cell">
+                <span class="metric-label">Cold Storage</span>
+                <span class="metric-val" id="kpiStorage">Domestic Cold</span>
+                <span class="metric-sub">Verify by phone</span>
+              </div>
+              <div class="metric-cell">
+                <span class="metric-label">Pallet Capacity</span>
+                <span class="metric-val" id="kpiPallets">0.5 of 1 pallet</span>
+                <span class="metric-sub" id="kpiServiceDays">Open Wed, Sat</span>
+              </div>
+              <div class="metric-cell">
+                <span class="metric-label">Window & Margin</span>
+                <span class="metric-val" id="kpiClock">6h clock · 3h pickup</span>
+                <span class="metric-sub" id="kpiMargin" style="color:var(--accent-dark); font-weight:500;">+3h buffer</span>
+              </div>
+              <div class="metric-cell">
+                <span class="metric-label">Transport</span>
+                <span class="metric-val" id="kpiDriver">Dispatch Driver</span>
+                <span class="metric-sub" id="kpiDriverSub">No refrigerated van</span>
+              </div>
+            </div>
+
+            <!-- Rationale + Outreach Message -->
+            <div class="match-columns">
+              <div class="rationale-col">
+                <div>
+                  <div style="font-size:11.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px;">
+                    Why This Pantry Fits
+                  </div>
+                  <p class="rationale-text" id="orgExcerpt">
+                    "Neighborhood food pantry with household refrigeration. Can take a few crates of fresh produce, dairy, or eggs (up to 1 pallet)."
+                  </p>
+                </div>
+                <div class="census-footnote" id="neighborhoodText">
+                  Nearest census tract: 13% poverty · 5% no-vehicle households · 12% public assistance (Descriptive context — never used to rank).
+                </div>
+              </div>
+
+              <div class="outreach-box">
+                <div class="outreach-top">
+                  <span>Ready-to-Send Outreach SMS</span>
+                  <button class="btn-ghost" style="padding:2px 6px; font-size:11.5px;" onclick="copyOutreachSms()">Copy</button>
+                </div>
+                <div class="outreach-body" id="outreachBox"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. PROGRESSIVE DISCLOSURE TABS -->
+        <div class="subview-header">
+          <div class="segmented-control">
+            <button class="seg-btn active" data-tab="mapTab" onclick="switchTab('mapTab')">
+              Route & Timeline
+            </button>
+            <button class="seg-btn" data-tab="backupsTab" onclick="switchTab('backupsTab')">
+              Backups & Filtered (<span id="backupsCountBadge">5</span>)
+            </button>
+            <button class="seg-btn" data-tab="agentTab" onclick="switchTab('agentTab')">
+              Agent Reasoning & Log
+            </button>
+          </div>
+          <span style="font-size:11.5px; color:var(--text-muted);" id="sessionBadge"></span>
+        </div>
+
+        <!-- TAB 1: MAP & DELIVERY TIMELINE -->
+        <div class="tab-surface active" id="mapTab">
+          <div class="route-grid">
+            <div>
+              <div id="map"></div>
+              <div class="map-caption">
+                <div>
+                  <span><i class="legend-dot" style="background:#f59e0b;"></i>Donor</span>
+                  <span style="margin-left:10px;"><i class="legend-dot" style="background:#10b981;"></i>Top Match</span>
+                  <span style="margin-left:10px;"><i class="legend-dot" style="background:#0284c7;"></i>Backups</span>
+                  <span style="margin-left:10px;"><i class="legend-dot" style="background:#e11d48;"></i>Filtered Out</span>
+                </div>
+                <span>ZIP-centroid coordinates</span>
+              </div>
+            </div>
+
+            <div class="timeline-panel">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:13.5px; font-weight:600;">Delivery Window</span>
+                  <span class="time-pill ok" id="marginRiskBadge">+3.0h buffer</span>
+                </div>
+                <p id="timelineSummary" style="font-size:13px; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
+                  Food has <b>6.0h</b> remaining. Recipient collects within <b>3.0h</b>, leaving a <b>+3.0h</b> safety buffer.
+                </p>
+
+                <div class="progress-bar-track">
+                  <div class="progress-lead" id="timelineLeadBar" style="width:50%;"></div>
+                  <div class="progress-slack" id="timelineSlackBar" style="width:50%;"></div>
+                </div>
+                <div class="progress-labels">
+                  <span id="leadBarLabel">Pickup lead: 3.0h</span>
+                  <span id="slackBarLabel">Safety buffer: +3.0h</span>
+                </div>
+              </div>
+
+              <div class="delay-controls">
+                <div style="font-size:12px; font-weight:500; color:var(--text-secondary); margin-bottom:8px;">
+                  Simulate unexpected route delay (triggers live re-route):
+                </div>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button onclick="simulateDelay(1.5)">+1.5h Delay</button>
+                  <button onclick="simulateDelay(3.5)">+3.5h Delay (Re-Route)</button>
+                  <button class="btn-ghost" onclick="resetTimelineClock()">Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: BACKUPS & FILTERED CANDIDATES -->
+        <div class="tab-surface" id="backupsTab">
+          <div class="alt-grid">
+            <div>
+              <div class="sidebar-title" style="margin-bottom:8px;">Next Viable Backups</div>
+              <div id="nextOptionsList"></div>
+            </div>
+            <div>
+              <div class="sidebar-title" style="margin-bottom:8px;">Filtered Semantic Decoys (Why Blocked)</div>
+              <div id="rejectedDecoysList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: AGENT REASONING & ACTIVITY LOG -->
+        <div class="tab-surface" id="agentTab">
+          <div class="alt-grid">
+            <div>
+              <div class="sidebar-title" style="margin-bottom:8px;">Full Agent Response</div>
+              <div class="mono-pane" id="agentTranscript"></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span class="sidebar-title">Session Audit Log</span>
+                <button class="btn-ghost" style="padding:2px 8px; font-size:11.5px;" onclick="exportDiscrepancyLog()">Export JSON</button>
+              </div>
+              <div class="mono-pane" id="discrepancyLog"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- MODAL 1: PANTRY ONBOARDING -->
+  <div class="modal-backdrop" id="onboardModal">
+    <div class="modal">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:16px; font-weight:600;">Onboard Verified Pantry Profile</h3>
+        <button class="btn-ghost" onclick="closeModal('onboardModal')">Close</button>
+      </div>
+      <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">
+        Capture ground-truth cooler, unloading, and collection lead-time capabilities directly from a pantry manager.
+      </p>
+      <div class="form-grid">
+        <label>Organization Name
+          <input type="text" id="obName" value="Pilsen Community Fridge & Pantry" />
+        </label>
+        <label>Street Address & ZIP
+          <input type="text" id="obAddr" value="1850 S Blue Island Ave, Chicago, IL 60608" />
+        </label>
+        <label>Cold Storage
+          <select id="obCold">
+            <option value="walk-in">Walk-in Cooler (Commercial)</option>
+            <option value="commercial">Commercial Reach-in Fridge</option>
+            <option value="domestic">Household Fridge (&lt;=1 pallet)</option>
+            <option value="none">No Cold Storage (Dry Only)</option>
+          </select>
+        </label>
+        <label>Unloading Capability
+          <select id="obDock">
+            <option value="hand-unloaded crates (up to 2 pallets)">Hand-unloaded crates (No dock, max 2p)</option>
+            <option value="full pallets on a pallet jack (loading dock, up to 8 pallets)">Pallet jack & loading dock (Max 8p)</option>
+          </select>
+        </label>
+        <label>Collection Lead Time (Hours)
+          <input type="number" id="obLead" value="2" min="1" max="48" />
+        </label>
+        <label>Refrigerated Van?
+          <select id="obVan">
+            <option value="true">Yes — Self-collects</option>
+            <option value="false">No — Needs driver dispatch</option>
+          </select>
+        </label>
+      </div>
+      <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:8px;">
+        <button onclick="closeModal('onboardModal')">Cancel</button>
+        <button class="btn-dark" onclick="submitPantryOnboarding()">Save & Test Match</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: EQUITY STUDY -->
+  <div class="modal-backdrop" id="equityModal">
+    <div class="modal">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:16px; font-weight:600;">10-Posting Equity Study & Search Pool Analysis</h3>
+        <button class="btn-ghost" onclick="closeModal('equityModal')">Close</button>
+      </div>
+      <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">
+        Evaluated across all 10 official <code>a4i_food.surplus_postings</code> against 1,004 Chicago ACS Census tracts and 192 recipients.
+      </p>
+      <table class="clean-table">
+        <thead>
+          <tr>
+            <th>Group</th>
+            <th>Sample</th>
+            <th>Poverty</th>
+            <th>No Vehicle</th>
+            <th>Public Assist</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Chicago Metro Baseline</td><td>1,004 tracts</td><td>15%</td><td>20%</td><td>18%</td></tr>
+          <tr><td>All Recipients Corpus (Mean / Med)</td><td>192 orgs</td><td>19% / 15%</td><td>27% / 25%</td><td>20% / 12%</td></tr>
+          <tr><td>Recipients w/ Dock or 5+ Pallets</td><td>17 orgs</td><td>16%</td><td>27%</td><td>17%</td></tr>
+          <tr><td><b>Top Matches — Per Posting</b></td><td>10 postings</td><td><b>22%</b> / 17%</td><td><b>31%</b> / 23%</td><td><b>20%</b> / 16%</td></tr>
+          <tr><td>Top Matches — Distinct Orgs</td><td>8 orgs</td><td>17% / 14%</td><td>26% / 20%</td><td>16% / 11%</td></tr>
+          <tr><td>Top Matches — Pallet-Weighted</td><td>37.5 pallets</td><td>15%</td><td>32%</td><td>9%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================================
+    // 1. SURPLUS QUEUE DATA
+    // ============================================================================
+    const SURPLUS_QUEUE = [
+      {
+        id: "demo-bakery",
+        track: "Retail",
+        title: "40 Trays Cream Pastries",
+        commodity: "Pastry",
+        hours: 1.0,
+        pallets: 0.25,
+        needs_cold: true,
+        donor_lat: 41.8890,
+        donor_lon: -87.6320,
+        cacheKey: "no-match-bakery",
+        prompt: "A bakery has 40 trays of cream-filled pastries that must stay refrigerated and leave their dock within 1 hour."
+      },
+      {
+        id: "post-4",
+        track: "Retail",
+        title: "Deli Sandwiches & Salads",
+        commodity: "Salad",
+        hours: 4.0,
+        pallets: 0.5,
+        needs_cold: true,
+        donor_lat: 41.8840,
+        donor_lon: -87.6280,
+        cacheKey: "spinach",
+        prompt: "A retail deli in Chicago has prepared sandwiches and salads from the deli case (about half a pallet, needs cold storage) that must move within 4 hours."
+      },
+      {
+        id: "post-1",
+        track: "Retail",
+        title: "10 Crates Fresh Spinach",
+        commodity: "Spinach",
+        hours: 6.0,
+        pallets: 0.5,
+        needs_cold: true,
+        donor_lat: 41.9100,
+        donor_lon: -87.6500,
+        cacheKey: "spinach",
+        prompt: "A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold."
+      },
+      {
+        id: "post-2",
+        track: "Retail",
+        title: "60 Gal Milk & Yogurt",
+        commodity: "Milk",
+        hours: 8.0,
+        pallets: 1.0,
+        needs_cold: true,
+        donor_lat: 41.9200,
+        donor_lon: -87.6800,
+        cacheKey: "spinach",
+        prompt: "A Chicago grocer has mixed dairy - about 60 gallons of milk and some yogurt (1 pallet, needs cold storage), dock closes in 8 hours."
+      },
+      {
+        id: "post-10",
+        track: "Essentials",
+        title: "Clinic Cold Supplements",
+        commodity: "Dietary Supplement",
+        hours: 8.0,
+        pallets: 0.5,
+        needs_cold: true,
+        donor_lat: 41.8700,
+        donor_lon: -87.6700,
+        cacheKey: "spinach",
+        prompt: "We have temperature-sensitive nutritional supplements for a clinic (half a pallet, cold chain required) that must be picked up within 8 hours."
+      },
+      {
+        id: "post-6",
+        track: "Farm",
+        title: "Half Truckload Blueberries",
+        commodity: "Blueberries",
+        hours: 12.0,
+        pallets: 10.0,
+        needs_cold: true,
+        donor_lat: 41.6800,
+        donor_lon: -87.6500,
+        cacheKey: "farm-potatoes",
+        prompt: "A farm near Chicago has half a truckload of blueberries (10 pallets), picked this morning, extremely perishable, needs cold storage within 12 hours."
+      },
+      {
+        id: "post-3",
+        track: "Retail",
+        title: "200 Loaves Day-Old Bread",
+        commodity: "Bread",
+        hours: 24.0,
+        pallets: 2.0,
+        needs_cold: false,
+        donor_lat: 41.8950,
+        donor_lon: -87.6400,
+        cacheKey: "farm-potatoes",
+        prompt: "Three grocery store locations in Chicago have roughly 200 loaves of day-old bread and pastries (2 pallets, room temperature) available for pickup within 24 hours."
+      },
+      {
+        id: "post-5",
+        track: "Farm",
+        title: "5 Tons Field Potatoes",
+        commodity: "Potatoes",
+        hours: 72.0,
+        pallets: 5.0,
+        needs_cold: false,
+        donor_lat: 41.6200,
+        donor_lon: -87.6800,
+        cacheKey: "farm-potatoes",
+        prompt: "A farm south of Chicago has 5 tons of potatoes still in the field. They can load pallets if someone collects within 3 days."
+      },
+      {
+        id: "post-7",
+        track: "Farm",
+        title: "30 Bins Winter Squash",
+        commodity: "Squash",
+        hours: 120.0,
+        pallets: 15.0,
+        needs_cold: false,
+        donor_lat: 41.6500,
+        donor_lon: -87.7200,
+        cacheKey: "farm-potatoes",
+        prompt: "A farm has surplus winter squash, about 30 bins (15 pallets), no refrigeration needed, must move within 5 days (120 hours)."
+      },
+      {
+        id: "post-8",
+        track: "Essentials",
+        title: "48 Cases Infant Formula",
+        commodity: "Infant Formula",
+        hours: 168.0,
+        pallets: 2.0,
+        needs_cold: false,
+        donor_lat: 41.8800,
+        donor_lon: -87.6500,
+        cacheKey: "sealed-formula",
+        prompt: "48 cases of sealed infant formula with 8 months to expiry from a distributor in Chicago, 2 pallets, can sit at room temperature."
+      },
+      {
+        id: "post-9",
+        track: "Essentials",
+        title: "1 Pallet Diapers & Wipes",
+        commodity: "Diapers",
+        hours: 720.0,
+        pallets: 1.0,
+        needs_cold: false,
+        donor_lat: 41.8900,
+        donor_lon: -87.6600,
+        cacheKey: "sealed-formula",
+        prompt: "A distributor in Chicago has 1 pallet of diapers and wipes, sizes 1 through 4, available within 30 days."
+      }
+    ];
+
+    // ============================================================================
+    // 2. STATE
+    // ============================================================================
+    let currentPosting = SURPLUS_QUEUE[2];
+    let currentBrief = (window.EVIDENCE_CACHE && window.EVIDENCE_CACHE["spinach"]) ? window.EVIDENCE_CACHE["spinach"].brief : null;
+    let currentAnswer = (window.EVIDENCE_CACHE && window.EVIDENCE_CACHE["spinach"]) ? window.EVIDENCE_CACHE["spinach"].answer : "";
+    let sessionId = "coord-" + Math.random().toString(36).substring(2, 9);
+    let sessionReady = false;
+    let claimedPalletsByOrg = {};
+    let excludedOrgs = [];
+    let discrepancyEntries = [];
+    let uploadedPhotoBase64 = null;
+    let uploadedPhotoMime = "image/png";
+    let map = null;
+    let mapLayerGroup = null;
+
+    const CLOUD_RUN_URL = "https://food-broker-817377390808.us-east1.run.app";
+    function getApiBase() {
+      if (window.location.protocol.startsWith("http") && (window.location.port === "8090" || window.location.hostname.includes("run.app"))) {
+        return "";
+      }
+      return CLOUD_RUN_URL;
+    }
+
+    // ============================================================================
+    // 3. INIT & NAVIGATION
+    // ============================================================================
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("sessionBadge").textContent = `Session ${sessionId}`;
+      initMap();
+      renderQueue();
+      renderBrief(currentBrief, currentAnswer);
+      checkOpenFDARecall(currentPosting.commodity);
+      addLogEntry("INIT", `Ready (192 Chicago pantries loaded; Session ${sessionId}).`);
+      ensureAdkSession();
+
+      document.addEventListener("click", (e) => {
+        const dd = document.getElementById("problemDropdown");
+        if (dd && !dd.contains(e.target)) dd.classList.remove("open");
+      });
+    });
+
+    function toggleProblemMenu(e) {
+      e.stopPropagation();
+      document.getElementById("problemDropdown").classList.toggle("open");
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".seg-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.getAttribute("data-tab") === tabId);
+      });
+      document.querySelectorAll(".tab-surface").forEach((panel) => {
+        panel.classList.toggle("active", panel.id === tabId);
+      });
+      if (tabId === "mapTab" && map) {
+        setTimeout(() => map.invalidateSize(), 50);
+      }
+    }
+
+    function formatHours(h) {
+      if (h >= 48) return `${Math.round(h / 24)}d`;
+      return `${h}h`;
+    }
+
+    function renderQueue() {
+      const list = document.getElementById("queueList");
+      list.innerHTML = "";
+      SURPLUS_QUEUE.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "queue-row" + (currentPosting.id === item.id ? " active" : "");
+        const pillClass = item.hours <= 2 ? "crit" : item.hours <= 6 ? "urg" : "ok";
+        div.innerHTML = `
+          <div>
+            <div class="queue-row-title">${item.title}</div>
+            <div class="queue-row-sub">${item.track} · ${item.pallets}p · ${item.needs_cold ? "Cold" : "Dry"}</div>
+          </div>
+          <span class="time-pill ${pillClass}">${formatHours(item.hours)}</span>
+        `;
+        div.onclick = () => selectQueuePosting(item);
+        list.appendChild(div);
+      });
+    }
+
+    async function selectQueuePosting(item) {
+      currentPosting = item;
+      excludedOrgs = [];
+      renderQueue();
+      document.getElementById("promptInput").value = item.prompt;
+      checkOpenFDARecall(item.commodity);
+
+      if (window.EVIDENCE_CACHE && window.EVIDENCE_CACHE[item.cacheKey]) {
+        const cached = window.EVIDENCE_CACHE[item.cacheKey];
+        currentBrief = JSON.parse(JSON.stringify(cached.brief));
+        currentBrief.the_clock.hours_remaining = item.hours;
+        currentAnswer = cached.answer;
+        renderBrief(currentBrief, currentAnswer);
+      }
+
+      if (document.getElementById("liveApiToggle").checked) {
+        await submitPrompt(item.prompt);
+      } else {
+        addLogEntry("QUEUE", `Selected "${item.title}" (${item.hours}h window).`);
+      }
+    }
+
+    // ============================================================================
+    // 4. MAP
+    // ============================================================================
+    function initMap() {
+      map = L.map("map", { zoomControl: true }).setView([41.881, -87.68], 10);
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+        attribution: "&copy; OpenStreetMap &copy; CARTO"
+      }).addTo(map);
+      mapLayerGroup = L.layerGroup().addTo(map);
+    }
+
+    function lookupCoords(orgName) {
+      if (!orgName || !window.RECIPIENT_COORDS) return { lat: 41.885, lon: -87.65 };
+      if (window.RECIPIENT_COORDS[orgName]) return window.RECIPIENT_COORDS[orgName];
+      const lower = orgName.toLowerCase();
+      for (const [k, v] of Object.entries(window.RECIPIENT_COORDS)) {
+        if (k.toLowerCase().includes(lower) || lower.includes(k.toLowerCase())) return v;
+      }
+      return { lat: 41.885, lon: -87.65 };
+    }
+
+    function haversineMiles(lat1, lon1, lat2, lon2) {
+      const R = 3958.8;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+      return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).toFixed(1);
+    }
+
+    function updateMap(brief) {
+      if (!map || !mapLayerGroup) return;
+      mapLayerGroup.clearLayers();
+
+      const dLat = currentPosting.donor_lat || 41.90;
+      const dLon = currentPosting.donor_lon || -87.65;
+
+      const donorMarker = L.circleMarker([dLat, dLon], {
+        radius: 7, color: "#d97706", fillColor: "#f59e0b", fillOpacity: 0.9, weight: 2
+      }).bindPopup(`<b>Donor Origin</b><br>${currentPosting.title}`);
+      mapLayerGroup.addLayer(donorMarker);
+
+      const bounds = [[dLat, dLon]];
+
+      (brief?.rejected_but_close || []).forEach((decoy) => {
+        const c = lookupCoords(decoy.name);
+        bounds.push([c.lat, c.lon]);
+        const m = L.circleMarker([c.lat, c.lon], {
+          radius: 6, color: "#e11d48", fillColor: "#f43f5e", fillOpacity: 0.85, weight: 1.5
+        }).bindPopup(`<b>Filtered: ${decoy.name}</b><br>Rank #${decoy.semantic_rank || "?"}<br>${decoy.because}`);
+        mapLayerGroup.addLayer(m);
+      });
+
+      (brief?.next_two_options || []).forEach((opt) => {
+        const c = lookupCoords(opt.name);
+        bounds.push([c.lat, c.lon]);
+        const dist = haversineMiles(dLat, dLon, c.lat, c.lon);
+        const m = L.circleMarker([c.lat, c.lon], {
+          radius: 7, color: "#0284c7", fillColor: "#38bdf8", fillOpacity: 0.9, weight: 2
+        }).bindPopup(`<b>Backup #${opt.rank}: ${opt.name}</b><br>${opt.why} (~${dist} mi)`);
+        mapLayerGroup.addLayer(m);
+      });
+
+      if (brief?.organization_and_why?.name) {
+        const topName = brief.organization_and_why.name;
+        const c = lookupCoords(topName);
+        bounds.push([c.lat, c.lon]);
+        const dist = haversineMiles(dLat, dLon, c.lat, c.lon);
+
+        const routeLine = L.polyline([[dLat, dLon], [c.lat, c.lon]], {
+          color: "#059669", weight: 2.5, dashArray: "5, 5"
+        });
+        mapLayerGroup.addLayer(routeLine);
+
+        const topMarker = L.circleMarker([c.lat, c.lon], {
+          radius: 9, color: "#047857", fillColor: "#10b981", fillOpacity: 0.95, weight: 2.5
+        }).bindPopup(`<b>Top Match: ${topName}</b><br>${brief.organization_and_why.address} (~${dist} mi)`);
+        mapLayerGroup.addLayer(topMarker);
+      }
+
+      if (bounds.length > 1) {
+        map.fitBounds(bounds, { padding: [26, 26], maxZoom: 12 });
+      }
+    }
+
+    // ============================================================================
+    // 5. RENDER BRIEF
+    // ============================================================================
+    function renderBrief(brief, answerText) {
+      document.getElementById("agentTranscript").textContent = answerText || "Waiting for agent...";
+      if (!brief) return;
+
+      const s = brief.search || { candidates_searched: 80, viable_after_filters: 0 };
+      document.getElementById("searchPoolBadge").textContent =
+        `${s.candidates_searched} searched → ${s.viable_after_filters} viable`;
+
+      const eyebrow = document.getElementById("matchEyebrow");
+
+      // Refusal state
+      if (brief.refusal || !brief.organization_and_why) {
+        eyebrow.textContent = "Safe Refusal";
+        eyebrow.style.background = "var(--red-soft)";
+        eyebrow.style.color = "var(--red)";
+        document.getElementById("orgName").textContent = "No Viable Recipient Found";
+        document.getElementById("orgAddress").textContent = brief.refusal || "No candidate passed hard constraints.";
+        document.getElementById("meaningRankLabel").textContent = "0 survivors";
+        document.getElementById("orgExcerpt").textContent =
+          "Recommending a pantry that cannot store or collect the load inside the deadline risks food spoilage. Plain refusal is safer.";
+        document.getElementById("kpiStorage").textContent = "—";
+        document.getElementById("kpiPallets").textContent = "0 viable";
+        document.getElementById("kpiClock").textContent = `${brief.the_clock?.hours_remaining || 1}h clock`;
+        document.getElementById("kpiMargin").textContent = "Insufficient time";
+        document.getElementById("kpiMargin").style.color = "var(--red)";
+        document.getElementById("kpiDriver").textContent = "Hold Dispatch";
+        document.getElementById("neighborhoodText").textContent = "No recipient matched.";
+        document.getElementById("outreachBox").textContent = "No outreach message drafted — load cannot be safely placed inside the window.";
+        renderBackupsAndDecoys(brief);
+        updateTimelineBar(brief.the_clock?.hours_remaining || 1, null);
+        updateMap(brief);
+        return;
+      }
+
+      eyebrow.textContent = "Top Match";
+      eyebrow.style.background = "var(--accent-soft)";
+      eyebrow.style.color = "var(--accent-dark)";
+
+      const org = brief.organization_and_why;
+      const cap = brief.what_they_can_take || {};
+      const clk = brief.the_clock || {};
+      const nb = brief.whose_neighborhood || {};
+      const topRankCard = (brief.ranked && brief.ranked[0]) ? brief.ranked[0] : {};
+
+      const claimed = claimedPalletsByOrg[org.name] || 0;
+      const remainingCap = Math.max(0, (cap.max_pallets || 0) - claimed);
+
+      document.getElementById("orgName").textContent = org.name;
+      document.getElementById("orgAddress").textContent = org.address || "";
+      document.getElementById("meaningRankLabel").textContent =
+        `Meaning Rank #${topRankCard.meaning_rank || "?"} of ${s.candidates_searched}`;
+      document.getElementById("orgExcerpt").textContent = `"${org.profile_excerpt || org.why}"`;
+
+      const coldStr = (cap.cold_storage || "none");
+      document.getElementById("kpiStorage").textContent =
+        coldStr.charAt(0).toUpperCase() + coldStr.slice(1) + " Cold";
+
+      document.getElementById("kpiPallets").textContent =
+        `${cap.load_pallets}p load (${remainingCap}/${cap.max_pallets}p open)`;
+
+      document.getElementById("kpiClock").textContent =
+        `${clk.hours_remaining}h clock · ${clk.collection_lead_hours}h lead`;
+
+      const marginEl = document.getElementById("kpiMargin");
+      marginEl.textContent = `+${clk.margin_hours}h buffer`;
+      marginEl.style.color = clk.margin_hours < 2 ? "var(--amber)" : "var(--accent-dark)";
+
+      const driverEl = document.getElementById("kpiDriver");
+      const driverSub = document.getElementById("kpiDriverSub");
+      if (clk.needs_driver) {
+        driverEl.textContent = "Dispatch Driver";
+        driverSub.textContent = "Needs volunteer transport";
+      } else {
+        driverEl.textContent = "Self-Collects";
+        driverSub.textContent = "Has refrigerated van";
+      }
+      document.getElementById("kpiServiceDays").textContent = `Open ${cap.service_days || "All week"}`;
+
+      document.getElementById("neighborhoodText").textContent =
+        `${nb.tract || ""} · Serves ${nb.populations_served || "community"} (${nb.households_per_week || "?"} households/wk). Descriptive context only.`;
+
+      document.getElementById("outreachBox").textContent = brief.outreach_message || "";
+
+      renderBackupsAndDecoys(brief);
+      updateTimelineBar(clk.hours_remaining, clk.collection_lead_hours);
+      updateMap(brief);
+    }
+
+    function renderBackupsAndDecoys(brief) {
+      const backups = brief.next_two_options || [];
+      const decoys = brief.rejected_but_close || [];
+      document.getElementById("backupsCountBadge").textContent = String(backups.length + decoys.length);
+
+      const nextEl = document.getElementById("nextOptionsList");
+      nextEl.innerHTML = "";
+      if (backups.length === 0) {
+        nextEl.innerHTML = `<div style="font-size:12.5px; color:var(--text-muted);">No backup options available inside this window.</div>`;
+      } else {
+        backups.forEach((b) => {
+          const d = document.createElement("div");
+          d.className = "alt-item";
+          d.innerHTML = `
+            <div class="alt-item-top">
+              <span>#${b.rank} · ${b.name}</span>
+              <span class="time-pill ok">+${b.margin_hours}h buffer</span>
+            </div>
+            <div class="alt-item-sub">
+              ${b.address} — ${b.why} (${b.needs_driver ? "Needs driver" : "Own van"})
+            </div>
+          `;
+          nextEl.appendChild(d);
+        });
+      }
+
+      const decoyEl = document.getElementById("rejectedDecoysList");
+      decoyEl.innerHTML = "";
+      decoys.forEach((r) => {
+        const d = document.createElement("div");
+        d.className = "alt-item";
+        d.innerHTML = `
+          <div class="alt-item-top">
+            <span>${r.name}</span>
+            <span class="time-pill crit">Meaning #${r.semantic_rank || "?"}</span>
+          </div>
+          <div class="alt-item-sub">
+            Filtered out: ${r.because}
+          </div>
+        `;
+        decoyEl.appendChild(d);
+      });
+    }
+
+    function updateTimelineBar(hoursRemaining, leadHours) {
+      const badge = document.getElementById("marginRiskBadge");
+      const summary = document.getElementById("timelineSummary");
+      const leadBar = document.getElementById("timelineLeadBar");
+      const slackBar = document.getElementById("timelineSlackBar");
+      const leadLbl = document.getElementById("leadBarLabel");
+      const slackLbl = document.getElementById("slackBarLabel");
+
+      if (leadHours === null || leadHours === undefined) {
+        badge.className = "time-pill crit";
+        badge.textContent = "Refused";
+        summary.innerHTML = `Only <b>${hoursRemaining}h</b> remaining. No recipient can collect inside this window.`;
+        leadBar.style.width = "100%";
+        leadBar.style.background = "var(--red)";
+        slackBar.style.width = "0%";
+        leadLbl.textContent = `Window: ${hoursRemaining}h`;
+        slackLbl.textContent = "0h buffer";
+        return;
+      }
+
+      const margin = +(hoursRemaining - leadHours).toFixed(1);
+      leadLbl.textContent = `Pickup lead: ${leadHours}h`;
+      slackLbl.textContent = `Buffer: ${margin >= 0 ? "+" : ""}${margin}h`;
+
+      if (margin < 0) {
+        badge.className = "time-pill crit";
+        badge.textContent = `Spoilage Risk (${margin}h)`;
+        summary.innerHTML = `Clock dropped to <b>${hoursRemaining}h</b>, but active recipient requires <b>${leadHours}h</b>. Re-routing...`;
+        leadBar.style.width = "100%";
+        leadBar.style.background = "var(--red)";
+        slackBar.style.width = "0%";
+      } else if (margin < 2.0) {
+        badge.className = "time-pill urg";
+        badge.textContent = `Tight (+${margin}h)`;
+        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> left; recipient needs <b>${leadHours}h</b>. Confirm immediately by phone.`;
+        const leadPct = Math.min(92, Math.round((leadHours / hoursRemaining) * 100));
+        leadBar.style.width = `${leadPct}%`;
+        leadBar.style.background = "var(--amber)";
+        slackBar.style.width = `${100 - leadPct}%`;
+      } else {
+        badge.className = "time-pill ok";
+        badge.textContent = `+${margin}h buffer`;
+        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> remaining. Recipient collects within <b>${leadHours}h</b>, leaving a <b>+${margin}h</b> safety buffer.`;
+        const leadPct = Math.min(82, Math.round((leadHours / hoursRemaining) * 100));
+        leadBar.style.width = `${leadPct}%`;
+        leadBar.style.background = "var(--text)";
+        slackBar.style.width = `${100 - leadPct}%`;
+      }
+    }
+
+    // ============================================================================
+    // 6. DELAY SIMULATOR
+    // ============================================================================
+    async function simulateDelay(delayHours) {
+      document.getElementById("problemDropdown").classList.remove("open");
+      const origHours = currentPosting.hours || 6.0;
+      const newHours = Math.max(0.5, +(origHours - delayHours).toFixed(1));
+      const lead = currentBrief?.the_clock?.collection_lead_hours || 3.0;
+      updateTimelineBar(newHours, lead);
+
+      const activeOrg = currentBrief?.organization_and_why?.name || "the current recipient";
+      addLogEntry("DELAY", `Simulated +${delayHours}h delay -> Clock shrunk from ${origHours}h to ${newHours}h.`);
+
+      const followUpPrompt =
+        `URGENT DELAY UPDATE: Due to a ${delayHours}-hour traffic/dock delay, the food now has only ${newHours} hours remaining before spoilage/dock closure (down from ${origHours} hours). ` +
+        `Check if ${activeOrg} or any other recipient can collect within ${newHours} hours, and re-run find_matches with hours_remaining=${newHours} to re-route or refuse safely.`;
+
+      document.getElementById("promptInput").value = followUpPrompt;
+      await submitPrompt(followUpPrompt);
+    }
+
+    function resetTimelineClock() {
+      if (currentBrief && currentBrief.the_clock) {
+        currentBrief.the_clock.hours_remaining = currentPosting.hours;
+        updateTimelineBar(currentPosting.hours, currentBrief.the_clock.collection_lead_hours);
+      }
+    }
+
+    // ============================================================================
+    // 7. openFDA SAFETY CHECK
+    // ============================================================================
+    async function checkOpenFDARecall(commodity) {
+      const banner = document.getElementById("recallBanner");
+      const dot = document.getElementById("recallDot");
+      const badge = document.getElementById("recallStatusBadge");
+      const detail = document.getElementById("recallDetail");
+      banner.className = "match-card-strip";
+      dot.className = "dot";
+      badge.textContent = `Checking openFDA (${commodity})...`;
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 3500);
+      try {
+        const q = encodeURIComponent(`reason_for_recall:"${commodity}" AND status:"Ongoing"`);
+        const url = `https://api.fda.gov/food/enforcement.json?search=${q}&limit=2`;
+        const resp = await fetch(url, { signal: controller.signal });
+        clearTimeout(timer);
+
+        if (resp.status === 404) {
+          badge.textContent = `openFDA Clear (${commodity})`;
+          detail.textContent = `0 active recalls. Confirm sealed packaging & lot code at pickup.`;
+          return;
+        }
+        const data = await resp.json();
+        const total = data?.meta?.results?.total || 0;
+        const first = (data?.results && data.results[0]) ? data.results[0] : null;
+        if (total > 0 && first) {
+          banner.className = "match-card-strip warn";
+          dot.className = "dot amber";
+          badge.textContent = `${total} FDA Recall Notice(s) for ${commodity}`;
+          const reason = (first.reason_for_recall || "").slice(0, 85);
+          detail.textContent = `"${reason}..." — Verify donor lot/UPC before loading.`;
+        } else {
+          badge.textContent = `openFDA Clear (${commodity})`;
+          detail.textContent = `Verified against openFDA Enforcement API. Confirm lot code on pickup.`;
+        }
+      } catch (err) {
+        clearTimeout(timer);
+        badge.textContent = `Safety Gate Active (${commodity})`;
+        detail.textContent = `Confirm sealed packaging and lot code on dock pickup.`;
+      }
+    }
+
+    function triggerSafetyHalt() {
+      document.getElementById("problemDropdown").classList.remove("open");
+      const banner = document.getElementById("recallBanner");
+      const dot = document.getElementById("recallDot");
+      const badge = document.getElementById("recallStatusBadge");
+      const detail = document.getElementById("recallDetail");
+      banner.className = "match-card-strip halt";
+      dot.className = "dot red";
+      badge.textContent = "Safety Halt — Do Not Dispatch";
+      detail.textContent = `"${currentPosting.title}" flagged for recall or temperature violation.`;
+      addLogEntry("HALT", `Coordinator halted "${currentPosting.title}".`);
+    }
+
+    // ============================================================================
+    // 8. VOICE & MULTIMODAL PHOTO
+    // ============================================================================
+    let recognition = null;
+    let isRecording = false;
+
+    function toggleVoiceInput() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const micBtn = document.getElementById("micBtn");
+      const micLabel = document.getElementById("micLabel");
+      if (!SpeechRec) {
+        document.getElementById("promptInput").value =
+          "A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.";
+        return;
+      }
+      if (isRecording && recognition) {
+        recognition.stop();
+        return;
+      }
+      recognition = new SpeechRec();
+      recognition.lang = "en-US";
+      recognition.interimResults = true;
+      recognition.continuous = false;
+
+      recognition.onstart = () => {
+        isRecording = true;
+        micBtn.classList.add("recording");
+        micLabel.textContent = "Listening...";
+      };
+      recognition.onresult = (event) => {
+        let transcript = "";
+        for (let i = 0; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        document.getElementById("promptInput").value = transcript;
+      };
+      recognition.onend = () => {
+        isRecording = false;
+        micBtn.classList.remove("recording");
+        micLabel.textContent = "Voice";
+        const val = document.getElementById("promptInput").value.trim();
+        if (val) {
+          addLogEntry("VOICE", `Transcribed: "${val}"`);
+          submitPrompt(val);
+        }
+      };
+      recognition.start();
+    }
+
+    function loadSampleCratePhoto() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 480;
+      canvas.height = 240;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fef3c7";
+      ctx.fillRect(0, 0, 480, 240);
+      ctx.strokeStyle = "#b45309";
+      ctx.lineWidth = 6;
+      ctx.strokeRect(8, 8, 464, 224);
+
+      ctx.fillStyle = "#111827";
+      ctx.font = "bold 22px monospace";
+      ctx.fillText("CHICAGO RETAIL GROCER — PALLET TAG", 24, 42);
+      ctx.fillStyle = "#dc2626";
+      ctx.font = "bold 20px monospace";
+      ctx.fillText("PERISHABLE — KEEP REFRIGERATED (36°F)", 24, 76);
+
+      ctx.fillStyle = "#1f2937";
+      ctx.font = "bold 18px monospace";
+      ctx.fillText("ITEM:      FRESH BABY SPINACH (BAGGED)", 24, 114);
+      ctx.fillText("QUANTITY:  10 CRATES (~0.5 PALLET)", 24, 144);
+      ctx.fillText("HARVESTED: YESTERDAY (LOT #CHI-1020)", 24, 174);
+      ctx.fillStyle = "#b91c1c";
+      ctx.fillText("DEADLINE:  DOCK CLOSES IN 6 HOURS", 24, 206);
+
+      const dataUrl = canvas.toDataURL("image/png");
+      uploadedPhotoBase64 = dataUrl.split(",")[1];
+      uploadedPhotoMime = "image/png";
+
+      document.getElementById("photoPreview").src = dataUrl;
+      document.getElementById("photoDrawer").classList.add("active");
+      addLogEntry("PHOTO", "Attached sample spinach pallet tag.");
+    }
+
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        uploadedPhotoBase64 = dataUrl.split(",")[1];
+        uploadedPhotoMime = file.type || "image/png";
+        document.getElementById("photoPreview").src = dataUrl;
+        document.getElementById("photoDrawer").classList.add("active");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function dispatchPhotoOffer() {
+      if (!uploadedPhotoBase64) return;
+      const textPrompt =
+        "Read this produce crate / pallet tag image. Extract the product name, quantity in crates/pallets, whether it needs cold storage, and the donor deadline in hours. State what you extracted from the tag, then call lookup_shelf_life and find_matches to give the 6-part Match Brief.";
+      document.getElementById("promptInput").value = "Extracting pallet tag image...";
+      document.getElementById("photoDrawer").classList.remove("active");
+      await submitPrompt(textPrompt, {
+        inlineData: { mimeType: uploadedPhotoMime, data: uploadedPhotoBase64 }
+      });
+    }
+
+    // ============================================================================
+    // 9. CLAIM & ISSUE REPORTING
+    // ============================================================================
+    function copyAndClaimPrimary() {
+      copyOutreachSms();
+      if (!currentBrief?.organization_and_why?.name) return;
+      const org = currentBrief.organization_and_why.name;
+      const load = currentBrief.what_they_can_take?.load_pallets || 0.5;
+      claimedPalletsByOrg[org] = (claimedPalletsByOrg[org] || 0) + load;
+
+      const btn = document.getElementById("claimBtnLabel");
+      btn.textContent = "Claimed & Copied ✓";
+      setTimeout(() => { btn.textContent = "Copy SMS & Claim"; }, 2200);
+
+      addLogEntry("CLAIMED", `Locked ${load}p at ${org} & copied SMS.`);
+      renderBrief(currentBrief, currentAnswer);
+    }
+
+    async function reportDiscrepancy(issueLabel, fieldName, reportedValue) {
+      document.getElementById("problemDropdown").classList.remove("open");
+      const org = currentBrief?.organization_and_why?.name || "Habibi Care";
+      const oldVal = currentBrief?.what_they_can_take?.[fieldName] ?? "on-file";
+      discrepancyEntries.push({
+        timestamp: new Date().toISOString(),
+        recipient: org,
+        issue: issueLabel,
+        field: fieldName,
+        profile_on_file: oldVal,
+        reported_reality: reportedValue
+      });
+      excludedOrgs.push(org);
+
+      addLogEntry("DISCREPANCY", `${org}: "${issueLabel}" (${fieldName}=${reportedValue}). Re-matching...`);
+
+      const prompt = `FIELD DISCREPANCY REPORT: We called ${org} and found "${issueLabel}" (${fieldName} is actually ${reportedValue}). They cannot take this load. Who's next?`;
+      document.getElementById("promptInput").value = prompt;
+      await submitPrompt(prompt);
+    }
+
+    function addLogEntry(tag, text) {
+      const list = document.getElementById("discrepancyLog");
+      const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      list.textContent = `[${time} · ${tag}] ${text}\n` + list.textContent;
+    }
+
+    function exportDiscrepancyLog() {
+      const blob = new Blob([JSON.stringify({ claimedPalletsByOrg, discrepancyEntries }, null, 2)], {
+        type: "application/json"
+      });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `rescuebroker-audit-${sessionId}.json`;
+      a.click();
+    }
+
+    function reportSystemBug() {
+      document.getElementById("problemDropdown").classList.remove("open");
+      const title = encodeURIComponent(`[Coordinator Console Bug] Session ${sessionId}`);
+      window.open(`https://github.com/jimmycgz/challenge2-117/issues/new?labels=bug,needs-pickup&title=${title}`, "_blank");
+    }
+
+    // ============================================================================
+    // 10. LIVE ADK API
+    // ============================================================================
+    async function ensureAdkSession() {
+      try {
+        const base = getApiBase();
+        const resp = await fetch(`${base}/apps/food_broker/users/coordinator/sessions/${sessionId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: "{}"
+        });
+        if (resp.ok) {
+          sessionReady = true;
+          document.getElementById("connBadge").textContent = "Cloud Run Live";
+          document.getElementById("connDot").className = "dot";
+        }
+      } catch (e) {
+        document.getElementById("connBadge").textContent = "Instant Replay";
+        document.getElementById("connDot").className = "dot amber";
+      }
+    }
+
+    async function resetSession() {
+      sessionId = "coord-" + Math.random().toString(36).substring(2, 9);
+      sessionReady = false;
+      excludedOrgs = [];
+      document.getElementById("sessionBadge").textContent = `Session ${sessionId}`;
+      addLogEntry("SESSION", `Started new session ${sessionId}.`);
+      await ensureAdkSession();
+    }
+
+    async function quickFollowUp(text) {
+      document.getElementById("promptInput").value = text;
+      await submitPrompt(text);
+    }
+
+    async function sendMcpWalkInQuery() {
+      const q = "How many recipients in the corpus have walk-in cold storage, and what share of all recipients is that?";
+      document.getElementById("promptInput").value = q;
+      switchTab("agentTab");
+      await submitPrompt(q);
+    }
+
+    async function submitPrompt(overrideText, extraPart) {
+      const text = (overrideText || document.getElementById("promptInput").value).trim();
+      if (!text) return;
+
+      const sendBtn = document.getElementById("sendBtn");
+      const latencyBadge = document.getElementById("latencyBadge");
+      sendBtn.disabled = true;
+      const t0 = performance.now();
+      latencyBadge.textContent = "Matching...";
+
+      try {
+        const base = getApiBase();
+        if (!sessionReady) await ensureAdkSession();
+
+        const parts = [];
+        if (extraPart) parts.push(extraPart);
+        parts.push({ text });
+
+        const resp = await fetch(`${base}/run`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            appName: "food_broker",
+            userId: "coordinator",
+            sessionId: sessionId,
+            newMessage: { role: "user", parts }
+          })
+        });
+
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const events = await resp.json();
+        const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+        latencyBadge.textContent = `Matched in ${elapsed}s`;
+
+        let newBrief = null;
+        let finalReply = "";
+        const toolsCalled = [];
+
+        for (const ev of events) {
+          for (const p of (ev?.content?.parts || [])) {
+            if (p.functionCall) toolsCalled.push(p.functionCall.name);
+            if (p.functionResponse && p.functionResponse.name === "find_matches") {
+              if (p.functionResponse.response && !p.functionResponse.response.error) {
+                newBrief = p.functionResponse.response;
+              }
+            }
+            if (p.text) finalReply = p.text;
+          }
+        }
+
+        if (toolsCalled.length > 0) {
+          addLogEntry("AGENT", `Tools: ${toolsCalled.join(" -> ")} (${elapsed}s)`);
+        }
+        if (newBrief) currentBrief = newBrief;
+        currentAnswer = finalReply || currentAnswer;
+        renderBrief(currentBrief, currentAnswer);
+      } catch (err) {
+        handleOfflineFallback(text);
+        latencyBadge.textContent = "Instant Replay";
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+
+    function handleOfflineFallback(text) {
+      const lower = text.toLowerCase();
+      if (lower.includes("walk-in")) {
+        document.getElementById("agentTranscript").textContent =
+          `[BigQuery MCP execute_sql]\nSELECT COUNT(*) FROM a4i_food.recipients WHERE cold_storage = 'walk-in'\n\n13 of the 192 recipients in the Chicago corpus have walk-in cold storage (6.8%).`;
+        return;
+      }
+      if (lower.includes("greenline")) {
+        document.getElementById("agentTranscript").textContent =
+          `[explain_candidate("Greenline Community Pantry")]\n\nGreenline Community Pantry ranked #1–#7 by meaning (their profile explicitly asks for fresh greens), but was filtered out because they have no cold storage (cold_storage="none") and require 12h pickup lead time (load has 6h).`;
+        switchTab("agentTab");
+        return;
+      }
+      if (lower.includes("said no") || lower.includes("cannot take")) {
+        if (currentBrief && currentBrief.next_two_options && currentBrief.next_two_options.length > 0) {
+          const promoted = currentBrief.next_two_options[0];
+          const remaining = currentBrief.next_two_options.slice(1);
+          const coords = lookupCoords(promoted.name);
+          currentBrief.organization_and_why = {
+            name: promoted.name,
+            address: promoted.address,
+            why: promoted.why,
+            profile_excerpt: `Promoted from Backup #${promoted.rank} after primary recipient declined.`
+          };
+          currentBrief.what_they_can_take.max_pallets = coords.max_pallets || 1;
+          currentBrief.what_they_can_take.cold_storage = coords.cold_storage || "domestic";
+          currentBrief.the_clock.collection_lead_hours = coords.pickup_window_hours || 4;
+          currentBrief.the_clock.margin_hours = currentBrief.the_clock.hours_remaining - (coords.pickup_window_hours || 4);
+          currentBrief.the_clock.needs_driver = promoted.needs_driver;
+          currentBrief.outreach_message = currentBrief.outreach_message.replace(/Hello .* team,/, `Hello ${promoted.name} team,`);
+          currentBrief.next_two_options = remaining;
+          currentAnswer = `${promoted.name} promoted to Top Match.\n\n${currentBrief.outreach_message}`;
+          renderBrief(currentBrief, currentAnswer);
+        }
+        return;
+      }
+      renderBrief(currentBrief, currentAnswer);
+    }
+
+    function copyOutreachSms() {
+      const txt = document.getElementById("outreachBox").textContent;
+      navigator.clipboard.writeText(txt);
+      addLogEntry("SMS", `Copied outreach SMS.`);
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = "flex"; }
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+    async function submitPantryOnboarding() {
+      const name = document.getElementById("obName").value;
+      const addr = document.getElementById("obAddr").value;
+      const cold = document.getElementById("obCold").value;
+      const dock = document.getElementById("obDock").value;
+      const lead = document.getElementById("obLead").value;
+      const van = document.getElementById("obVan").value === "true";
+
+      window.RECIPIENT_COORDS[name] = {
+        lat: 41.8565, lon: -87.6612, zip: "60608",
+        cold_storage: cold, max_pallets: dock.includes("8") ? 8 : 2,
+        pickup_window_hours: parseFloat(lead), refrigerated_transport: van
+      };
+      closeModal("onboardModal");
+      addLogEntry("ONBOARD", `Added "${name}" (${cold}, ${lead}h lead).`);
+
+      const p = `We just onboarded a verified pantry "${name}" at ${addr} (${cold} cold storage, takes ${dock}, collects within ${lead}h, refrigerated_transport=${van}). Now we have 10 crates of fresh spinach that must move in 6 hours and stay cold—how does our match pipeline evaluate this offer?`;
+      document.getElementById("promptInput").value = p;
+      await submitPrompt(p);
+    }
+  </script>
+</body>
+</html>
