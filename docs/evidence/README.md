@@ -17,6 +17,7 @@ organization has.
 | [demo-tracks.txt](demo-tracks.txt) | A retail, a farm and an essentials posting through the same corpus and search, with what the filters removed and why |
 | [mcp-walk-in-answer.md](mcp-walk-in-answer.md) | A free-form data question answered through Google's managed BigQuery MCP server on the live service: two `execute_sql` calls, 13 of 192 recipients |
 | [follow-ups-transcript.md](follow-ups-transcript.md) | One conversation, six turns: a match, "they said no" twice (the next recipients are briefed), "why not" a named organization and the big food bank, and a question answered from the earlier brief |
+| [invariants.txt](invariants.txt) | The invariant check on all ten postings: every recommended recipient meets every hard constraint, nothing lost (0 violations) |
 | [selfcheck.txt](selfcheck.txt) | The offline check passing |
 
 Screenshots or a recording of the chat page are not here yet; the team's pitch video covers them.
