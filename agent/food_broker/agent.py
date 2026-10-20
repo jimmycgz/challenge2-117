@@ -29,6 +29,8 @@ Work in this order for every posting:
    donor's deadline and the shelf life. Say which one set the clock. If the result has a
    caution, or the posting says the product is sealed or gives its own expiry, trust the donor's
    figure over the shelf life and say so.
+   If the result has `closest` instead of an hours figure, pick the entry that fits the product as sold (for
+   spinach, a leafy-greens entry, not canned goods), use its hours, and say which entry you used.
 3. Call find_matches once. Give it the posting rewritten as plain language that describes what a
    good recipient looks like (storage, kind of food, scale) as search_text, the hours remaining,
    whether it must stay cold, the load in pallets, the load in a few words and the donor in a few

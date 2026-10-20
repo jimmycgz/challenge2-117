@@ -186,6 +186,24 @@ def main():
     assert _shelf_caution(1.0) and _shelf_caution(2.0), "a 1 or 2 hour shelf life must carry a caution"
     assert _shelf_caution(168.0) is None and _shelf_caution(None) is None
 
+    # Shelf life: an exact entry wins; with none, the closest entries are returned for the caller to choose from.
+    from food_broker.tools import shape_shelf_result
+    exact = shape_shelf_result("Lettuce", "refrigerated", [
+        {"product_name": "Lettuce", "product_subtitle": "leaf", "hours": 168.0, "note": "ok", "is_exact": True},
+        {"product_name": "Bagged greens", "product_subtitle": "leaf, spinach", "hours": 120.0, "note": "ok",
+         "is_exact": False}])
+    assert exact["hours"] == 168.0 and "closest" not in exact, exact
+    near = shape_shelf_result("Spinach", "refrigerated", [
+        {"product_name": "Bagged greens", "product_subtitle": "leaf, spinach, lettuce", "hours": 120.0, "note": "ok",
+         "is_exact": False},
+        {"product_name": "Lettuce", "product_subtitle": "leaf, spinach", "hours": 168.0, "note": "ok",
+         "is_exact": False}])
+    assert near["hours"] is None and [c["product_name"] for c in near["closest"]] == ["Bagged greens", "Lettuce"], near
+    assert shape_shelf_result("Zzz", "pantry", [])["hours"] is None
+    short = shape_shelf_result("Formula", "pantry", [
+        {"product_name": "Formula", "product_subtitle": "", "hours": 1.0, "note": "ok", "is_exact": True}])
+    assert "caution" in short, "a 1-hour exact figure must still carry the caution"
+
     print("selfcheck passed:", len(CANDIDATES), "candidates,", len(viable), "viable for spinach")
 
 
