@@ -1,0 +1,4 @@
+# Top-level dependencies for the food broker agent. Wheels only; tested on Python 3.12.
+google-adk[mcp]==2.12.0
+google-genai==2.31.0
+google-cloud-bigquery==3.46.2
