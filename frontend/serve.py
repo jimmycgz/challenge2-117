@@ -10,6 +10,7 @@ Usage:
 """
 
 import http.server
+import json
 import os
 import pathlib
 import urllib.error
@@ -31,6 +32,7 @@ class ConsoleHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
         super().end_headers()
 
     def do_OPTIONS(self):
@@ -49,6 +51,25 @@ class ConsoleHandler(http.server.SimpleHTTPRequestHandler):
             return
         self.send_error(405, "Method Not Allowed")
 
+    def _ensure_session_from_run_body(self, body: bytes | None, headers: dict):
+        if not body:
+            return
+        try:
+            payload = json.loads(body.decode("utf-8"))
+            app_name = payload.get("appName", "food_broker")
+            user_id = payload.get("userId", "coordinator")
+            session_id = payload.get("sessionId")
+            if not session_id:
+                return
+            sess_url = f"{BACKEND_URL}/apps/{app_name}/users/{user_id}/sessions/{session_id}"
+            sess_req = urllib.request.Request(
+                sess_url, data=b"{}", headers=headers, method="POST"
+            )
+            with urllib.request.urlopen(sess_req, timeout=15) as _:
+                pass
+        except Exception:
+            pass
+
     def _proxy(self, method: str):
         target = f"{BACKEND_URL}{self.path}"
         length = int(self.headers.get("Content-Length", "0"))
@@ -56,6 +77,10 @@ class ConsoleHandler(http.server.SimpleHTTPRequestHandler):
         headers = {"Accept": "application/json"}
         if self.headers.get("Content-Type"):
             headers["Content-Type"] = self.headers["Content-Type"]
+
+        # If calling /run, proactively ensure the ADK session exists on Cloud Run
+        if method == "POST" and self.path.startswith("/run"):
+            self._ensure_session_from_run_body(body, headers)
 
         req = urllib.request.Request(target, data=body, headers=headers, method=method)
         try:
@@ -69,6 +94,25 @@ class ConsoleHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(data)
         except urllib.error.HTTPError as exc:
+            # If Cloud Run routed /run to an instance without the in-memory session (404), recreate and retry once
+            if exc.code == 404 and method == "POST" and self.path.startswith("/run"):
+                self._ensure_session_from_run_body(body, headers)
+                try:
+                    retry_req = urllib.request.Request(
+                        target, data=body, headers=headers, method=method
+                    )
+                    with urllib.request.urlopen(retry_req, timeout=120) as resp2:
+                        data2 = resp2.read()
+                        self.send_response(resp2.status)
+                        self.send_header(
+                            "Content-Type",
+                            resp2.headers.get("Content-Type", "application/json"),
+                        )
+                        self.end_headers()
+                        self.wfile.write(data2)
+                        return
+                except Exception:
+                    pass
             err_body = exc.read()
             self.send_response(exc.code)
             self.send_header("Content-Type", "application/json")
