@@ -30,6 +30,16 @@
   "next_two_options": [
     {
       "rank": 2,
+      "meaning_rank": 3,
+      "name": "Chicago Food Rescue",
+      "address": "2426 W DAKIN ST 2, CHICAGO, IL 60618",
+      "profile_source": "generated",
+      "why": "vehicle cold storage, takes up to 2 pallets, collects within 8h",
+      "margin_hours": 16,
+      "needs_driver": false
+    },
+    {
+      "rank": 3,
       "meaning_rank": 4,
       "name": "Cedar Street Produce Alliance",
       "address": "Chicago, IL",
@@ -37,22 +47,12 @@
       "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
       "margin_hours": 12,
       "needs_driver": false
-    },
-    {
-      "rank": 3,
-      "meaning_rank": 6,
-      "name": "Chicago Food Rescue",
-      "address": "2426 W DAKIN ST 2, CHICAGO, IL 60618",
-      "profile_source": "generated",
-      "why": "vehicle cold storage, takes up to 2 pallets, collects within 8h",
-      "margin_hours": 16,
-      "needs_driver": false
     }
   ],
   "ranked": [
     {
       "rank": 1,
-      "meaning_rank": 2,
+      "meaning_rank": 1,
       "name": "Maple Street Produce Alliance",
       "address": "Chicago, IL",
       "profile_source": "planted",
@@ -62,6 +62,16 @@
     },
     {
       "rank": 2,
+      "meaning_rank": 3,
+      "name": "Chicago Food Rescue",
+      "address": "2426 W DAKIN ST 2, CHICAGO, IL 60618",
+      "profile_source": "generated",
+      "why": "vehicle cold storage, takes up to 2 pallets, collects within 8h",
+      "margin_hours": 16,
+      "needs_driver": false
+    },
+    {
+      "rank": 3,
       "meaning_rank": 4,
       "name": "Cedar Street Produce Alliance",
       "address": "Chicago, IL",
@@ -69,41 +79,31 @@
       "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
       "margin_hours": 12,
       "needs_driver": false
-    },
-    {
-      "rank": 3,
-      "meaning_rank": 6,
-      "name": "Chicago Food Rescue",
-      "address": "2426 W DAKIN ST 2, CHICAGO, IL 60618",
-      "profile_source": "generated",
-      "why": "vehicle cold storage, takes up to 2 pallets, collects within 8h",
-      "margin_hours": 16,
-      "needs_driver": false
     }
   ],
   "rejected_but_close": [
     {
       "name": "Greenline Community Pantry",
       "because": "no cold storage",
-      "semantic_rank": 1,
+      "semantic_rank": 2,
       "profile_source": "planted"
     },
     {
-      "name": "Care & Care",
+      "name": "One Patient - Global Health Initiative Ltd",
       "because": "capacity 0 pallets, load is 0.25",
-      "semantic_rank": 15,
+      "semantic_rank": 19,
       "profile_source": "generated"
     },
     {
-      "name": "Martha & Me Inc Nfp",
+      "name": "Mercy To Mankind Clinic Nfp",
       "because": "capacity 0 pallets, load is 0.25",
-      "semantic_rank": 17,
+      "semantic_rank": 21,
       "profile_source": "generated"
     }
   ],
   "refusal": null,
   "search": {
     "candidates_searched": 80,
-    "viable_after_filters": 45
+    "viable_after_filters": 51
   }
 }

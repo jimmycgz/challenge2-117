@@ -11,10 +11,10 @@
   "ranked": [],
   "rejected_but_close": [
     {
-      "name": "Chicago Food Rescue",
-      "because": "needs 8h to collect, food has 1h",
+      "name": "Cedar Street Produce Alliance",
+      "because": "needs 12h to collect, food has 1h",
       "semantic_rank": 1,
-      "profile_source": "generated"
+      "profile_source": "planted"
     },
     {
       "name": "Burrito Brigade Chicago",
@@ -25,7 +25,7 @@
     {
       "name": "Lakeshore Mutual Aid Collective",
       "because": "no cold storage; needs 12h to collect, food has 1h",
-      "semantic_rank": 14,
+      "semantic_rank": 6,
       "profile_source": "planted"
     }
   ],

@@ -143,7 +143,7 @@ The saved spinach answer ranks its rejections differently from demo-tracks.txt. 
 | 4 | Greenline is an invented case | [agent README](../agent/food_broker/README.md), "Why a plain top-k search is not enough" |
 | 4 | Pool 15 left 1, 40 left 3, 80 left 12 | [pool-study.txt](evidence/pool-study.txt) |
 | 4 | The test and the sorting bug | [deck outline](DECK-OUTLINE.md), slide 4; the test is in [selfcheck.py](../agent/food_broker/selfcheck.py) |
-| 7 (optional) | 6 of 183 real recipients (the table has 13 of 192; seven of those walk-ins are invented cases). The saved file was captured at 13:52 EDT on 2026-10-20 from the live service (revision `food-broker-00010-9jc`) and shows the query filtering on `profile_source` | [mcp-walk-in-answer.md](evidence/mcp-walk-in-answer.md) |
+| 7 (optional) | 6 of 183 real recipients (the table has 13 of 192; seven of those walk-ins are invented cases). The saved file was captured at 14:40 EDT on 2026-10-20 from the live service (revision `food-broker-00012-jhq`) and shows the query filtering on `profile_source` | [mcp-walk-in-answer.md](evidence/mcp-walk-in-answer.md) |
 | 8 | Per posting, per recipient, three of four retail offers, 9% against a mean of 19%, ten postings | [equity audit](../agent/food_broker/EQUITY-AUDIT.md), group table and "What the numbers say" |
 | 9 | Shelf life is consumer guidance; locations are ZIP-level | [agent README](../agent/food_broker/README.md), "Results and limits" |
 | Before you record | 19.9 s, 22.5 s and 20.3 s on Cloud Run, gemini-3.8-flash low thinking, one sample each | [model-call-timings.txt](evidence/model-call-timings.txt), "Cloud Run on 3.8" |
