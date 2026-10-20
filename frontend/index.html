@@ -328,9 +328,8 @@
       flex-direction: column;
       justify-content: space-between;
       flex-shrink: 0;
-      transition: margin-left 0.2s ease;
     }
-    .nav-rail.collapsed { margin-left: -205px; }
+    .nav-rail.collapsed { display: none !important; }
 
     .nav-group { display: flex; flex-direction: column; gap: 2px; }
     .nav-group-label {
@@ -382,9 +381,8 @@
       flex-direction: column;
       min-height: 0;
       flex-shrink: 0;
-      transition: margin-left 0.2s ease;
     }
-    .queue-sidebar.collapsed { margin-left: -275px; }
+    .queue-sidebar.collapsed { display: none !important; }
 
     .sidebar-header {
       padding: 14px 14px 8px;
@@ -636,9 +634,8 @@
       flex-direction: column;
       min-height: 0;
       flex-shrink: 0;
-      transition: margin-right 0.2s ease;
     }
-    .agent-sidebar.collapsed { margin-right: -355px; }
+    .agent-sidebar.collapsed { display: none !important; }
 
     .agent-header {
       padding: 10px 14px;
@@ -2704,6 +2701,14 @@
       const navHidden = document.getElementById("leftNavRail")?.classList.contains("collapsed");
       const queueHidden = document.getElementById("queueSidebar")?.classList.contains("collapsed");
       const chatHidden = document.getElementById("agentSidebar")?.classList.contains("collapsed");
+      const navBtn = document.getElementById("toggleNavBtn");
+      if (navBtn) {
+        navBtn.textContent = navHidden ? "☰ Show Menu" : "☰ Menu";
+      }
+      const queueBtn = document.getElementById("toggleQueueBtn");
+      if (queueBtn) {
+        queueBtn.textContent = queueHidden ? "📋 Show Queue (11)" : "📋 Queue (11)";
+      }
       const focusBtn = document.getElementById("focusModeBtn");
       if (focusBtn) {
         focusBtn.textContent = (navHidden && queueHidden && chatHidden) ? "⛶ Show Panels" : "⛶ Full Width";
@@ -2718,14 +2723,14 @@
       const rail = document.getElementById("leftNavRail");
       if (rail) rail.classList.toggle("collapsed");
       updateFocusButtonLabel();
-      setTimeout(() => triggerMapResize(), 220);
+      setTimeout(() => triggerMapResize(), 80);
     }
 
     function toggleQueueSidebar() {
       const q = document.getElementById("queueSidebar");
       if (q) q.classList.toggle("collapsed");
       updateFocusButtonLabel();
-      setTimeout(() => triggerMapResize(), 220);
+      setTimeout(() => triggerMapResize(), 80);
     }
 
     function toggleFocusMode() {
@@ -2743,7 +2748,7 @@
         chat?.classList.add("collapsed");
       }
       updateFocusButtonLabel();
-      setTimeout(() => triggerMapResize(), 220);
+      setTimeout(() => triggerMapResize(), 80);
     }
 
     function switchMainView(viewName) {
@@ -2754,16 +2759,6 @@
         sec.classList.toggle("active", sec.id === `view-${viewName}`);
       });
 
-      // Automatically give full width to table/planning views by hiding the incoming food queue sidebar,
-      // and restore the queue sidebar when returning to Live Dispatch.
-      const qSidebar = document.getElementById("queueSidebar");
-      if (qSidebar) {
-        if (viewName === "dispatch") {
-          qSidebar.classList.remove("collapsed");
-        } else {
-          qSidebar.classList.add("collapsed");
-        }
-      }
       updateFocusButtonLabel();
 
       const titles = {
@@ -2777,7 +2772,7 @@
       updateCopilotChipsForView(viewName);
 
       if (viewName === "dispatch") {
-        setTimeout(() => triggerMapResize(), 220);
+        setTimeout(() => triggerMapResize(), 120);
       }
     }
 
