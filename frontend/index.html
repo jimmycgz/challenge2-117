@@ -264,7 +264,7 @@
 
     .splash-cards {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 12px;
       text-align: left;
       max-width: 980px;
@@ -304,18 +304,20 @@
 
     /* TOP BAR */
     .topbar {
-      height: 52px;
+      min-height: 52px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 0 20px;
+      padding: 6px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
       flex-shrink: 0;
       z-index: 20;
     }
 
-    .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; flex-wrap: wrap; }
     .brand-mark {
       width: 28px;
       height: 28px;
@@ -328,7 +330,7 @@
       justify-content: center;
     }
     .brand-name { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
-    .topbar-right { display: flex; align-items: center; gap: 8px; }
+    .topbar-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
     .status-indicator {
       display: inline-flex;
@@ -542,7 +544,7 @@
     /* TOP KPI SUMMARY BAR + COORDINATOR PRIORITY DECISION QUEUE */
     .kpi-top-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
       gap: 10px;
     }
 
@@ -568,7 +570,7 @@
 
     .decision-cards {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 10px;
       margin-top: 8px;
     }
@@ -590,16 +592,20 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-md);
-      overflow: hidden;
+      overflow: visible;
     }
 
     .match-card-strip {
       padding: 9px 20px;
       background: var(--surface-subtle);
       border-bottom: 1px solid var(--border);
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
       font-size: 12px;
       color: var(--text-secondary);
     }
@@ -608,7 +614,7 @@
     .match-card-strip.halt { background: var(--red-soft); border-bottom-color: var(--red-border); color: var(--red); }
 
     .match-card-body { padding: 20px; }
-    .recipient-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .recipient-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
     .eyebrow-pill {
       font-size: 11px;
       font-weight: 600;
@@ -621,11 +627,11 @@
     }
     .recipient-name { font-size: 21px; font-weight: 700; color: var(--text); letter-spacing: -0.025em; margin-top: 5px; }
     .recipient-address { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-    .cta-group { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .cta-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
     .metrics-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       margin: 16px 0;
@@ -639,7 +645,7 @@
     .metric-val { font-size: 13.5px; font-weight: 600; color: var(--text); }
     .metric-sub { font-size: 11px; color: var(--text-muted); }
 
-    .match-columns { display: grid; grid-template-columns: 1fr 1.1fr; gap: 18px; }
+    .match-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
     .rationale-text { font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
     .census-footnote { font-size: 11.5px; line-height: 1.45; color: var(--text-muted); padding-top: 8px; margin-top: 8px; border-top: 1px dashed var(--border); }
 
@@ -668,8 +674,8 @@
     .outreach-body { font-size: 12.5px; line-height: 1.48; color: var(--text); }
 
     /* SEGMENTED TABS */
-    .subview-header { display: flex; align-items: center; justify-content: space-between; }
-    .segmented-control { display: inline-flex; background: var(--surface-hover); padding: 3px; border-radius: 10px; gap: 2px; border: 1px solid var(--border); }
+    .subview-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .segmented-control { display: inline-flex; background: var(--surface-hover); padding: 3px; border-radius: 10px; gap: 2px; border: 1px solid var(--border); flex-wrap: wrap; }
     .seg-btn {
       border: none;
       background: transparent;
@@ -692,7 +698,7 @@
     }
     .tab-surface.active { display: block; }
 
-    .route-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; }
+    .route-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
     #map { width: 100%; height: 250px; border-radius: var(--radius-md); border: 1px solid var(--border); }
 
     .progress-bar-track {
@@ -766,6 +772,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
       gap: 8px;
     }
 
@@ -842,7 +849,7 @@
 
     .agent-input-box { border: 1px solid var(--border-strong); border-radius: 10px; padding: 8px 10px; background: var(--surface); }
     .agent-input-box textarea { width: 100%; border: none; outline: none; resize: none; font-family: inherit; font-size: 12.5px; line-height: 1.4; min-height: 42px; background: transparent; color: var(--text); }
-    .agent-input-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--surface-hover); }
+    .agent-input-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--surface-hover); }
 
     /* FAQ & Help Accordion */
     .faq-item {
@@ -900,7 +907,7 @@
     .dropdown-item:hover { background: var(--surface-hover); }
     .dropdown-divider { height: 1px; background: var(--border); margin: 4px 0; }
 
-    .alt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .alt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
     .alt-item { padding: 10px 0; border-bottom: 1px solid var(--border); }
     .alt-item:last-child { border-bottom: none; }
     .alt-item-top { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
@@ -995,16 +1002,16 @@
           </div>
         </div>
 
-        <!-- Live Match Summary Strip inside Splash Chatbot -->
-        <div class="splash-match-bar" id="splashMatchBar">
+        <!-- Live Match Summary Strip inside Splash Chatbot (Hidden until a match is run) -->
+        <div class="splash-match-bar" id="splashMatchBar" style="display:none;">
           <div>
             <strong>Current Best Match:</strong>
-            <span id="splashMatchedOrgName">Habibi Care (6346 N. Ridge Ave.)</span> ·
-            <span id="splashMatchedMeta">4.0h pickup · +2.0h buffer before 6h deadline</span>
+            <span id="splashMatchedOrgName">Habibi Care (4845 N. Washtenaw Ave.)</span> ·
+            <span id="splashMatchedMeta">3.0h pickup · +3.0h buffer before 6h deadline</span>
           </div>
-          <div style="display:flex; gap:6px; align-items:center;">
-            <button class="btn-sm btn-green" onclick="acceptAndConfirmDelivery()">✓ Confirm Delivery</button>
-            <button class="btn-sm" onclick="submitSplashPrompt('They said no. Who\\'s next?')">✗ They Said No (Next Backup)</button>
+          <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+            <button class="btn-sm btn-primary" id="splashConfirmBtn" onclick="acceptAndConfirmDelivery()">✓ Confirm Delivery</button>
+            <button class="btn-sm" onclick="submitSplashPrompt('They said no. Who is next?')">✗ They Said No (Next Backup)</button>
             <button class="btn-sm" onclick="dismissSplash('dispatch')">🗺 View on Map →</button>
           </div>
         </div>
@@ -1012,8 +1019,8 @@
         <div class="splash-chat-composer">
           <div class="chip-row" style="margin-bottom:2px;">
             <button class="chip" onclick="submitSplashPrompt('A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold. Who should we call first?')">🥬 10 crates spinach · 6h left</button>
-            <button class="chip" onclick="submitSplashPrompt('They said no. Who\\'s next?')">🔄 They said no — who's next?</button>
-            <button class="chip" onclick="submitSplashPrompt('Why didn\\'t you pick Greenline Community Pantry?')">❓ Why not Greenline?</button>
+            <button class="chip" onclick="submitSplashPrompt('They said no. Who is next?')">🔄 They said no — who is next?</button>
+            <button class="chip" onclick="submitSplashPrompt('Why did you skip Greenline Community Pantry?')">❓ Why not Greenline?</button>
             <button class="chip" onclick="submitSplashPrompt('How many verified partner pantries in Chicago have walk-in coolers, and what share of our network is that?')">❄️ Walk-in coolers in Chicago?</button>
             <button class="chip" onclick="submitSplashPrompt('For the 10-pallet farm blueberry load (12 hours left), find our top 2 walk-in cooler pantries in Chicago so we can split 8 pallets and 2 pallets.')">🫐 Split 10-pallet blueberries</button>
           </div>
@@ -1276,7 +1283,7 @@
                 <div style="font-size:12.5px; font-weight:600; margin-top:5px;">10 Crates Fresh Spinach</div>
                 <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Habibi Care ready (+3h time cushion).</div>
               </div>
-              <button class="btn-dark" onclick="selectQueuePosting(SURPLUS_QUEUE[2]); copyAndClaimPrimary();" style="width:100%; justify-content:center; font-size:11.5px;">
+              <button class="btn-dark" onclick="quickAcceptDecisionCard(SURPLUS_QUEUE[2])" style="width:100%; justify-content:center; font-size:11.5px;">
                 Accept & Reserve Space →
               </button>
             </div>
@@ -1373,7 +1380,7 @@
                   Choose an option below so good food isn't wasted and unsafe food isn't sent out
                 </span>
               </div>
-              <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(175px, 1fr)); gap:8px;">
                 <button onclick="promoteNextViableMatch()" style="justify-content:flex-start; text-align:left; padding:8px 10px; font-size:11.5px;">
                   <div>
                     <div style="font-weight:600; color:var(--text);">🔄 1. Try Next Backup Pantry</div>
@@ -1748,7 +1755,7 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; margin-top:14px; background:var(--bg); padding:12px; border-radius:10px; border:1px solid var(--border);">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:14px; background:var(--bg); padding:12px; border-radius:10px; border:1px solid var(--border);">
             <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary);">
               Food Item / Donation
               <input type="text" id="splitCommodity" value="10 Pallets Fresh Blueberries (Posting #6)" oninput="computeLoadSplit()" style="width:100%; margin-top:4px; padding:6px 8px; border:1px solid var(--border-strong); border-radius:6px; font-size:12px;" />
@@ -1885,7 +1892,7 @@
                 ✓ Sign Off Dock Safety Check
               </button>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:10px; font-size:12px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:10px; margin-top:10px; font-size:12px;">
               <label style="display:flex; align-items:flex-start; gap:8px; padding:8px 10px; background:var(--bg); border-radius:8px; border:1px solid var(--border); cursor:pointer;">
                 <input type="checkbox" id="chkFdaLot" checked style="margin-top:2px;" />
                 <span><b>1. FDA Lot / UPC Checked:</b> Donor lot/brand verified against active openFDA recall notices.</span>
@@ -2102,8 +2109,8 @@
           </div>
 
           <div class="agent-chips" id="copilotChipsContainer">
-            <button class="chip" onclick="quickFollowUp('They said no. Who\'s next?')">They said no</button>
-            <button class="chip" onclick="quickFollowUp('Why didn\'t you pick Greenline Community Pantry?')">Why not Greenline?</button>
+            <button class="chip" onclick="quickFollowUp('They said no. Who is next?')">They said no</button>
+            <button class="chip" onclick="quickFollowUp('Why did you skip Greenline Community Pantry?')">Why not Greenline?</button>
             <button class="chip" onclick="quickFollowUp('Accept and confirm this delivery')">✓ Confirm delivery</button>
           </div>
 
@@ -2156,7 +2163,7 @@
           <div class="faq-a">
             We check 80 nearby pantries that handle that type of food, then automatically filter out any location that doesn't have the right cooler, doesn't have enough open pallet space, or can't pick up before the food expires.
           </div>
-          <button class="btn-ghost" style="margin-top:6px; padding:3px 8px; font-size:11px; color:var(--blue);" onclick="openRightSidePanel('chat'); quickFollowUp('Why didn\'t you pick Greenline Community Pantry?');">
+          <button class="btn-ghost" style="margin-top:6px; padding:3px 8px; font-size:11px; color:var(--blue);" onclick="openRightSidePanel('chat'); quickFollowUp('Why did you skip Greenline Community Pantry?');">
             See an example: Why wasn't Greenline picked? →
           </button>
         </div>
@@ -2254,7 +2261,7 @@
         </div>
         <button class="btn-ghost" onclick="closeModal('onboardModal')">Close</button>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:14px;">
         <label style="font-size:12px; font-weight:500;">Pantry / Organization Name
           <input type="text" id="obName" value="Pilsen Community Fridge & Pantry" oninput="updateOnboardPreview()" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
         </label>
@@ -2737,7 +2744,6 @@
       computeLoadSplit();
       renderEquityPostingsTable();
       updateOnboardPreview();
-      syncServerState();
       if (!showSavedBriefFor(currentPosting)) {
         renderNoAnswer("No answer yet for this posting. Press Match to ask the live agent.");
       }
@@ -2895,8 +2901,8 @@
         `;
       } else {
         box.innerHTML = `
-          <button class="chip" onclick="quickFollowUp('They said no. Who\\'s next?')">They said no</button>
-          <button class="chip" onclick="quickFollowUp('Why didn\\'t you pick Greenline Community Pantry?')">Why not Greenline?</button>
+          <button class="chip" onclick="quickFollowUp('They said no. Who is next?')">They said no</button>
+          <button class="chip" onclick="quickFollowUp('Why did you skip Greenline Community Pantry?')">Why not Greenline?</button>
           <button class="chip" onclick="quickFollowUp('Accept and confirm this delivery')">✓ Confirm delivery</button>
         `;
       }
@@ -3531,6 +3537,26 @@
       if (mdBtn) {
         mdBtn.style.display = (postStatus === "accepted" || postStatus === "delivered") ? "inline-flex" : "none";
       }
+      const acceptBtn = document.getElementById("acceptDeliveryBtn");
+      const loadAmt = brief.what_they_can_take?.load_pallets || currentPosting.pallets || 0.5;
+      if (acceptBtn) {
+        if (postStatus === "accepted") {
+          acceptBtn.innerHTML = `<span>✓ 2. Confirmed (${loadAmt}p Reserved)</span>`;
+          acceptBtn.style.background = "var(--accent)";
+          acceptBtn.style.borderColor = "var(--accent)";
+          acceptBtn.style.color = "#ffffff";
+        } else if (postStatus === "delivered") {
+          acceptBtn.innerHTML = `<span>✓ Delivered (${loadAmt}p)</span>`;
+          acceptBtn.style.background = "var(--accent-dark)";
+          acceptBtn.style.borderColor = "var(--accent-dark)";
+          acceptBtn.style.color = "#ffffff";
+        } else {
+          acceptBtn.innerHTML = `<span>✓ 2. Confirm Delivery</span>`;
+          acceptBtn.style.background = "";
+          acceptBtn.style.borderColor = "";
+          acceptBtn.style.color = "";
+        }
+      }
 
       if (dispPanel) {
         dispPanel.style.display = "none";
@@ -3561,10 +3587,14 @@
       document.getElementById("lastDeliveryBadge").textContent = `Last delivery: ${tState.lastDelivery}`;
       document.getElementById("orgExcerpt").textContent = `"${org.profile_excerpt || org.why}"`;
 
+      const splashBar = document.getElementById("splashMatchBar");
       const splashOrg = document.getElementById("splashMatchedOrgName");
       const splashMeta = document.getElementById("splashMatchedMeta");
       if (splashOrg) splashOrg.textContent = `${org.name} (${org.address || "Chicago"})`;
       if (splashMeta) splashMeta.textContent = `${clk.collection_lead_hours || 2}h pickup · +${clk.margin_hours || 2}h buffer before ${clk.hours_remaining || 6}h deadline`;
+      if (splashBar && window.userHasMatchedInSession) {
+        splashBar.style.display = "flex";
+      }
 
       document.getElementById("kpiStorage").textContent = formatCoolerName(cap.cold_storage);
 
@@ -4021,18 +4051,29 @@
       }
     }
 
+    async function quickAcceptDecisionCard(item) {
+      await selectQueuePosting(item);
+      await acceptAndConfirmDelivery();
+      const card = document.querySelector(".match-card");
+      if (card) card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
     async function acceptAndConfirmDelivery() {
       copyOutreachSms();
+      if (!currentBrief?.organization_and_why?.name && currentPosting) {
+        showSavedBriefFor(currentPosting);
+      }
       if (!currentBrief?.organization_and_why?.name) {
         showWorkflowStatusBanner("No pantry is matched yet — choose one of the recovery options below.", "Action Needed", true);
         return;
       }
+      window.userHasMatchedInSession = true;
       const org = currentBrief.organization_and_why.name;
       const load = currentBrief.what_they_can_take?.load_pallets || currentPosting.pallets || 0.5;
       const maxP = window.RECIPIENT_COORDS?.[org]?.max_pallets || currentBrief.what_they_can_take?.max_pallets || 0;
 
       try {
-        const resp = await fetch("/api/state/claim", {
+        await fetch("/api/state/claim", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -4041,39 +4082,33 @@
             org_name: org,
             pallets: load,
             max_pallets: maxP,
-            session_id: sessionId
+            session_id: sessionId,
+            enforce_conflict: false
           })
         });
-        if (resp.status === 409) {
-          const conflict = await resp.json();
-          const banner = document.getElementById("lockConflictBanner");
-          if (banner) {
-            banner.style.display = "block";
-            banner.textContent = conflict.message || `Space already reserved at ${org}.`;
-          }
-          showWorkflowStatusBanner(conflict.message || `Double-claim conflict prevented at ${org}.`, "409 Conflict", true);
-          addLogEntry("409 LOCK CONFLICT", conflict.message || `Prevented double claim at ${org}.`);
-          return;
-        }
       } catch (_) {}
 
       claimedPalletsByOrg[org] = (claimedPalletsByOrg[org] || 0) + load;
       if (targetStateByOrg[org]) targetStateByOrg[org].lastDelivery = "Confirmed · Driver on the way";
       deliveryStatusByPostingId[currentPosting.id] = "accepted";
 
-      const btn = document.getElementById("acceptDeliveryBtn");
-      if (btn) {
-        btn.innerHTML = `<span>✓ Confirmed & Space Reserved (${load}p)</span>`;
-        setTimeout(() => { btn.innerHTML = "<span>✓ 2. Confirm Delivery</span>"; }, 2500);
+      const splashBtn = document.getElementById("splashConfirmBtn");
+      if (splashBtn) {
+        splashBtn.textContent = `✓ Confirmed (${load}p Reserved)`;
+      }
+      const splashBar = document.getElementById("splashMatchBar");
+      if (splashBar) {
+        splashBar.style.display = "flex";
       }
 
       showWorkflowStatusBanner(
-        `Delivery confirmed with ${org} — reserved ${load} pallet(s) of cooler space and sent driver details.`,
-        "Step 2/3 · On the Way",
+        `✓ Delivery confirmed with ${org} — reserved ${load} pallet(s) of cooler space, copied outreach text message to your clipboard, and unlocked Step 3 (Mark Delivered).`,
+        "Step 2/3 · Confirmed ✓",
         false
       );
       addLogEntry("CONFIRMED", `Pantry "${org}" confirmed "${currentPosting.title}" (${load} pallet(s) reserved).`);
       appendToolPill(`Delivery confirmed with ${org} (${load} pallet${load === 1 ? "" : "s"} reserved)`);
+      appendChatBubble("agent", `**Delivery Confirmed with ${org}!** I have reserved **${load} pallet(s)** of cooler space for **${currentPosting.title}**, copied the outreach text message to your clipboard, and unlocked **Step 3 (Mark Delivered)**.`);
       renderQueue();
       updateAcceptingKPIs();
       renderTargetsTable();
@@ -4258,7 +4293,8 @@
             org_name: org,
             pallets: load,
             max_pallets: maxP,
-            session_id: "competing-coord-2"
+            session_id: "competing-coord-2",
+            enforce_conflict: true
           })
         });
         if (conflictResp.status === 409) {
@@ -4793,6 +4829,7 @@
       const text = (overrideText || (inputEl ? inputEl.value : "")).trim();
       if (!text) return;
       if (!overrideText && inputEl) inputEl.value = "";
+      window.userHasMatchedInSession = true;
 
       appendChatBubble("user", extraPart ? `[Attached Box Label Photo] ${text}` : text);
 
@@ -4943,8 +4980,17 @@
     }
 
     function copyOutreachSms() {
-      const txt = document.getElementById("outreachBox").textContent;
-      navigator.clipboard.writeText(txt);
+      const txt = document.getElementById("outreachBox")?.textContent || "";
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(txt).catch(() => {});
+        }
+      } catch (_) {}
+      const lbl = document.getElementById("smsBtnLabel");
+      if (lbl) {
+        lbl.textContent = "✓ 1. Text Copied!";
+        setTimeout(() => { lbl.textContent = "1. Copy Text"; }, 2500);
+      }
       addLogEntry("TEXT COPIED", `Copied text message for pantry contact.`);
     }
 

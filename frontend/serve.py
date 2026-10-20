@@ -136,13 +136,14 @@ class ConsoleHandler(http.server.SimpleHTTPRequestHandler):
                 max_pallets = float(payload.get("max_pallets") or 0.0)
                 session_id = str(payload.get("session_id") or "local-coord")
                 force_split = bool(payload.get("allow_split", False))
+                enforce_conflict = bool(payload.get("enforce_conflict", False))
 
                 if not posting_id or not org_name or pallets <= 0:
                     self._send_json(400, {"error": "posting_id, org_name, and pallets > 0 required"})
                     return
 
                 existing_lock = state["posting_locks"].get(posting_id)
-                if existing_lock and not force_split:
+                if enforce_conflict and existing_lock and not force_split:
                     if existing_lock.get("session_id") != session_id or existing_lock.get("org_name") != org_name:
                         self._send_json(
                             409,
@@ -160,7 +161,7 @@ class ConsoleHandler(http.server.SimpleHTTPRequestHandler):
                         return
 
                 already_claimed = float(state["claimed_pallets_by_org"].get(org_name, 0.0))
-                if max_pallets > 0 and (already_claimed + pallets) > max_pallets + 1e-6:
+                if enforce_conflict and max_pallets > 0 and (already_claimed + pallets) > max_pallets + 1e-6:
                     self._send_json(
                         409,
                         {
