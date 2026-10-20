@@ -1252,6 +1252,12 @@
           <span class="nav-badge">11</span>
         </button>
 
+        <button class="nav-item" data-view="overview" onclick="switchMainView('overview')">
+          <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Overview & Urgent</span>
+          <span class="nav-badge" style="background:var(--red-soft); color:var(--red); border:1px solid var(--red-border);">3</span>
+        </button>
+
         <button class="nav-item" onclick="expandAndFocusAssistant()" style="background:var(--primary-soft); border-color:var(--primary-border); color:var(--primary); font-weight:600; margin:2px 0;">
           <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           <span>AI Broker Chat</span>
@@ -1311,9 +1317,9 @@
     <main class="stage-scroll">
 
       <!-- ======================================================================
-           VIEW 1: LIVE DISPATCH (WITH KPI BAR + PRIORITY DECISION QUEUE)
+           VIEW 0: NETWORK OVERVIEW & MOST URGENT DECISIONS (SEPARATE AREA)
            ====================================================================== -->
-      <div class="view-section active" id="view-dispatch">
+      <div class="view-section" id="view-overview">
 
         <!-- Executive KPI & Metrics Bar -->
         <div class="kpi-top-row">
@@ -1345,7 +1351,7 @@
             <span style="font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted);">
               Most Urgent Decisions Right Now
             </span>
-            <span style="font-size:11px; color:var(--text-muted);">Click any card to take action</span>
+            <span style="font-size:11px; color:var(--text-muted);">Click any card to open in Live Dispatch</span>
           </div>
           <div class="decision-cards">
             <div class="decision-card">
@@ -1390,6 +1396,26 @@
               </button>
             </div>
           </div>
+        </div>
+
+      </div>
+
+      <!-- ======================================================================
+           VIEW 1: LIVE DISPATCH (FOCUSED SINGLE-OFFER DECISION VIEW)
+           ====================================================================== -->
+      <div class="view-section active" id="view-dispatch">
+
+        <!-- Slim Active Offer Context Bar -->
+        <div id="activePostingHeader" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); box-shadow:var(--shadow-xs);">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span class="eyebrow-pill" id="activeOfferTrackPill" style="background:var(--bg-subtle); color:var(--text-secondary);">Retail Offer</span>
+            <strong id="activeOfferTitle" style="font-size:14px; color:var(--text);">10 Crates Fresh Spinach</strong>
+            <span id="activeOfferSpecs" style="font-size:12px; color:var(--text-secondary);">0.5 pallet · Needs cooler</span>
+            <span class="time-pill urg" id="activeOfferTimePill">6h left</span>
+          </div>
+          <button class="btn-ghost" style="font-size:11.5px; padding:4px 8px;" onclick="switchMainView('overview')">
+            📊 View Network Stats & Urgent Triage →
+          </button>
         </div>
 
         <!-- Primary Match Hero Card -->
@@ -3094,6 +3120,7 @@
 
       const titles = {
         dispatch: "Live Dispatch",
+        overview: "Network Overview & Urgent Triage",
         targets: "Pantry Locations & Cooler Space (192)",
         routes: "Multi-Stop Route Planner",
         safety: "Food Safety & Recalls",
@@ -3262,7 +3289,26 @@
       setTimeout(() => triggerMapResize(), 120);
     }
 
+    function updateActiveOfferHeader(item) {
+      if (!item) return;
+      const trackEl = document.getElementById("activeOfferTrackPill");
+      const titleEl = document.getElementById("activeOfferTitle");
+      const specsEl = document.getElementById("activeOfferSpecs");
+      const timeEl = document.getElementById("activeOfferTimePill");
+      if (trackEl) trackEl.textContent = `${item.track} Offer`;
+      if (titleEl) titleEl.textContent = item.title;
+      if (specsEl) specsEl.textContent = `${item.pallets} pallet${item.pallets === 1 ? "" : "s"} · ${item.needs_cold ? "Needs cooler" : "Dry storage"}`;
+      if (timeEl) {
+        const st = deliveryStatusByPostingId[item.id];
+        const pillClass = st === "delivered" ? "green" : st === "accepted" ? "green" : st === "diverted" ? "ok" : item.hours <= 2 ? "crit" : item.hours <= 6 ? "urg" : "ok";
+        const pillText = st === "delivered" ? "✓ Delivered" : st === "accepted" ? "✓ Confirmed" : st === "diverted" ? "♻️ Diverted" : `${formatHours(item.hours)} left`;
+        timeEl.className = `time-pill ${pillClass}`;
+        timeEl.textContent = pillText;
+      }
+    }
+
     function renderQueue() {
+      updateActiveOfferHeader(currentPosting);
       const list = document.getElementById("queueList");
       const mobList = document.getElementById("mobileQueueList");
       if (list) list.innerHTML = "";
