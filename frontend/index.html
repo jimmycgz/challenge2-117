@@ -2112,7 +2112,7 @@
               id="promptInput"
               placeholder="Ask a question, describe a food donation, or tell me to confirm/switch pantries..."
               onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); submitPrompt(); }"
-            >A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.</textarea>
+            ></textarea>
 
             <div class="agent-input-actions">
               <div style="display:flex; gap:4px; align-items:center;">
@@ -2740,8 +2740,6 @@
       syncServerState();
       if (!showSavedBriefFor(currentPosting)) {
         renderNoAnswer("No answer yet for this posting. Press Match to ask the live agent.");
-      } else {
-        appendChatBubble("agent", currentAnswer);
       }
       checkOpenFDARecall(currentPosting.commodity);
       const allNames = Object.keys(window.RECIPIENT_COORDS || {});
@@ -3085,9 +3083,7 @@
       const splashInput = document.getElementById("splashPromptInput");
       const text = (overrideText || (splashInput ? splashInput.value : "")).trim();
       if (!text) return;
-      if (!overrideText && splashInput) splashInput.value = "";
-      const mainInput = document.getElementById("promptInput");
-      if (mainInput) mainInput.value = text;
+      if (splashInput) splashInput.value = "";
       await submitPrompt(text);
     }
 
@@ -3143,7 +3139,6 @@
       currentPosting = item;
       excludedOrgs = [];
       renderQueue();
-      document.getElementById("promptInput").value = item.prompt;
       checkOpenFDARecall(item.commodity);
       setLiveStatus("");
       const wfBanner = document.getElementById("deliveryWorkflowStatus");
@@ -4737,14 +4732,12 @@
 
     async function quickFollowUp(text) {
       openRightSidePanel("chat");
-      document.getElementById("promptInput").value = text;
       await submitPrompt(text);
     }
 
     async function sendMcpWalkInQuery() {
       const q = "How many verified partner pantries in Chicago have walk-in coolers, and what share of our network is that?";
       openRightSidePanel("chat");
-      document.getElementById("promptInput").value = q;
       await submitPrompt(q);
     }
 
@@ -4796,8 +4789,10 @@
     }
 
     async function submitPrompt(overrideText, extraPart) {
-      const text = (overrideText || document.getElementById("promptInput").value).trim();
+      const inputEl = document.getElementById("promptInput");
+      const text = (overrideText || (inputEl ? inputEl.value : "")).trim();
       if (!text) return;
+      if (!overrideText && inputEl) inputEl.value = "";
 
       appendChatBubble("user", extraPart ? `[Attached Box Label Photo] ${text}` : text);
 
