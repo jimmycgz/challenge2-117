@@ -1,6 +1,6 @@
 # Live service transcript
 
-Captured 2026-10-20 11:29 EDT from the deployed Cloud Run service. The recipient names and addresses are real (IRS data). Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
+Captured 2026-10-20 11:29 EDT from the deployed Cloud Run service. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
 
 ## Health, with no credentials
 

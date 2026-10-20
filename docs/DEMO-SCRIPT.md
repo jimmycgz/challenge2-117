@@ -40,7 +40,7 @@ Point at, in this order:
    a match with 20 minutes of slack is a warning, not a win.
 3. Part 6, the next two options and the "closest rejected matches", each with its rank by meaning. This is the moment
    to slow down, and to say it in your own words. The facts to land: in the saved run, the three nearest recipients by
-   meaning were all removed; two could not collect in time; one, Greenline Community Pantry at rank 3, writes that its
+   meaning were all removed; two could not collect in time; one, Greenline Community Pantry at rank 3 (an invented teaching case in the challenge data), writes that its
    families ask for fresh greens and that it has no refrigeration of any kind; the nearest recipient that works is
    11th by meaning, and the ranking's top three sit at 50th to 63rd. A live run can pick a different recipient for the rejected list, so read what is on screen;
    the saved version is in [demo-tracks.txt](evidence/demo-tracks.txt).
@@ -115,15 +115,15 @@ server, read-only. Matching a posting never goes through free-form SQL, so the f
 ## The audit (20 seconds, one slide or the audit page)
 
 Show the group table in [the equity audit](../agent/food_broker/EQUITY-AUDIT.md). Say the honest result: counted per
-posting, the matches have more poverty than the corpus and the other two measures are mixed; counted per recipient, they sit lower, because one
-pantry won three postings; weighted by volume, assistance is 9% against 20% (compared as means). The audit searches with
+posting, the matches are close to the corpus with no consistent direction; counted per recipient, they sit lower on all three, because one
+pantry won three postings; weighted by volume, assistance is 9% against a corpus mean of 19% (compared as means). The audit searches with
 the raw posting text, while the live agent searches with a rewrite Gemini writes. Ten postings cannot separate a real
-skew from noise. The big farm loads can only go to the 17 recipients with room, who sit in somewhat lower-need areas.
+skew from noise. The big farm loads can only go to the 14 recipients with room; their tracts show lower need on the means but not the medians.
 
 ## The close (15 seconds)
 
-Say what is real and what is generated: recipient names and addresses are real, their storage, capacity and pickup times
-are generated, shelf life is consumer guidance, and locations are ZIP-level. Then say what comes next: remembering who
+Say what is real and what is generated: recipient names and addresses are real, except nine invented teaching cases the challenge
+adds, and everyone's storage, capacity and pickup times are generated, shelf life is consumer guidance, and locations are ZIP-level. Then say what comes next: remembering who
 received food recently so one pantry is not asked every time.
 
 ## If the live page is slow or gone

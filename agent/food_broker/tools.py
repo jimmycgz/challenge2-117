@@ -56,7 +56,7 @@ def vector_candidates(posting_text: str, top_k: int = 80) -> list[dict]:
       base.cold_storage, base.frozen_storage, base.loading_dock, base.refrigerated_transport,
       base.max_pallets, base.pickup_window_hours, base.weekly_households,
       base.populations_served, base.service_days, base.profile_text,
-      base.latitude, base.longitude, distance
+      base.latitude, base.longitude, base.profile_source, distance
     FROM VECTOR_SEARCH(
       TABLE `{DATASET}.recipient_embeddings`, 'embedding',
       (SELECT AI.EMBED(@posting, endpoint => '{EMBED_ENDPOINT}').result AS embedding),
@@ -343,7 +343,7 @@ def build_match_brief(
     picked += others[: 3 - len(picked)]
     shown = sorted(picked, key=lambda e: e.get("semantic_rank", 0))
     rejected = [{"name": e["name"], "because": e["eliminated_because"],
-                 "semantic_rank": e.get("semantic_rank")} for e in shown]
+                 "semantic_rank": e.get("semantic_rank"), "profile_source": e.get("profile_source")} for e in shown]
     if not viable:
         return {
             "organization_and_why": None, "what_they_can_take": None,
@@ -360,6 +360,7 @@ def build_match_brief(
 
     def card(rank: int, v: dict) -> dict:
         return {"rank": rank, "meaning_rank": v.get("semantic_rank"), "name": v["name"], "address": address(v),
+                "profile_source": v.get("profile_source"),
                 "why": v["why_viable"], "margin_hours": v["margin_hours"],
                 "needs_driver": v["needs_driver"]}
 
@@ -367,7 +368,7 @@ def build_match_brief(
     ranked = [card(i + 1, v) for i, v in enumerate(viable[:3])]
     return {
         "organization_and_why": {
-            "name": top["name"], "address": address(top),
+            "name": top["name"], "address": address(top), "profile_source": top.get("profile_source"),
             "why": top["why_viable"],
             "profile_excerpt": _excerpt(top.get("profile_text") or ""),
         },
@@ -430,10 +431,11 @@ def explain_candidate(
         for e in result["eliminated"]:
             if fragment in e["name"].lower():
                 found.append({"name": e["name"], "semantic_rank": e["semantic_rank"], "outcome": "removed",
-                              "detail": e["eliminated_because"]})
+                              "profile_source": e.get("profile_source"), "detail": e["eliminated_because"]})
         for place, v in enumerate(result["viable"], 1):
             if fragment in v["name"].lower():
                 found.append({"name": v["name"], "semantic_rank": v["semantic_rank"], "outcome": "viable",
+                              "profile_source": v.get("profile_source"),
                               "detail": f"passed every filter and ranked {place} of {len(result['viable'])} "
                                         f"viable; {v['why_viable']}"})
         found.sort(key=lambda f: f["semantic_rank"])

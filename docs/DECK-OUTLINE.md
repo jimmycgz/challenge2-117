@@ -9,7 +9,8 @@ slides, in these words, not only in the repo. Front-load it: assume nobody reach
 ## 1. The situation
 
 We coordinate food rescue in Chicago. A grocer has just offered ten crates of spinach and it has to leave in six
-hours. Here is who we would call, and what we do not know about them.
+hours. Here is who we would call, and what we do not know about them. Their names and addresses are real IRS records,
+except nine invented teaching cases the challenge adds; what each can store, take and collect is generated.
 
 ## 2. The problem
 
@@ -28,7 +29,7 @@ on Cloud Run.
 ## 4. Why meaning is not enough
 
 For the spinach offer, the three closest recipients by meaning were all wrong. Two could not collect in time. One,
-ranked third, wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest
+ranked third and an invented teaching case in the challenge data, wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest
 one that passes is 11th by meaning; the three our ranking puts first sit at 50th, 54th and 63rd, because it prefers
 sturdier cold storage and a comfortable margin over closeness (the nearest passing recipient has a household fridge and one
 hour of slack; the picks have two or three hours and, for the first, a refrigerated vehicle). Pool of 15 left 1 viable recipient, 40 left 3, 80 left 12.
@@ -49,17 +50,17 @@ posting. A guard refuses to run under any account but the lab's.
 
 ## 7. The equity audit
 
-Did the food go where the need is, or where the loading docks are? Counted per posting, the matches have more poverty
-than the corpus and the other two measures are mixed. Counted per recipient, they sit lower, because one pantry won three postings. Weighted by volume,
-assistance is 9% against 20%, because the big farm loads can only go to the 17 recipients with room, who sit in
-somewhat lower-need areas (weighted figures are compared with the corpus as means). The audit searches with the raw
+Did the food go where the need is, or where the loading docks are? Counted per posting, the matches are close to the corpus
+with no consistent direction. Counted per recipient, they sit lower on all three measures, because one pantry won three postings. Weighted by volume,
+assistance is 9% against a corpus mean of 19%, because the big farm loads can only go to the 14 recipients with room (their
+tracts show lower need on the means, not on the medians; weighted figures are compared with the corpus as means). The audit searches with the raw
 posting text; the live agent searches with a rewrite Gemini writes. Ten postings cannot separate a real skew from noise. We found this by having the first version
 reviewed cold: it counted one recipient three times and reversed our own headline. Table: [equity audit](../agent/food_broker/EQUITY-AUDIT.md).
 
 ## 8. Limits and what is next
 
-Recipient names and addresses are real; their storage, capacity and pickup times are generated. Shelf life is consumer
-guidance. Locations are ZIP-level. One metro, ten postings. Next: remember who received food recently so one pantry is
+Recipient names and addresses are real (IRS records), except nine invented teaching cases the challenge adds to the
+corpus; their storage, capacity and pickup times, and everyone else's, are generated. Shelf life is consumer guidance. Locations are ZIP-level. One metro, ten postings. Next: remember who received food recently so one pantry is
 not asked every time, and split a load no single recipient can take.
 
 ## Where each scoring dimension is answered

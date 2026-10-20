@@ -204,6 +204,22 @@ def main():
         {"product_name": "Formula", "product_subtitle": "", "hours": 1.0, "note": "ok", "is_exact": True}])
     assert "caution" in short, "a 1-hour exact figure must still carry the caution"
 
+    # profile_source reaches the brief, the rejections and the explanation, so a planted teaching case can be labelled.
+    planted = dict(row("Invented Teaching Case", "walk-in", 10, 2, 0.05), profile_source="planted")
+    real = dict(row("Real Organization", "walk-in", 10, 3, 0.10), profile_source="generated")
+    pout = apply_constraints([planted, real], hours_remaining=6, needs_cold=True, pallets=0.5)
+    pb = build_match_brief("x", 6, pout["viable"], pout["eliminated"], pallets=0.5)
+    assert pb["organization_and_why"]["profile_source"] == "planted", pb["organization_and_why"]
+    assert [r["profile_source"] for r in pb["ranked"]] == ["planted", "generated"], pb["ranked"]
+    import food_broker.tools as T2
+    keep = T2.vector_candidates
+    try:
+        T2.vector_candidates = lambda text, top_k=80: [dict(planted, semantic_rank=1)]
+        ex = T2.explain_candidate("invented", "x", 6, True, 0.5)["matches"]
+        assert ex and ex[0]["profile_source"] == "planted", ex
+    finally:
+        T2.vector_candidates = keep
+
     print("selfcheck passed:", len(CANDIDATES), "candidates,", len(viable), "viable for spinach")
 
 

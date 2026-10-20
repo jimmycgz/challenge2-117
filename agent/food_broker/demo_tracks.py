@@ -13,6 +13,11 @@ Needs the lab tables and the identity settings (see README.md). Run from the age
 from .tools import _pallets, apply_constraints, vector_candidates
 
 # (track, posting, needs_cold, pallets, hours_remaining). Postings are the notebook's own.
+def tag(row: dict) -> str:
+    """Mark the nine invented teaching cases the challenge plants in the corpus: they are not real organizations."""
+    return "  [invented teaching case]" if row.get("profile_source") == "planted" else ""
+
+
 POSTINGS = [
     ("retail", "10 crates of spinach, harvested yesterday, needs cold storage", True, 0.5, 6),
     ("farm", "5 tons of potatoes still in the field, we can load pallets if someone collects",
@@ -29,17 +34,17 @@ def main():
         print(f"  semantic candidates: {len(cands)}   viable after constraints: {len(out['viable'])}")
         for pick, v in enumerate(out["viable"][:3], 1):
             print(f"  + agent's pick {pick}: {v['name']} (meaning rank #{v['semantic_rank']}, "
-                  f"{v['cold_storage']}, room for {_pallets(v['max_pallets'])}, margin {v['margin_hours']}h)")
+                  f"{v['cold_storage']}, room for {_pallets(v['max_pallets'])}, margin {v['margin_hours']}h){tag(v)}")
         if out["viable"]:
             nearest = min(out["viable"], key=lambda v: v["semantic_rank"])
             print(f"  = nearest by meaning that passed the filters: {nearest['name']} "
                   f"(meaning rank #{nearest['semantic_rank']}, {nearest['cold_storage']}, "
-                  f"room for {_pallets(nearest['max_pallets'])}, margin {nearest['margin_hours']}h)")
+                  f"room for {_pallets(nearest['max_pallets'])}, margin {nearest['margin_hours']}h){tag(nearest)}")
         cold = [e for e in out["eliminated"] if "no cold storage" in e["eliminated_because"]]
         shown = sorted(cold[:1] + [e for e in out["eliminated"] if e not in cold[:1]][:2],
                        key=lambda e: e["semantic_rank"])
         for e in shown:
-            print(f"  - removed: {e['name']} (meaning rank #{e['semantic_rank']}): {e['eliminated_because']}")
+            print(f"  - removed: {e['name']} (meaning rank #{e['semantic_rank']}): {e['eliminated_because']}{tag(e)}")
             if "no cold storage" in e["eliminated_because"]:
                 print(f"      its profile reads: \"{e['profile_text'][:150]}...\"")
 

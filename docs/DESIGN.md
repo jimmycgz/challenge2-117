@@ -43,7 +43,7 @@ any credentials that are not the lab's.
 
 | Table | Rows | Real or generated |
 |---|---|---|
-| `recipients` | 192 | Names, addresses, NTEE codes, reported income real (IRS). Storage, capacity, pickup times, profile text generated |
+| `recipients` | 192 | Names, addresses, NTEE codes, reported income real (IRS) for 183; the other nine are invented teaching cases the challenge adds, with no real street or ZIP. Storage, capacity, pickup times, profile text generated for all |
 | `recipient_embeddings` | 192 | `profile_text` embedded once with `gemini-embedding-2` (3072 dimensions) |
 | `surplus_postings` | 10 | Synthetic offers across three tracks |
 | `shelf_life` | 661 | USDA FoodKeeper, consumer guidance |
@@ -106,7 +106,7 @@ requests by the team's decision. ADK's chat page is at `/dev-ui/`, the API at `/
 | Top 2 rejected decoys | Up to 3, always one cold-storage rejection, with rank by meaning; `explain_candidate` for any named organization | Makes the search's mistakes visible | Keep |
 | 7-element brief with distance and a quoted profile | Six parts from the challenge sheet; no distance; profile not quoted for timing | See the limits above | Keep |
 | Table `recipients_embedded` | `recipient_embeddings` | Already built and live | Keep, do not rebuild |
-| KPI: matches sit above the 20% no-vehicle baseline | Per posting yes (mean 31%, median 23%); per distinct recipient mean 26%, median 20% | One pantry won three postings | Report all counts, see the audit |
+| KPI: matches sit above the 20% no-vehicle baseline | Per posting yes (mean 30%, median 23%); per distinct recipient mean 24%, median 20% (183 real recipients) | One pantry won three postings | Report all counts, see the audit |
 | "1 pallet is about 10 to 12 crates" | The model estimates, and varies (ten crates came out at 0.2 to 1 pallet) | Not pinned in the instructions | Pin it, see D5 |
 | Exact product name for shelf life | Exact name only, so "spinach" finds nothing (it is listed as "Bagged greens" and "Lettuce") | A bug found while writing the tests | Fix in its own pull request |
 
@@ -123,7 +123,8 @@ requests by the team's decision. ADK's chat page is at `/dev-ui/`, the API at `/
 
 ## 10. Known limits
 
-Recipient names and addresses are real; storage, capacity and pickup times are generated. Locations are ZIP-level, so
+Recipient names and addresses are real (IRS records), except nine invented teaching cases the challenge adds to the
+corpus; their storage, capacity and pickup times, and everyone else's, are generated. Locations are ZIP-level, so
 tract figures describe the surrounding area. Shelf life is consumer guidance. One metro, ten postings. The open service can
 run read-only SQL on the project's data. The audit searches with the raw posting text, while the live agent searches with
 a rewrite the model writes.

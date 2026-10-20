@@ -23,7 +23,7 @@ facts, not about a particular organization's name.
 |---|---|---|---|
 | B1 | `python -m food_broker.check_invariants` | `PASS: 0 violations`. Every recipient left standing has cold storage when needed, room for the load and a collection time within the clock, and no candidate is lost. It reuses the filter's own rules, so it shows the code is consistent across the data, not that the rules are the right ones | Passes, output in [evidence/invariants.txt](evidence/invariants.txt) |
 | B2 | `python -m food_broker.equity_audit` | The tables match [EQUITY-AUDIT.md](../agent/food_broker/EQUITY-AUDIT.md) | Matches |
-| B3 | `python -m food_broker.demo_tracks` | The retail block shows Greenline Community Pantry removed for no cold storage with its rank by meaning; farm and essentials blocks show viable recipients | Matches [evidence/demo-tracks.txt](evidence/demo-tracks.txt) |
+| B3 | `python -m food_broker.demo_tracks` | The retail block shows Greenline Community Pantry (an invented teaching case in the challenge data) removed for no cold storage with its rank by meaning; farm and essentials blocks show viable recipients | Matches [evidence/demo-tracks.txt](evidence/demo-tracks.txt) |
 | B4 | Row counts: recipients 192, recipient_embeddings 192, surplus_postings 10, shelf_life 661, tract_demographics 1004 | All five match | Matched |
 
 ## C. The seven coordinator questions (chat page; C1 first, C2 to C6 in the same session)

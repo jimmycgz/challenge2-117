@@ -1,4 +1,4 @@
-Pool-size study, lab tables, captured 2026-10-20 12:16 EDT. Recipient names are real; storage, capacity and pickup times are generated.
+Pool-size study, lab tables, captured 2026-10-20 12:16 EDT. Recipient names are real (IRS records), except nine invented teaching cases the challenge adds to the corpus; everyone's storage, capacity and pickup times are generated.
 
 Posting: '10 crates of spinach, harvested yesterday, needs cold storage'; clock 6 h, 0.5 pallet, cold: True
 

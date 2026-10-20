@@ -1,4 +1,4 @@
-Invariant check on all ten postings, lab tables, captured 2026-10-20 11:55 EDT. Recipient names are real; storage, capacity and pickup times are generated.
+Invariant check on all ten postings, lab tables, captured 2026-10-20 11:55 EDT. Recipient names are real (IRS records), except nine invented teaching cases the challenge adds to the corpus; everyone's storage, capacity and pickup times are generated.
 
 | # | Track | Candidates | Viable | Removed | Cold-storage removals | Violations |
 |---|---|---|---|---|---|---|

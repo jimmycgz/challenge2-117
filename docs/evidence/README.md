@@ -3,8 +3,10 @@
 The demo ran in a temporary lab project that will be deleted. These files were captured from the deployed Cloud Run
 service and from the lab's BigQuery tables on 2026-10-20, with the lab identifiers replaced by placeholders.
 
-The recipient names and addresses are real (IRS data). Their cold storage, pallet capacity and pickup times are
-generated, as the [agent README](../../agent/food_broker/README.md) says. Nothing here is a claim about what a real
+The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the
+corpus, which have no real street or ZIP; Greenline Community Pantry and Maple Street Produce Alliance are two of them.
+Everyone's cold storage, pallet capacity and pickup times are generated, as the
+[agent README](../../agent/food_broker/README.md) says. Nothing here is a claim about what a real
 organization has.
 
 | File | What it shows |

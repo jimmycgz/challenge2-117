@@ -50,4 +50,5 @@ pastes them; nothing here submits.
 
 A food-rescue broker for Chicago: a coordinator describes a surplus offer, and the agent finds recipients by meaning with
 BigQuery vector search, removes the ones that cannot store or collect it in time, and returns a Match Brief with a
-message ready to send. Recipient names and addresses are real; their storage, capacity and pickup times are generated.
+message ready to send. Recipient names and addresses are real (IRS records), except nine invented teaching cases the challenge adds to the
+corpus; their storage, capacity and pickup times, and everyone else's, are generated.

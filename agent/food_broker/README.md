@@ -98,17 +98,18 @@ reach the model. A full answer now takes about 22 seconds locally and about 13 o
 ## Results and limits
 
 [EQUITY-AUDIT.md](EQUITY-AUDIT.md) runs the matcher over the ten postings and counts the result three ways, because the
-answer changes with the count. Per posting, the matches have more poverty than the corpus and the other two measures are mixed. Per distinct
-recipient they sit lower, because one pantry was the top match for three of the four retail offers (spinach, dairy,
-deli). Weighted by estimated volume they sit in tracts with much less assistance (9%, against a corpus mean of 20%),
-because the large loads can only go to the 17 recipients with room. With ten postings and eight distinct recipients the
+answer changes with the count. Per posting, the matches are close to the corpus with no consistent direction. Per distinct
+recipient they sit lower on all three measures, because one pantry was the top match for three of the four retail offers (spinach, dairy,
+deli). Weighted by estimated volume they sit in tracts with much less assistance (9%, against a corpus mean of 19%),
+because the large loads can only go to the 14 recipients with room. With ten postings and eight distinct recipients the
 audit cannot separate a real skew from noise, and it searches with the raw posting text where the live agent searches
 with a rewrite. It does not show why that one pantry won three times; the matcher keeps no record of who received food
 recently.
 
 Known limits:
 
-- Recipient names and addresses are real; their cold storage, pallet capacity and pickup times are generated. The
+- Recipient names and addresses are real (IRS records), except nine invented teaching cases the challenge adds to the
+  corpus, which have no real street or ZIP. Everyone's cold storage, pallet capacity and pickup times are generated. The
   agent presents them as the profile on file and suggests confirming by phone.
 - Shelf life is USDA consumer guidance, not a cold-chain guarantee.
 - Locations are ZIP-level, so the tract figures describe the surrounding area.
