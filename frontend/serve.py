@@ -127,8 +127,10 @@ class ConsoleHandler(http.server.SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    # Loopback only, so other machines on the network cannot use this as an open relay.
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", PORT), ConsoleHandler)
-    print(f"Coordinator Dispatch Console running at http://127.0.0.1:{PORT}")
+    # Bind to 0.0.0.0 when running on Cloud Run (K_SERVICE set) or when HOST is specified; default to 127.0.0.1 locally.
+    default_host = "0.0.0.0" if os.environ.get("K_SERVICE") else "127.0.0.1"
+    host = os.environ.get("HOST", default_host)
+    server = http.server.ThreadingHTTPServer((host, PORT), ConsoleHandler)
+    print(f"Coordinator Dispatch Console running at http://{host}:{PORT}")
     print(f"Proxying ADK API calls to {BACKEND_URL}")
     server.serve_forever()
