@@ -1068,15 +1068,15 @@
                 </button>
 
                 <button class="btn-dark" onclick="acceptAndConfirmDelivery()" id="acceptDeliveryBtn" title="Step 2: Pantry accepted — confirm delivery & lock pallets">
-                  <span>✓ 2. Accept & Confirm Delivery</span>
+                  <span>✓ 2. Accept Delivery</span>
                 </button>
 
-                <button onclick="markDeliveryCompleted()" id="markDeliveredBtn" title="Step 3: Driver completed drop-off at pantry dock">
+                <button onclick="markDeliveryCompleted()" id="markDeliveredBtn" style="display:none;" title="Step 3: Driver completed drop-off at pantry dock">
                   <span>📦 3. Mark Delivered</span>
                 </button>
 
-                <button onclick="promoteNextViableMatch()" style="color:var(--red); border-color:var(--red-border);" title="Pantry refused or unavailable — advance to next viable backup">
-                  <span>✗ Refused / Next Match</span>
+                <button onclick="toggleOrTriggerRefusal()" style="color:var(--red); border-color:var(--red-border);" title="Pantry refused or cannot deliver — open fallback options or promote next match">
+                  <span>✗ Can't Deliver / Refused ▾</span>
                 </button>
 
                 <div class="dropdown" id="problemDropdown">
@@ -1099,14 +1099,20 @@
               </div>
             </div>
 
+            <!-- In-Card Live Agent Progress Indicator (Visible when Cloud Run is matching) -->
+            <div id="cardLoadingBanner" style="display:none; margin-top:12px; padding:10px 14px; border-radius:8px; background:var(--blue-soft); border:1px solid #bae6fd; color:var(--blue); font-size:12.5px; font-weight:500; justify-content:space-between; align-items:center;">
+              <span id="cardLoadingText">⚡ Live Cloud Run Agent: 1. Checking USDA Shelf Life → 2. Searching 192 Pantries in BigQuery → 3. Drafting Match Brief...</span>
+              <span class="time-pill ok">Running...</span>
+            </div>
+
             <!-- Live Delivery Acceptance Status Banner -->
             <div id="deliveryWorkflowStatus" style="display:none; margin-top:12px; padding:10px 14px; border-radius:8px; background:var(--accent-soft); border:1px solid var(--accent-border); color:var(--accent-dark); font-size:12.5px; font-weight:500; justify-content:space-between; align-items:center;">
               <span id="deliveryWorkflowText"></span>
               <span class="time-pill green" id="deliveryWorkflowStepPill">Confirmed</span>
             </div>
 
-            <!-- Fallback & Unmatched Food Disposition Protocol (When Refused or 0 Matches) -->
-            <div id="unmatchedDispositionPanel" style="margin-top:12px; padding:12px 14px; border-radius:8px; background:var(--bg); border:1px solid var(--border); display:flex; flex-direction:column; gap:8px;">
+            <!-- Fallback & Unmatched Food Disposition Protocol (Auto-expands on Refusal / 0 Matches or when clicking "Can't Deliver") -->
+            <div id="unmatchedDispositionPanel" style="display:none; margin-top:12px; padding:12px 14px; border-radius:8px; background:var(--bg); border:1px solid var(--border); flex-direction:column; gap:8px;">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
                 <span style="font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-secondary);" id="dispositionHeaderTitle">
                   If Delivery Is Refused or Unmatched — Fallback & Disposition Protocol
@@ -1673,10 +1679,10 @@
             <button class="btn-dark" style="padding:4px 8px; font-size:11px;" onclick="dispatchPhotoOffer()">Extract & Match</button>
           </div>
 
-          <div class="agent-chips">
+          <div class="agent-chips" id="copilotChipsContainer">
             <button class="chip" onclick="quickFollowUp('They said no. Who\'s next?')">They said no</button>
             <button class="chip" onclick="quickFollowUp('Why didn\'t you pick Greenline Community Pantry?')">Why not Greenline?</button>
-            <button class="chip" onclick="sendMcpWalkInQuery()">Walk-in coolers (SQL)</button>
+            <button class="chip" onclick="quickFollowUp('Accept and confirm this delivery')">✓ Accept delivery</button>
           </div>
 
           <div class="agent-input-box">
@@ -2250,6 +2256,36 @@
       document.getElementById("splashScreen").classList.remove("hidden");
     }
 
+    function updateCopilotChipsForView(viewName) {
+      const box = document.getElementById("copilotChipsContainer");
+      if (!box) return;
+      if (viewName === "targets") {
+        box.innerHTML = `
+          <button class="chip" onclick="sendMcpWalkInQuery()">Walk-in coolers (SQL)</button>
+          <button class="chip" onclick="quickFollowUp('Pause current pantry from accepting food today')">⏸ Pause active pantry</button>
+          <button class="chip" onclick="quickFollowUp('How many recipients in a4i_food.recipients have pickup_window_hours <= 2?')">≤2h pickup pantries</button>
+        `;
+      } else if (viewName === "routes") {
+        box.innerHTML = `
+          <button class="chip" onclick="plotConsolidatedCorridorOnMap()">Plot 5-Stop I-55 Run</button>
+          <button class="chip" onclick="askAgentToOptimizeCorridor('For the 10-pallet farm blueberry load (12h clock), find our top 2 walk-in cooler recipients in Chicago so we can split 8 pallets and 2 pallets.')">Split 10p Blueberries</button>
+          <button class="chip" onclick="simulateDelay(3.5)">+3.5h Truck Delay</button>
+        `;
+      } else if (viewName === "safety" || viewName === "equity") {
+        box.innerHTML = `
+          <button class="chip" onclick="quickFollowUp('Check openFDA recall status for Spinach and Milk')">Check FDA Recalls</button>
+          <button class="chip" onclick="triggerSafetyHalt(); switchMainView('dispatch');">Trigger Safety Halt</button>
+          <button class="chip" onclick="sendMcpWalkInQuery()">Walk-in coolers (SQL)</button>
+        `;
+      } else {
+        box.innerHTML = `
+          <button class="chip" onclick="quickFollowUp('They said no. Who\\'s next?')">They said no</button>
+          <button class="chip" onclick="quickFollowUp('Why didn\\'t you pick Greenline Community Pantry?')">Why not Greenline?</button>
+          <button class="chip" onclick="quickFollowUp('Accept and confirm this delivery')">✓ Accept delivery</button>
+        `;
+      }
+    }
+
     function switchMainView(viewName) {
       document.querySelectorAll(".nav-item[data-view]").forEach((btn) => {
         btn.classList.toggle("active", btn.getAttribute("data-view") === viewName);
@@ -2266,6 +2302,7 @@
         equity: "Equity & Impact Study"
       };
       document.getElementById("activeViewBreadcrumb").textContent = titles[viewName] || "Live Dispatch";
+      updateCopilotChipsForView(viewName);
 
       if (viewName === "dispatch") {
         setTimeout(() => triggerMapResize(), 60);
@@ -2731,7 +2768,10 @@
         document.getElementById("kpiDriver").textContent = "Hold Dispatch";
         document.getElementById("neighborhoodText").textContent = "No recipient matched.";
         document.getElementById("outreachBox").textContent = "No outreach message drafted — load cannot be safely placed inside the window.";
+        const mdBtn = document.getElementById("markDeliveredBtn");
+        if (mdBtn) mdBtn.style.display = "none";
         if (dispPanel) {
+          dispPanel.style.display = "flex";
           dispPanel.style.background = "var(--red-soft)";
           dispPanel.style.borderColor = "var(--red-border)";
           dispTitle.style.color = "var(--red)";
@@ -2744,7 +2784,14 @@
         return;
       }
 
+      const postStatus = deliveryStatusByPostingId[currentPosting.id];
+      const mdBtn = document.getElementById("markDeliveredBtn");
+      if (mdBtn) {
+        mdBtn.style.display = (postStatus === "accepted" || postStatus === "delivered") ? "inline-flex" : "none";
+      }
+
       if (dispPanel) {
+        dispPanel.style.display = "none";
         dispPanel.style.background = "var(--bg)";
         dispPanel.style.borderColor = "var(--border)";
         dispTitle.style.color = "var(--text-secondary)";
@@ -3196,6 +3243,21 @@
       renderBrief(currentBrief, currentAnswer);
     }
 
+    function toggleOrTriggerRefusal() {
+      const dispPanel = document.getElementById("unmatchedDispositionPanel");
+      if (dispPanel) {
+        const isHidden = dispPanel.style.display === "none" || !dispPanel.style.display;
+        dispPanel.style.display = isHidden ? "flex" : "none";
+        if (isHidden) {
+          dispPanel.style.background = "var(--amber-soft)";
+          dispPanel.style.borderColor = "var(--amber-border)";
+          document.getElementById("dispositionHeaderTitle").style.color = "var(--amber)";
+          document.getElementById("dispositionHeaderTitle").textContent =
+            "Recipient Refused or Cannot Deliver — Select Recovery Path Below:";
+        }
+      }
+    }
+
     async function promoteNextViableMatch() {
       const org = currentBrief?.organization_and_why?.name;
       if (org) {
@@ -3437,14 +3499,67 @@
       await submitPrompt(q);
     }
 
+    function getUnavailableOrgsFromUiState() {
+      const unavailable = new Set(excludedOrgs);
+      for (const [org, st] of Object.entries(targetStateByOrg)) {
+        if (st && st.accepting === false) unavailable.add(org);
+      }
+      for (const [org, claimed] of Object.entries(claimedPalletsByOrg)) {
+        const maxP = window.RECIPIENT_COORDS?.[org]?.max_pallets || 0;
+        if (maxP > 0 && claimed >= maxP) unavailable.add(org);
+      }
+      return Array.from(unavailable);
+    }
+
+    async function handleConversationalUiCommand(text) {
+      const lower = text.toLowerCase();
+      if (lower.includes("accept and confirm") || lower === "accept delivery" || lower === "confirm delivery") {
+        acceptAndConfirmDelivery();
+        const org = currentBrief?.organization_and_why?.name || "the primary recipient";
+        const load = currentBrief?.what_they_can_take?.load_pallets || currentPosting.pallets || 0.5;
+        appendChatBubble("agent", `✓ Delivery accepted and confirmed for ${org}! Locked ${load} pallet(s) against their open capacity, copied outreach SMS, and unlocked Step 3 (Mark Delivered).`);
+        return true;
+      }
+      if (lower === "mark delivered" || lower.includes("completed delivery")) {
+        markDeliveryCompleted();
+        const org = currentBrief?.organization_and_why?.name || "the primary recipient";
+        appendChatBubble("agent", `📦 Marked "${currentPosting.title}" as Delivered at ${org}. Updated Last Delivery timestamp to "Delivered just now".`);
+        return true;
+      }
+      if (lower.includes("pause current pantry") || lower.includes("stop accepting food")) {
+        const org = currentBrief?.organization_and_why?.name;
+        if (org) {
+          if (!targetStateByOrg[org]) targetStateByOrg[org] = { accepting: true, lastDelivery: "2d ago" };
+          targetStateByOrg[org].accepting = true; // so toggle sets it to false
+          toggleTargetAccepting(org);
+          return true;
+        }
+      }
+      if (lower.includes("openfda") || lower.includes("fda recall")) {
+        await checkOpenFDARecall(currentPosting.commodity);
+        const statusTxt = document.getElementById("recallStatusBadge")?.textContent || "Checked";
+        const detailTxt = document.getElementById("recallDetail")?.textContent || "";
+        appendToolPill(`openFDA Enforcement API (${currentPosting.commodity})`);
+        appendChatBubble("agent", `Live openFDA Enforcement Check for ${currentPosting.commodity}: ${statusTxt} — ${detailTxt}`);
+        return true;
+      }
+      return false;
+    }
+
     async function submitPrompt(overrideText, extraPart) {
       const text = (overrideText || document.getElementById("promptInput").value).trim();
       if (!text) return;
 
       appendChatBubble("user", extraPart ? `[Attached Pallet Tag Image] ${text}` : text);
 
+      // Bidirectional UI <-> Agent alignment: execute direct UI/FDA commands from chat immediately
+      if (!extraPart && await handleConversationalUiCommand(text)) {
+        return;
+      }
+
       const sendBtn = document.getElementById("sendBtn");
       const latencyBadge = document.getElementById("latencyBadge");
+      const cardLoader = document.getElementById("cardLoadingBanner");
 
       // Replay mode covers every send: nothing goes to the agent, and nothing is made up in its place.
       if (!document.getElementById("liveApiToggle").checked) {
@@ -3455,6 +3570,7 @@
 
       const postingAtSend = currentPosting;
       sendBtn.disabled = true;
+      if (cardLoader) cardLoader.style.display = "flex";
       const t0 = performance.now();
       latencyBadge.textContent = "Thinking...";
       setLiveStatus("");
@@ -3463,9 +3579,16 @@
         const base = getApiBase();
         await ensureAdkSession();
 
+        // Sync UI operational state (paused pantries, full pallet locks, declined orgs) into agent prompt
+        const unavailableOrgs = getUnavailableOrgsFromUiState();
+        let promptWithState = text;
+        if (unavailableOrgs.length > 0 && !text.includes("Exclude ")) {
+          promptWithState += ` (Note from live dispatch console state: exclude these recipients that are currently paused, full, or declined today: ${unavailableOrgs.slice(0, 15).join(", ")}).`;
+        }
+
         const parts = [];
         if (extraPart) parts.push(extraPart);
-        parts.push({ text });
+        parts.push({ text: promptWithState });
 
         const runPayload = JSON.stringify({
           appName: "food_broker",
@@ -3543,6 +3666,7 @@
         document.getElementById("connDot").className = "dot amber";
       } finally {
         sendBtn.disabled = false;
+        if (cardLoader) cardLoader.style.display = "none";
       }
     }
 
