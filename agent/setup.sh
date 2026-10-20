@@ -138,7 +138,7 @@ if [[ "${IS_WIN_VENV}" -eq 1 ]]; then
 cat <<EOF
 
 Note: '${DOTENV_FILE}' has been synced from '${LAB_ENV_FILE}'.
-ADK ('adk api_server' / 'adk run') automatically loads '${DOTENV_FILE}'.
+ADK ('adk web' / 'adk api_server' / 'adk run') automatically loads '${DOTENV_FILE}'.
 
 [Option 1: Windows PowerShell]
 1. Move into the agent directory and activate the virtual environment:
@@ -149,6 +149,8 @@ ADK ('adk api_server' / 'adk run') automatically loads '${DOTENV_FILE}'.
    Get-Content .env | Where-Object { \$_ -match '^[A-Z0-9_]+=' } | ForEach-Object { \$k,\$v = \$_ -split '=',2; Set-Item "Env:\$k" \$v }
 
 3. Start the agent locally (from inside 'agent/'):
+   adk web --allow_origins "regex:https://.*\.cloudshell\.dev"
+   # Or with local API server + Dev UI:
    adk api_server --with_ui --port 8765 .
    # Then open: http://127.0.0.1:8765/dev-ui/
 
@@ -162,6 +164,8 @@ ADK ('adk api_server' / 'adk run') automatically loads '${DOTENV_FILE}'.
    set -a; source .env; set +a
 
 3. Start the agent locally (from inside 'agent/'):
+   adk web --allow_origins "regex:https://.*\.cloudshell\.dev"
+   # Or with local API server + Dev UI:
    adk api_server --with_ui --port 8765 .
    # Then open: http://127.0.0.1:8765/dev-ui/
 
@@ -170,7 +174,7 @@ else
 cat <<EOF
 
 Note: '${DOTENV_FILE}' has been synced from '${LAB_ENV_FILE}'.
-ADK ('adk api_server' / 'adk run') automatically loads '${DOTENV_FILE}'.
+ADK ('adk web' / 'adk api_server' / 'adk run') automatically loads '${DOTENV_FILE}'.
 
 1. Move into the agent directory and activate the virtual environment:
    cd "${AGENT_DIR}"
@@ -179,15 +183,18 @@ ADK ('adk api_server' / 'adk run') automatically loads '${DOTENV_FILE}'.
 2. (Optional) Load .env into your current shell for standalone scripts:
    set -a; source .env; set +a
 
-3. Start the agent locally (from inside 'agent/'):
-   # Option A: Start ADK API Server + Web Dev UI (recommended for browser testing)
+3. Start the agent in console / Cloud Shell (from inside 'agent/'):
+   # Option A: Start ADK Web UI in Cloud Shell / console (recommended)
+   adk web --allow_origins "regex:https://.*\.cloudshell\.dev"
+
+   # Option B: Start ADK API Server + Web Dev UI on a local port
    adk api_server --with_ui --port 8765 .
    # Then open: http://127.0.0.1:8765/dev-ui/
 
-   # Option B: Start ADK API Server only
+   # Option C: Start ADK API Server only
    adk api_server --port 8765 .
 
-   # Option C: Run interactive CLI session
+   # Option D: Run interactive CLI session
    adk run food_broker
 
 EOF
