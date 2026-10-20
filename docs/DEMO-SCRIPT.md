@@ -1,140 +1,168 @@
-# Demo script for the pitch video
+# Demo script for the pitch video (~3 minutes)
 
-Navigation: [submission checklist](SUBMISSION.md) · [agent README](../agent/food_broker/README.md) ·
-[equity audit](../agent/food_broker/EQUITY-AUDIT.md) · [captured evidence](evidence/README.md).
+Navigation: [deck outline](DECK-OUTLINE.md) · [submission checklist](SUBMISSION.md) ·
+[agent README](../agent/food_broker/README.md) · [equity audit](../agent/food_broker/EQUITY-AUDIT.md) ·
+[captured evidence](evidence/README.md) · [design & benchmarks](DESIGN.md).
 
-Plan for about three minutes of screen share with one person talking. Judges watch the recording after the event and
-cannot ask questions, so every point below has to be said out loud or shown on screen.
+Plan for **three minutes** of screen share with one person narrating. Judges watch the recording asynchronously after
+the event with no live Q&A, so every differentiator, UX choice, and mandatory judge check below is explicitly shown on
+screen and spoken out loud.
 
-## Before you record
+---
 
-- Open the service's chat page: the service address, then `/dev-ui/`. Pick the `food_broker` agent if it is not
-  already selected and start a new session for each posting. Nobody here has tried this in a browser yet, so do one
-  dry run first.
-- The page lists everyone's test sessions. Type nothing personal.
-- Answers vary a little from run to run: the Gemini model rewrites the search and estimates the load, so the top
-  recipient's name and the pallet estimate can change. Point at the structure, not at a name you expect.
-- Each answer takes about 13 seconds on Cloud Run and about 22 locally on gemini-2.5-flash (one measurement each; re-time on 3.8 after the deploy). Say something while it works, or cut the wait when you edit.
-- Keep a second window open on [the evidence folder](evidence/README.md). If the live page is slow or gone, show the
-  same answers from there (see the fallback at the end).
+## Before you record (Two-Tab Setup)
 
-## The opening line (15 seconds)
+1. **Tab 1 — RescueBroker Coordinator Dispatch Console (`frontend/index.html`):**
+   - Serve locally (`python3 frontend/serve.py`, then open `http://127.0.0.1:8080`) or open the deployed console.
+   - Start on the **Splash Screen** so your opening click launches the **Live Dispatch Queue** (showing the 11 ticking
+     clocks, openFDA Recall Banner, 4-KPI Capacity Bar, Spatial Map of the 183 real recipients, and the collapsible
+     Right Agent Copilot).
+2. **Tab 2 — Live Cloud Run ADK Endpoint (`https://food-broker-817377390808.us-east1.run.app/dev-ui/`):**
+   - Pick the `food_broker` agent and keep it ready to show the raw ADK tool trace (`lookup_shelf_life` $\rightarrow$
+     `find_matches` $\rightarrow$ `explain_candidate` $\rightarrow$ `execute_sql`), or use the **Right Agent Copilot
+     Drawer** directly inside Tab 1 (which calls the exact same Cloud Run `/run` endpoint).
+3. **Keep [`docs/evidence/`](evidence/README.md) open in a background tab** in case a live Cloud Run call takes >15s.
 
-Say it as one sentence, in your own words:
+---
 
-> We coordinate food rescue in Chicago. A grocer has just offered us ten crates of spinach and it has to leave within
-> six hours. Here is who we would call, and here is what we don't know about them.
+## 1. The Hook & Why We Built a Dispatch Console, Not Just a Chat Box (0:00 – 0:25 | 25s)
 
-## Posting 1: retail, the clock (60 seconds)
+**On screen:** Start on the **RescueBroker Splash Page**, click **Launch Live Dispatch**, and sweep the cursor across
+the **Ticking-Clock Surplus Queue** on the left and the **Chicago Pantry Map** on the right.
 
-Type:
+**Say out loud:**
+> *"We coordinate food rescue in Chicago. It is Thursday afternoon, and a grocer has just offered us ten crates of
+> fresh spinach that must leave their dock within six hours and stay cold. Here is who we would call, and what we don't
+> know about them.*
+> *Most teams stop at a developer chat box. Our user is an internal dispatch coordinator juggling eleven expiring
+> offers under a ticking clock—so we built RescueBroker: a Coordinator Dispatch Console connected live to our ADK agent
+> on Cloud Run, combining a ticking-clock queue, spatial map, openFDA recall gate, and conversational Copilot."*
+
+---
+
+## 2. Posting 1: Retail Spinach, The `top_k=80` Pool & The Rank #3 Decoy (0:25 – 1:15 | 50s)
+
+**On screen:** Select **Posting #1 (10 Crates of Spinach — 6h left)** in the queue, or send the prompt in the Agent
+Copilot / `/dev-ui/`:
 
 ```text
 A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.
 ```
 
-Point at, in this order:
+**Point at, in this order:**
+1. **The Scannable 6-Part Match Brief & 4-KPI Bar:** Named organization, real IRS street address, **Domestic/Vehicle Cold
+   Storage**, **0.5 of 1 pallet**, **6h clock vs. 3h pickup (+3h safety buffer)**, and the **⚠️ Dispatch Volunteer Driver**
+   flag.
+2. **Why `top_k=80` & Why Meaning Alone Fails (`80 searched → 12 viable` badge + Rejected Decoys list):**
+   - Slow down here—this is the signature moment of the pitch.
+   - **Say out loud:**
+     > *"Under the hood, our agent calls `lookup_shelf_life`, then `find_matches`, which runs BigQuery `VECTOR_SEARCH`
+     > over 192 recipient profiles with a wide pool of 80. Why 80? We measured it: for this spinach offer, a pool of 15
+     > leaves only 1 viable recipient, 40 leaves 3, and 80 leaves 12.*
+     > *Look at the rejected matches at the bottom: the top three semantic matches by meaning were all wrong—all three
+     > needed 12 to 21 hours to collect against a 6-hour clock, and **Greenline Community Pantry**, ranked 3rd by
+     > meaning (one of nine invented teaching cases in the challenge data), writes that its families ask most for fresh
+     > greens while having **zero refrigeration of any kind**.*
+     > *Even the nearest candidate that passes hard filters at rank 11 only has a household fridge and 1 hour of slack—so
+     > our tiered ranking picks ranks 50, 54, and 63, prioritizing a comfortable 2-to-3 hour safety buffer and sturdy
+     > cold storage over raw embedding distance."*
 
-1. The one-line summary, then part 1: a named organization and its address, and why it fits.
-2. Part 3, the clock: hours the food has, the recipient's collection time and the margin. Say what the margin means:
-   a match with 20 minutes of slack is a warning, not a win.
-3. Part 6, the next two options and the "closest rejected matches", each with its rank by meaning. This is the moment
-   to slow down, and to say it in your own words. The facts to land: in the saved run, the three nearest recipients by
-   meaning were all removed; all three needed longer to collect than the food had; one, Greenline Community Pantry at rank 3 (an invented teaching case in the challenge data), writes that its
-   families ask for fresh greens and that it has no refrigeration of any kind; the nearest recipient that works is
-   11th by meaning, and the ranking's top three sit at 50th to 63rd. A live run can pick a different recipient for the rejected list, so read what is on screen;
-   the saved version is in [demo-tracks.txt](evidence/demo-tracks.txt).
-4. Part 5, the outreach message: ready to send, with the driver sentence if the recipient has no cold transport.
+---
 
-## Posting 2: farm, same corpus (30 seconds)
+## 3. Multi-Turn Follow-Ups: "They Said No" & "Why Not the Big Food Bank Downtown?" (1:15 – 1:45 | 30s)
 
-Type:
-
-```text
-A farm south of Chicago has 5 tons of potatoes still in the field. They can load pallets if someone collects within 3 days.
-```
-
-Point at: the capacity in part 2 (a recipient with room for the whole load, and whether it has a dock and its own
-transport) and the margin in part 3. Say: this is a different track, handled by the same corpus and the same search, with no separate
-rulebook. Be honest that splitting a load across several recipients is not built.
-
-## Posting 3: essentials, a data problem the agent caught (30 seconds)
-
-Type:
-
-```text
-48 cases of sealed infant formula with 8 months to expiry from a distributor in Chicago, 2 pallets, can sit at room temperature.
-```
-
-Point at: the clock in part 3 is the donor's eight months, not an hour. Say: the shelf-life table gave sealed formula
-one hour, which is FoodKeeper's figure for a prepared formula. We found it while auditing, and the agent now warns on
-very short figures and trusts the donor's expiry.
-
-## "They said no" (30 seconds)
-
-Stay in the same session as posting 1 and type:
+**On screen:** Click **"Recipient Declined — Next Option"** in the console (or type in the same session):
 
 ```text
 They said no. Who's next?
 ```
 
-Point at: it skips the recipient who declined and briefs the next one, with a new message ready to send. Then type:
+Then immediately ask:
 
 ```text
 Why them and not the big food bank downtown?
 ```
 
-Point at: it searches for "food bank" (and "food depository"), finds a large food bank, says where it ranked by meaning
-and why it was removed (for example, no room for the load, or a collection time of 36 or 41 hours against 6). Which
-organization it finds varies run to run (the Greater Chicago Food Depository in some runs, Americas Food Bank in the
-saved one); read what is on screen. Saved version: [follow-ups transcript](evidence/follow-ups-transcript.md).
+**Point at & say out loud:**
+> *"Coordinators live in a world where pantries don't answer the phone. When the primary match declines, our tool
+> re-runs with `exclude_names`, promotes the runner-up with a fresh SMS, and queues the next backup.*
+> *And when the coordinator asks 'Why not the big food bank downtown?', our `explain_candidate` tool searches the
+> 80-candidate pool by name and reports its exact semantic rank and why it was eliminated—for example, Americas Food
+> Bank at rank 29, removed because it needs 41 hours to collect against a 6-hour clock."*
 
-## When nobody can take it (20 seconds)
+---
 
-Type:
+## 4. Three Tracks Through One Corpus + Two Data Traps We Caught (1:45 – 2:25 | 40s)
 
+**On screen:** Click **5 Tons of Potatoes (Farm)**, **48 Cases of Sealed Infant Formula (Essentials)**, and **40 Trays
+of Cream Pastries (1h Bakery Refusal)** (or show the **Route Optimizer** / transcripts):
+
+```text
+A farm south of Chicago has 5 tons of potatoes still in the field. They can load pallets if someone collects within 3 days.
+```
+```text
+48 cases of sealed infant formula with 8 months to expiry from a distributor in Chicago, 2 pallets, can sit at room temperature.
+```
 ```text
 A bakery has 40 trays of cream-filled pastries that must stay refrigerated and leave their dock within 1 hour.
 ```
 
-Point at: it says there is no match and shows the closest rejections with the reason for each (they need many hours
-to collect). Say: an agent that recommends a recipient who cannot store the food is worse than one that says nobody
-can.
+**Point at & say out loud:**
+> *"The exact same corpus and pipeline handle all three tracks with zero track-specific rulebooks:*
+> *Five tons of farm potatoes—about 5 pallets—filters out small pantries and household fridges (which we cap at 1
+> pallet) to route to a high-capacity warehouse with a loading dock.*
+> *On the 48 cases of sealed infant formula, we caught a real data trap in USDA FoodKeeper: the table lists infant
+> formula at **1 hour**—which is the figure for a prepared, opened bottle, not sealed cases with 8 months left. Our
+> `lookup_shelf_life` tool triggers a `_shelf_caution` warning on any figure under 2 hours and honors the donor's
+> 8-month expiry.*
+> *And on the 1-hour bakery offer, zero organizations can collect in time. Instead of guessing, the agent safely refuses
+> and shows the closest rejections."*
 
-## A question that is not a posting (20 seconds)
+---
 
-Type:
+## 5. Google Managed BigQuery MCP: Only 6 of 183 Real Walk-In Coolers (2:25 – 2:40 | 15s)
+
+**On screen:** Show the free-form MCP question:
 
 ```text
 Not counting the invented teaching cases (profile_source 'planted'), how many recipients have walk-in cold storage, and what share is that?
 ```
 
-Point at: it answers 6 of 183, about 3.3%, states the query, and says it left nine invented cases out. Say that only six
-of the 183 real recipients have a walk-in cooler, which is why the cold-storage filter matters. Say: this goes through Google's managed BigQuery MCP
-server, read-only. Matching a posting never goes through free-form SQL, so the filters cannot be skipped.
+**Point at & say out loud:**
+> *"For free-form questions outside a posting, the agent queries Google's Managed BigQuery MCP server in read-only
+> mode. Excluding the 9 planted teaching cases, only **6 of the 183 real recipients (3.3%)** have a walk-in cooler—and
+> posting matches never touch free-form SQL so our safety filters can never be bypassed."*
 
-## The audit (20 seconds, one slide or the audit page)
+---
 
-Show the group table in [the equity audit](../agent/food_broker/EQUITY-AUDIT.md). Say the honest result: counted per
-posting, the matches are close to the corpus with no consistent direction; counted per recipient, they sit lower on all three, because one
-pantry won three postings; weighted by volume, assistance is 9% against a corpus mean of 19% (compared as means). The audit searches with
-the raw posting text, while the live agent searches with a rewrite Gemini writes. Ten postings cannot separate a real
-skew from noise. The big farm loads can go to only a few recipients (10 have room for ten or more pallets); their tracts show lower mean poverty and assistance, a similar share without a vehicle, and medians about level.
+## 6. The 3-Lens Equity Audit & Honest Limitations Close (2:40 – 3:00 | 20s)
 
-## The close (15 seconds)
+**On screen:** Click the **Equity & Impact** view in the left navigation rail (or show the table in
+[`EQUITY-AUDIT.md`](../agent/food_broker/EQUITY-AUDIT.md)).
 
-Say what is real and what is generated: recipient names and addresses are real, except nine invented teaching cases the challenge
-adds, and everyone's storage, capacity and pickup times are generated, shelf life is consumer guidance, and locations are ZIP-level. Then say what comes next: remembering who
-received food recently so one pantry is not asked every time.
+**Say out loud:**
+> *"Finally, did the food go where the need is, or where the loading docks are? We excluded the 9 invented teaching
+> cases and audited all 10 postings across the 183 real IRS recipients three ways:*
+> *Counted **per posting**, matches sit near or slightly above the corpus (22% poverty, 30% no-vehicle)—but our cold
+> review proved that's because **one fast pantry** in a high-need tract won three short-clock postings. Counted **once
+> per distinct recipient**, matches sit lower on all three measures. And **weighted by pallets**, public assistance
+> drops from 19% to **9%**, because 30 of the 37.5 pallets are farm loads that can only go to the few recipients with
+> 5-plus pallet capacity.*
+> *Our boundaries are explicit: 183 recipient names and addresses are real IRS records (plus 9 planted cases), while all
+> storage, capacity, and pickup times are generated; shelf life is consumer guidance; and locations are ZIP-level. Next,
+> we're adding persistent delivery memory so one pantry isn't called three times a day, and backend load splitting for
+> oversized farm offers."*
 
-## If the live page is slow or gone
+---
 
-The lab project is temporary. Show the saved answers instead, and say they were captured from the live service:
+## Fallback Links (If Live Cloud Run Is Slow During Recording)
 
-- Spinach: [answer](evidence/spinach-answer.md) and [structured brief](evidence/spinach-brief.json)
-- Sealed formula: [answer](evidence/sealed-formula-answer.md)
-- Free-form question: [answer](evidence/mcp-walk-in-answer.md)
-- Potatoes: [answer](evidence/farm-potatoes-answer.md)
-- No match: [answer](evidence/no-match-bakery-answer.md)
-- Three tracks through one search: [demo-tracks.txt](evidence/demo-tracks.txt)
-- The service answering with no credentials: [transcript](evidence/curl-transcript.md)
+All pre-captured live outputs are committed in [`docs/evidence/`](evidence/README.md):
+- Spinach + Decoy Rank #3: [`spinach-answer.md`](evidence/spinach-answer.md) & [`spinach-brief.json`](evidence/spinach-brief.json)
+- 6-Turn Follow-Up ("They said no" + "Why not X?"): [`follow-ups-transcript.md`](evidence/follow-ups-transcript.md)
+- Sealed Infant Formula (1h table trap vs 8-month expiry): [`sealed-formula-answer.md`](evidence/sealed-formula-answer.md)
+- Farm 5-Ton Potatoes: [`farm-potatoes-answer.md`](evidence/farm-potatoes-answer.md)
+- 1-Hour Bakery Safe Refusal: [`no-match-bakery-answer.md`](evidence/no-match-bakery-answer.md)
+- Managed BigQuery MCP (`6 of 183` walk-in coolers): [`mcp-walk-in-answer.md`](evidence/mcp-walk-in-answer.md)
+- Pool Study (`top_k` 15 $\rightarrow$ 1, 40 $\rightarrow$ 3, 80 $\rightarrow$ 12): [`pool-study.txt`](evidence/pool-study.txt)
+

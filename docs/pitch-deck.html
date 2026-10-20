@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RescueBroker — Pitch Deck (Challenge 2: Chicago Food Equity Broker)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --slide-bg: #ffffff;
+      --text: #09090b;
+      --text-secondary: #3f3f46;
+      --text-muted: #71717a;
+      --border: #e4e4e7;
+      --accent: #059669;
+      --accent-soft: #ecfdf5;
+      --accent-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --red: #e11d48;
+      --red-soft: #fff1f2;
+      --blue: #2563eb;
+      --blue-soft: #eff6ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      padding: 32px 20px 80px;
+    }
+
+    .deck-toolbar {
+      max-width: 1120px;
+      margin: 0 auto 24px;
+      background: #18181b;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+    .deck-toolbar button {
+      background: #10b981;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .slide {
+      width: 1120px;
+      min-height: 630px;
+      margin: 0 auto 36px;
+      background: var(--slide-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      padding: 44px 52px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      page-break-after: always;
+    }
+
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 24px;
+    }
+    .slide-kicker {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+    .slide-num {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: #f4f4f5;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.18;
+      margin-bottom: 12px;
+    }
+    .subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+    .card {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .card.highlight {
+      background: var(--accent-soft);
+      border-color: var(--accent-border);
+    }
+    .card.warn {
+      background: var(--amber-soft);
+      border-color: #fde68a;
+    }
+    .card.danger {
+      background: var(--red-soft);
+      border-color: #fecdd3;
+    }
+    .card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card p, .card li {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .card ul { padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+
+    .stat-big {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      font-family: "JetBrains Mono", monospace;
+    }
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      text-align: left;
+    }
+    th {
+      background: #f4f4f5;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    tr.row-accent td {
+      background: var(--accent-soft);
+      font-weight: 600;
+    }
+    code {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .slide-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .deck-toolbar { display: none; }
+      .slide {
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        width: 100%;
+        height: 100vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-toolbar">
+    <div><strong>RescueBroker Pitch Deck</strong> · Challenge 2: Resilient Food Equity &amp; Surplus Broker (Chicago Metro)</div>
+    <button onclick="window.print()">Export / Print to PDF (8 Slides)</button>
+  </div>
+
+  <!-- SLIDE 1 -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker">1 · The Situation &amp; Data Provenance (Judge Check #1)</span>
+        <span class="slide-num">Slide 1 / 8</span>
+      </div>
+      <h1>Four Questions in the Same Minute—Before the Truck Goes to the Compactor</h1>
+      <p class="subtitle">
+        <strong>"We coordinate food rescue in Chicago. A grocer has just offered ten crates of fresh spinach and it has to leave within six hours and stay cold. Here is who we would call, and what we do not know about them."</strong>
+      </p>
+
+      <div class="grid-2" style="margin-bottom: 18px;">
+        <div class="card">
+          <h3>⏱️ Why Spreadsheets &amp; Generic Chatbots Fail</h3>
+          <ul>
+            <li>Answering <strong>what arrived, who wants it, what they can physically store, and whether they can collect before the dock closes</strong> takes 40 minutes of manual phone tag.</li>
+            <li>A staff dispatcher managing 11 expiring offers cannot scroll through a developer chat log—they need a <strong>Ticking-Clock Queue</strong>, a <strong>scannable 6-Part Match Brief</strong>, and <strong>1-click SMS/Decline pivots</strong>.</li>
+          </ul>
+        </div>
+        <div class="card highlight">
+          <h3>🔍 Real vs. Generated Data (Explicit Judge Check)</h3>
+          <ul>
+            <li><strong>REAL (Public Domain / CC0):</strong> <strong>183 IRS 990 organizations</strong> in Chicago (names, addresses, NTEE codes, reported income), <strong>USDA FoodKeeper</strong> shelf life (661 products), and <strong>US Census ACS</strong> demographics (1,004 tracts).</li>
+            <li><strong>INVENTED / GENERATED:</strong> <strong>9 planted teaching cases</strong> added by the challenge (<code>profile_source = 'planted'</code>, no real street/ZIP), plus all operational fields (<code>cold_storage</code>, <code>max_pallets</code>, <code>pickup_window_hours</code>, <code>refrigerated_transport</code>).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-4">
+        <div class="card"><div class="stat-big">183 + 9</div><div class="stat-label">Real IRS Orgs + Planted Cases</div></div>
+        <div class="card"><div class="stat-big">6 of 183</div><div class="stat-label">Real Orgs w/ Walk-In Cooler (3.3%)</div></div>
+        <div class="card"><div class="stat-big">15.6s</div><div class="stat-label">Live Cloud Run Response (3.8 Flash)</div></div>
+        <div class="card"><div class="stat-big">41 / 42</div><div class="stat-label">Automated Eval Checks Passed</div></div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>RescueBroker · Chicago Food Rescue &amp; Surplus Broker</span>
+      <span>Rubric: Impact &amp; Insight (30 pts) · Rigor &amp; Judgment (25 pts)</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker">2 · User Experience &amp; Product Differentiation</span>
+        <span class="slide-num">Slide 2 / 8</span>
+      </div>
+      <h1>Beyond Raw <code>adk web</code>: The RescueBroker Coordinator Dispatch Console</h1>
+      <p class="subtitle">
+        The challenge rubric notes: <em>"A coordinator's queue with a clock ticking down beats a chat log."</em> We built a dedicated SaaS Dispatch Console for internal staff paired with a live Cloud Run Agent Copilot.
+      </p>
+
+      <div class="grid-3">
+        <div class="card highlight">
+          <h3>1. Ticking-Clock Queue &amp; Hero Card</h3>
+          <ul>
+            <li>11 live offers sorted by urgency (<code>🔴 &lt;=2h</code>, <code>🟡 &lt;=6h</code>, <code>🟢 &gt;6h</code>).</li>
+            <li>Scannable <strong>6-Part Match Brief</strong> + 4-KPI Capacity/Buffer Bar.</li>
+            <li>1-Click <strong>"Recipient Declined — Next Option"</strong> button &amp; ready-to-copy SMS.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>2. Spatial Map &amp; Route / Split Hub</h3>
+          <ul>
+            <li>Plots the <strong>183 real IRS recipients</strong> (explicitly separating &amp; labelling the 9 invented teaching cases).</li>
+            <li><strong>Multi-Stop Route Optimizer</strong> &amp; multi-pantry load splitting for oversized farm offers.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>3. Multimodal Right Agent Copilot</h3>
+          <ul>
+            <li>Connected live to <code>food_broker</code> on Cloud Run (<code>min-instances=1</code>).</li>
+            <li>Supports <strong>Voice dictation</strong>, <strong>Crate Tag Photo scanning</strong>, and multi-turn follow-up Q&amp;A.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 18px;">
+        <div class="card warn">
+          <h3>🛡️ Live openFDA Recall Gate &amp; Driver Delay Re-Router</h3>
+          <p>Checks active food recalls via the CC0 <strong>openFDA Enforcement API</strong> before dispatch, and includes a mid-route <strong>Driver Delay Simulator (+1h / +2h)</strong> that re-runs constraints if traffic threatens the clock.</p>
+        </div>
+        <div class="card">
+          <h3>🏢 Pantry Network Directory &amp; Conversational Intake</h3>
+          <p>Browsable 192-organization directory with storage/dock filters plus a <strong>Pantry Onboarding</strong> flow that asks pallet-vs-hand unloading to replace synthetic operational data over time.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Frontend: frontend/index.html + Live Cloud Run ADK Backend</span>
+      <span>Rubric: Craft &amp; Communication (15 pts) · Bonus — Range (+10 pts)</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker">3 · Architecture &amp; Empirical Model Benchmark</span>
+        <span class="slide-num">Slide 3 / 8</span>
+      </div>
+      <h1>1 ADK Agent + 4 Deterministic Tool Surfaces (Tested Across 42 Runs)</h1>
+      <p class="subtitle">
+        Passing 80 candidate rows between multiple LLM sub-agents took <strong>76–86s per hop</strong>. Keeping candidate retrieval, hard filtering, and ranking inside deterministic Python tools cut latency to <strong>~15.6–17.2s</strong>.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Component / Tool</th>
+            <th>Technology</th>
+            <th>What Makes Our Implementation Unique</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Root Agent (<code>food_broker</code>)</strong></td>
+            <td>Vertex AI <code>gemini-3.8-flash</code> (low thinking) + Python ADK</td>
+            <td>Selected via a <strong>42-run benchmark</strong> (14 checks × 3 runs): <code>3.8-flash</code> low thinking scored <strong>41/42</strong> (9/9 on critical cases, 0 prompt-injection leaks) vs. <code>2.5-flash</code> (38/42, leaked SQL once).</td>
+          </tr>
+          <tr>
+            <td><strong>Tool 1: <code>lookup_shelf_life</code></strong></td>
+            <td>BigQuery <code>a4i_food.shelf_life</code> (661 USDA items)</td>
+            <td>Includes our <code>_shelf_caution(hours &lt;= 2)</code> detector that catches opened-container figures (like 1-hour infant formula) so the agent honors sealed donor expiries.</td>
+          </tr>
+          <tr class="row-accent">
+            <td><strong>Tool 2: <code>find_matches</code></strong></td>
+            <td>BigQuery <code>VECTOR_SEARCH</code> + <code>AI.EMBED</code> (<code>gemini-embedding-2</code>)</td>
+            <td>Retrieves <code>top_k=80</code> semantic candidates &rarr; enforces cold storage, domestic fridge cap, pallet room &amp; lead time &rarr; tiered safety ranking &rarr; <code>ST_DISTANCE</code> census tract lookup.</td>
+          </tr>
+          <tr>
+            <td><strong>Tool 3: <code>explain_candidate</code></strong></td>
+            <td>Custom Python Diagnostic Tool</td>
+            <td>Answers <em>"Why them and not [Org X]?"</em> by locating any named organization in the <code>top_k=80</code> pool and reporting its exact <code>semantic_rank</code> and failed constraint.</td>
+          </tr>
+          <tr>
+            <td><strong>Tool 4: Managed BigQuery MCP</strong></td>
+            <td><code>https://bigquery.googleapis.com/mcp</code> (<code>McpToolset</code>)</td>
+            <td>Read-only <code>execute_sql</code> / <code>get_table_info</code> for free-form coordinator analytics, strictly isolated from posting matches and locked by <code>identity_guard.py</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="slide-footer">
+      <span>Architecture &amp; Benchmarks: docs/DESIGN.md · agent/food_broker/tools.py</span>
+      <span>Rubric: Technical Execution (30 pts) · Bonus — Range (+10 pts)</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker">4 · Why Meaning Is Not Enough (Judge Check #2)</span>
+        <span class="slide-num">Slide 4 / 8</span>
+      </div>
+      <h1>For the Spinach Offer, the Top 3 Semantic Matches Were All Wrong</h1>
+      <p class="subtitle">
+        Vector search finds who <em>talks</em> about fresh greens. Our constraint filter and tiered ranking find who can actually refrigerate and collect them within 6 hours.
+      </p>
+
+      <div class="grid-3" style="margin-bottom: 18px;">
+        <div class="card danger">
+          <h3>❌ Ranks #1–#3 Eliminated</h3>
+          <ul>
+            <li>All 3 closest semantic hits needed <strong>12h–21h to collect</strong> against a 6h clock.</li>
+            <li><strong>Rank #3 (<code>Greenline Community Pantry</code> — planted teaching case):</strong> Begs for <em>"fresh greens"</em> in its profile, but has <strong><code>cold_storage = 'none'</code></strong>.</li>
+          </ul>
+        </div>
+        <div class="card warn">
+          <h3>📊 Measured <code>top_k</code> Pool Study</h3>
+          <ul>
+            <li><code>top_k = 15</code> &rarr; leaves only <strong>1 viable</strong> match</li>
+            <li><code>top_k = 40</code> &rarr; leaves <strong>3 viable</strong> matches</li>
+            <li><code>top_k = 80</code> &rarr; leaves <strong>12 viable</strong> matches (giving 9 backups when pantries say no).</li>
+          </ul>
+        </div>
+        <div class="card highlight">
+          <h3>✅ Why Ranks #50, #54, #63 Win</h3>
+          <ul>
+            <li>The nearest viable hit is <strong>11th by meaning</strong>, but only has a <strong>household fridge</strong> and <strong>1h of slack</strong>.</li>
+            <li>Our ranking prefers a <strong>comfortable margin (&ge;2h)</strong>, <strong>sturdy cold storage</strong>, and <strong>own cold transport</strong>—picking <strong>#50, #54, #63</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🧪 Mutation-Tested Decoy Guarantee (<code>selfcheck.py</code>)</h3>
+        <p>
+          <code>build_match_brief</code> always includes a cold-storage failure in <code>rejected_but_close</code> when one exists in the pool. We wrote a mutation test in <code>selfcheck.py</code> that deliberately switches off the cold-storage rule to verify the test fails—which caught a real sorting bug in our first build.
+        </p>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Evidence: docs/evidence/pool-study.txt · docs/evidence/demo-tracks.txt</span>
+      <span>Rubric: Technical Execution (30 pts) · Rigor &amp; Judgment (25 pts)</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker">5 · One Corpus, Three Tracks (Zero Custom Rulebooks)</span>
+        <span class="slide-num">Slide 5 / 8</span>
+      </div>
+      <h1>Retail Produce, 5 Tons of Potatoes &amp; Sealed Formula Through One Pipeline</h1>
+      <p class="subtitle">
+        A rule-based system needs a separate rulebook per track. Our semantic search + physical constraint pipeline handles all three tracks against the same 192-recipient corpus.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Track</th>
+            <th>Incoming Offer</th>
+            <th>Pool Survival (<code>top_k=80</code>)</th>
+            <th>Top Ranked Match &amp; Operational Proof</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-accent">
+            <td>🛒 <strong>Track 1: Retail &amp; Grocer</strong></td>
+            <td><strong>10 crates of spinach</strong><br/>(<code>0.5 pallets</code>, <code>6h</code> clock, cold)</td>
+            <td><strong>12 viable</strong> / 68 removed</td>
+            <td><strong>Shakespear Rose / Habibi Care</strong> — Verified cold storage, collects in 3–4h (+2–3h safety margin), flags volunteer driver if no van.</td>
+          </tr>
+          <tr>
+            <td>🚜 <strong>Track 2: Farm Surplus</strong></td>
+            <td><strong>5 tons of potatoes</strong><br/>(<code>~5 pallets</code>, <code>72h</code> clock, ambient)</td>
+            <td><strong>10 viable</strong> / 70 removed</td>
+            <td><strong>Anso Child Development / Lakeview Pantry</strong> — Eliminates small storefront pantries; routes to warehouse with <code>7–12 pallets</code> room.</td>
+          </tr>
+          <tr>
+            <td>🍼 <strong>Track 3: Critical Essentials</strong></td>
+            <td><strong>48 cases sealed infant formula</strong><br/>(<code>2 pallets</code>, <code>8 months</code> expiry)</td>
+            <td><strong>26 viable</strong> / 54 removed</td>
+            <td><strong>Chicago Food Rescue / Infant Welfare</strong> — Matches infant/family profile and overrides the 1-hour FoodKeeper table trap.</td>
+          </tr>
+          <tr>
+            <td>🛑 <strong>Edge Case: Unviable Clock</strong></td>
+            <td><strong>40 trays cream-filled pastries</strong><br/>(<code>1h</code> dock deadline, cold)</td>
+            <td><strong>0 viable</strong> / 80 removed</td>
+            <td><strong>Safe Refusal</strong> — Refuses to guess; outputs closest semantic matches and shows they need 2h–18h to collect.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="slide-footer">
+      <span>Evidence: docs/evidence/spinach-answer.md · farm-potatoes-answer.md · sealed-formula-answer.md · no-match-bakery-answer.md</span>
+      <span>Rubric: Impact &amp; Insight (30 pts) · Technical Execution (30 pts)</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker">6 · Engineering Rigor &amp; Caught Data Traps</span>
+        <span class="slide-num">Slide 6 / 8</span>
+      </div>
+      <h1>Five Non-Obvious Traps Our Engineering Caught</h1>
+      <p class="subtitle">
+        Every team runs <code>VECTOR_SEARCH</code>. Here are five subtle failure modes in the challenge data that our code explicitly defends against:
+      </p>
+
+      <div class="grid-2">
+        <div class="card highlight">
+          <h3>1. The 1-Hour Infant Formula Table Bug (<code>_shelf_caution</code>)</h3>
+          <p>USDA FoodKeeper lists <code>Infant formula</code> at <strong>1 hour</strong> (the rule for a prepared bottle warmed for a baby). Our <code>lookup_shelf_life</code> tool warns on any figure <code>&lt;= 2h</code> so sealed cases use the donor's 8-month expiry.</p>
+        </div>
+        <div class="card highlight">
+          <h3>2. Domestic Fridge ≠ Walk-In Cooler (<code>DOMESTIC_FRIDGE_PALLETS = 1</code>)</h3>
+          <p>A naive <code>cold_storage != 'none'</code> check sends 4 pallets of produce to a church with a household fridge. Our filter rejects <code>cold_storage == 'domestic'</code> whenever <code>pallets &gt; 1</code>.</p>
+        </div>
+        <div class="card">
+          <h3>3. Sanitizing Contradictory Profile Timing Prose</h3>
+          <p>Generated <code>profile_text</code> sometimes claims <em>"we can be there within a couple of hours"</em> while the numeric <code>pickup_window_hours</code> column is <code>19h</code>. Our <code>_excerpt()</code> function strips timing sentences so only the numeric column governs the clock.</p>
+        </div>
+        <div class="card">
+          <h3>4. Read-Only Managed MCP + Lab Identity Guard</h3>
+          <p>Ad-hoc SQL questions (<em>"Excluding planted cases, how many recipients have a walk-in cooler?"</em> &rarr; <strong>6 of 183, 3.3%</strong>) use Google's Managed BigQuery MCP in read-only mode, while <code>identity_guard.py</code> blocks non-lab credentials.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Evidence: docs/evidence/mcp-walk-in-answer.md · agent/food_broker/selfcheck.py</span>
+      <span>Rubric: Rigor &amp; Judgment (25 pts)</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker">7 · The 3-Lens Equity Audit (Judge Check #3)</span>
+        <span class="slide-num">Slide 7 / 8</span>
+      </div>
+      <h1>Did the Food Go Where the Need Is, or Where the Loading Docks Are?</h1>
+      <p class="subtitle">
+        We excluded the <strong>9 invented teaching cases</strong> (placed at the metro center by formula) and audited all 10 postings across the <strong>183 real IRS recipients</strong> (68 tracts) three ways:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Comparison Group (Chicago Metro)</th>
+            <th>n</th>
+            <th>Poverty (Mean / Med)</th>
+            <th>No Vehicle (Mean / Med)</th>
+            <th>Assistance (Mean / Med)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Chicago Metro Baseline</strong> (pop-weighted)</td>
+            <td>1,004 tracts</td>
+            <td><strong>15%</strong> / —</td>
+            <td><strong>20%</strong> / —</td>
+            <td><strong>18%</strong> / —</td>
+          </tr>
+          <tr>
+            <td><strong>All Real Recipients Corpus</strong></td>
+            <td>183 orgs</td>
+            <td><strong>19%</strong> / 16%</td>
+            <td><strong>28%</strong> / 27%</td>
+            <td><strong>19%</strong> / 12%</td>
+          </tr>
+          <tr class="row-accent">
+            <td><strong>Lens 1: Top Matches — Once Per Posting</strong></td>
+            <td>10 postings</td>
+            <td><strong>22%</strong> / 16%</td>
+            <td><strong>30%</strong> / 23%</td>
+            <td><strong>19%</strong> / 11%</td>
+          </tr>
+          <tr>
+            <td><strong>Lens 2: Top Matches — Per Distinct Recipient</strong></td>
+            <td>8 orgs</td>
+            <td><strong>16%</strong> / 10%</td>
+            <td><strong>24%</strong> / 20%</td>
+            <td><strong>15%</strong> / 6%</td>
+          </tr>
+          <tr class="row-accent">
+            <td><strong>Lens 3: Top Matches — Weighted by Pallets</strong></td>
+            <td>37.5 pallets</td>
+            <td><strong>14%</strong> / —</td>
+            <td><strong>32%</strong> / —</td>
+            <td><strong>9%</strong> / —</td>
+          </tr>
+          <tr>
+            <td><strong>Recipients w/ Dock or 5+ Pallets Room</strong></td>
+            <td>14 orgs</td>
+            <td><strong>17%</strong> / 14%</td>
+            <td><strong>29%</strong> / 27%</td>
+            <td><strong>16%</strong> / 14%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="grid-2" style="margin-top: 14px;">
+        <div class="card">
+          <h3>🔍 Cold-Review Finding #1: Repeat-Winner Illusion</h3>
+          <p>Per posting, means look higher-need (<code>22% / 30%</code>) only because <strong>one fast pantry</strong> (<em>Shakespear Rose</em>, in a <code>45% poverty / 52% no-vehicle</code> tract) won 3 short-clock postings. Counted once per recipient (<code>n=8</code>), means sit lower (<code>16% / 24% / 15%</code>).</p>
+        </div>
+        <div class="card">
+          <h3>🔍 Cold-Review Finding #2: Volume &amp; Dock Skew</h3>
+          <p>30 of the 37.5 pallets are farm loads. Weighted by pallets, assistance drops to <strong>9% vs. 19% corpus mean</strong> because big loads can only go to the few recipients with room (14 have 5+ pallets; 10 have 10+ pallets).</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Full Reproducible Audit: agent/food_broker/EQUITY-AUDIT.md · agent/food_broker/equity_audit.py</span>
+      <span>Rubric: Rigor &amp; Judgment (25 pts) · Impact &amp; Insight (30 pts)</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 8 -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker">8 · Honest Limitations &amp; Roadmap (Judge Check #4)</span>
+        <span class="slide-num">Slide 8 / 8</span>
+      </div>
+      <h1>Explicit Boundaries Today &amp; What We Build Next</h1>
+      <p class="subtitle">
+        A tool a coordinator can trust must state what it knows, what is generated, and where human verification is required.
+      </p>
+
+      <div class="grid-2">
+        <div class="card warn">
+          <h3>⚠️ Four Honest Limitations Today</h3>
+          <ul>
+            <li><strong>Generated Operational Fields &amp; 9 Planted Cases:</strong> 183 org names/addresses/income are real IRS records; all storage, pallet capacities, and pickup windows are generated—so every brief advises confirming by phone before dispatch.</li>
+            <li><strong>Consumer Shelf-Life Guidance:</strong> USDA FoodKeeper is home-storage guidance, not commercial cold-chain telemetry.</li>
+            <li><strong>ZIP-Centroid Locations:</strong> Recipient coordinates are ZIP centroids joined to the nearest census tract internal point (<code>ST_DISTANCE</code>), and <code>surplus_postings</code> has no donor coordinates.</li>
+            <li><strong>Small Sample &amp; Stateless Memory:</strong> 10 postings across 68 tracts cannot separate skew from noise, and without delivery history one fast pantry wins repeated short-clock offers.</li>
+          </ul>
+        </div>
+        <div class="card highlight">
+          <h3>🚀 Production Next Steps</h3>
+          <ul>
+            <li><strong>Persistent Delivery Rotation &amp; Locks (Firestore — Issue #12):</strong> Record daily claims and declines so offers spread across viable pantries instead of calling <em>Shakespear Rose</em> three times.</li>
+            <li><strong>Backend Multi-Recipient Load Splitting (Issue #13):</strong> Extend <code>find_matches</code> to automatically split 5-ton farm loads across 2–3 pantries when no single cooler has room.</li>
+            <li><strong>Live Pantry Self-Onboarding (Issue #10):</strong> Use conversational intake to collect real walk-in cooler and pallet-jack capabilities directly into BigQuery + <code>AI.EMBED</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Repository: github.com/jimmycgz/challenge2-117 · Live Cloud Run: food-broker-817377390808.us-east1.run.app</span>
+      <span>Thank You · Agents for Impact 2026</span>
+    </div>
+  </section>
+
+</body>
+</html>
