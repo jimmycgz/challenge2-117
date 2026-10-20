@@ -3821,10 +3821,13 @@
         mobBar.style.display = "flex";
       }
 
-      document.getElementById("kpiStorage").textContent = formatCoolerName(cap.cold_storage);
+      const isDryDockLoad = (currentPosting && currentPosting.needs_cold === false && cap.loading_dock);
+      document.getElementById("kpiStorage").textContent = isDryDockLoad
+        ? `Loading Dock (${formatCoolerName(cap.cold_storage)})`
+        : formatCoolerName(cap.cold_storage);
 
       document.getElementById("kpiPallets").textContent =
-        `${cap.load_pallets} of ${remainingCap} open pallet${remainingCap === 1 ? "" : "s"}`;
+        `${cap.load_pallets} of ${remainingCap} open pallet${remainingCap === 1 ? "" : "s"}${cap.loading_dock ? " · Dock" : ""}`;
 
       document.getElementById("kpiClock").textContent =
         `${clk.hours_remaining}h left · ${clk.collection_lead_hours}h pickup`;
