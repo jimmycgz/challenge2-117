@@ -655,15 +655,43 @@
     }
 
     .chat-bubble {
-      max-width: 92%;
-      padding: 9px 12px;
+      max-width: 94%;
+      padding: 11px 14px;
       border-radius: 12px;
       font-size: 12.5px;
-      line-height: 1.48;
-      white-space: pre-wrap;
+      line-height: 1.52;
+      white-space: normal;
+      word-break: break-word;
     }
-    .chat-bubble.user { align-self: flex-end; background: var(--text); color: #fff; border-bottom-right-radius: 3px; }
+    .chat-bubble.user { align-self: flex-end; background: var(--text); color: #fff; border-bottom-right-radius: 3px; white-space: pre-wrap; }
     .chat-bubble.agent { align-self: flex-start; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 3px; box-shadow: var(--shadow-xs); }
+    .chat-bubble.agent p { margin: 0 0 8px 0; }
+    .chat-bubble.agent p:last-child { margin-bottom: 0; }
+    .chat-bubble.agent .chat-sec-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin: 10px 0 4px 0;
+      padding-top: 6px;
+      border-top: 1px solid var(--surface-hover);
+    }
+    .chat-bubble.agent .chat-sec-title:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .chat-bubble.agent ul { margin: 4px 0 8px 16px; padding: 0; }
+    .chat-bubble.agent li { margin-bottom: 4px; color: var(--text-secondary); }
+    .chat-bubble.agent li strong { color: var(--text); }
+    .chat-bubble.agent .chat-sms-card {
+      margin: 6px 0 8px 0;
+      padding: 9px 11px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 7px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
     .chat-tool-pill { font-size: 11px; font-weight: 600; color: var(--accent-dark); background: var(--accent-soft); border: 1px solid var(--accent-border); padding: 3px 8px; border-radius: 6px; align-self: flex-start; }
 
     .agent-composer {
@@ -2086,10 +2114,12 @@
       if (out.includes("\n---\n")) {
         out = out.split("\n---\n").slice(1).join("\n---\n").trim();
       }
-      // Remove HTML comments and clean markdown symbols (`**`, `*   `) for clean readable chat bubbles
+      // Remove HTML comments and fenced code blocks if any leaked through
       out = out.replace(/<!--[\s\S]*?-->/g, "").trim();
-      out = out.replace(/\*\*([^*]+)\*\*/g, "$1");
-      out = out.replace(/^\*\s+/gm, "• ");
+      out = out.replace(/```[\s\S]*?```/g, "").trim();
+      out = out.replace(/^#\s+Answer to:.*$/gim, "").trim();
+      out = out.replace(/^Captured\s+\d{4}-\d{2}-\d{2}[^\n]*$/gim, "").trim();
+      out = out.replace(/^Tool calls, in order:\s*$/gim, "").trim();
       // Translate internal tool/database names into natural coordinator language
       out = out.replace(/\(profile_source\s*['"]?planted['"]?\)/gi, "(sample training pantry)");
       out = out.replace(/profile_source\s*['"]?planted['"]?/gi, "sample training pantry");
@@ -2098,8 +2128,8 @@
       out = out.replace(/Meaning Rank #(\d+)/gi, "Recommended #$1");
       out = out.replace(/,?\s*ranked (\d+)(?:st|nd|rd|th)? by meaning,?\s*removed:/gi, " — skipped because:");
       out = out.replace(/ranked (\d+)(?:st|nd|rd|th)? by meaning/gi, "a close match (#$1)");
-      out = out.replace(/Rejected(?: but)? close matches:/gi, "Nearby pantries skipped (and why):");
-      out = out.replace(/The closest rejections were:/gi, "Nearby pantries checked (and why they couldn't take it):");
+      out = out.replace(/Rejected(?: but)? close matches:/gi, "**Nearby pantries skipped (and why):**");
+      out = out.replace(/The closest rejections were:/gi, "**Nearby pantries checked (and why they couldn't take it):**");
       out = out.replace(/domestic cold storage/gi, "standard household fridge space");
       out = out.replace(/walk-in cold storage/gi, "a walk-in cooler");
       out = out.replace(/commercial cold storage/gi, "a commercial reach-in cooler");
@@ -2110,6 +2140,121 @@
       out = out.replace(/pickup_window_hours/gi, "pickup notice hours");
       out = out.replace(/refrigerated_transport/gi, "refrigerated van");
       return out.trim();
+    }
+
+    function formatInlineMarkdownHtml(line) {
+      let safe = escapeHtml(line);
+      // Bold: **text** or __text__
+      safe = safe.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      safe = safe.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+      // Italic: *text* (only when not surrounded by spaces)
+      safe = safe.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>");
+      // Inline code: `text` -> clean bold text (no technical code font)
+      safe = safe.replace(/`([^`]+)`/g, "<strong>$1</strong>");
+      // Strip any stray lone asterisks that the model may have emitted
+      safe = safe.replace(/\*\*/g, "");
+      return safe;
+    }
+
+    function renderAgentMessageHtml(rawText) {
+      const cleaned = formatHumanFriendlyAgentReply(rawText);
+      if (!cleaned) return "";
+
+      const lines = cleaned.split(/\r?\n/);
+      const htmlParts = [];
+      let inList = false;
+      let inOutreach = false;
+      let outreachLines = [];
+
+      const closeList = () => {
+        if (inList) {
+          htmlParts.push("</ul>");
+          inList = false;
+        }
+      };
+
+      const closeOutreach = () => {
+        if (inOutreach && outreachLines.length > 0) {
+          htmlParts.push(`<div class="chat-sms-card">${outreachLines.join("<br>")}</div>`);
+          outreachLines = [];
+        }
+        inOutreach = false;
+      };
+
+      for (let i = 0; i < lines.length; i++) {
+        const rawLine = lines[i];
+        const trimmed = rawLine.trim();
+
+        if (!trimmed) {
+          if (inOutreach && outreachLines.length > 0) {
+            outreachLines.push("");
+          } else {
+            closeList();
+          }
+          continue;
+        }
+
+        // Detect numbered section headers like "1. **Who, and why** - ..." or "**1. Who, and why**"
+        const secMatch = trimmed.match(/^(?:\*\*)?(\d+)\.\s*(?:\*\*)?([^*\n:-]+)(?:\*\*)?(?:\s*[-:]\s*(.*))?$/);
+        if (secMatch) {
+          closeList();
+          closeOutreach();
+          const secNum = secMatch[1];
+          const secTitle = secMatch[2].trim();
+          const remainder = (secMatch[3] || "").trim();
+          htmlParts.push(`<div class="chat-sec-title">${escapeHtml(secNum)}. ${escapeHtml(secTitle)}</div>`);
+          if (secTitle.toLowerCase().includes("outreach message")) {
+            inOutreach = true;
+            if (remainder) outreachLines.push(formatInlineMarkdownHtml(remainder));
+          } else if (remainder) {
+            htmlParts.push(`<p>${formatInlineMarkdownHtml(remainder)}</p>`);
+          }
+          continue;
+        }
+
+        // Detect standalone bold headings like "**Nearby pantries skipped (and why):**" or "### Heading"
+        const headingMatch = trimmed.match(/^(?:#{1,4}\s+|\*\*([^*]+)\*\*:?\s*$)/);
+        if (headingMatch) {
+          closeList();
+          closeOutreach();
+          const hText = trimmed.replace(/^#{1,4}\s+/, "").replace(/\*\*/g, "").replace(/:$/, "").trim();
+          htmlParts.push(`<div class="chat-sec-title">${escapeHtml(hText)}</div>`);
+          if (hText.toLowerCase().includes("outreach message")) {
+            inOutreach = true;
+          }
+          continue;
+        }
+
+        // If we are inside the outreach message section, keep collecting until the next numbered section or bullet list
+        if (inOutreach) {
+          if (/^([*•-]\s+|\d+\.\s+)/.test(trimmed)) {
+            closeOutreach();
+          } else {
+            outreachLines.push(formatInlineMarkdownHtml(trimmed));
+            continue;
+          }
+        }
+
+        // Detect bullet items: "* item", "- item", "• item"
+        const bulletMatch = trimmed.match(/^[*•-]\s+(.*)$/);
+        if (bulletMatch) {
+          closeOutreach();
+          if (!inList) {
+            htmlParts.push("<ul>");
+            inList = true;
+          }
+          htmlParts.push(`<li>${formatInlineMarkdownHtml(bulletMatch[1].trim())}</li>`);
+          continue;
+        }
+
+        // Regular paragraph line
+        closeList();
+        htmlParts.push(`<p>${formatInlineMarkdownHtml(trimmed)}</p>`);
+      }
+
+      closeList();
+      closeOutreach();
+      return htmlParts.join("");
     }
 
     function formatFriendlyToolsLabel(toolsCalled, elapsedSec) {
@@ -2470,7 +2615,11 @@
       const feed = document.getElementById("chatFeed");
       const div = document.createElement("div");
       div.className = `chat-bubble ${role}`;
-      div.textContent = role === "agent" ? formatHumanFriendlyAgentReply(text) : text;
+      if (role === "agent") {
+        div.innerHTML = renderAgentMessageHtml(text);
+      } else {
+        div.textContent = text;
+      }
       feed.appendChild(div);
       feed.scrollTop = feed.scrollHeight;
     }
