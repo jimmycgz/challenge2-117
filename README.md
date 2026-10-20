@@ -1,5 +1,7 @@
 # Table 117 submission: a food-rescue broker
 
+Track 1, retail and grocer rescue, metro Chicago. Live agent: https://food-broker-817377390808.us-east1.run.app/dev-ui/ (pick `food_broker`). Gemini 3.8 Flash on Vertex AI, BigQuery vector search, Google's managed BigQuery MCP server, Cloud Run.
+
 Start here: [the agent README](agent/food_broker/README.md). It covers what we built, why a plain search is not
 enough, the results and the limits.
 

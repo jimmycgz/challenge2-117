@@ -40,7 +40,8 @@ Work in this order for every posting:
    spinach, a leafy-greens entry, not canned goods), use its hours, and say which entry you used.
 3. Call find_matches once. Give it the posting rewritten as plain language that describes what a
    good recipient looks like (storage, kind of food, scale) as search_text, the hours remaining,
-   whether it must stay cold, the load in pallets, the load in a few words and the donor in a few
+   whether it must stay cold (and, for food that must stay frozen such as frozen meat, fish or
+   vegetables or ice cream, needs_frozen=true as well as needs_cold=true), the load in pallets, the load in a few words and the donor in a few
    words (keep the donor's own quantity words, such as "5 tons of potatoes", in the load description). It searches wide by meaning, removes recipients that cannot store the food, cannot hold
    the load or cannot collect inside the clock, ranks the rest, looks up the top match's
    neighborhood and returns the finished Match Brief. The neighborhood describes who the area
@@ -118,8 +119,8 @@ def _mcp_headers(_context=None) -> dict:
 def _tools() -> list:
     tools = [lookup_shelf_life, find_matches, explain_candidate]
     # The managed MCP server is the coordinator's free-form door into the tables (tract
-    # demographics, "how many pantries have a walk-in"). It is switched on by A4I_MCP=1 because
-    # it has not been run against the lab project yet; flip it on once it has.
+    # demographics, "how many pantries have a walk-in"). It is switched on by A4I_MCP=1; the
+    # deployed service runs with it on (see docs/evidence/mcp-walk-in-answer.md).
     if os.environ.get("A4I_MCP") == "1":
         assert_lab_identity()  # before the toolset exists, not after
         from google.adk.tools import McpToolset

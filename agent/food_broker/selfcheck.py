@@ -249,6 +249,17 @@ def main():
         assert decide(creds), f"metadata user outside the lab accepted: {creds.service_account_email}"
     assert not decide(MetadataCreds()), "metadata user inside the lab refused"
 
+    # Frozen food: a walk-in cooler with no freezer is removed when the food must stay frozen, and kept when it need not.
+    two = [
+        {"name": "Cooler only", "cold_storage": "walk-in", "frozen_storage": False, "max_pallets": 4, "pickup_window_hours": 2},
+        {"name": "Has freezer", "cold_storage": "walk-in", "frozen_storage": True, "max_pallets": 4, "pickup_window_hours": 2},
+    ]
+    frozen = apply_constraints(two, hours_remaining=24, needs_cold=True, pallets=1, needs_frozen=True)
+    assert [v["name"] for v in frozen["viable"]] == ["Has freezer"], frozen["viable"]
+    assert "no freezer" in frozen["eliminated"][0]["eliminated_because"], frozen["eliminated"]
+    chilled = apply_constraints(two, hours_remaining=24, needs_cold=True, pallets=1)
+    assert len(chilled["viable"]) == 2, "freezer required for food that only needs to be chilled"
+
     print("selfcheck passed:", len(CANDIDATES), "candidates,", len(viable), "viable for spinach")
 
 

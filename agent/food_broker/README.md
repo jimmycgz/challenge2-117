@@ -124,6 +124,17 @@ Known limits:
   pantries 2 to 6 hours, regional food banks 14 to 45), but the generator does not define it.
 - The shelf-life table gave sealed infant formula a 1-hour shelf life, a prepared-formula figure. The shelf-life
   lookup now adds a caution at 2 hours or less, and the agent then uses the donor's own figure.
+- The filters trust the storage flags, and the data contains planted rows where the flag and the profile text disagree.
+  Harborview Neighbors Trust is flagged walk-in with a freezer, but its text says it has a single shelf in a shared
+  cupboard and no freezer, so a frozen load can be sent to it. Lakeshore Mutual Aid Collective is flagged `none` while its
+  text says "chilled holding", so we remove it for cold food (the cautious error). Third Ward Community Table is flagged
+  walk-in while its text says "a fridge". We did not add a text check; the agent tells the coordinator to confirm by phone.
+- Cedar Street and Maple Street Produce Alliance are the same on every capability we filter on (walk-in, ten pallets,
+  own refrigerated van, 12-hour collection). The tie is broken by closeness in meaning, so which one is named first says
+  nothing about which is better; the brief does not flag the tie.
+- Frozen food: `find_matches` has a `needs_frozen` argument and removes recipients with no freezer. A probe found that,
+  before it was added, frozen chicken went to recipients with no freezer; the filter was added the same afternoon. It
+  uses the `frozen_storage` flag, so the Harborview case above still passes it.
 
 ## How to run
 
