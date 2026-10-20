@@ -165,6 +165,6 @@ The written answer then says plainly that it could not find a match.
 
 The deployed service is open: no credentials are needed, so a browser or `curl` can call it directly. ADK's chat page
 is at the service root. ADK's API server has no authentication of its own, so the deploy limits spend (one
-instance, 8 concurrent requests, a 120-second timeout). One instance on purpose: sessions live in its memory, so a
+instance, 8 concurrent requests, a 300-second timeout). One instance on purpose: sessions live in its memory, so a
 second instance would lose a follow-up question. A page served from a different origin than the service needs
 CORS, which is off until `A4I_ALLOW_ORIGINS` is set when the service is deployed; ask the agent lane.

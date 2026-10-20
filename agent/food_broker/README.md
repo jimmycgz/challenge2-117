@@ -139,7 +139,7 @@ To deploy, run `bash agent/deploy.sh` from the repository root. It checks the gc
 the identity guard, then Cloud Build builds the [Dockerfile](../Dockerfile) in the cloud and deploys it to Cloud Run.
 The service is open to unauthenticated requests, by the team's decision, so that anyone can try it. ADK's API server
 has no authentication of its own, so spend is bounded by the deploy flags (one instance, 8 concurrent requests,
-a 120-second timeout); `OPEN=0` puts it behind authentication instead. It is one instance on purpose: ADK keeps chat
+a 300-second timeout); `OPEN=0` puts it behind authentication instead. It is one instance on purpose: ADK keeps chat
 sessions in the instance's memory, so a second instance would lose a follow-up question. ADK's chat page is served at the service
 root (`NO_UI=1` turns it off). A browser page on another origin needs `A4I_ALLOW_ORIGINS` set at deploy time. How to
 call the server and what comes back: [API.md](API.md).
@@ -187,6 +187,7 @@ The table below says what each one does.
 | `A4I_DATASET` | BigQuery dataset with the lab tables | `a4i_food` |
 | `A4I_EMBED_ENDPOINT` | Embedding model for the search; must match the one that built `recipient_embeddings` | `gemini-embedding-2` |
 | `A4I_MODEL` | Gemini model for the agent; use one the project has enabled | `gemini-2.5-flash` |
+| `A4I_THINKING_LEVEL` | How much the model thinks before answering: `LOW`, `MEDIUM` or `HIGH` (`MINIMAL` is rejected by gemini-3.8-flash). Low keeps an answer to about 15 to 20 seconds; default thinking took 38 to 70 | Unset (the model's default) |
 | `A4I_METRO` | City named in the agent's instructions | `Chicago` |
 | `A4I_MCP` | `1` adds the BigQuery MCP toolset; `deploy.sh` sets it unless `NO_MCP=1` | Off |
 | `GOOGLE_CLOUD_PROJECT` | Project for the BigQuery client, `<lab-project-id>`; `deploy.sh` sets it | None |

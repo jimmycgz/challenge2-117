@@ -61,6 +61,7 @@ ENV_VARS+=",A4I_EXPECTED_PRINCIPAL_SUFFIX=${A4I_EXPECTED_PRINCIPAL_SUFFIX}"
 ENV_VARS+=",A4I_EXPECTED_PROJECT_NUMBER=${PROJECT_NUMBER}"
 ENV_VARS+=",GOOGLE_GENAI_USE_VERTEXAI=1,GOOGLE_CLOUD_LOCATION=${VERTEX_LOCATION}"
 [[ -n "${A4I_MODEL:-}" ]] && ENV_VARS+=",A4I_MODEL=${A4I_MODEL}"
+[[ -n "${A4I_THINKING_LEVEL:-}" ]] && ENV_VARS+=",A4I_THINKING_LEVEL=${A4I_THINKING_LEVEL}"
 # ADK's chat page is served by default; NO_UI=1 serves the API only.
 [[ "${NO_UI:-0}" != "1" ]] && ENV_VARS+=",A4I_UI_FLAG=--with_ui"
 # One instance only: ADK keeps chat sessions in that instance's memory, so a second instance would lose a follow-up.
@@ -74,6 +75,6 @@ gcloud run deploy "${SERVICE}" \
   --region "${REGION}" \
   --source "${HERE}" \
   "${AUTH_FLAG}" \
-  --min-instances 1 --max-instances 1 --concurrency 8 --timeout 120 \
+  --min-instances 1 --max-instances 1 --concurrency 8 --timeout 300 \
   --memory 1Gi \
   --set-env-vars "${ENV_VARS}"
