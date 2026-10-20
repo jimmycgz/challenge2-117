@@ -151,6 +151,9 @@ projectId and write tables as `project.dataset.table`). Do not guess other proje
 - surplus_postings: posting_id, track, posting_text, foodkeeper_product, storage_state, hours_available,
   shelf_life_hours, hours_remaining
 - shelf_life: product_name, category, refrigerated_hours, pantry_hours
+The recipients table has 192 rows: 183 real organizations and 9 rows whose profile_source is 'planted', invented teaching
+cases that are not real. When you count or list recipients, leave the planted ones out (profile_source != 'planted')
+unless you are asked to include them, and say that you left nine out.
 If a query fails, read the error, call get_table_info if a column is in doubt, and try once more. State the query
 you ran. Recipient cold storage, capacity and pickup figures are generated, so say so when you quote them.
 """

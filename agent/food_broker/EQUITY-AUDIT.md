@@ -86,12 +86,12 @@ Weighted figures are compared with the corpus as means; the medians are in the r
   recipient (Shakespear Rose Community Table) was ranked first for postings 1, 2 and 4, in a tract with 45% poverty and
   52% of households without a vehicle; counting it three times is what lifts the per-posting means.
 - **Weighted by volume, the matches sit in tracts with much less assistance.** The three farm postings are 30 of the
-  37.5 estimated pallets. Weighted by pallets, the matches are at 14% poverty, 32% on vehicle access and 9% on
+  37.5 estimated pallets. Weighted by pallets, the matches are at 14% poverty, 32% of households without a vehicle and 9% on
   assistance, against a corpus mean of 19% on assistance (corpus median 12%, metro 18%).
 - **The loading-dock question has at most a hint of an answer.** Only 14 of the 183 recipients have a dock or room for 5
   or more pallets, and a large load can only go to them. Their tracts have a lower mean poverty (17% against 20% for
-  the rest) and assistance (16% against 20%), with similar vehicle access (29% against 27%). The medians are about
-  level (poverty 14% against 16%, assistance 14% against 12%, vehicle access 27% against 27%). With 14 recipients,
+  the rest) and assistance (16% against 20%), with a similar share of households without a vehicle (29% against 27%). The medians are about
+  level (poverty 14% against 16%, assistance 14% against 12%, no vehicle 27% against 27%). With 14 recipients,
   that is not evidence about the matcher.
 - **The effective sample is small.** The 183 recipients sit on 68 distinct tracts, because recipients in one ZIP get the
   same nearest tract. There are ten postings, eight distinct top matches, and no confidence interval. The audit cannot

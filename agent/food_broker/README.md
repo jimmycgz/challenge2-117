@@ -201,6 +201,6 @@ The table below says what each one does.
 | The agent end to end with Gemini on Vertex AI | Verified: ran |
 | Cloud Run service, open to the public | Verified: deployed, answered full questions with no credentials, chat page loads |
 | Offline selfcheck | Verified: passes |
-| BigQuery MCP toolset | Verified: locally and on Cloud Run, a free-form question made two `execute_sql` calls and the agent's count (13 of 192) matched a direct query |
+| BigQuery MCP toolset | Verified: locally and on Cloud Run, a free-form question made two `execute_sql` calls and the agent's count matched a direct query. That first check counted all 192 rows (13 walk-in); seven of those are invented cases, so the real figure is 6 of 183 |
 | A browser front end | Not verified: none has been run against the agent |
 | Equity audit | Limited: one metro, ten postings |

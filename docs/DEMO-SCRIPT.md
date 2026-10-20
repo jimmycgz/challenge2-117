@@ -106,10 +106,11 @@ can.
 Type:
 
 ```text
-How many recipients in the corpus have walk-in cold storage, and what share of all recipients is that?
+Not counting the invented teaching cases (profile_source 'planted'), how many recipients have walk-in cold storage, and what share is that?
 ```
 
-Point at: it answers 13 of 192, about 6.8%, and states the query. Say: this goes through Google's managed BigQuery MCP
+Point at: it answers 6 of 183, about 3.3%, states the query, and says it left nine invented cases out. Say that only six
+of the 183 real recipients have a walk-in cooler, which is why the cold-storage filter matters. Say: this goes through Google's managed BigQuery MCP
 server, read-only. Matching a posting never goes through free-form SQL, so the filters cannot be skipped.
 
 ## The audit (20 seconds, one slide or the audit page)
