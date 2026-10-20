@@ -33,7 +33,7 @@ curl -s -X POST http://127.0.0.1:8765/run -H 'content-type: application/json' -d
 - **The written answer.** The last event with a `text` part. It is the same brief as six labelled parts, for
   a chat view.
 
-A full answer took about 22 seconds on a laptop (one measurement, on gemini-2.5-flash). On gemini-3.8-flash at low thinking, spinach took 15.6 to 17.2 s run alone ([timings](../../docs/DESIGN.md)). Use `/run_sse` if the interface should show progress.
+A full answer took about 22 seconds on a laptop (one measurement, on gemini-2.5-flash). On gemini-3.8-flash at low thinking, spinach took 15.6 to 17.2 s run alone, and 22.5 to 28.5 s in four later runs ([timings](../../docs/DESIGN.md)). Use `/run_sse` if the interface should show progress.
 
 ## The Match Brief
 

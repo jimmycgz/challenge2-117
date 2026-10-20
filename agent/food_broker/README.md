@@ -93,7 +93,7 @@ the credentials before each agent run, the first BigQuery client and the MCP too
 
 When the 80 candidate rows passed through the language model, each model call took 76 to 86 seconds and a full answer
 ran past 3 minutes. `find_matches` runs the search, the filters and the brief inside the code, so the rows never
-reach the model. On gemini-2.5-flash a full answer took about 22 seconds locally and about 13 on Cloud Run (one measurement each). On gemini-3.8-flash at low thinking, spinach took 15.6 to 17.2 s locally, run alone; the Cloud Run figure for 3.8 is measured after the deploy.
+reach the model. On gemini-2.5-flash a full answer took about 22 seconds locally and about 13 on Cloud Run (one measurement each). On gemini-3.8-flash at low thinking, spinach took 15.6 to 17.2 s locally, run alone, earlier in the day, and 22.5 to 28.5 s in four runs on the final branch (13:29 to 13:31 EDT, no other job of ours running, the BigQuery MCP toolset on); the Cloud Run figure for 3.8 is measured after the deploy.
 
 ## Results and limits
 
@@ -187,7 +187,7 @@ The table below says what each one does.
 | `A4I_DATASET` | BigQuery dataset with the lab tables | `a4i_food` |
 | `A4I_EMBED_ENDPOINT` | Embedding model for the search; must match the one that built `recipient_embeddings` | `gemini-embedding-2` |
 | `A4I_MODEL` | Gemini model for the agent; use one the project has enabled | `gemini-2.5-flash` |
-| `A4I_THINKING_LEVEL` | How much the model thinks before answering: `LOW`, `MEDIUM` or `HIGH` (`MINIMAL` is rejected by gemini-3.8-flash). Spinach took 15.6 to 17.2 s at low, run alone; other cases took 27 to 28 s while other jobs ran, and one 117 s. Default thinking took 38 to 70 s | Unset (the model's default) |
+| `A4I_THINKING_LEVEL` | How much the model thinks before answering: `LOW`, `MEDIUM` or `HIGH` (`MINIMAL` is rejected by gemini-3.8-flash). Spinach took 15.6 to 17.2 s at low, run alone, and 22.5 to 28.5 s in four later runs; other cases took 27 to 28 s while other jobs ran, and one 117 s. Default thinking took 38 to 70 s | Unset (the model's default) |
 | `A4I_METRO` | City named in the agent's instructions | `Chicago` |
 | `A4I_MCP` | `1` adds the BigQuery MCP toolset; `deploy.sh` sets it unless `NO_MCP=1` | Off |
 | `GOOGLE_CLOUD_PROJECT` | Project for the BigQuery client, `<lab-project-id>`; `deploy.sh` sets it | None |
