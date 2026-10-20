@@ -1,20 +1,32 @@
-<!-- markdownlint-disable MD029 MD030 MD032 MD036 -->
+<!-- markdownlint-disable MD001 MD009 MD022 MD029 MD030 MD031 MD032 MD036 -->
 <!-- The answer below is the model's output verbatim, so it keeps its own list spacing. -->
 
 # Answer to: Not counting the invented teaching cases (profile_source 'planted'), how many recipients have walk-in cold storage, and what share is that?
 
-Captured 2026-10-20 12:41 EDT, from the agent running locally against the lab tables and Google's managed BigQuery MCP server, before the next deploy. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says.
+Captured 14:40 EDT on 2026-10-20. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
 
-SQL the agent ran through Google's managed BigQuery MCP server (read-only), in order:
+Tool calls, in order:
 
-```sql
-SELECT COUNT(*) FROM `<lab-project-id>.a4i_food.recipients` WHERE profile_source != 'planted'
-```
-
-```sql
-SELECT COUNT(*) FROM `<lab-project-id>.a4i_food.recipients` WHERE cold_storage = 'walk-in' AND profile_source != 'planted'
+```text
+execute_sql_readonly({"projectId": "<lab-project-id>", "query": "SELECT\n  COUNTIF(cold_storage = 'walk-in') AS walk_in_count,\n  COUNT(*) AS total_real_recipients,\n  ROUND(COUNTIF(cold_storage = 'walk-in') * 100.0 / COUNT(*), 1) AS walk_in_pct\nFROM `<lab-project-id>.a4i_food.recipients`\nWHERE profile_source != 'planted'"})
 ```
 
 ---
 
-Not counting the 9 invented teaching cases, 6 recipients have walk-in cold storage, which is 3.3% of the total.
+Leaving out the 9 planted teaching cases, here is the breakdown from the database:
+
+- **Recipients with walk-in cold storage:** 6
+- **Total real recipients:** 183
+- **Share:** 3.3%
+
+*(Note: Recipient operational details such as cold storage type are synthetic/generated profiles on file, not physically verified.)*
+
+**Query executed:**
+```sql
+SELECT
+  COUNTIF(cold_storage = 'walk-in') AS walk_in_count,
+  COUNT(*) AS total_real_recipients,
+  ROUND(COUNTIF(cold_storage = 'walk-in') * 100.0 / COUNT(*), 1) AS walk_in_pct
+FROM `<lab-project-id>.a4i_food.recipients`
+WHERE profile_source != 'planted'
+```

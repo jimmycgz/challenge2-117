@@ -11,19 +11,22 @@
   "ranked": [],
   "rejected_but_close": [
     {
-      "name": "Open Door Outreach Center",
-      "because": "needs 8h to collect, food has 1h",
-      "semantic_rank": 1
+      "name": "Cedar Street Produce Alliance",
+      "because": "needs 12h to collect, food has 1h",
+      "semantic_rank": 1,
+      "profile_source": "planted"
     },
     {
-      "name": "Willis House Of Refuge Nfp",
+      "name": "Burrito Brigade Chicago",
       "because": "needs 8h to collect, food has 1h",
-      "semantic_rank": 2
+      "semantic_rank": 2,
+      "profile_source": "generated"
     },
     {
       "name": "Lakeshore Mutual Aid Collective",
       "because": "no cold storage; needs 12h to collect, food has 1h",
-      "semantic_rank": 19
+      "semantic_rank": 6,
+      "profile_source": "planted"
     }
   ],
   "refusal": "No candidate can take this load in time. The closest rejections are listed with the reason each was eliminated.",

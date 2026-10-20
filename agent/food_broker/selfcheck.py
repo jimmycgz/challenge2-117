@@ -233,6 +233,33 @@ def main():
     assert _principal_of(MetadataCreds()) == ("student-00-abc@labs.example", False, False), _principal_of(MetadataCreds())
     assert _principal_of(ServiceAccountCreds())[1] is True, "a real service account must still be judged as one"
 
+    # The decision, not only the classifier: a metadata-reported user whose address is not the lab's is still refused,
+    # including a lookalike that ends in the suffix without the at-sign.
+    class OutsiderCreds:  # a Cloud Shell user on some other organisation
+        service_account_email = "someone@other.example"
+
+    class LookalikeCreds:
+        service_account_email = "evil@notlabs.example"
+
+    def decide(creds):  # the guard's two steps: classify the credential, then decide
+        who, is_sa, impersonated = _principal_of(creds)
+        return refused(who, P, is_sa, P, S, impersonated=impersonated)
+
+    for creds in (OutsiderCreds(), LookalikeCreds()):
+        assert decide(creds), f"metadata user outside the lab accepted: {creds.service_account_email}"
+    assert not decide(MetadataCreds()), "metadata user inside the lab refused"
+
+    # Frozen food: a walk-in cooler with no freezer is removed when the food must stay frozen, and kept when it need not.
+    two = [
+        {"name": "Cooler only", "cold_storage": "walk-in", "frozen_storage": False, "max_pallets": 4, "pickup_window_hours": 2},
+        {"name": "Has freezer", "cold_storage": "walk-in", "frozen_storage": True, "max_pallets": 4, "pickup_window_hours": 2},
+    ]
+    frozen = apply_constraints(two, hours_remaining=24, needs_cold=True, pallets=1, needs_frozen=True)
+    assert [v["name"] for v in frozen["viable"]] == ["Has freezer"], frozen["viable"]
+    assert "no freezer" in frozen["eliminated"][0]["eliminated_because"], frozen["eliminated"]
+    chilled = apply_constraints(two, hours_remaining=24, needs_cold=True, pallets=1)
+    assert len(chilled["viable"]) == 2, "freezer required for food that only needs to be chilled"
+
     print("selfcheck passed:", len(CANDIDATES), "candidates,", len(viable), "viable for spinach")
 
 

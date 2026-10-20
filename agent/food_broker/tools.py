@@ -162,6 +162,7 @@ def apply_constraints(
     hours_remaining: float,
     needs_cold: bool,
     pallets: float = 1,
+    needs_frozen: bool = False,
 ) -> dict:
     """Split semantic candidates into viable matches (ranked) and eliminated ones, with reasons.
 
@@ -170,6 +171,7 @@ def apply_constraints(
         hours_remaining: Hours the food has left, already capped by the donor's own deadline.
         needs_cold: True if the food must stay cold.
         pallets: Size of the load in pallets (a crate-sized load is a fraction of 1).
+        needs_frozen: True if the food must stay frozen. A recipient without a freezer is removed.
 
     Returns:
         {"viable": [...], "eliminated": [...]}. Viable rows carry `margin_hours` (time left after
@@ -189,6 +191,8 @@ def apply_constraints(
                 reasons.append(
                     f"only a household fridge, load is {pallets:g} pallets"
                 )
+        if needs_frozen and not c.get("frozen_storage"):
+            reasons.append("no freezer")
         if (c.get("max_pallets") or 0) < pallets:
             reasons.append(f"capacity {_pallets(c.get('max_pallets'))}, load is {pallets:g}")
         lead = c.get("pickup_window_hours")
@@ -407,6 +411,7 @@ def explain_candidate(
     needs_cold: bool,
     pallets: float = 1.0,
     top_k: int = 80,
+    needs_frozen: bool = False,
 ) -> dict:
     """Why a named organization was or was not chosen for a posting.
 
@@ -415,7 +420,7 @@ def explain_candidate(
 
     Args:
         name_fragment: Part of the organization's name, e.g. "food depository" or "greenline".
-        search_text, hours_remaining, needs_cold, pallets, top_k: The same values used for find_matches.
+        search_text, hours_remaining, needs_cold, pallets, top_k, needs_frozen: The same values used for find_matches.
 
     Returns:
         {"matches": [...]} with up to five organizations, each {"name", "semantic_rank", "outcome", "detail"},
@@ -425,7 +430,7 @@ def explain_candidate(
 
     try:
         candidates = vector_candidates(search_text, top_k=top_k)
-        result = apply_constraints(candidates, hours_remaining, needs_cold, pallets)
+        result = apply_constraints(candidates, hours_remaining, needs_cold, pallets, needs_frozen)
         fragment = name_fragment.strip().lower()
         found = []
         for e in result["eliminated"]:
@@ -459,6 +464,7 @@ def find_matches(
     donor_description: str = "A local donor",
     top_k: int = 80,
     exclude_names: Optional[list[str]] = None,
+    needs_frozen: bool = False,
 ) -> dict:
     """Find recipients for a posting and return the finished Match Brief, in one step.
 
@@ -477,6 +483,8 @@ def find_matches(
         top_k: Size of the semantic pool before filtering. Keep it wide.
         exclude_names: Recipients that have already said no (or are closed). They are skipped, so the brief is
             for the next best recipient. Use the exact names from the earlier brief.
+        needs_frozen: True if the food must stay frozen (also pass needs_cold=True). Recipients without a freezer
+            are removed.
 
     Returns:
         The brief from build_match_brief, plus `search` with the pool size and how many survived the
@@ -490,7 +498,7 @@ def find_matches(
         if exclude_names:
             skip = {n.strip().lower() for n in exclude_names}
             candidates = [c for c in candidates if c["name"].strip().lower() not in skip]
-        result = apply_constraints(candidates, hours_remaining, needs_cold, pallets)
+        result = apply_constraints(candidates, hours_remaining, needs_cold, pallets, needs_frozen)
         neighborhood = None
         if result["viable"]:
             top = result["viable"][0]

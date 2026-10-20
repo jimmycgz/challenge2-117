@@ -27,7 +27,8 @@ Work in this order for every posting:
    cold, and the donor's own deadline in hours. Work out "must it stay cold" from the product
    yourself and never ask about it: fish, meat, poultry, dairy, eggs, leafy or cut produce,
    prepared or deli food, and anything described as fresh or chilled must stay cold; bread, canned,
-   dry and shelf-stable goods do not. State your assumption in the first line (for example "salmon,
+   dry and shelf-stable goods do not, and neither do whole root vegetables and other hardy whole
+   produce (potatoes, sweet potatoes, onions, winter squash), even when called fresh. State your assumption in the first line (for example "salmon,
    so it must stay cold"). Ask only for what you cannot work out: the donor's deadline in hours
    (never guess it), or an amount you cannot estimate. Ask one short question, and say what you
    already assumed.
@@ -39,7 +40,8 @@ Work in this order for every posting:
    spinach, a leafy-greens entry, not canned goods), use its hours, and say which entry you used.
 3. Call find_matches once. Give it the posting rewritten as plain language that describes what a
    good recipient looks like (storage, kind of food, scale) as search_text, the hours remaining,
-   whether it must stay cold, the load in pallets, the load in a few words and the donor in a few
+   whether it must stay cold (and, for food that must stay frozen such as frozen meat, fish or
+   vegetables or ice cream, needs_frozen=true as well as needs_cold=true), the load in pallets, the load in a few words and the donor in a few
    words (keep the donor's own quantity words, such as "5 tons of potatoes", in the load description). It searches wide by meaning, removes recipients that cannot store the food, cannot hold
    the load or cannot collect inside the clock, ranks the rest, looks up the top match's
    neighborhood and returns the finished Match Brief. The neighborhood describes who the area
@@ -117,8 +119,8 @@ def _mcp_headers(_context=None) -> dict:
 def _tools() -> list:
     tools = [lookup_shelf_life, find_matches, explain_candidate]
     # The managed MCP server is the coordinator's free-form door into the tables (tract
-    # demographics, "how many pantries have a walk-in"). It is switched on by A4I_MCP=1 because
-    # it has not been run against the lab project yet; flip it on once it has.
+    # demographics, "how many pantries have a walk-in"). It is switched on by A4I_MCP=1; the
+    # deployed service runs with it on (see docs/evidence/mcp-walk-in-answer.md).
     if os.environ.get("A4I_MCP") == "1":
         assert_lab_identity()  # before the toolset exists, not after
         from google.adk.tools import McpToolset
@@ -126,7 +128,9 @@ def _tools() -> list:
 
         tools.append(McpToolset(
             connection_params=StreamableHTTPConnectionParams(url=BIGQUERY_MCP_URL),
-            tool_filter=["execute_sql", "get_table_info", "list_table_ids"],
+            # execute_sql_readonly, never execute_sql: the server itself refuses anything but SELECT on the former, while
+            # execute_sql runs INSERT, UPDATE, DELETE and DDL as the service's account (the service is public).
+            tool_filter=["execute_sql_readonly", "get_table_info", "list_table_ids"],
             header_provider=_mcp_headers,
         ))
     return tools
@@ -139,7 +143,7 @@ def _identity_gate(callback_context):
 
 
 MCP_INSTRUCTION = """
-You also have Google's BigQuery tools (execute_sql, get_table_info, list_table_ids) for free-form questions about
+You also have Google's BigQuery tools (execute_sql_readonly, get_table_info, list_table_ids) for free-form questions about
 the data that a coordinator may ask outside a posting, such as how many recipients have a walk-in cooler, or which
 tracts have the lowest vehicle access. Use them only for such questions, only to read, and only on the tables in the
 dataset """ + os.environ.get("A4I_DATASET", "a4i_food") + """. Never use them to find a match for a posting:

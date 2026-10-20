@@ -73,7 +73,7 @@ Follow-ups: `find_matches` takes `exclude_names`, so after "they said no" the ne
   ([demo tracks](evidence/demo-tracks.txt)). That is deliberate: the nearest passing recipient has a household fridge and one
   hour of slack; the picks have two or three hours and, for the first, a refrigerated vehicle. Closeness by meaning is
   how a profile reads, not whether the food arrives safely, so it is spent last.
-- **One agent.** Latency fell from over 3 minutes to about 13 to 22 seconds (measured on gemini-2.5-flash; 3.8 at low thinking: 15.6 to 17.2 s for spinach, run alone, then 22.5 to 28.5 s in four later runs on the final branch).
+- **One agent.** Latency fell from over 3 minutes to about 13 to 22 seconds (measured on gemini-2.5-flash; 3.8 at low thinking: 15.6 to 17.2 s for spinach, run alone, then 22.5 to 28.5 s in four later runs on the final branch; on Cloud Run 19.9 to 22.5 s, one sample each).
 - **No tract data in the ranking.** The audit then measures the matcher instead of what the ranking was told to favor.
 - **Tools never skipped.** Matching a posting always goes through `find_matches`, so the filters cannot be talked around.
   The MCP server answers data questions only.

@@ -1,95 +1,104 @@
 {
   "organization_and_why": {
-    "name": "Habibi Care",
-    "address": "4845 N WASHTENAW AVE, CHICAGO, IL 60625",
-    "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
-    "profile_excerpt": "Emergency shelter providing three meals a day to residents. Two household fridges. Dry storage is a converted closet. No dedicated vehicle. Delivery is far easier for us than pickup. Prepared and ready-to-eat food."
+    "name": "Feed My Fam Nfp",
+    "address": "2948 N MEADE AVE, CHICAGO, IL 60634",
+    "profile_source": "generated",
+    "why": "vehicle cold storage, takes up to 3 pallets, collects within 4h",
+    "profile_excerpt": "Mobile distribution serving neighborhoods without a fixed pantry. Reefer van with pallet capacity, but no static warehouse. Route flexibility is our strength - a same-day diversion is usually possible."
   },
   "what_they_can_take": {
     "load_pallets": 0.5,
-    "max_pallets": 1,
-    "cold_storage": "domestic",
+    "max_pallets": 3,
+    "cold_storage": "vehicle",
     "frozen_storage": false,
     "loading_dock": false,
-    "refrigerated_transport": false,
-    "service_days": "Monday"
+    "refrigerated_transport": true,
+    "service_days": "Saturday"
   },
   "the_clock": {
     "hours_remaining": 6,
-    "collection_lead_hours": 3,
-    "margin_hours": 3,
-    "needs_driver": true
+    "collection_lead_hours": 4,
+    "margin_hours": 2,
+    "needs_driver": false
   },
   "whose_neighborhood": {
-    "households_per_week": 165,
-    "populations_served": "Families with children",
-    "tract": "Nearest census tract: 13% of residents below the poverty line, 5% of households without a vehicle, 12% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
+    "households_per_week": 345,
+    "populations_served": "Unhoused individuals and families",
+    "tract": "Nearest census tract: 11% of residents below the poverty line, 3% of households without a vehicle, 8% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
   },
-  "outreach_message": "Hello Habibi Care team,\n\nA grocer in Chicago has ten crates of spinach. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 6 hours from now, which leaves you roughly 3 hours of slack to collect. We can arrange a driver, since it has to stay cold on the way.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "outreach_message": "Hello Feed My Fam Nfp team,\n\nA grocer in Chicago has ten crates of fresh spinach. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 6 hours from now, which leaves you roughly 2 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
   "next_two_options": [
     {
       "rank": 2,
-      "meaning_rank": 34,
-      "name": "Love Of Angels",
-      "address": "4966 N KOLMAR AVE, CHICAGO, IL 60630",
-      "why": "domestic cold storage, takes up to 1 pallet, collects within 4h",
-      "margin_hours": 2,
+      "meaning_rank": 30,
+      "name": "Habibi Care",
+      "address": "4845 N WASHTENAW AVE, CHICAGO, IL 60625",
+      "profile_source": "generated",
+      "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
+      "margin_hours": 3,
       "needs_driver": true
     },
     {
       "rank": 3,
-      "meaning_rank": 57,
-      "name": "Good Food Pantry",
-      "address": "808 SEELEY AVE, PARK RIDGE, IL 60068",
-      "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
-      "margin_hours": 3,
+      "meaning_rank": 35,
+      "name": "Mtms",
+      "address": "9608 S 49TH AVE, OAK LAWN, IL 60453",
+      "profile_source": "generated",
+      "why": "domestic cold storage, takes up to 1 pallet, collects within 4h",
+      "margin_hours": 2,
       "needs_driver": true
     }
   ],
   "ranked": [
     {
       "rank": 1,
-      "meaning_rank": 17,
-      "name": "Habibi Care",
-      "address": "4845 N WASHTENAW AVE, CHICAGO, IL 60625",
-      "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
-      "margin_hours": 3,
-      "needs_driver": true
+      "meaning_rank": 80,
+      "name": "Feed My Fam Nfp",
+      "address": "2948 N MEADE AVE, CHICAGO, IL 60634",
+      "profile_source": "generated",
+      "why": "vehicle cold storage, takes up to 3 pallets, collects within 4h",
+      "margin_hours": 2,
+      "needs_driver": false
     },
     {
       "rank": 2,
-      "meaning_rank": 34,
-      "name": "Love Of Angels",
-      "address": "4966 N KOLMAR AVE, CHICAGO, IL 60630",
-      "why": "domestic cold storage, takes up to 1 pallet, collects within 4h",
-      "margin_hours": 2,
+      "meaning_rank": 30,
+      "name": "Habibi Care",
+      "address": "4845 N WASHTENAW AVE, CHICAGO, IL 60625",
+      "profile_source": "generated",
+      "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
+      "margin_hours": 3,
       "needs_driver": true
     },
     {
       "rank": 3,
-      "meaning_rank": 57,
-      "name": "Good Food Pantry",
-      "address": "808 SEELEY AVE, PARK RIDGE, IL 60068",
-      "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
-      "margin_hours": 3,
+      "meaning_rank": 35,
+      "name": "Mtms",
+      "address": "9608 S 49TH AVE, OAK LAWN, IL 60453",
+      "profile_source": "generated",
+      "why": "domestic cold storage, takes up to 1 pallet, collects within 4h",
+      "margin_hours": 2,
       "needs_driver": true
     }
   ],
   "rejected_but_close": [
     {
+      "name": "Burrito Brigade Chicago",
+      "because": "needs 8h to collect, food has 6h",
+      "semantic_rank": 1,
+      "profile_source": "generated"
+    },
+    {
+      "name": "Women Of Esther Ministries",
+      "because": "capacity 0 pallets, load is 0.5",
+      "semantic_rank": 2,
+      "profile_source": "generated"
+    },
+    {
       "name": "Greenline Community Pantry",
       "because": "no cold storage; needs 12h to collect, food has 6h",
-      "semantic_rank": 1
-    },
-    {
-      "name": "Tca Health Inc Nfp",
-      "because": "needs 18h to collect, food has 6h",
-      "semantic_rank": 2
-    },
-    {
-      "name": "Go Forth International",
-      "because": "needs 21h to collect, food has 6h",
-      "semantic_rank": 3
+      "semantic_rank": 5,
+      "profile_source": "planted"
     }
   ],
   "refusal": null,

@@ -35,7 +35,7 @@ or where it ranked among the viable ones. Questions about a match already given 
 neighborhood) are answered from the earlier brief with no new search.
 
 For questions that are not a posting, such as how many recipients have a walk-in cooler, the agent also uses
-Google's managed BigQuery MCP server (`execute_sql`, `get_table_info`, `list_table_ids`), read-only and told which
+Google's managed BigQuery MCP server (`execute_sql_readonly`, `get_table_info`, `list_table_ids`), read-only (the server refuses anything but SELECT) and told which
 dataset to stay in. It is on in the deployed service. Matching a posting always goes through `find_matches`, never
 through free-form SQL, so the filters cannot be skipped.
 
@@ -93,7 +93,7 @@ the credentials before each agent run, the first BigQuery client and the MCP too
 
 When the 80 candidate rows passed through the language model, each model call took 76 to 86 seconds and a full answer
 ran past 3 minutes. `find_matches` runs the search, the filters and the brief inside the code, so the rows never
-reach the model. On gemini-2.5-flash a full answer took about 22 seconds locally and about 13 on Cloud Run (one measurement each). On gemini-3.8-flash at low thinking, spinach took 15.6 to 17.2 s locally, run alone, earlier in the day, and 22.5 to 28.5 s in four runs on the final branch (13:29 to 13:31 EDT, no other job of ours running, the BigQuery MCP toolset on); the Cloud Run figure for 3.8 is measured after the deploy.
+reach the model. On gemini-2.5-flash a full answer took about 22 seconds locally and about 13 on Cloud Run (one measurement each). On gemini-3.8-flash at low thinking, spinach took 15.6 to 17.2 s locally, run alone, earlier in the day, and 22.5 to 28.5 s in four runs on the final branch (13:29 to 13:31 EDT, no other job of ours running, the BigQuery MCP toolset on); on Cloud Run (revision `food-broker-00009-52v`, one sample each, 13:38 to 13:40 EDT) it took 19.9 s for spinach, 22.5 s for the "they said no" follow-up and 20.3 s for the farm posting.
 
 ## Results and limits
 
@@ -113,10 +113,14 @@ Known limits:
   agent presents them as the profile on file and suggests confirming by phone.
 - Shelf life is USDA consumer guidance, not a cold-chain guarantee.
 - Locations are ZIP-level, so the tract figures describe the surrounding area.
-- The deployed service is open and the agent has Google's BigQuery tool, which runs read-only SQL as the service's
-  account. Anyone with the address can ask it questions about the project's data, including the project id and table
-  names, which the agent is given. The instructions confine it to the one dataset, but that is an instruction, not a
-  permission. The project is a temporary lab project and holds only this data.
+- The deployed service is open, and anyone with the address can ask the agent questions about the project's data,
+  including the project id and table names, which the agent is given. The agent's free-form SQL tool is
+  `execute_sql_readonly`, which the BigQuery MCP server restricts to SELECT. Until the afternoon of 2026-10-20 the agent
+  loaded `execute_sql` instead, which the server documents as able to run INSERT, UPDATE, DELETE and DDL as the service's
+  account; that was found in review and switched. The service still runs as the project's default compute account, which
+  holds the Editor role, so a dedicated read-only runtime account is a next step. The instructions also confine the agent
+  to the one dataset, but that part is an instruction, not a permission. The project is a temporary lab project and a
+  snapshot of the tables is in the dataset `a4i_food_backup`.
 - The generated profile text and the numeric fields were produced separately and can disagree: one wholesale-style
   recipient's profile says it can be there "within a couple of hours" while its collection-time number is 19 hours.
   The filters use the numbers, and the agent is told not to repeat what a profile says about timing.
@@ -124,6 +128,17 @@ Known limits:
   pantries 2 to 6 hours, regional food banks 14 to 45), but the generator does not define it.
 - The shelf-life table gave sealed infant formula a 1-hour shelf life, a prepared-formula figure. The shelf-life
   lookup now adds a caution at 2 hours or less, and the agent then uses the donor's own figure.
+- The filters trust the storage flags, and the data contains planted rows where the flag and the profile text disagree.
+  Harborview Neighbors Trust is flagged walk-in with a freezer, but its text says it has a single shelf in a shared
+  cupboard and no freezer, so a frozen load can be sent to it. Lakeshore Mutual Aid Collective is flagged `none` while its
+  text says "chilled holding", so we remove it for cold food (the cautious error). Third Ward Community Table is flagged
+  walk-in while its text says "a fridge". We did not add a text check; the agent tells the coordinator to confirm by phone.
+- Cedar Street and Maple Street Produce Alliance are the same on every capability we filter on (walk-in, ten pallets,
+  own refrigerated van, 12-hour collection). The ranking sorts on margin tier, then sturdier cold storage, then own refrigerated transport, then closeness in meaning; a tie on the first three falls to meaning because nothing else is left to compare, so which one is named first says
+  nothing about which is better; the brief does not flag the tie. A true tie like this one we would break on who received food least recently, so one pantry is not asked every time; that needs the delivery memory we have not built. We chose not to break it on neighborhood need, which the equity audit reports but the ranking does not use.
+- Frozen food: `find_matches` has a `needs_frozen` argument and removes recipients with no freezer. A probe found that,
+  before it was added, frozen chicken went to recipients with no freezer; the filter was added the same afternoon. It
+  uses the `frozen_storage` flag, so the Harborview case above still passes it.
 
 ## How to run
 
@@ -202,6 +217,7 @@ The table below says what each one does.
 | The agent end to end with Gemini on Vertex AI | Verified: ran |
 | Cloud Run service, open to the public | Verified: deployed, answered full questions with no credentials, chat page loads |
 | Offline selfcheck | Verified: passes |
-| BigQuery MCP toolset | Verified: locally and on Cloud Run, a free-form question made two `execute_sql` calls and the agent's count matched a direct query. That first check counted all 192 rows (13 walk-in); seven of those are invented cases, so the real figure is 6 of 183 |
+| The notebook's validation section (25 checks) on the loaded tables | Verified: 23 pass, 2 fail, [validation.txt](../../docs/evidence/validation.txt). Sealed goods keep their clock fails for the formula posting (1 hour left); the agent takes the donor's figure instead, see the shelf-life limit above. Text matches flags fails for two invented teaching cases that disagree in opposite directions: Third Ward is flagged walk-in but its text says "a fridge" (the flag overstates, so a cold load can go to a small domestic fridge), Lakeshore is flagged none but its text says "chilled holding" (the flag understates, so it is wrongly removed). The filters trust the flags, see the limits above |
+| BigQuery MCP toolset | Verified: locally and on Cloud Run, a free-form question ran through the BigQuery MCP tools (`execute_sql_readonly` since revision 00012; earlier revisions used `execute_sql`) and the agent's count matched a direct query. That first check counted all 192 rows (13 walk-in); seven of those are invented cases, so the real figure is 6 of 183 |
 | A browser front end | Not verified: none has been run against the agent |
 | Equity audit | Limited: one metro, ten postings |
