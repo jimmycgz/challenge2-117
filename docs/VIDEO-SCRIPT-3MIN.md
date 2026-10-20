@@ -87,6 +87,8 @@ Slow down here; this is the beat judges should remember. Say these facts, in thi
 7. One line: the rule that always shows a cold-storage rejection is tested with a case that fails when the rule is
    switched off, and that test caught a sorting bug in our first version.
 
+Never put part 1 of the 24-hour greens capture ([decoy-greens-24h-answer.md](evidence/decoy-greens-24h-answer.md)) on screen: its top match is an invented teaching case. For this beat show its rejected list (part 6), where Greenline is removed for storage alone, or the 6-hour spinach run, where the pick is a real organization.
+
 Leave out where the agent's own top three sit. In the saved run they are 50th, 54th and 63rd by meaning, because the
 ranking puts a comfortable margin and sturdier cold storage ahead of closeness. Those are easy to mistake for the
 first recipients that pass, which start at 11th.

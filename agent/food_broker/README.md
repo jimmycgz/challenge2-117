@@ -130,8 +130,8 @@ Known limits:
   text says "chilled holding", so we remove it for cold food (the cautious error). Third Ward Community Table is flagged
   walk-in while its text says "a fridge". We did not add a text check; the agent tells the coordinator to confirm by phone.
 - Cedar Street and Maple Street Produce Alliance are the same on every capability we filter on (walk-in, ten pallets,
-  own refrigerated van, 12-hour collection). The tie is broken by closeness in meaning, so which one is named first says
-  nothing about which is better; the brief does not flag the tie.
+  own refrigerated van, 12-hour collection). The ranking sorts on margin tier, then sturdier cold storage, then own refrigerated transport, then closeness in meaning; a tie on the first three falls to meaning because nothing else is left to compare, so which one is named first says
+  nothing about which is better; the brief does not flag the tie. A true tie like this one we would break on who received food least recently, so one pantry is not asked every time; that needs the delivery memory we have not built. We chose not to break it on neighborhood need, which the equity audit reports but the ranking does not use.
 - Frozen food: `find_matches` has a `needs_frozen` argument and removes recipients with no freezer. A probe found that,
   before it was added, frozen chicken went to recipients with no freezer; the filter was added the same afternoon. It
   uses the `frozen_storage` flag, so the Harborview case above still passes it.
