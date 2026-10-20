@@ -1,156 +1,155 @@
-# Deck outline: RescueBroker — Coordinator Dispatch Console & Food Equity Broker
+# Deck outline: RescueBroker — Turning 45 Minutes of Phone Tag into a 15-Second Food Rescue Dispatch
 
-Navigation: [demo script](DEMO-SCRIPT.md) · [submission checklist](SUBMISSION.md) ·
-[agent README](../agent/food_broker/README.md) · [equity audit](../agent/food_broker/EQUITY-AUDIT.md) ·
-[design & benchmarks](DESIGN.md).
+Navigation: [visual slide deck (HTML/PDF)](pitch-deck.html) · [demo script](DEMO-SCRIPT.md) ·
+[submission checklist](SUBMISSION.md) · [agent README](../agent/food_broker/README.md) ·
+[equity audit](../agent/food_broker/EQUITY-AUDIT.md) · [design notes](DESIGN.md).
 
-Eight slides. Judges score the deck and the video asynchronously after the event with no Q&A, so every differentiator,
-benchmark, and rigor check is stated directly on the slides below. Front-load it: assume nobody reaches the last slide.
-
----
-
-## 1. The Thursday 2:10 PM Reality: Why Chatbots Fail a Ticking Clock
-
-We coordinate food rescue in Chicago. A grocer has just offered **ten crates of fresh spinach** and it has to leave their
-dock within **6 hours** and stay cold. Here is who we would call, and what we do not know about them.
-
-- **The 4-Question Bottleneck:** Answering *what just arrived, who wants it, what they can physically store, and whether
-  they can collect before the dock closes* takes a human coordinator 40 minutes of phone tag across spreadsheets.
-- **Why We Built a Dispatch Console, Not Just a Chat Box:** Most teams stop at raw `adk web`. A staff dispatcher managing
-  11 expiring offers cannot scroll through a developer chat log—they need a **Ticking-Clock Queue**, a **scannable 6-Part
-  Match Brief**, **spatial map verification**, and **1-click SMS/decline workflows**.
-- **Data Provenance Up Front (Judge Check #1):**
-  - **Real:** **183 IRS 990 tax-exempt organizations** in Chicago (names, addresses, NTEE codes, reported income),
-    **USDA FoodKeeper** shelf life (661 products), and **US Census ACS** tract demographics (1,004 tracts).
-  - **Invented / Generated:** **9 planted teaching cases** added by the challenge (`profile_source = 'planted'`, with no
-    real street/ZIP), plus all operational fields (`cold_storage`, `max_pallets`, `pickup_window_hours`,
-    `refrigerated_transport`).
+Eight slides written in plain, human language for operations leaders and judges. Every required judge check is on the
+slides below without burying the story in developer jargon.
 
 ---
 
-## 2. User Experience: The RescueBroker SaaS Coordinator Console (`frontend/index.html`)
+## 1. Thursday, 2:10 PM: Why Good Food Goes to the Compactor
 
-Built specifically for our primary persona (**Internal Dispatch Staff**) with **5 operational views + a collapsible Right
-Agent Copilot** connected live to Cloud Run:
+> *"We coordinate food rescue in Chicago. A grocer has just offered ten crates of fresh spinach that must leave their
+> loading dock within six hours and stay cold. Here is who we would call—and what we do not know about them."*
 
-1. **Ticking-Clock Dispatch Queue & Match Brief Hero Card:**
-   - Color-coded urgency pills (`🔴 <= 2h`, `🟡 <= 6h`, `🟢 > 6h`), **openFDA Recall Safety Strip**, **4-KPI Capacity &
-     Buffer Bar**, ready-to-copy SMS, and a 1-click **"Recipient Declined — Next Option"** pivot button.
-2. **Spatial Map & Multi-Stop Route / Load-Split Planner:**
-   - Plots the **183 real IRS recipients** across Chicago (explicitly labelling the 9 invented teaching cases rather than
-     plotting fake coordinates), plus corridor **Milk-Run grouping** and **multi-pantry load splitting** for oversized farm loads.
-3. **Pantry Network Directory (192 Orgs) & Conversational Intake:**
-   - Filters by walk-in cooler, loading dock, and refrigerated van, and includes a **Pantry Onboarding** workflow to close
-     the loop on missing public operational data.
-4. **openFDA Safety Gate & Driver Incident Log:**
-   - Live CC0 federal recall check (`api.fda.gov`) + mid-route driver delay re-routing (`recalculateWithDelay`) and
-     door-rejection reporting.
-5. **Multimodal & Multi-Turn Agent Copilot Drawer (`food_broker`):**
-   - Supports **Voice dictation**, **Pallet/Crate Tag Photo scanning**, and live multi-turn follow-ups (*"They said no"*,
-     *"Why not X?"*, and free-form BigQuery MCP SQL queries).
+- **Today's Reality (45 Minutes of Phone Tag):** A coordinator sits with a ringing phone, a spreadsheet of 192
+  charities, and a group text of volunteer drivers. Before sending a van, they must answer **four questions in the same
+  minute**: *Who needs fresh greens? Who actually has a working cooler? Can they collect before 8 PM? Do they have a
+  refrigerated van, or do we send a volunteer?* By the time a human calls down the list, the dock closes.
+- **With RescueBroker (A Verified Match Brief in 15 Seconds):** The coordinator pastes the grocer's text (or snaps a
+  photo of the pallet tag) and gets a ranked recommendation, a safety buffer check, a ready-to-send text message, and two
+  backup pantries ready to call.
+- **What Is Real vs. Estimated Up Front:** **183 Chicago charity names, addresses, and tax incomes** are real IRS
+  records (plus **9 invented teaching cases** added by the challenge); USDA shelf life and Census neighborhood data are
+  real; every charity's cooler type, pallet capacity, and pickup window are generated.
 
 ---
 
-## 3. Architecture & Our 42-Run Model Benchmark (`docs/DESIGN.md`)
+## 2. Built for Dispatchers, Not Software Engineers: The Coordinator Command Center
 
-**Why 1 Single ADK Root Agent + 4 Deterministic Tool Surfaces Beats a Multi-Agent Chain:**
-Passing 80 candidate rows between LLM sub-agents took **76–86 seconds per hop (>3 minutes total)**. Keeping vector
-candidate retrieval, hard constraint filtering, tiered ranking, and brief assembly inside deterministic Python functions
-(`agent/food_broker/tools.py`) cuts response time to **~15–17 seconds** on warm Cloud Run (`min-instances=1`) and enables
-100% offline unit verification (`selfcheck.py`).
+When a dispatcher is juggling 11 expiring food offers at 4 PM, scrolling through a chatbot is a liability. We built the
+**RescueBroker Coordinator Console** (`frontend/index.html`) around how a real rescue desk operates:
 
-- **`lookup_shelf_life`:** Queries `a4i_food.shelf_life` + injects `_shelf_caution` when `hours <= 2` (catching opened-container traps).
-- **`find_matches`:** BigQuery `VECTOR_SEARCH` (`gemini-embedding-2`, `top_k=80`) $\rightarrow$ hard constraint filter $\rightarrow$ tiered safety ranking $\rightarrow$ `ST_DISTANCE` nearest census tract lookup $\rightarrow$ 6-part Match Brief + guaranteed cold-storage decoy log.
-- **`explain_candidate`:** Searches the `top_k=80` pool for any named organization (*"Why not Greenline?"* / *"Why not the big food bank downtown?"*) and reports its exact `semantic_rank` and failed constraint.
-- **Google's Managed BigQuery MCP Server (`https://bigquery.googleapis.com/mcp`):** Read-only `execute_sql` / `get_table_info` for ad-hoc coordinator questions outside a posting, guarded by `identity_guard.py`.
-- **Empirical Model Selection (14 checks × 3 runs = 42 runs):** We benchmarked `gemini-3.8-flash` (low thinking: **41/42 checks, 15.6–17.2s**, zero prompt-injection leaks) against `gemini-2.5-flash` (**38/42 checks, 17.8–20.0s**, leaked SQL on 1 of 3 prompt-injection tests).
-
----
-
-## 4. Why Meaning Is Not Enough: The `top_k=80` Pool Study & Rank #3 Decoy (Judge Check #2)
-
-For the 6-hour spinach offer across 192 Chicago recipients, **the three closest recipients by meaning were all wrong**:
-- All three needed longer to collect than the food had (`12h–21h` vs. `6h`).
-- **Ranked 3rd by meaning (`Greenline Community Pantry` — an invented teaching case in the challenge data):** Writes that
-  its families *"ask most for fresh greens"*—and has **no refrigeration of any kind (`cold_storage = 'none'`)**.
-- **Measured Candidate Pool Study ([`pool-study.txt`](evidence/pool-study.txt)):**
-  - `top_k = 15` leaves **1** viable recipient | `top_k = 40` leaves **3** | `top_k = 80` leaves **12** (giving 9 backup options when pantries decline).
-- **Why Our Tiered Ranking Picks Semantic Ranks #50, #54, and #63 Over Rank #11 ([`demo-tracks.txt`](evidence/demo-tracks.txt)):**
-  - The nearest candidate by meaning that passes hard filters sits at **11th**, but only has a **household fridge (`domestic`)** and **1 hour of slack**.
-  - Our ranking models slack as a **comfortable safety tier (`>= max(2h, 25% of clock)`)**, then prioritizes **sturdy commercial/vehicle cold storage (`REAL_COLD`)** and **own refrigerated transport** over raw embedding distance—picking **#50, #54, and #63** (which have 2–3 hours of buffer and, for #50, a refrigerated vehicle).
-- **Mutation-Tested Filter:** `selfcheck.py` includes a test that disables the cold-storage rule to verify the test suite catches the decoy (which caught a real sorting bug in our v1 build).
+1. **The Live Countdown Queue:** Every incoming donation is sorted by urgency (**Red: under 2 hours left**, **Amber:
+   under 6 hours**). Coordinators can type, dictate by voice, or upload a photo of a crate label.
+2. **The 6-Part Match Brief Card:** No wall of prose. One glance shows: *Who to call & why*, *Cooler & pallet room*,
+   *Time buffer on the clock*, *Whether to dispatch a volunteer driver*, *Neighborhood need*, and a *1-click SMS*.
+3. **One-Click "They Said No" Pivot:** Pantries are run by busy volunteers who miss calls. Clicking **"Recipient
+   Declined — Next Option"** immediately promotes the #2 backup pantry and writes a fresh text message.
+4. **Chicago Pantry Map & FDA Recall Check:** Plots the **183 real Chicago charities** alongside an automatic **FDA
+   recall check** so staff never dispatch recalled food.
+5. **Side-by-Side AI Copilot:** Lets coordinators ask natural follow-up questions (*"Why didn't we call the big food
+   bank downtown?"* or *"How many pantries in Chicago actually have a walk-in cooler?"*).
 
 ---
 
-## 5. One Corpus, Three Tracks — Zero Track-Specific Rulebooks
+## 3. How It Works in Plain English (Five Steps in 15 Seconds)
 
-Retail spinach, five tons of farm potatoes, and sealed infant formula run through the exact same corpus, embedding search, and constraint pipeline (`docs/evidence/demo-tracks.txt`):
+Every charity describes itself differently—one says *"fresh greens for families,"* another says *"refrigerated
+produce."* Keyword search misses them. RescueBroker reads for meaning, then checks physical reality:
 
-| Track | Posting | Viable (`top_k=80`) | How the Same Pipeline Adapts |
+1. **Check the Food Clock:** Compares the grocer's dock deadline against USDA food-safety guidance.
+2. **Search by Meaning:** Finds the **80 closest charities** in Chicago whose mission and dietary needs fit the offer.
+3. **Enforce Hard Reality:** Eliminates anyone without the right cooler, enough pallet room, or enough time to collect.
+4. **Rank for Safety Buffer:** Prioritizes charities with at least 2 hours of breathing room and sturdy refrigeration
+   before raw text similarity.
+5. **Deliver the Actionable Brief:** Adds neighborhood need from the US Census and drafts the exact pickup message.
+
+*Why it's fast and reliable:* Passing 80 charities between multiple AI chatbots took over a minute. Keeping the safety
+rules in fast, offline-tested code and using Google's fastest reasoning model (verified across 42 test runs) delivers
+answers in **~15 seconds**.
+
+---
+
+## 4. Why Smart Search Alone Spoils Food—and How We Catch the Decoy
+
+If an AI sends ten crates of perishable spinach to a pantry with no refrigerator, the food spoils and the coordinator
+never trusts the tool again. Look at what happened on our 6-hour spinach offer:
+
+- **The Top 3 "Best" Matches by Meaning Were All Wrong:** All three needed **12 to 21 hours** to collect against a
+  6-hour clock. **Ranked #3 by meaning (`Greenline Community Pantry` — one of the 9 planted teaching cases)** wrote
+  passionately that its families ask most for *"fresh greens"*—and has **no refrigeration of any kind**.
+- **Why We Search 80 Charities Instead of 15:** Because physical rules eliminate most matches, searching only the top
+  15 charities left just **1 viable option** (and 40 left **3**). Searching **80** gives the coordinator **12 viable
+  pantries**—so when the first two decline, ten backups are ready.
+- **Why We Pick Safe Buffer Over a 1-Hour Squeeze:** The closest charity that technically passed (#11) only had a
+  **household kitchen fridge** and **1 hour of slack**. RescueBroker passes over thin margins to pick charities (#50,
+  #54, #63) with **2–3 hours of breathing room** and a **refrigerated van**.
+
+---
+
+## 5. One System for Every Kind of Surplus (Grocer, Farm, and Family Clinic)
+
+Coordinators don't want three separate tools for grocery stores, farms, and family shelters. Because RescueBroker
+matches on meaning and physical capacity, one workflow handles all three:
+
+| Type of Donation | What the Donor Offered | What Makes It Hard | How RescueBroker Handled It |
 |---|---|---|---|
-| 🛒 **Retail Rescue** | **10 crates of spinach** (`0.5 pallets`, `6h` clock, cold) | **12 of 80** | Eliminates no-fridge & slow-pickup decoys; selects fast neighborhood pantry (`3–4h` pickup) and flags volunteer driver dispatch. |
-| 🚜 **Farm Surplus** | **5 tons of potatoes** (`~5 pallets`, `72h` clock, ambient) | **10 of 80** | Eliminates 169 small pantries; routes to high-capacity warehouse operation with `7–12 pallets` room and loading dock. |
-| 🍼 **Critical Essentials** | **48 cases sealed infant formula** (`8 months` expiry, `2 pallets`) | **26 of 80** | Matches infant/family clinics while overriding the 1-hour prepared-formula FoodKeeper table artifact. |
+| 🛒 **Neighborhood Grocer** | **10 crates of fresh spinach** (0.5 pallets, 6h left, cold) | Hours, not days; most pantries lack a van. | Found **12 viable pantries**; picked a fast responder (3–4h pickup), flagged volunteer driver need, and rejected the no-cooler decoy. |
+| 🚜 **Regional Farm** | **5 tons of potatoes in the field** (~5 pallets, 3 days left) | Almost no neighborhood pantry fits 5 pallets. | Filtered out 169 small pantries and routed to one of the **10 large operations** with warehouse room and a loading dock. |
+| 🍼 **Critical Supplies** | **48 cases of sealed infant formula** (2 pallets, 8 months left) | Strict safety rules and specialized clinics. | Matched to child-development & family programs while catching a misleading 1-hour database rule (Slide 6). |
+| 🛑 **Impossible Clock** | **40 trays of cream pastries** (Must leave dock in **1 hour**) | A bad tool guesses and wastes a driver trip. | **Safely refused to guess.** Told the coordinator nobody can collect in 1 hour and showed the closest kitchens (which need 2+ hours). |
 
 ---
 
-## 6. Five Non-Obvious Engineering Safeguards We Built
+## 6. Four Real-World Mistakes Our System Catches So Coordinators Don't Get Burned
 
-1. **Catching the USDA FoodKeeper "1-Hour Formula" Trap (`_shelf_caution`):**
-   - `a4i_food.shelf_life` gives `Infant formula` **1 hour** (a prepared/opened bottle figure). `lookup_shelf_life` warns on any figure `<= 2h` so the agent uses the donor's 8-month sealed expiry instead of falsely rejecting the load.
-2. **Household Fridge ≠ Walk-In Cooler (`DOMESTIC_FRIDGE_PALLETS = 1`):**
-   - Unlike boolean `cold_storage != 'none'` filters that route 4 pallets of produce to a church kitchen fridge, our filter caps `domestic` cold storage at **1 pallet max**.
-3. **Sanitizing Contradictory Profile Timing Claims (`_excerpt` in `tools.py`):**
-   - Because profiles are template-generated, a recipient's `profile_text` can claim *"we can be there within a couple of hours"* while its numeric `pickup_window_hours` column is `19h`. Both our code and prompt strip timing claims from prose excerpts so only the verified column governs the clock.
-4. **Safe Refusal When Viable = 0 (`no-match-bakery-answer.md`):**
-   - On **40 trays of cream-filled pastries with a 1-hour dock deadline**, `0 of 80` pass. The agent refuses to guess and lists the closest rejections with their exact time shortfall.
-5. **Read-Only BigQuery MCP + Lab Identity Guard (`mcp-walk-in-answer.md`):**
-   - Free-form SQL questions (*"Not counting the invented teaching cases, how many recipients have walk-in cold storage?"* $\rightarrow$ **`6 of 183 (3.3%)`**) run via Google's Managed BigQuery MCP server, strictly isolated from posting matches and locked to the lab GCP identity.
+1. **Knowing Sealed Infant Formula Lasts 8 Months—Not 1 Hour:** The federal shelf-life table lists infant formula at
+   **1 hour**—because that is the rule for an *already-opened bottle warmed for a baby*! A naive tool rejects 48 sealed
+   cases with 8 months left on the box. RescueBroker detects suspiciously short table numbers ($\le 2$ hours) and uses
+   the donor's sealed expiration date.
+2. **A Kitchen Fridge Is Not a Walk-In Cooler:** Many church pantries list "domestic cold storage"—a standard household
+   refrigerator. Other tools see "has cold storage" and try to send them 4 pallets of produce. We cap household fridges
+   at **1 pallet max**.
+3. **Trusting Verified Pickup Hours Over Vague Bio Text:** In charity profiles, the written bio sometimes says *"we can
+   be there within a couple of hours"* while their operational record requires **19 hours notice**. RescueBroker strips
+   vague timing claims from bios and strictly enforces the numeric pickup window.
+4. **Instant City-Wide Answers:** When a coordinator asks, *"Excluding the 9 test cases, how many real Chicago pantries
+   actually have a walk-in cooler?"*, RescueBroker checks the live database and answers in seconds: **only 6 out of 183
+   (3.3%)**.
 
 ---
 
-## 7. The 3-Lens Cold-Reviewed Equity Audit (Judge Check #3)
+## 7. Auditing Our Impact: Did Food Go Where the Need Is, or Where the Loading Docks Are?
 
-**Did the food go where the need is, or where the loading docks are?**
-We excluded the **9 invented teaching cases** (whose coordinates sit at the metro center by formula) and audited all **10 `surplus_postings`** across the **183 real IRS recipients** (on 68 distinct census tracts) three ways ([`EQUITY-AUDIT.md`](../agent/food_broker/EQUITY-AUDIT.md)):
+We never use neighborhood demographics to score who "deserves" food. Instead, we ran all 10 surplus offers across the
+**183 real Chicago organizations** (excluding the 9 invented teaching cases) and audited where the food landed:
 
-| Comparison Group (183 Real Chicago Recipients) | n | Poverty (Mean / Med) | No Vehicle (Mean / Med) | Assistance (Mean / Med) |
+| How We Count the Matches | Count | Neighborhood Poverty (Avg / Med) | Households w/o a Car (Avg / Med) | On Food/Cash Assistance (Avg / Med) |
 |---|---|---|---|---|
-| **Chicago Metro Baseline** (pop-weighted) | 1,004 tracts | **15%** / — | **20%** / — | **18%** / — |
-| **All Real Recipients Corpus** | 183 orgs | **19%** / 16% | **28%** / 27% | **19%** / 12% |
-| **Lens 1: Top Matches — Once Per Posting** | 10 postings | **22%** / 16% | **30%** / 23% | **19%** / 11% |
-| **Lens 2: Top Matches — Once Per Distinct Recipient** | 8 orgs | **16%** / 10% | **24%** / 20% | **15%** / 6% |
-| **Lens 3: Top Matches — Weighted by Pallets** | 37.5 pallets | **14%** / — | **32%** / — | **9%** / — |
-| **Recipients w/ Dock or 5+ Pallets** | 14 orgs | **17%** / 14% | **29%** / 27% | **16%** / 14% |
+| **Chicago Metro Overall** (pop-weighted) | 1,004 tracts | **15%** / — | **20%** / — | **18%** / — |
+| **All 183 Real Chicago Charities** | 183 charities | **19%** / 16% | **28%** / 27% | **19%** / 12% |
+| **View 1: Counted Per Donation Offer** | 10 offers | **22%** / 16% | **30%** / 23% | **19%** / 11% |
+| **View 2: Counted Per Unique Charity Reached** | 8 charities | **16%** / 10% | **24%** / 20% | **15%** / 6% |
+| **View 3: Weighted by Pallets of Food Moved** | 37.5 pallets | **14%** / — | **32%** / — | **9%** / — |
 
-- **What Our Cold Review Caught (That a Simple Average Hides):**
-  - **The Repeat-Winner Effect:** Counted per posting, matches sit above the corpus on mean poverty (`22% vs 19%`) and no-vehicle (`30% vs 28%`) only because **one fast pantry** (*Shakespear Rose Community Table*, in a `45% poverty / 52% no-vehicle` tract) won 3 short-clock retail postings. Counted once per distinct recipient (`n=8`), matches sit **lower on all three measures** (`16% / 24% / 15%`).
-  - **The Volume / Loading-Dock Skew:** The 3 farm loads account for **30 of the 37.5 pallets**. Weighted by pallets, assistance drops to **9% vs. 19% corpus mean**, because large loads can only go to the **14 real recipients** with 5+ pallet capacity (10 have room for 10+ pallets).
-  - **Responsible AI Separation:** Census tract figures are looked up *after* ranking (`lookup_neighborhood`) so demographic composition is never used to score who "deserves" food.
-
----
-
-## 8. Honest Limitations & Production Roadmap (Judge Check #4)
-
-- **Four Explicit Boundaries Today:**
-  1. **Real vs. Generated Split:** 183 recipient names/addresses/income are real IRS records (plus 9 invented teaching cases); all storage, pallet capacity, and pickup windows are generated—so every brief instructs the coordinator to confirm by phone before rolling a truck.
-  2. **Consumer Shelf-Life Guidance:** USDA FoodKeeper reflects home storage, not commercial cold-chain telemetry.
-  3. **ZIP-Centroid Spatial Resolution:** Recipient coordinates are ZIP-level centroids matched to the nearest tract internal point (`ST_DISTANCE`), describing the surrounding area rather than the exact building block, and `surplus_postings` carries no donor coordinates.
-  4. **Small Audit Sample & No Delivery Memory:** 10 postings across 68 tracts cannot separate statistical skew from noise, and without persistent delivery history one well-equipped pantry wins repeated short-clock offers.
-- **What Comes Next:**
-  - **Persistent Delivery Rotation & Pallet Locks (Firestore — Issue #12):** Track daily claims and declines so offers rotate across viable pantries.
-  - **Backend Multi-Recipient Load Splitter (Issue #13):** Automatically split 5-ton farm loads across 2–3 pantries in `find_matches` when no single cooler can take the full volume.
-  - **Live Pantry Self-Onboarding (Issue #10):** Replace synthetic operational profiles by interviewing pantry managers directly into BigQuery + `AI.EMBED`.
+- **Discovery #1 (One Fast Pantry Won 3 Times):** Looking only at View 1 (*Per Offer*), it looks like our matches beat
+  the city average on poverty (`22%`) and carless households (`30%`). When we audited ourselves cold, we saw why: **one
+  well-equipped pantry** in a high-need neighborhood (*Shakespear Rose*, `45%` poverty / `52%` no car) won 3 short-clock
+  grocery offers. Counting each charity once (View 2), the averages sit slightly below the directory.
+- **Discovery #2 (Big Farm Loads Follow Loading Docks):** Farm offers make up **30 of the 37.5 pallets**. Weighted by
+  volume (View 3), public assistance drops from `19%` to **`9%`**—because only **14 charities in Chicago** have room for
+  5+ pallets (and only 10 can take 10+ pallets), and big warehouses sit in more industrial areas.
 
 ---
 
-## Where Each Judging Dimension Is Answered
+## 8. Honest Limits Today & Three Practical Upgrades for Day Two
 
-| Dimension | Weight | Answered On |
-|---|---:|---|
-| **Impact & Insight** | 30 | Slides 1–2 (Coordinator Console UX, Ticking-Clock Queue, 6-Part Match Brief, "They said no" & "Why not X?" flows) |
-| **Technical Execution** | 30 | Slides 3–5 (Live Cloud Run service, `VECTOR_SEARCH` pool study `15->1, 40->3, 80->12`, 3 tracks through 1 corpus) |
-| **Rigor & Judgment** | 25 | Slides 4, 6, 7 & 8 (Rank #3 decoy, 1h formula bug, domestic fridge cap, 3-lens equity audit, 183 vs 9 planted split, 42-run model benchmark) |
-| **Craft & Communication** | 15 | Slide 2 & Video (SaaS Dispatch Console + live Cloud Run Agent Copilot + crisp 6-part card formatting) |
-| **Bonus — Range** | +10 | Slides 2, 3 & 6 (Google Managed BigQuery MCP Server, Custom SaaS Dispatch Console w/ Google Maps & openFDA Recall Gate, Multimodal Voice/Photo Intake, Vertex AI + Cloud Run) |
-
+- **Four Honest Realities Today:**
+  1. **Who Is Real vs. What Is Estimated:** The **183 charity names, addresses, and tax incomes** are real IRS records
+     (plus **9 invented teaching cases**). However, every pantry's **cooler type, pallet room, and pickup hours are
+     generated** because no public national database exists—so RescueBroker always reminds staff to confirm by phone.
+  2. **Home Storage Guidance:** USDA shelf-life numbers reflect home storage, not commercial cold-chain guarantees.
+  3. **ZIP-Code Neighborhoods:** Charity locations are ZIP-code center points, describing the surrounding area rather
+     than the exact block.
+  4. **No Memory of Yesterday's Deliveries Yet:** Without delivery history, the fastest well-equipped pantry gets called
+     first on repeated short-clock offers.
+- **Three Practical Upgrades Next:**
+  1. **Fair Rotation & Delivery Memory:** Remember who received food earlier today so one fast pantry isn't called three
+     times in a row.
+  2. **Automatic Load Splitting for Big Farm Offers:** Split 5-ton farm loads across 2–3 nearby pantries when no single
+     cooler has room.
+  3. **2-Minute Pantry Self-Check-In:** Let pantry managers text or talk to RescueBroker to update their real cooler
+     space and pallet-jack access.
