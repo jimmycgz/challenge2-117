@@ -84,9 +84,10 @@ Point at: it skips the recipient who declined and briefs the next one, with a ne
 Why them and not the big food bank downtown?
 ```
 
-Point at: it finds the Greater Chicago Food Depository, says where it ranked by meaning and why it was removed (it needs
-36 hours to collect and the food has 6). Names and ranks can differ run to run; read what is on screen. Saved version:
-[follow-ups transcript](evidence/follow-ups-transcript.md).
+Point at: it searches for "food bank" (and "food depository"), finds a large food bank, says where it ranked by meaning
+and why it was removed (for example, no room for the load, or a collection time of 36 or 41 hours against 6). Which
+organization it finds varies run to run (the Greater Chicago Food Depository in some runs, Americas Food Bank in the
+saved one); read what is on screen. Saved version: [follow-ups transcript](evidence/follow-ups-transcript.md).
 
 ## When nobody can take it (20 seconds)
 
