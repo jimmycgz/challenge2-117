@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RescueBroker — Visual Pitch Deck (Chicago Food Rescue &amp; Surplus Broker)</title>
+  <title>RescueBroker — Minimalist Pitch Deck (Chicago Food Rescue)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -11,23 +11,14 @@
     :root {
       --bg: #f8fafc;
       --surface: #ffffff;
-      --surface-subtle: #f8fafc;
-      --surface-hover: #f1f5f9;
       --border: #e2e8f0;
-      --border-strong: #cbd5e1;
-      --text: #1e293b;
+      --text: #0f172a;
       --text-secondary: #475569;
       --text-muted: #64748b;
 
-      --primary: #0f766e;
-      --primary-hover: #115e59;
-      --primary-soft: #f0fdfa;
-      --primary-border: #99f6e4;
-
-      --accent: #10b981;
-      --accent-dark: #0f766e;
-      --accent-soft: #f0fdfa;
-      --accent-border: #99f6e4;
+      --teal: #0f766e;
+      --teal-soft: #f0fdfa;
+      --teal-border: #99f6e4;
 
       --blue: #0284c7;
       --blue-soft: #f0f9ff;
@@ -40,14 +31,6 @@
       --red: #be123c;
       --red-soft: #fff1f2;
       --red-border: #fecdd3;
-
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.03);
-      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
-      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.05);
-      --shadow-lg: 0 10px 24px rgba(15, 23, 42, 0.07);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -56,1295 +39,684 @@
       font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
       background: #e2e8f0;
       color: var(--text);
-      line-height: 1.35;
       -webkit-font-smoothing: antialiased;
-      letter-spacing: -0.011em;
+      letter-spacing: -0.015em;
     }
 
-    /* TOP SITE-STYLE BAR */
-    .deck-toolbar {
+    /* MINIMAL TOP BAR */
+    .topbar {
       position: sticky;
       top: 0;
       z-index: 100;
-      height: 52px;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(10px);
+      height: 50px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
-      padding: 0 24px;
+      padding: 0 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-size: 13px;
     }
 
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-mark {
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
-      background: var(--primary);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .brand-name { font-size: 14.5px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
-
-    .slide-jump-nav { display: flex; gap: 4px; align-items: center; }
-    .jump-pill {
-      padding: 5px 9px;
-      border-radius: 6px;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--text-secondary);
+    .nav-links { display: flex; gap: 6px; }
+    .nav-links a {
       text-decoration: none;
-      transition: all 0.15s ease;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 6px;
     }
-    .jump-pill:hover { background: var(--surface-hover); color: var(--text); }
+    .nav-links a:hover { background: #f1f5f9; color: var(--text); }
 
-    .toolbar-right { display: flex; align-items: center; gap: 10px; }
     .btn-print {
-      background: var(--primary);
+      background: var(--teal);
       color: #fff;
-      border: 1px solid var(--primary);
+      border: none;
       padding: 6px 14px;
-      border-radius: 8px;
+      border-radius: 7px;
       font-weight: 600;
       font-size: 12px;
       cursor: pointer;
     }
 
-    /* 16:9 SLIDE CANVAS */
+    /* 16:9 MINIMALIST SLIDE */
     .slide {
-      width: 1180px;
-      height: 664px;
-      margin: 24px auto;
-      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px 44px 24px;
-      box-shadow: var(--shadow-lg);
+      width: 1160px;
+      height: 652px;
+      margin: 28px auto;
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 52px 64px 40px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
-      overflow: hidden;
       page-break-after: always;
     }
 
-    .slide-header {
+    .kicker {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--teal);
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .kicker span { color: var(--text-muted); font-weight: 600; }
+
+    h1 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      color: var(--text);
       margin-bottom: 8px;
     }
 
-    .slide-kicker {
-      display: inline-flex;
+    .sub {
+      font-size: 16.5px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-bottom: 28px;
+    }
+
+    /* SIMPLE FLOW ROW */
+    .flow-row {
+      display: grid;
+      grid-template-columns: 150px 1fr 32px 1fr 32px 1.15fr;
       align-items: center;
-      gap: 7px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--primary);
-      background: var(--primary-soft);
-      padding: 4px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--primary-border);
-    }
-
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; }
-
-    .slide-meta { display: flex; align-items: center; gap: 8px; }
-    .judge-badge {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: var(--blue-soft);
-      color: var(--blue);
-      border: 1px solid var(--blue-border);
-    }
-    .slide-num {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--text-muted);
-      background: var(--surface);
-      padding: 4px 10px;
-      border-radius: 999px;
+      gap: 10px;
+      padding: 18px 22px;
+      border-radius: 14px;
       border: 1px solid var(--border);
     }
 
-    h1 {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
-      color: var(--text);
-      margin-bottom: 12px;
+    .flow-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-align: center;
     }
+
+    .flow-box strong { display: block; font-size: 15px; margin-bottom: 3px; }
+    .flow-box span { font-size: 12.5px; color: var(--text-muted); }
+
+    .arrow { text-align: center; font-size: 18px; color: var(--text-muted); font-weight: 700; }
+
+    /* BIG STAT ROW */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-num { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; color: var(--text); }
+    .stat-desc { font-size: 13px; color: var(--text-secondary); margin-top: 4px; line-height: 1.35; }
 
     /* PILLS */
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
+    .tag {
+      display: inline-block;
+      font-size: 11.5px;
       font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 999px;
-    }
-    .pill.green { background: var(--primary-soft); color: var(--primary); border: 1px solid var(--primary-border); }
-    .pill.amber { background: var(--amber-soft); color: var(--amber); border: 1px solid var(--amber-border); }
-    .pill.red { background: var(--red-soft); color: var(--red); border: 1px solid var(--red-border); }
-    .pill.blue { background: var(--blue-soft); color: var(--blue); border: 1px solid var(--blue-border); }
-    .pill.slate { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
-
-    /* CARDS & GRIDS */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      box-shadow: var(--shadow-sm);
-    }
-    .card.teal { background: linear-gradient(180deg, #f0fdfa 0%, #ffffff 100%); border-color: var(--primary-border); }
-    .card.amber { background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%); border-color: var(--amber-border); }
-    .card.red { background: linear-gradient(180deg, #fff1f2 0%, #ffffff 100%); border-color: var(--red-border); }
-
-    /* VISUAL PIPELINE / FLOW DIAGRAM NODES */
-    .diagram-lane {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 14px 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      background: var(--surface);
-    }
-
-    .d-node {
-      flex: 1;
-      text-align: center;
-      padding: 12px 10px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--surface-subtle);
-    }
-
-    .d-node-icon { font-size: 22px; margin-bottom: 4px; }
-    .d-node-title { font-size: 13px; font-weight: 800; color: var(--text); }
-    .d-node-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-    .d-arrow {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: var(--text-muted);
-      font-size: 10.5px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    /* VISUAL TRAP -> FIX ROW */
-    .trap-fix-box {
-      display: grid;
-      grid-template-columns: 1fr 28px 1fr;
-      align-items: center;
-      gap: 8px;
-      margin-top: 10px;
-    }
-    .trap-side {
-      background: var(--red-soft);
-      border: 1px solid var(--red-border);
-      border-radius: 10px;
-      padding: 12px;
-      text-align: center;
-    }
-    .fix-side {
-      background: var(--primary-soft);
-      border: 1px solid var(--primary-border);
-      border-radius: 10px;
-      padding: 12px;
-      text-align: center;
-    }
-
-    /* GROUPED BAR CHART (SLIDE 7) */
-    .chart-group {
-      display: grid;
-      grid-template-columns: 195px 1fr;
-      align-items: center;
-      gap: 14px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-    }
-    .chart-bars {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .metric-bar-wrap { display: flex; align-items: center; gap: 8px; }
-    .metric-track {
-      flex: 1;
-      height: 14px;
-      background: #f1f5f9;
+      padding: 4px 10px;
       border-radius: 99px;
-      overflow: hidden;
     }
-    .metric-fill { height: 100%; border-radius: 99px; }
+    .tag.teal { background: var(--teal-soft); color: var(--teal); border: 1px solid var(--teal-border); }
+    .tag.amber { background: var(--amber-soft); color: var(--amber); border: 1px solid var(--amber-border); }
+    .tag.red { background: var(--red-soft); color: var(--red); border: 1px solid var(--red-border); }
+    .tag.blue { background: var(--blue-soft); color: var(--blue); border: 1px solid var(--blue-border); }
 
-    .slide-footer {
-      border-top: 1px solid var(--border);
-      padding-top: 10px;
+    /* CLEAN CARDS */
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      background: var(--bg);
+    }
+
+    .footer {
+      font-size: 12px;
+      color: var(--text-muted);
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11px;
-      background: #f1f5f9;
-      padding: 2px 5px;
-      border-radius: 4px;
-      color: var(--text);
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
     }
 
     @media print {
       body { background: #fff; }
-      .deck-toolbar { display: none; }
-      .slide { margin: 0; border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100vh; }
+      .topbar { display: none; }
+      .slide { margin: 0; box-shadow: none; border-radius: 0; width: 100%; height: 100vh; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP NAVIGATION -->
-  <div class="deck-toolbar">
-    <div class="brand">
-      <div class="brand-mark">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-        </svg>
-      </div>
-      <span class="brand-name">RescueBroker</span>
-      <span class="pill green">Chicago · Track 1 (Retail &amp; Multi-Track)</span>
+  <div class="topbar">
+    <div style="font-weight:800; color:var(--teal);">RescueBroker · Chicago Food Rescue</div>
+    <div class="nav-links">
+      <a href="#s1">1 · Problem</a>
+      <a href="#s2">2 · Match Brief</a>
+      <a href="#s3">3 · 7 Questions</a>
+      <a href="#s4">4 · Funnel</a>
+      <a href="#s5">5 · 3 Tracks</a>
+      <a href="#s6">6 · 4 Traps</a>
+      <a href="#s7">7 · Equity</a>
+      <a href="#s8">8 · Next</a>
     </div>
-
-    <div class="slide-jump-nav">
-      <a class="jump-pill" href="#s1">1 · Problem</a>
-      <a class="jump-pill" href="#s2">2 · Match Brief</a>
-      <a class="jump-pill" href="#s3">3 · 7 Questions</a>
-      <a class="jump-pill" href="#s4">4 · Funnel</a>
-      <a class="jump-pill" href="#s5">5 · 3 Tracks</a>
-      <a class="jump-pill" href="#s6">6 · 4 Traps</a>
-      <a class="jump-pill" href="#s7">7 · Equity Chart</a>
-      <a class="jump-pill" href="#s8">8 · Intake Loop</a>
-    </div>
-
-    <div class="toolbar-right">
-      <span class="pill green"><span class="dot"></span> Cloud Run Live (~20s)</span>
-      <button class="btn-print" onclick="window.print()">Export / Print PDF</button>
-    </div>
+    <button class="btn-print" onclick="window.print()">Export PDF</button>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- SLIDE 1: VISUAL PROBLEM DIAGRAM & FRONT-LOADED SUMMARY -->
+  <!-- SLIDE 1: THE PROBLEM & SOLUTION -->
   <!-- ===================================================================== -->
   <section class="slide" id="s1">
     <div>
-      <div class="slide-header">
-        <span class="slide-kicker"><span class="dot"></span> 1 · Chicago Metro · Track 1: Retail &amp; Grocer Rescue</span>
-        <div class="slide-meta">
-          <span class="judge-badge">Judge Check #1 · Metro, Scenario &amp; Data Provenance</span>
-          <span class="slide-num">Slide 1 / 8</span>
-        </div>
-      </div>
+      <div class="kicker">01 · Chicago Metro · Track 1: Retail &amp; Grocer Rescue <span>Slide 1 / 8</span></div>
+      <h1>10 Crates of Spinach. 6 Hours on the Clock.</h1>
+      <p class="sub">“A Chicago grocer just offered 10 crates of fresh spinach that must leave their dock in 6 hours and stay cold.”</p>
 
-      <h1>A Matching Problem Under a Ticking Clock</h1>
-
-      <!-- SCENARIO CALLOUT -->
-      <div style="background:var(--primary-soft); border:1px solid var(--primary-border); border-left:4px solid var(--primary); border-radius:10px; padding:9px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
-        <div style="font-size:13px; font-weight:600; color:var(--text);">
-          “We coordinate food rescue in <span style="color:var(--primary);">Chicago</span>. A grocer just offered <span style="color:var(--primary);">10 crates of fresh spinach</span> that must leave their dock within <span style="color:var(--primary);">6 hours</span> and stay cold.”
-        </div>
-        <span class="pill amber">⏱ 6h Dock Clock</span>
-      </div>
-
-      <!-- VISUAL DIAGRAM: MANUAL PHONE TAG VS RESCUEBROKER PIPELINE -->
-      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
-        <!-- MANUAL LANE -->
-        <div class="diagram-lane" style="background:var(--red-soft); border-color:var(--red-border);">
-          <div style="width:130px; flex-shrink:0;">
-            <span class="pill red">❌ Today</span>
-            <div style="font-size:15px; font-weight:800; color:var(--red); margin-top:4px;">45 Min</div>
-            <div style="font-size:11px; color:var(--text-secondary);">Manual Phone Tag</div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <!-- MANUAL -->
+        <div class="flow-row" style="background:var(--red-soft); border-color:var(--red-border);">
+          <div>
+            <span class="tag red">Today</span>
+            <div style="font-size:20px; font-weight:800; color:var(--red); margin-top:4px;">45 Mins</div>
           </div>
-
-          <div class="d-node" style="background:#fff;">
-            <div class="d-node-icon">🥬</div>
-            <div class="d-node-title">10 Crates Spinach</div>
-            <div class="d-node-sub">0.5 Pallets · 6h Clock</div>
+          <div class="flow-box">
+            <strong>📋 183 Charities</strong>
+            <span>Manual spreadsheet</span>
           </div>
-          <div class="d-arrow">➔</div>
-          <div class="d-node" style="background:#fff;">
-            <div class="d-node-icon">📋</div>
-            <div class="d-node-title">183-Row Spreadsheet</div>
-            <div class="d-node-sub">Who needs greens?</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">
+            <strong>📞 4 Questions / Call</strong>
+            <span>Cooler? Room? Hours? Van?</span>
           </div>
-          <div class="d-arrow">➔</div>
-          <div class="d-node" style="background:#fff;">
-            <div class="d-node-icon">📞</div>
-            <div class="d-node-title">4 Questions / Call</div>
-            <div class="d-node-sub">Cooler? Space? Hours? Van?</div>
-          </div>
-          <div class="d-arrow">➔</div>
-          <div class="d-node" style="background:#ffe4e6; border-color:var(--red-border);">
-            <div class="d-node-icon">🗑️</div>
-            <div class="d-node-title" style="color:var(--red);">Dock Closes at 8 PM</div>
-            <div class="d-node-sub" style="color:var(--red);">400 lbs Spoiled</div>
+          <div class="arrow">→</div>
+          <div class="flow-box" style="border-color:var(--red-border); background:#ffe4e6;">
+            <strong style="color:var(--red);">🗑️ 8 PM Compactor</strong>
+            <span style="color:var(--red);">Clock runs out</span>
           </div>
         </div>
 
-        <!-- RESCUEBROKER LANE -->
-        <div class="diagram-lane" style="background:var(--primary-soft); border-color:var(--primary-border);">
-          <div style="width:130px; flex-shrink:0;">
-            <span class="pill green">✅ RescueBroker</span>
-            <div style="font-size:15px; font-weight:800; color:var(--primary); margin-top:4px;">~20 Sec</div>
-            <div style="font-size:11px; color:var(--text-secondary);">Live Cloud Run</div>
+        <!-- RESCUEBROKER -->
+        <div class="flow-row" style="background:var(--teal-soft); border-color:var(--teal-border);">
+          <div>
+            <span class="tag teal">RescueBroker</span>
+            <div style="font-size:20px; font-weight:800; color:var(--teal); margin-top:4px;">~20 Secs</div>
           </div>
-
-          <div class="d-node" style="background:#fff;">
-            <div class="d-node-icon">💬</div>
-            <div class="d-node-title">Paste Offer / Photo</div>
-            <div class="d-node-sub">USDA 661-Item Check</div>
+          <div class="flow-box">
+            <strong>🧠 Vector Search (80)</strong>
+            <span>BigQuery AI.EMBED</span>
           </div>
-          <div class="d-arrow">➔</div>
-          <div class="d-node" style="background:#fff;">
-            <div class="d-node-icon">🧠</div>
-            <div class="d-node-title">BigQuery Vector Search</div>
-            <div class="d-node-sub">Top 80 by Meaning</div>
+          <div class="arrow">→</div>
+          <div class="flow-box">
+            <strong>🧊 Physical Filters</strong>
+            <span>Cooler + Pallets + Clock</span>
           </div>
-          <div class="d-arrow">➔</div>
-          <div class="d-node" style="background:#fff;">
-            <div class="d-node-icon">🧊</div>
-            <div class="d-node-title">Hard Safety Filters</div>
-            <div class="d-node-sub">Cooler + Pallets + Clock</div>
-          </div>
-          <div class="d-arrow">➔</div>
-          <div class="d-node" style="background:#ccfbf1; border-color:var(--primary);">
-            <div class="d-node-icon">🚚</div>
-            <div class="d-node-title" style="color:var(--primary);">Habibi Care (+3h Slack)</div>
-            <div class="d-node-sub" style="color:var(--primary);">SMS + 2 Backups Ready</div>
+          <div class="arrow">→</div>
+          <div class="flow-box" style="border-color:var(--teal); background:#ccfbf1;">
+            <strong style="color:var(--teal);">🚚 Habibi Care (+3h Slack)</strong>
+            <span style="color:var(--teal);">SMS + 2 Backups Ready</span>
           </div>
         </div>
-      </div>
-
-      <!-- VISUAL DATA PROVENANCE SPLIT BAR + 4 KEY NUMBERS -->
-      <div class="grid-4" style="margin-bottom:10px;">
-        <div class="card" style="padding:12px 14px; border-left:4px solid var(--primary);">
-          <div style="font-size:11px; font-weight:700; color:var(--primary);">REAL DATA (50%)</div>
-          <div style="font-size:22px; font-weight:800; margin:2px 0;">183 IRS Orgs</div>
-          <div style="font-size:11px; color:var(--text-muted);">Real names, addresses, NTEE &amp; income + USDA + ACS</div>
-        </div>
-        <div class="card" style="padding:12px 14px; border-left:4px solid var(--amber);">
-          <div style="font-size:11px; font-weight:700; color:var(--amber);">GENERATED + PLANTED</div>
-          <div style="font-size:22px; font-weight:800; margin:2px 0;">Ops + 9 Decoys</div>
-          <div style="font-size:11px; color:var(--text-muted);">Cooler, pallets &amp; pickup hours generated (+9 planted cases)</div>
-        </div>
-        <div class="card" style="padding:12px 14px; border-left:4px solid var(--blue);">
-          <div style="font-size:11px; font-weight:700; color:var(--blue);">WHY CHICAGO?</div>
-          <div style="font-size:22px; font-weight:800; margin:2px 0;">20% No-Car</div>
-          <div style="font-size:11px; color:var(--text-muted);">High transit spread across 1,004 tracts (vs 5% in Denver)</div>
-        </div>
-        <div class="card" style="padding:12px 14px; border-left:4px solid #334155;">
-          <div style="font-size:11px; font-weight:700; color:#334155;">VERIFIED ACCURACY</div>
-          <div style="font-size:22px; font-weight:800; margin:2px 0;">41 / 42 Checks</div>
-          <div style="font-size:11px; color:var(--text-muted);"><code>gemini-3-flash-preview</code> · Zero SQL injection leaks</div>
-        </div>
-      </div>
-
-      <!-- 1-LINE FRONT-LOADED FINDINGS & LIMITS (IF CUT OFF EARLY) -->
-      <div style="background:#f1f5f9; border-radius:8px; padding:7px 12px; display:flex; justify-content:space-between; font-size:11px; color:var(--text-secondary);">
-        <span><strong>Found:</strong> Top 3 semantic hits failed (#3 <em>Greenline</em> decoy has no cooler); <code>top_k=80</code> gives 12 viable vs 1 at 15; volume skews 9% vs 19% (only 14 orgs fit 5+ pallets).</span>
-        <span><strong>Limits &amp; Next:</strong> Synthetic ops, consumer USDA, ZIP coords &rarr; <strong>Next:</strong> Intake Agent, Load Split, Rotation.</span>
       </div>
     </div>
 
-    <div class="slide-footer">
-      <span>RescueBroker · Visual Executive Summary (Front-Loaded)</span>
-      <span>IRS 990 (17 U.S.C. § 105), USDA FoodKeeper (CC0) &amp; US Census ACS are real; operational profiles are synthetic.</span>
+    <!-- FRONT-LOADED KEY FACTS -->
+    <div class="stat-row">
+      <div>
+        <div class="stat-num" style="color:var(--teal);">183 Real</div>
+        <div class="stat-desc"><strong>IRS charities</strong> + USDA + Census are real · Cooler/hours &amp; <strong>9 planted decoys</strong> are generated</div>
+      </div>
+      <div>
+        <div class="stat-num">20% No-Car</div>
+        <div class="stat-desc"><strong>Why Chicago:</strong> High transit spread across 1,004 tracts separates neighborhood need</div>
+      </div>
+      <div>
+        <div class="stat-num">12 Viable</div>
+        <div class="stat-desc"><strong>Why top_k=80:</strong> Top 3 by meaning failed (#3 <em>Greenline</em> decoy has no cooler)</div>
+      </div>
+      <div>
+        <div class="stat-num">41 / 42</div>
+        <div class="stat-desc"><strong>Safety checks:</strong> Passed on <code>gemini-3-flash-preview</code> · Honest limits &amp; Intake Agent next</div>
+      </div>
     </div>
   </section>
 
   <!-- ===================================================================== -->
-  <!-- SLIDE 2: VISUAL MATCH BRIEF UI MOCKUP (ALL 7 ITEMS AT A GLANCE) -->
+  <!-- SLIDE 2: THE MATCH BRIEF (ALL 7 ELEMENTS, ONE CLEAN VIEW) -->
   <!-- ===================================================================== -->
   <section class="slide" id="s2">
     <div>
-      <div class="slide-header">
-        <span class="slide-kicker"><span class="dot"></span> 2 · Output Artifact · The 7-Part Match Brief UI</span>
-        <div class="slide-meta">
-          <span class="judge-badge">Impact &amp; Insight (30 pts) · Coordinator Console + Match Brief</span>
-          <span class="slide-num">Slide 2 / 8</span>
-        </div>
-      </div>
+      <div class="kicker">02 · The Output Artifact · Custom Dispatch Console + ADK Web <span>Slide 2 / 8</span></div>
+      <h1>The Match Brief: Actionable in One View</h1>
+      <p class="sub">Built for internal rescue staff—answering all 7 required items without a follow-up question.</p>
 
-      <h1>One Visual Card Answers Every Question Before the Van Rolls</h1>
-
-      <!-- VISUAL APP MOCKUP: MINI MAP + 7-PART MATCH BRIEF -->
-      <div style="background:#fff; border:1px solid var(--border-strong); border-radius:14px; box-shadow:var(--shadow-md); overflow:hidden;">
-        <!-- WINDOW HEADER -->
-        <div style="background:#f1f5f9; border-bottom:1px solid var(--border); padding:8px 16px; display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="width:10px; height:10px; border-radius:50%; background:#f43f5e;"></span>
-            <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b;"></span>
-            <span style="width:10px; height:10px; border-radius:50%; background:#10b981;"></span>
-            <span style="font-size:12px; font-weight:700; margin-left:6px;">RescueBroker Dispatch Console · Live Spinach Match Brief</span>
+      <!-- SINGLE MINIMALIST MATCH BRIEF CARD -->
+      <div style="border:2px solid var(--teal-border); border-radius:16px; padding:26px 30px; background:var(--teal-soft);">
+        <!-- ROW 1: ORG, ADDRESS & WHY THEM -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:18px; border-bottom:1px solid var(--teal-border);">
+          <div>
+            <span class="tag teal">① Organization &amp; ② Why Them</span>
+            <div style="font-size:24px; font-weight:800; margin-top:6px;">Habibi Care <span style="font-size:15px; font-weight:500; color:var(--text-secondary);">· 4845 N Washtenaw Ave, Chicago 60625 (Real IRS)</span></div>
+            <div style="font-size:14.5px; color:var(--text-secondary); margin-top:4px;">“Serves 165 families/wk with children; has domestic cold storage, 1-pallet capacity, and collects within 3 hours.”</div>
           </div>
-          <div style="display:flex; gap:6px;">
-            <span class="pill green">✓ Custom Staff UI + ADK Web</span>
-            <span class="pill blue">openFDA Recall Checked</span>
-          </div>
+          <span class="tag amber" style="font-size:13px; padding:6px 12px;">⚠️ Needs Volunteer Driver</span>
         </div>
 
-        <div style="display:grid; grid-template-columns: 310px 1fr; min-height: 445px;">
-          <!-- LEFT: MINI VISUAL MAP & QUEUE GRAPHIC -->
-          <div style="background:#f8fafc; border-right:1px solid var(--border); padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
-            <div>
-              <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Ticking-Clock Queue</div>
-              <div style="background:#fff; border:2px solid var(--primary); border-radius:10px; padding:10px; margin-bottom:8px;">
-                <div style="display:flex; justify-content:space-between;"><span class="pill amber">⏱ 6h Left</span><span style="font-size:11px; font-weight:700; color:var(--primary);">0.5 Pallets</span></div>
-                <div style="font-size:13px; font-weight:800; margin-top:4px;">🥬 10 Crates Fresh Spinach</div>
-                <div style="font-size:11px; color:var(--text-muted);">Grocer Dock · Needs Cold</div>
-              </div>
-              <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:8px 10px; opacity:0.75; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:12px; font-weight:600;">🥐 40 Trays Pastries</span>
-                <span class="pill red">1h · Refused</span>
-              </div>
-              <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:8px 10px; opacity:0.75; display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:12px; font-weight:600;">🥔 5 Tons Potatoes</span>
-                <span class="pill slate">72h · Dock</span>
-              </div>
-            </div>
-
-            <!-- STYLIZED SVG CHICAGO MAP GRAPHIC -->
-            <div style="background:#e0f2fe; border:1px solid var(--blue-border); border-radius:10px; height:175px; position:relative; overflow:hidden; padding:10px;">
-              <svg width="100%" height="100%" viewBox="0 0 260 150" style="position:absolute; inset:0;">
-                <!-- Lake Michigan shoreline -->
-                <path d="M 195 0 Q 205 60 225 150 L 260 150 L 260 0 Z" fill="#bae6fd" />
-                <!-- Grid roads -->
-                <line x1="0" y1="40" x2="200" y2="40" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
-                <line x1="0" y1="90" x2="210" y2="90" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
-                <line x1="70" y1="0" x2="70" y2="150" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
-                <line x1="140" y1="0" x2="140" y2="150" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
-                <!-- Route arc -->
-                <path d="M 155 85 Q 130 45 115 32" fill="none" stroke="#0f766e" stroke-width="2.5" stroke-dasharray="4,3"/>
-                <!-- #1 Winner Pin -->
-                <circle cx="115" cy="32" r="8" fill="#0f766e" stroke="#fff" stroke-width="2"/>
-                <!-- #2 & #3 Backup Pins -->
-                <circle cx="78" cy="38" r="6" fill="#0284c7" stroke="#fff" stroke-width="1.5"/>
-                <circle cx="52" cy="28" r="6" fill="#0284c7" stroke="#fff" stroke-width="1.5"/>
-                <!-- Rejected Decoy Pin -->
-                <circle cx="165" cy="95" r="6" fill="#be123c" stroke="#fff" stroke-width="1.5"/>
-              </svg>
-              <div style="position:relative; z-index:2; display:flex; flex-direction:column; justify-content:space-between; height:100%;">
-                <span class="pill green" style="align-self:flex-start; background:#fff;">🟢 #1 Habibi Care (60625)</span>
-                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                  <span class="pill blue" style="background:#fff; font-size:10px;">🔵 #2 &amp; #3 Backups</span>
-                  <span class="pill red" style="background:#fff; font-size:10px;">🔴 Greenline Decoy</span>
-                </div>
-              </div>
-            </div>
+        <!-- ROW 2: CAPACITY, CLOCK, NEIGHBORHOOD -->
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; padding:18px 0; border-bottom:1px solid var(--teal-border);">
+          <div style="background:#fff; padding:14px 16px; border-radius:10px; border:1px solid var(--border);">
+            <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">③ What They Can Take</div>
+            <div style="font-size:18px; font-weight:800; color:var(--teal); margin-top:4px;">Domestic Cooler · 1 Plt</div>
+            <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Offer is 0.5 pallets · <em>Confirm by phone</em></div>
           </div>
 
-          <!-- RIGHT: THE 7 VISUAL MATCH BRIEF TILES -->
-          <div style="padding:14px 18px; display:flex; flex-direction:column; justify-content:space-between;">
-            <div style="display:grid; grid-template-columns: 1.15fr 1fr; gap:10px;">
-              <!-- ITEM 1 & 2 -->
-              <div style="background:var(--primary-soft); border:1px solid var(--primary-border); border-radius:10px; padding:10px 12px;">
-                <div style="display:flex; justify-content:space-between;">
-                  <span style="font-size:10.5px; font-weight:800; color:var(--primary);">① ORGANIZATION &amp; ② WHY THEM</span>
-                  <span class="pill green" style="font-size:10px; padding:1px 7px;">Real IRS 990</span>
-                </div>
-                <div style="font-size:16px; font-weight:800; margin-top:2px;">Habibi Care <span style="font-size:11.5px; font-weight:500; color:var(--text-secondary);">(Tied #1 w/ Shakespear Rose)</span></div>
-                <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">📍 4845 N Washtenaw Ave, Chicago, IL 60625</div>
-                <div style="font-size:11.5px; color:var(--primary); font-weight:600; margin-top:4px;">“Weekly produce pantry for 165 families w/ kids; cold storage &amp; 3h pickup.”</div>
-              </div>
+          <div style="background:#fff; padding:14px 16px; border-radius:10px; border:1px solid var(--border);">
+            <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">④ The Clock &amp; Margin</div>
+            <div style="font-size:18px; font-weight:800; color:var(--teal); margin-top:4px;">6h Left vs 3h = +3h Slack</div>
+            <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">No refrigerated van on file</div>
+          </div>
 
-              <!-- ITEM 3 -->
-              <div style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:10px; padding:10px 12px;">
-                <span style="font-size:10.5px; font-weight:800; color:var(--text-muted);">③ WHAT THEY CAN ACTUALLY TAKE</span>
-                <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
-                  <div style="flex:1; background:#fff; border:1px solid var(--border); border-radius:8px; padding:6px 8px; text-align:center;">
-                    <div style="font-size:15px; font-weight:800; color:var(--primary);">🧊 Domestic</div>
-                    <div style="font-size:10.5px; color:var(--text-muted);">Cold Storage</div>
-                  </div>
-                  <div style="flex:1; background:#fff; border:1px solid var(--border); border-radius:8px; padding:6px 8px; text-align:center;">
-                    <div style="font-size:15px; font-weight:800; color:var(--primary);">0.5 / 1.0 Plt</div>
-                    <div style="font-size:10.5px; color:var(--text-muted);">50% Room Used</div>
-                  </div>
-                </div>
-                <div style="font-size:11px; color:var(--text-muted); margin-top:5px; text-align:center;">📞 <em>Generated profile — confirm by phone before rolling truck</em></div>
-              </div>
+          <div style="background:#fff; padding:14px 16px; border-radius:10px; border:1px solid var(--border);">
+            <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">⑤ Who It Helps (Tract)</div>
+            <div style="font-size:18px; font-weight:800; color:var(--blue); margin-top:4px;">13% Pov · 5% No-Car</div>
+            <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">12% assistance · 165 households/wk</div>
+          </div>
+        </div>
 
-              <!-- ITEM 4: VISUAL CLOCK GAUGE -->
-              <div style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:10px; padding:10px 12px;">
-                <div style="display:flex; justify-content:space-between;">
-                  <span style="font-size:10.5px; font-weight:800; color:var(--text-muted);">④ THE CLOCK &amp; DRIVER MARGIN</span>
-                  <span class="pill amber" style="font-size:10px; padding:1px 7px;">⚠️ Volunteer Driver Needed</span>
-                </div>
-                <!-- VISUAL 6-HOUR TIMELINE BAR -->
-                <div style="margin-top:8px; display:grid; grid-template-columns: 1fr 1fr; height:24px; border-radius:6px; overflow:hidden; font-size:11px; font-weight:700;">
-                  <div style="background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center;">0–3h: Pickup Window</div>
-                  <div style="background:#ccfbf1; color:var(--primary); display:flex; align-items:center; justify-content:center;">3–6h: +3h Safety Buffer</div>
-                </div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:5px;">6h dock deadline vs 3h pickup lead time · No refrigerated van on file</div>
-              </div>
-
-              <!-- ITEM 5: WHO IT HELPS -->
-              <div style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:10px; padding:10px 12px;">
-                <div style="display:flex; justify-content:space-between;">
-                  <span style="font-size:10.5px; font-weight:800; color:var(--text-muted);">⑤ WHO IT HELPS (ACS TRACT)</span>
-                  <span style="font-size:11px; font-weight:700; color:var(--blue);">165 Households / Wk</span>
-                </div>
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:7px; text-align:center;">
-                  <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:5px;">
-                    <div style="font-size:15px; font-weight:800;">13%</div>
-                    <div style="font-size:10px; color:var(--text-muted);">Poverty</div>
-                  </div>
-                  <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:5px;">
-                    <div style="font-size:15px; font-weight:800;">5%</div>
-                    <div style="font-size:10px; color:var(--text-muted);">No Vehicle</div>
-                  </div>
-                  <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:5px;">
-                    <div style="font-size:15px; font-weight:800;">12%</div>
-                    <div style="font-size:10px; color:var(--text-muted);">Assistance</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ITEM 6: SMS BUBBLE -->
-            <div style="background:#f0fdf4; border:1px dashed var(--primary); border-radius:10px; padding:9px 14px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
-              <div style="font-size:11.8px; color:#065f46;">
-                <strong>⑥ Ready-to-Send SMS:</strong> “Hello Habibi Care team, A grocer in Chicago has 10 crates of spinach (0.5 pallets, 6h clock, +3h slack). We can arrange a volunteer driver. Can you take it?”
-              </div>
-              <span class="pill green" style="flex-shrink:0;">Copy &amp; Send</span>
-            </div>
-
-            <!-- ITEM 7: NEXT TWO OPTIONS + REJECTED DECOY -->
-            <div style="display:grid; grid-template-columns: 1fr 1fr 1.15fr; gap:8px;">
-              <div style="background:var(--blue-soft); border:1px solid var(--blue-border); border-radius:8px; padding:7px 10px;">
-                <div style="font-size:10px; font-weight:800; color:var(--blue);">⑦ BACKUP #2 (1-CLICK PROMOTE)</div>
-                <div style="font-size:12.5px; font-weight:800;">Love Of Angels</div>
-                <div style="font-size:11px; color:var(--text-secondary);">Domestic cold · 4h pickup (+2h slack)</div>
-              </div>
-              <div style="background:var(--blue-soft); border:1px solid var(--blue-border); border-radius:8px; padding:7px 10px;">
-                <div style="font-size:10px; font-weight:800; color:var(--blue);">⑦ BACKUP #3 (IF #2 DECLINES)</div>
-                <div style="font-size:12.5px; font-weight:800;">Good Food Pantry</div>
-                <div style="font-size:11px; color:var(--text-secondary);">Domestic cold · 3h pickup (+3h slack)</div>
-              </div>
-              <div style="background:var(--red-soft); border:1px solid var(--red-border); border-radius:8px; padding:7px 10px;">
-                <div style="font-size:10px; font-weight:800; color:var(--red);">✗ CAUGHT DECOY (#3 BY MEANING)</div>
-                <div style="font-size:12.5px; font-weight:800; color:var(--red);">Greenline Community Pantry</div>
-                <div style="font-size:11px; color:#9f1239;">Removed: <strong>No cooler</strong> &amp; 12h pickup vs 6h</div>
-              </div>
-            </div>
+        <!-- ROW 3: SMS & BACKUPS -->
+        <div style="padding-top:16px; display:grid; grid-template-columns: 1.35fr 1fr; gap:16px; align-items:center;">
+          <div style="background:#fff; padding:12px 16px; border-radius:10px; border:1px dashed var(--teal); font-size:13px; color:var(--text);">
+            <strong style="color:var(--teal);">⑥ Drafted SMS:</strong> “Hello Habibi Care team, A grocer in Chicago has 10 crates of spinach (6h clock, +3h slack). We can arrange a driver. Can you take it?”
+          </div>
+          <div style="font-size:13px; line-height:1.5;">
+            <div><strong style="color:var(--blue);">⑦ Next Two Backups:</strong> #2 Love Of Angels (+2h) · #3 Good Food (+3h)</div>
+            <div style="color:var(--red);"><strong>✗ Caught Decoy (#3):</strong> Greenline Pantry (No cooler, needs 12h)</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="slide-footer">
-      <span>Verbatim output captured from live Cloud Run service: <code>docs/evidence/spinach-answer.md</code></span>
-      <span>All 7 required Match Brief elements displayed in a single coordinator action view</span>
+    <div class="footer">
+      <span>Verbatim output from live Cloud Run service (<code>docs/evidence/spinach-answer.md</code>)</span>
+      <span>Tied #1 with Shakespear Rose Community Table on the 6h spinach offer</span>
     </div>
   </section>
 
   <!-- ===================================================================== -->
-  <!-- SLIDE 3: VISUAL AFTERNOON TIMELINE & SPEED/SAFETY BAR CHART -->
+  <!-- SLIDE 3: 7 COORDINATOR QUESTIONS & 20S SPEED -->
   <!-- ===================================================================== -->
   <section class="slide" id="s3">
     <div>
-      <div class="slide-header">
-        <span class="slide-kicker"><span class="dot"></span> 3 · Afternoon Workflow &amp; Speed Benchmark</span>
-        <div class="slide-meta">
-          <span class="judge-badge">All 7 Coordinator Questions + Why ~20s on Gemini 3 Flash</span>
-          <span class="slide-num">Slide 3 / 8</span>
+      <div class="kicker">03 · Multi-Turn Afternoon Workflow <span>Slide 3 / 8</span></div>
+      <h1>Built for Follow-Up Calls—Not Just One Search</h1>
+      <p class="sub">Stays with the coordinator across all 7 challenge questions when pantries decline.</p>
+
+      <!-- 4 SIMPLE HORIZONTAL STEPS -->
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; margin-bottom:28px;">
+        <div class="card" style="background:var(--teal-soft); border-color:var(--teal-border);">
+          <span class="tag teal">2:10 PM · Turn 1</span>
+          <div style="font-size:18px; font-weight:800; margin:10px 0 6px;">1. The Offer</div>
+          <p style="font-size:13.5px; color:var(--text-secondary);">Checks USDA shelf life (120h capped at 6h), filters 80 hits, and briefs <strong>Habibi Care</strong> (+3h slack).</p>
+        </div>
+
+        <div class="card">
+          <span class="tag amber">2:14 PM · Turns 2–3</span>
+          <div style="font-size:18px; font-weight:800; margin:10px 0 6px;">2. “They Said No”</div>
+          <p style="font-size:13.5px; color:var(--text-secondary);">Skips declined pantries via <code>exclude_recipient_ids</code>; promotes <strong>#2 Love Of Angels</strong>, then <strong>#3 Good Food</strong>.</p>
+        </div>
+
+        <div class="card">
+          <span class="tag blue">2:18 PM · Turn 4</span>
+          <div style="font-size:18px; font-weight:800; margin:10px 0 6px;">3. “Why Not X?”</div>
+          <p style="font-size:13.5px; color:var(--text-secondary);">Checks <strong>Americas Food Bank</strong> (#29 by meaning): eliminated by <strong>0 pallets room &amp; 41h notice</strong>.</p>
+        </div>
+
+        <div class="card">
+          <span class="tag teal">2:22 PM · Turns 5–6</span>
+          <div style="font-size:18px; font-weight:800; margin:10px 0 6px;">4. City SQL (MCP)</div>
+          <p style="font-size:13.5px; color:var(--text-secondary);">Queries BigQuery MCP read-only: <strong>6 of 183 (3.3%)</strong> real charities have a walk-in cooler.</p>
         </div>
       </div>
 
-      <h1>Handling Every Follow-Up Call Across the Afternoon</h1>
-
-      <!-- VISUAL 4-STEP CONNECTED TIMELINE -->
-      <div class="diagram-lane" style="margin-bottom:16px; padding:16px; background:#fff;">
-        <div class="d-node" style="background:var(--primary-soft); border-color:var(--primary-border); text-align:left; padding:12px;">
-          <div style="display:flex; justify-content:space-between;"><span class="pill green">2:10 PM</span><span style="font-size:10.5px; font-weight:700; color:var(--primary);">Q1, Q4, Q5, Q6, Q7</span></div>
-          <div style="font-size:13.5px; font-weight:800; margin:6px 0 3px;">1. Initial Spinach Offer</div>
-          <div style="font-size:11.5px; color:var(--text-secondary);">Checks USDA (120h capped at 6h), filters 80 hits &rarr; <strong>Habibi Care</strong> (+3h slack, needs driver) + SMS.</div>
+      <!-- SIMPLE 3-COLUMN SPEED COMPARISON -->
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; padding-top:20px; border-top:1px solid var(--border);">
+        <div>
+          <div style="font-size:12px; font-weight:700; color:var(--red);">❌ MULTI-AGENT PROTOTYPE</div>
+          <div style="font-size:26px; font-weight:800; margin:4px 0;">76 – 86 sec</div>
+          <div style="font-size:13px; color:var(--text-secondary);">Passing 80 rows between chatbots was too slow for a live call.</div>
         </div>
-
-        <div class="d-arrow">➔<br/><span>Declined</span></div>
-
-        <div class="d-node" style="background:var(--amber-soft); border-color:var(--amber-border); text-align:left; padding:12px;">
-          <div style="display:flex; justify-content:space-between;"><span class="pill amber">2:14 PM</span><span style="font-size:10.5px; font-weight:700; color:var(--amber);">Q3 (“Said No” ×2)</span></div>
-          <div style="font-size:13.5px; font-weight:800; margin:6px 0 3px;">2. “They Said No. Next?”</div>
-          <div style="font-size:11.5px; color:var(--text-secondary);">Passes <code>exclude_recipient_ids</code> &rarr; promotes <strong>#2 Love Of Angels</strong>, then <strong>#3 Good Food Pantry</strong>.</div>
+        <div>
+          <div style="font-size:12px; font-weight:700; color:var(--amber);">⚠️ GEMINI-2.5-FLASH</div>
+          <div style="font-size:26px; font-weight:800; margin:4px 0;">~13s · 38 / 42</div>
+          <div style="font-size:13px; color:var(--text-secondary);">Quicker on Cloud Run, but ran SQL it should have refused in 1 of 3 runs.</div>
         </div>
-
-        <div class="d-arrow">➔<br/><span>Audit</span></div>
-
-        <div class="d-node" style="background:var(--blue-soft); border-color:var(--blue-border); text-align:left; padding:12px;">
-          <div style="display:flex; justify-content:space-between;"><span class="pill blue">2:18 PM</span><span style="font-size:10.5px; font-weight:700; color:var(--blue);">Q2 (“Why Not X?”)</span></div>
-          <div style="font-size:13.5px; font-weight:800; margin:6px 0 3px;">3. “Why Not Downtown?”</div>
-          <div style="font-size:11.5px; color:var(--text-secondary);">Calls <code>explain_recipient</code> &rarr; <strong>Americas Food Bank</strong> (#29) failed <strong>0 pallets &amp; 41h notice</strong>.</div>
-        </div>
-
-        <div class="d-arrow">➔<br/><span>MCP SQL</span></div>
-
-        <div class="d-node" style="background:#f8fafc; border-color:var(--border-strong); text-align:left; padding:12px;">
-          <div style="display:flex; justify-content:space-between;"><span class="pill slate">2:22 PM</span><span style="font-size:10.5px; font-weight:700; color:#334155;">Managed MCP</span></div>
-          <div style="font-size:13.5px; font-weight:800; margin:6px 0 3px;">4. City SQL &amp; Guardrail</div>
-          <div style="font-size:11.5px; color:var(--text-secondary);">Answers <strong>6 of 183 (3.3%)</strong> real orgs have walk-in coolers; refuses prompt-injection SQL.</div>
-        </div>
-      </div>
-
-      <!-- VISUAL LATENCY & ACCURACY BAR CHART -->
-      <div class="card" style="padding:18px 22px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <div>
-            <span class="pill green">⚡ Speed vs. Correctness Benchmark</span>
-            <span style="font-size:14px; font-weight:800; margin-left:8px;">Why We Chose <code>gemini-3-flash-preview</code> (Low Thinking)</span>
-          </div>
-          <span style="font-size:11.5px; color:var(--text-muted);">Measured on Live Cloud Run (<code>docs/evidence/model-call-timings.txt</code>)</span>
-        </div>
-
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <!-- ROW 1: MULTI-AGENT -->
-          <div style="display:grid; grid-template-columns: 230px 1fr 190px; align-items:center; gap:14px;">
-            <div>
-              <div style="font-size:12.5px; font-weight:700; color:var(--red);">❌ Multi-Agent LLM Chain</div>
-              <div style="font-size:11px; color:var(--text-muted);">Passing 80 rows between sub-agents</div>
-            </div>
-            <div style="background:#f1f5f9; height:22px; border-radius:99px; overflow:hidden;">
-              <div style="width:95%; height:100%; background:var(--red); border-radius:99px; display:flex; align-items:center; padding-left:12px; color:#fff; font-size:11px; font-weight:700;">76 – 86 seconds per step (Grocer hangs up)</div>
-            </div>
-            <span class="pill red" style="justify-content:center;">Too Slow for Live Calls</span>
-          </div>
-
-          <!-- ROW 2: GEMINI 2.5 FLASH -->
-          <div style="display:grid; grid-template-columns: 230px 1fr 190px; align-items:center; gap:14px;">
-            <div>
-              <div style="font-size:12.5px; font-weight:700; color:var(--amber);">⚠️ gemini-2.5-flash</div>
-              <div style="font-size:11px; color:var(--text-muted);">Fastest raw Cloud Run speed</div>
-            </div>
-            <div style="background:#f1f5f9; height:22px; border-radius:99px; overflow:hidden;">
-              <div style="width:18%; height:100%; background:#f59e0b; border-radius:99px; display:flex; align-items:center; padding-left:10px; color:#fff; font-size:11px; font-weight:700;">~13s</div>
-            </div>
-            <span class="pill amber" style="justify-content:center;">38 / 42 · 1 SQL Injection Leak</span>
-          </div>
-
-          <!-- ROW 3: GEMINI 3 FLASH PREVIEW -->
-          <div style="display:grid; grid-template-columns: 230px 1fr 190px; align-items:center; gap:14px;">
-            <div>
-              <div style="font-size:12.5px; font-weight:800; color:var(--primary);">✅ gemini-3-flash-preview</div>
-              <div style="font-size:11px; color:var(--text-muted);">Low thinking + Python tool filters</div>
-            </div>
-            <div style="background:#f1f5f9; height:22px; border-radius:99px; overflow:hidden;">
-              <div style="width:26%; height:100%; background:var(--primary); border-radius:99px; display:flex; align-items:center; padding-left:10px; color:#fff; font-size:11px; font-weight:700;">~20s (19.9s / 22.5s / 20.3s)</div>
-            </div>
-            <span class="pill green" style="justify-content:center;">41 / 42 Checks · 0 Leaks</span>
-          </div>
+        <div>
+          <div style="font-size:12px; font-weight:700; color:var(--teal);">✅ GEMINI-3-FLASH-PREVIEW</div>
+          <div style="font-size:26px; font-weight:800; color:var(--teal); margin:4px 0;">~20s · 41 / 42</div>
+          <div style="font-size:13px; color:var(--text-secondary);">Chosen for correctness (19.9s, 22.5s, 20.3s live · 0 SQL leaks).</div>
         </div>
       </div>
     </div>
 
-    <div class="slide-footer">
-      <span>Full 6-turn live transcript: <code>docs/evidence/follow-ups-transcript.md</code></span>
-      <span>Stack: Python ADK · Vertex AI Gemini · BigQuery <code>VECTOR_SEARCH</code> · Google Managed BigQuery MCP · Cloud Run</span>
+    <div class="footer">
+      <span>Live transcript: <code>docs/evidence/follow-ups-transcript.md</code></span>
+      <span>Stack: Python ADK · Vertex AI Gemini · BigQuery Vector Search · Managed BigQuery MCP · Cloud Run</span>
     </div>
   </section>
 
   <!-- ===================================================================== -->
-  <!-- SLIDE 4: VISUAL FUNNEL & SEMANTIC RANK VS REALITY -->
+  <!-- SLIDE 4: WHY VECTOR SEARCH ALONE FAILS (CLEAN FUNNEL) -->
   <!-- ===================================================================== -->
   <section class="slide" id="s4">
     <div>
-      <div class="slide-header">
-        <span class="slide-kicker"><span class="dot"></span> 4 · Technical Execution · Vector Search Funnel</span>
-        <div class="slide-meta">
-          <span class="judge-badge">Judge Check #2 · Why Semantic Top-K Alone Spoils Food</span>
-          <span class="slide-num">Slide 4 / 8</span>
-        </div>
-      </div>
+      <div class="kicker">04 · Technical Execution · Judge Check #2 <span>Slide 4 / 8</span></div>
+      <h1>Meaning Is Not Capacity</h1>
+      <p class="sub">The top 3 semantic matches for 6-hour spinach were all wrong—including a planted decoy with no cooler.</p>
 
-      <h1>Meaning Is Not Capacity: Inside the 6-Hour Spinach Funnel</h1>
+      <div style="display:grid; grid-template-columns: 1fr 1.15fr; gap:28px; align-items:center;">
+        <!-- LEFT: MINIMALIST SVG FUNNEL -->
+        <div style="text-align:center;">
+          <svg width="100%" height="250" viewBox="0 0 440 250">
+            <polygon points="10,10 430,10 385,78 55,78" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="220" y="42" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">192 Total Recipients</text>
+            <text x="220" y="62" text-anchor="middle" font-size="12.5" fill="#64748b">183 Real IRS Orgs + 9 Planted Decoys</text>
 
-      <div class="grid-2" style="align-items:stretch;">
-        <!-- LEFT: VISUAL SVG FILTERING FUNNEL + POOL SIZE BARS -->
-        <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
-          <div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-              <span class="pill blue">1 · Candidate Funnel (Why top_k = 80)</span>
-              <span style="font-size:11px; color:var(--text-muted);"><code>docs/evidence/pool-study.txt</code></span>
-            </div>
+            <polygon points="62,90 378,90 330,158 110,158" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="1.5"/>
+            <text x="220" y="122" text-anchor="middle" font-size="16" font-weight="800" fill="#0369a1">80 Nearest by Meaning</text>
+            <text x="220" y="142" text-anchor="middle" font-size="12.5" fill="#0284c7">BigQuery VECTOR_SEARCH + AI.EMBED</text>
 
-            <!-- SVG FUNNEL DIAGRAM -->
-            <svg width="100%" height="190" viewBox="0 0 480 190">
-              <!-- Stage 1 -->
-              <polygon points="10,8 470,8 430,58 50,58" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
-              <text x="240" y="30" text-anchor="middle" font-size="13" font-weight="800" fill="#1e293b">192 Total Chicago Recipients in BigQuery</text>
-              <text x="240" y="47" text-anchor="middle" font-size="11" fill="#475569">183 Real IRS Nonprofits + 9 Planted Teaching Cases</text>
-
-              <!-- Stage 2 -->
-              <polygon points="55,66 425,66 375,118 105,118" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="1.5"/>
-              <text x="240" y="89" text-anchor="middle" font-size="13" font-weight="800" fill="#0369a1">80 Nearest by Meaning (VECTOR_SEARCH)</text>
-              <text x="240" y="106" text-anchor="middle" font-size="11" fill="#0284c7">AI.EMBED on profile_text · 85% eliminated by physical rules next</text>
-
-              <!-- Stage 3 -->
-              <polygon points="110,126 370,126 330,180 150,180" fill="#ccfbf1" stroke="#5eead4" stroke-width="2"/>
-              <text x="240" y="150" text-anchor="middle" font-size="14" font-weight="800" fill="#0f766e">12 Viable Pantries Survive</text>
-              <text x="240" y="168" text-anchor="middle" font-size="11" font-weight="600" fill="#0f766e">Cooler OK · Pallets &ge; 0.5 · Pickup &le; 6h (Top 3 + 9 Backups)</text>
-            </svg>
-          </div>
-
-          <!-- POOL COMPARISON MINI BARS -->
-          <div style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:10px; padding:12px;">
-            <div style="font-size:11.5px; font-weight:700; margin-bottom:8px;">What Happens If You Pull Fewer Candidates?</div>
-            <div style="display:grid; grid-template-columns: 95px 1fr 85px; align-items:center; gap:8px; font-size:11.5px; margin-bottom:6px;">
-              <strong>top_k = 15</strong>
-              <div style="height:10px; background:#e2e8f0; border-radius:99px;"><div style="width:8%; height:100%; background:var(--red); border-radius:99px;"></div></div>
-              <strong style="color:var(--red);">1 viable (0 backups)</strong>
-            </div>
-            <div style="display:grid; grid-template-columns: 95px 1fr 85px; align-items:center; gap:8px; font-size:11.5px; margin-bottom:6px;">
-              <strong>top_k = 40</strong>
-              <div style="height:10px; background:#e2e8f0; border-radius:99px;"><div style="width:25%; height:100%; background:#f59e0b; border-radius:99px;"></div></div>
-              <strong style="color:var(--amber);">3 viable (Tight)</strong>
-            </div>
-            <div style="display:grid; grid-template-columns: 95px 1fr 85px; align-items:center; gap:8px; font-size:11.5px;">
-              <strong style="color:var(--primary);">top_k = 80</strong>
-              <div style="height:10px; background:#e2e8f0; border-radius:99px;"><div style="width:100%; height:100%; background:var(--primary); border-radius:99px;"></div></div>
-              <strong style="color:var(--primary);">12 viable ✓</strong>
-            </div>
+            <polygon points="118,170 322,170 285,240 155,240" fill="#ccfbf1" stroke="#5eead4" stroke-width="2"/>
+            <text x="220" y="204" text-anchor="middle" font-size="18" font-weight="800" fill="#0f766e">12 Viable Pantries</text>
+            <text x="220" y="224" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f766e">Cooler + Pallets + Pickup &le; 6h</text>
+          </svg>
+          <div style="font-size:13px; color:var(--text-secondary); margin-top:8px;">
+            <strong>Pool Study:</strong> <code>top_k=15</code> left <strong>1</strong> viable · <code>top_k=40</code> left <strong>3</strong> · <code>top_k=80</code> leaves <strong>12</strong>
           </div>
         </div>
 
-        <!-- RIGHT: VISUAL SEMANTIC RANK STRIP (#1 TO #63) -->
-        <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span class="pill red">2 · Semantic Rank vs. Operational Reality</span>
-            <span style="font-size:11px; color:var(--text-muted);"><code>docs/evidence/demo-tracks.txt</code></span>
+        <!-- RIGHT: 3 CLEAN RANK CARDS -->
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div class="card" style="background:var(--red-soft); border-color:var(--red-border); padding:18px 22px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:16px; color:var(--red);">✗ #1, #2 &amp; #3 by Meaning — Rejected</strong>
+              <span class="tag red">12h – 21h Pickup</span>
+            </div>
+            <p style="font-size:13.5px; color:#9f1239; margin-top:6px;">
+              <strong>#3 Greenline Community Pantry</strong> (planted decoy) begs for <em>“fresh greens”</em> while having <strong>no refrigeration at all</strong>.
+            </p>
           </div>
 
-          <div style="display:flex; flex-direction:column; gap:10px;">
-            <!-- RANK #1 & #2 -->
-            <div style="display:grid; grid-template-columns: 74px 1fr auto; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; background:var(--red-soft); border:1px solid var(--red-border);">
-              <span class="pill red" style="justify-content:center;">Rank #1–2</span>
-              <div>
-                <div style="font-size:13px; font-weight:800; color:var(--red);">Go Forth Int’l &amp; Tca Health</div>
-                <div style="font-size:11px; color:#9f1239;">Great text match, but need <strong>18h – 21h pickup notice</strong> vs 6h clock</div>
-              </div>
-              <span style="font-size:12px; font-weight:800; color:var(--red);">✗ REJECTED</span>
+          <div class="card" style="background:var(--amber-soft); border-color:var(--amber-border); padding:18px 22px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:16px; color:var(--amber);">⚠️ #11 by Meaning — Passed Over</strong>
+              <span class="tag amber">Only +1h Margin</span>
             </div>
-
-            <!-- RANK #3 GREENLINE DECOY -->
-            <div style="display:grid; grid-template-columns: 74px 1fr auto; align-items:center; gap:10px; padding:12px; border-radius:10px; background:#ffe4e6; border:2px solid var(--red);">
-              <span class="pill red" style="justify-content:center;">Rank #3</span>
-              <div>
-                <div style="font-size:13.5px; font-weight:800; color:var(--red);">🪤 Greenline Community Pantry (Planted Decoy)</div>
-                <div style="font-size:11.5px; color:#9f1239;">Bio begs for <em>“fresh greens”</em> — has <strong>NO refrigeration</strong> &amp; needs 12h</div>
-              </div>
-              <span style="font-size:12px; font-weight:800; color:var(--red);">✗ CAUGHT</span>
-            </div>
-
-            <!-- RANK #11 -->
-            <div style="display:grid; grid-template-columns: 74px 1fr auto; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; background:var(--amber-soft); border:1px solid var(--amber-border);">
-              <span class="pill amber" style="justify-content:center;">Rank #11</span>
-              <div>
-                <div style="font-size:13px; font-weight:800; color:var(--amber);">First Survivor by Meaning</div>
-                <div style="font-size:11px; color:#92400e;">Passes filters, but only has a <strong>household fridge &amp; +1h slack</strong> (5h pickup)</div>
-              </div>
-              <span style="font-size:11.5px; font-weight:700; color:var(--amber);">Passed Over</span>
-            </div>
-
-            <!-- RANK #50, #54, #63 -->
-            <div style="display:grid; grid-template-columns: 74px 1fr auto; align-items:center; gap:10px; padding:12px; border-radius:10px; background:var(--primary-soft); border:2px solid var(--primary);">
-              <span class="pill green" style="justify-content:center;">#50, 54, 63</span>
-              <div>
-                <div style="font-size:13.5px; font-weight:800; color:var(--primary);">Our Top 3 Recommended Pantries</div>
-                <div style="font-size:11.5px; color:#065f46;">Prioritizes <strong>+2h to +3h safety buffer</strong> &amp; sturdier cold storage</div>
-              </div>
-              <span style="font-size:12px; font-weight:800; color:var(--primary);">✓ SELECTED</span>
-            </div>
+            <p style="font-size:13.5px; color:#92400e; margin-top:6px;">
+              First candidate to pass hard filters, but only has a household kitchen fridge and 1 hour of slack.
+            </p>
           </div>
 
-          <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-size:11px; color:var(--text-secondary);">
-            🧪 <strong>Broken-Filter Selfcheck:</strong> <code>selfcheck.py</code> deliberately disables the cooler check to prove <em>Greenline</em> jumps into the winners.
+          <div class="card" style="background:var(--teal-soft); border-color:var(--teal-border); padding:18px 22px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:16px; color:var(--teal);">✓ #50, #54 &amp; #63 — Our Top 3 Picks</strong>
+              <span class="tag teal">+2h to +3h Buffer</span>
+            </div>
+            <p style="font-size:13.5px; color:#065f46; margin-top:6px;">
+              Ranked by pickup safety buffer and sturdier cooling; verified by a broken-filter test in <code>selfcheck.py</code>.
+            </p>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="slide-footer">
-      <span>Vector search generates candidates; deterministic Python rules guarantee physical safety.</span>
-      <span>Judge Check #2: Verified on live corpus in <code>docs/evidence/pool-study.txt</code></span>
+    <div class="footer">
+      <span>Evidence: <code>docs/evidence/pool-study.txt</code> &amp; <code>docs/evidence/demo-tracks.txt</code></span>
+      <span>Judge Check #2: Genuine Vector Search + Constraint Filtering</span>
     </div>
   </section>
 
   <!-- ===================================================================== -->
-  <!-- SLIDE 5: VISUAL 4-LANE MULTI-TRACK ROUTING DIAGRAM -->
+  <!-- SLIDE 5: ONE ENGINE ACROSS ALL 3 TRACKS -->
   <!-- ===================================================================== -->
   <section class="slide" id="s5">
     <div>
-      <div class="slide-header">
-        <span class="slide-kicker"><span class="dot"></span> 5 · Multi-Track Proof · One Engine Across All 3 Tracks</span>
-        <div class="slide-meta">
-          <span class="judge-badge">Retail, Farm, Essentials &amp; Safe 1h Refusal</span>
-          <span class="slide-num">Slide 5 / 8</span>
-        </div>
-      </div>
+      <div class="kicker">05 · Multi-Track Generalization <span>Slide 5 / 8</span></div>
+      <h1>One Pipeline Across Grocer, Farm &amp; Clinic</h1>
+      <p class="sub">No custom rulebook per track—meaning plus physical capacity handles all four scenarios.</p>
 
-      <h1>One Shared Pipeline Handles Grocer, Farm, Clinic &amp; Refusals</h1>
-
-      <!-- TOP ENGINE BANNER -->
-      <div style="background:var(--primary-soft); border:1px solid var(--primary-border); border-radius:12px; padding:10px 18px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
-        <div style="font-size:13px; font-weight:700; color:var(--primary);">
-          🧠 Single Architecture: <code>lookup_shelf_life</code> ➔ BigQuery <code>VECTOR_SEARCH (top_k=80)</code> ➔ Storage + Pallet + Clock Filter
-        </div>
-        <span class="pill green">Zero Per-Track Rulebooks</span>
-      </div>
-
-      <!-- 4 VISUAL SCENARIO CARDS -->
-      <div class="grid-4" style="margin-bottom:14px;">
-        <!-- CARD 1: RETAIL -->
-        <div class="card teal" style="text-align:center; padding:18px 14px;">
-          <div style="font-size:32px; margin-bottom:6px;">🛒</div>
-          <span class="pill green">Track 1 · Retail Rescue</span>
-          <h3 style="font-size:16px; font-weight:800; margin:8px 0 2px;">10 Crates Spinach</h3>
-          <div style="font-size:11.5px; color:var(--text-muted); margin-bottom:12px;">0.5 Pallets · 6h Clock · Cold</div>
-
-          <div style="background:#fff; border:1px solid var(--primary-border); border-radius:8px; padding:8px; margin-bottom:8px;">
-            <div style="font-size:20px; font-weight:800; color:var(--primary);">12 / 80</div>
-            <div style="font-size:10.5px; color:var(--text-muted);">Viable Pantries</div>
-          </div>
-
-          <div style="font-size:12px; font-weight:700; color:var(--text);">➔ Habibi Care</div>
-          <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">+3h buffer · Volunteer driver flagged · Decoy rejected</div>
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-top:10px;">
+        <div class="card" style="background:var(--teal-soft); border-color:var(--teal-border); text-align:center; padding:28px 18px;">
+          <div style="font-size:36px; margin-bottom:10px;">🛒</div>
+          <span class="tag teal">Track 1 · Retail</span>
+          <div style="font-size:19px; font-weight:800; margin:12px 0 4px;">10 Crates Spinach</div>
+          <div style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">0.5 Pallets · 6h · Cold</div>
+          <div style="font-size:28px; font-weight:800; color:var(--teal);">12 Viable</div>
+          <div style="font-size:13px; color:var(--text-secondary); margin-top:6px;">Habibi Care (+3h slack)<br/>Volunteer driver flagged</div>
         </div>
 
-        <!-- CARD 2: FARM -->
-        <div class="card" style="text-align:center; padding:18px 14px;">
-          <div style="font-size:32px; margin-bottom:6px;">🚜</div>
-          <span class="pill amber">Track 2 · Farm Surplus</span>
-          <h3 style="font-size:16px; font-weight:800; margin:8px 0 2px;">5 Tons Potatoes</h3>
-          <div style="font-size:11.5px; color:var(--text-muted); margin-bottom:12px;">~5 Pallets · 72h Clock · Ambient</div>
-
-          <div style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:8px; padding:8px; margin-bottom:8px;">
-            <div style="font-size:20px; font-weight:800; color:var(--amber);">10 / 80</div>
-            <div style="font-size:10.5px; color:var(--text-muted);">Have 5+ Pallet Room</div>
-          </div>
-
-          <div style="font-size:12px; font-weight:700; color:var(--text);">➔ Lakeview / Anso</div>
-          <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">7–12 pallet warehouse + dock · 169 small pantries filtered</div>
+        <div class="card" style="text-align:center; padding:28px 18px;">
+          <div style="font-size:36px; margin-bottom:10px;">🚜</div>
+          <span class="tag amber">Track 2 · Farm</span>
+          <div style="font-size:19px; font-weight:800; margin:12px 0 4px;">5 Tons Potatoes</div>
+          <div style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">5 Pallets · 72h · Ambient</div>
+          <div style="font-size:28px; font-weight:800; color:var(--amber);">10 Viable</div>
+          <div style="font-size:13px; color:var(--text-secondary); margin-top:6px;">Lakeview / Anso<br/>7–12 pallet warehouse dock</div>
         </div>
 
-        <!-- CARD 3: ESSENTIALS -->
-        <div class="card" style="text-align:center; padding:18px 14px;">
-          <div style="font-size:32px; margin-bottom:6px;">🍼</div>
-          <span class="pill blue">Track 3 · Essentials</span>
-          <h3 style="font-size:16px; font-weight:800; margin:8px 0 2px;">48 Cases Formula</h3>
-          <div style="font-size:11.5px; color:var(--text-muted); margin-bottom:12px;">2 Pallets · Sealed · 8 Months</div>
-
-          <div style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:8px; padding:8px; margin-bottom:8px;">
-            <div style="font-size:20px; font-weight:800; color:var(--blue);">26 / 80</div>
-            <div style="font-size:10.5px; color:var(--text-muted);">Family &amp; Infant Programs</div>
-          </div>
-
-          <div style="font-size:12px; font-weight:700; color:var(--text);">➔ Child/Family Clinics</div>
-          <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Overrides 1h opened-bottle USDA trap with 8-mo expiry</div>
+        <div class="card" style="text-align:center; padding:28px 18px;">
+          <div style="font-size:36px; margin-bottom:10px;">🍼</div>
+          <span class="tag blue">Track 3 · Essentials</span>
+          <div style="font-size:19px; font-weight:800; margin:12px 0 4px;">48 Cases Formula</div>
+          <div style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">2 Pallets · Sealed · 8 Mo</div>
+          <div style="font-size:28px; font-weight:800; color:var(--blue);">26 Viable</div>
+          <div style="font-size:13px; color:var(--text-secondary); margin-top:6px;">Family &amp; infant clinics<br/>Overrides 1h USDA trap</div>
         </div>
 
-        <!-- CARD 4: SAFE REFUSAL -->
-        <div class="card red" style="text-align:center; padding:18px 14px;">
-          <div style="font-size:32px; margin-bottom:6px;">🛑</div>
-          <span class="pill red">Impossible Deadline</span>
-          <h3 style="font-size:16px; font-weight:800; margin:8px 0 2px;">40 Trays Pastries</h3>
-          <div style="font-size:11.5px; color:var(--text-muted); margin-bottom:12px;">Must Leave in <strong>1 Hour</strong> · Cold</div>
-
-          <div style="background:#fff; border:1px solid var(--red-border); border-radius:8px; padding:8px; margin-bottom:8px;">
-            <div style="font-size:20px; font-weight:800; color:var(--red);">0 / 80</div>
-            <div style="font-size:10.5px; color:var(--red);">Fastest Pickup Is 2.0h</div>
-          </div>
-
-          <div style="font-size:12px; font-weight:800; color:var(--red);">➔ Safe Refusal</div>
-          <div style="font-size:11px; color:#9f1239; margin-top:2px;">Never guesses; lists closest kitchens (which need 2h+)</div>
+        <div class="card" style="background:var(--red-soft); border-color:var(--red-border); text-align:center; padding:28px 18px;">
+          <div style="font-size:36px; margin-bottom:10px;">🛑</div>
+          <span class="tag red">Impossible Clock</span>
+          <div style="font-size:19px; font-weight:800; margin:12px 0 4px;">40 Trays Pastries</div>
+          <div style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Must Leave in <strong>1 Hour</strong></div>
+          <div style="font-size:28px; font-weight:800; color:var(--red);">0 Viable</div>
+          <div style="font-size:13px; color:#9f1239; margin-top:6px;">Safe Refusal (min pickup in Chicago is 2.0h)</div>
         </div>
-      </div>
-
-      <!-- BOTTOM VISUAL PILL BAR -->
-      <div class="card" style="padding:10px 18px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
-        <span><strong>Pinned Unit Conversions:</strong> <code>20 crates = 1 pallet</code> · <code>1 ton = 1 pallet</code> · Root vegetables (potatoes, squash, onions) = <code>room temp</code></span>
-        <span class="pill slate">Tested in <code>selfcheck.py</code></span>
       </div>
     </div>
 
-    <div class="slide-footer">
-      <span>All 4 scenarios run through the exact same corpus and tools.</span>
-      <span>Captured outputs in <code>docs/evidence/</code></span>
+    <div class="footer">
+      <span>Pinned unit conversions: <code>20 crates = 1 pallet</code> · <code>1 ton = 1 pallet</code> · Root vegetables stay room-temp</span>
+      <span>All 4 transcripts in <code>docs/evidence/</code></span>
     </div>
   </section>
 
   <!-- ===================================================================== -->
-  <!-- SLIDE 6: 4 DATA TRAPS CAUGHT (VISUAL TRAP -> FIX CARDS) -->
+  <!-- SLIDE 6: 4 DATA TRAPS CAUGHT -->
   <!-- ===================================================================== -->
   <section class="slide" id="s6">
     <div>
-      <div class="slide-header">
-        <span class="slide-kicker"><span class="dot"></span> 6 · Rigor &amp; Judgment · Table Validation Discoveries</span>
-        <div class="slide-meta">
-          <span class="judge-badge">Rigor &amp; Judgment (25 pts) · 4 Data Traps Caught</span>
-          <span class="slide-num">Slide 6 / 8</span>
-        </div>
-      </div>
+      <div class="kicker">06 · Rigor &amp; Judgment · Data Validation <span>Slide 6 / 8</span></div>
+      <h1>Four Data Traps Caught by Inspecting the Tables</h1>
+      <p class="sub">Operational rules stay in embeddings; census demographics are never used to rank who deserves food.</p>
 
-      <h1>Four Real Traps in the Data—and How Our Code Catches Them</h1>
-
-      <div class="grid-2" style="gap:16px;">
-        <!-- TRAP 1 -->
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="pill green">🍼 1 · Sealed Infant Formula Trap</span>
-            <code>lookup_shelf_life</code>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:8px;">
+        <div class="card" style="padding:24px;">
+          <span class="tag teal">🍼 1 · Infant Formula Shelf Life</span>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:17px; font-weight:800;">
+            <span style="color:var(--red);">❌ 1 Hour (Opened Bottle)</span>
+            <span style="color:var(--text-muted);">→</span>
+            <span style="color:var(--teal);">✅ 8 Months (Sealed Case)</span>
           </div>
-          <div class="trap-fix-box">
-            <div class="trap-side">
-              <div style="font-size:10.5px; font-weight:800; color:var(--red);">❌ NAIVE TABLE LOOKUP</div>
-              <div style="font-size:16px; font-weight:800; color:var(--red); margin:4px 0;">1 Hour Shelf Life</div>
-              <div style="font-size:11px; color:#9f1239;">USDA row is for an <em>opened bottle warmed for a baby</em></div>
-            </div>
-            <div style="text-align:center; font-weight:800; color:var(--text-muted);">➔</div>
-            <div class="fix-side">
-              <div style="font-size:10.5px; font-weight:800; color:var(--primary);">✅ OUR GUARDRAIL</div>
-              <div style="font-size:16px; font-weight:800; color:var(--primary); margin:4px 0;">8 Months Honored</div>
-              <div style="font-size:11px; color:#065f46;"><code>_shelf_caution</code> flags &le;2h rows &amp; uses sealed expiry</div>
-            </div>
-          </div>
+          <p style="font-size:13.5px; color:var(--text-secondary); margin-top:8px;"><code>_shelf_caution</code> flags any USDA value &le;2 hours so sealed cans aren’t rejected.</p>
         </div>
 
-        <!-- TRAP 2 -->
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="pill green">🧊 2 · Kitchen Fridge vs. Walk-In</span>
-            <code>_storage_compatible</code>
+        <div class="card" style="padding:24px;">
+          <span class="tag teal">🧊 2 · Kitchen Fridge vs. Walk-In</span>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:17px; font-weight:800;">
+            <span style="color:var(--red);">❌ 4 Pallets → Fridge</span>
+            <span style="color:var(--text-muted);">→</span>
+            <span style="color:var(--teal);">✅ Cap Fridge &le; 1 Pallet</span>
           </div>
-          <div class="trap-fix-box">
-            <div class="trap-side">
-              <div style="font-size:10.5px; font-weight:800; color:var(--red);">❌ NAIVE STORAGE CHECK</div>
-              <div style="font-size:16px; font-weight:800; color:var(--red); margin:4px 0;">4 Pallets → Fridge</div>
-              <div style="font-size:11px; color:#9f1239;">Treats a household kitchen fridge like a warehouse cooler</div>
-            </div>
-            <div style="text-align:center; font-weight:800; color:var(--text-muted);">➔</div>
-            <div class="fix-side">
-              <div style="font-size:10.5px; font-weight:800; color:var(--primary);">✅ OUR GUARDRAIL</div>
-              <div style="font-size:16px; font-weight:800; color:var(--primary); margin:4px 0;">Cap Fridge &le; 1 Plt</div>
-              <div style="font-size:11px; color:#065f46;">Multi-pallet cold &rarr; commercial; frozen &rarr; freezer</div>
-            </div>
-          </div>
+          <p style="font-size:13.5px; color:var(--text-secondary); margin-top:8px;">Reserves multi-pallet cold loads for commercial coolers and frozen food for freezers.</p>
         </div>
 
-        <!-- TRAP 3 -->
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="pill amber">🕒 3 · Contradictory Bio Timing Text</span>
-            <code>_excerpt</code>
+        <div class="card" style="padding:24px;">
+          <span class="tag amber">🕒 3 · Contradictory Bio Text (12 Orgs)</span>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:17px; font-weight:800;">
+            <span style="color:var(--red);">❌ Bio Says “2 Hours”</span>
+            <span style="color:var(--text-muted);">→</span>
+            <span style="color:var(--teal);">✅ Enforce 19h Column</span>
           </div>
-          <div class="trap-fix-box">
-            <div class="trap-side">
-              <div style="font-size:10.5px; font-weight:800; color:var(--red);">❌ 12 CONTRADICTORY BIOS</div>
-              <div style="font-size:16px; font-weight:800; color:var(--red); margin:4px 0;">“Collect in 2 Hours”</div>
-              <div style="font-size:11px; color:#9f1239;">Written bio says 2h while numeric column is <strong>19 hours</strong></div>
-            </div>
-            <div style="text-align:center; font-weight:800; color:var(--text-muted);">➔</div>
-            <div class="fix-side">
-              <div style="font-size:10.5px; font-weight:800; color:var(--primary);">✅ OUR GUARDRAIL</div>
-              <div style="font-size:16px; font-weight:800; color:var(--primary); margin:4px 0;">Enforce 19h Column</div>
-              <div style="font-size:11px; color:#065f46;">Strips timing claims from quotes so brief never contradicts</div>
-            </div>
-          </div>
+          <p style="font-size:13.5px; color:var(--text-secondary); margin-top:8px;">Strips timing claims from written bio quotes so they never contradict numeric hours.</p>
         </div>
 
-        <!-- TRAP 4 -->
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="pill blue">📊 4 · Planted Decoys in City Counts</span>
-            <code>BigQuery MCP</code>
+        <div class="card" style="padding:24px;">
+          <span class="tag blue">📊 4 · Planted Decoys in City Counts</span>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:17px; font-weight:800;">
+            <span style="color:var(--red);">❌ 13 / 192 Walk-Ins</span>
+            <span style="color:var(--text-muted);">→</span>
+            <span style="color:var(--teal);">✅ 6 / 183 Real (3.3%)</span>
           </div>
-          <div class="trap-fix-box">
-            <div class="trap-side">
-              <div style="font-size:10.5px; font-weight:800; color:var(--red);">❌ UNFILTERED TABLE COUNT</div>
-              <div style="font-size:16px; font-weight:800; color:var(--red); margin:4px 0;">13 / 192 Walk-Ins</div>
-              <div style="font-size:11px; color:#9f1239;">7 of those 13 walk-in coolers are planted test decoys!</div>
-            </div>
-            <div style="text-align:center; font-weight:800; color:var(--text-muted);">➔</div>
-            <div class="fix-side">
-              <div style="font-size:10.5px; font-weight:800; color:var(--primary);">✅ OUR GUARDRAIL</div>
-              <div style="font-size:16px; font-weight:800; color:var(--primary); margin:4px 0;">6 / 183 Real (3.3%)</div>
-              <div style="font-size:11px; color:#065f46;">Filters <code>profile_source != 'planted'</code> on city stats</div>
-            </div>
-          </div>
+          <p style="font-size:13.5px; color:var(--text-secondary); margin-top:8px;">Excludes the 9 planted test cases (<code>profile_source != 'planted'</code>) on city SQL stats.</p>
         </div>
-      </div>
-
-      <!-- BIAS HANDLING STRIP -->
-      <div class="card teal" style="margin-top:14px; padding:10px 18px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
-        <span><strong>Embedding &amp; Bias Rule:</strong> Operational constraints (halal, infant, cold storage) stay in <code>profile_text</code>; census demographics are <strong>never used to rank who deserves food</strong>.</span>
-        <span class="pill green">Responsible AI Verified</span>
       </div>
     </div>
 
-    <div class="slide-footer">
-      <span>Validation before building: every anomaly above was discovered by inspecting <code>a4i_food</code> tables.</span>
-      <span>Judge Check: Rigor &amp; Judgment (Validation + Bias Handling)</span>
+    <div class="footer">
+      <span>All 4 guardrails verified by automated regression tests in <code>agent/food_broker/selfcheck.py</code></span>
+      <span>Judge Check: Validation &amp; Bias Handling</span>
     </div>
   </section>
 
   <!-- ===================================================================== -->
-  <!-- SLIDE 7: VISUAL EQUITY AUDIT BAR CHART (10 POSTINGS, 183 REAL ORGS) -->
+  <!-- SLIDE 7: THE EQUITY AUDIT -->
   <!-- ===================================================================== -->
   <section class="slide" id="s7">
     <div>
-      <div class="slide-header">
-        <span class="slide-kicker"><span class="dot"></span> 7 · Outcome Audit · 10 Postings Across 183 Real Charities</span>
-        <div class="slide-meta">
-          <span class="judge-badge">Judge Check #3 · Equity Audit (9 Planted Excluded)</span>
-          <span class="slide-num">Slide 7 / 8</span>
+      <div class="kicker">07 · Outcome Audit · Judge Check #3 <span>Slide 7 / 8</span></div>
+      <h1>Did Food Go Where the Need Is—or Where the Docks Are?</h1>
+      <p class="sub">10 postings audited across 183 real IRS charities (9 planted decoys excluded).</p>
+
+      <!-- MINIMALIST BAR TABLE -->
+      <div style="border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:20px;">
+        <div style="display:grid; grid-template-columns: 240px repeat(3, 1fr); background:#f1f5f9; padding:12px 20px; font-size:12px; font-weight:700; color:var(--text-secondary); text-transform:uppercase;">
+          <div>Group (Real Orgs Only)</div>
+          <div>Tract Poverty (Mean / Med)</div>
+          <div>No Vehicle (Mean / Med)</div>
+          <div>Public Assist (Mean / Med)</div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 240px repeat(3, 1fr); padding:13px 20px; border-top:1px solid var(--border); font-size:14px;">
+          <strong>Chicago Metro (1,004 tracts)</strong>
+          <span><strong>15%</strong></span>
+          <span><strong>20%</strong></span>
+          <span><strong>18%</strong></span>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 240px repeat(3, 1fr); padding:13px 20px; border-top:1px solid var(--border); font-size:14px;">
+          <strong>All 183 Real Charities</strong>
+          <span><strong>19%</strong> / 16%</span>
+          <span><strong>28%</strong> / 27%</span>
+          <span><strong>19%</strong> / 12%</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 240px repeat(3, 1fr); padding:13px 20px; border-top:1px solid var(--border); background:var(--teal-soft); font-size:14px;">
+          <strong style="color:var(--teal);">View 1 · Per Offer (n=10)</strong>
+          <span style="color:var(--teal);"><strong>22%</strong> / 16%</span>
+          <span style="color:var(--teal);"><strong>30%</strong> / 23%</span>
+          <span style="color:var(--teal);"><strong>19%</strong> / 11%</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 240px repeat(3, 1fr); padding:13px 20px; border-top:1px solid var(--border); font-size:14px;">
+          <strong>View 2 · Unique Orgs (n=8)</strong>
+          <span><strong>16%</strong> / 10%</span>
+          <span><strong>24%</strong> / 20%</span>
+          <span><strong>15%</strong> / 6%</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 240px repeat(3, 1fr); padding:13px 20px; border-top:1px solid var(--border); background:var(--amber-soft); font-size:14px;">
+          <strong style="color:var(--amber);">View 3 · By Volume (37.5 Plt)</strong>
+          <span><strong>14%</strong></span>
+          <span><strong>32%</strong></span>
+          <span style="color:var(--red);"><strong>9% ⚠️</strong> (vs 19% dir)</span>
         </div>
       </div>
 
-      <h1>Did Food Go Where the Need Is—or Where the Loading Docks Are?</h1>
-
-      <!-- VISUAL GROUPED BAR CHART -->
-      <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:14px;">
-        <!-- HEADER LEGEND -->
-        <div style="display:grid; grid-template-columns: 195px 1fr; gap:14px; padding:0 12px; font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted);">
-          <div>Comparison Group (Real Orgs)</div>
-          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
-            <div>🟦 Tract Poverty (Mean / Med)</div>
-            <div>🟩 No Vehicle (Mean / Med)</div>
-            <div>🟧 Public Assistance (Mean / Med)</div>
-          </div>
+      <!-- TWO CLEAN CALLOUTS -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px;">
+        <div class="card" style="padding:16px 20px; background:var(--teal-soft); border-color:var(--teal-border);">
+          <strong style="font-size:14.5px; color:var(--teal);">1. Why Per-Offer Mean Is Higher (22% Poverty)</strong>
+          <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">One fast pantry (<em>Shakespear Rose</em>, 45% poverty / 52% no-car) won 3 short-clock grocery offers.</p>
         </div>
-
-        <!-- ROW 1: CHICAGO METRO -->
-        <div class="chart-group">
-          <div>
-            <div style="font-size:12.5px; font-weight:700;">Chicago Metro Baseline</div>
-            <div style="font-size:10.5px; color:var(--text-muted);">1,004 tracts (pop-weighted)</div>
-          </div>
-          <div class="chart-bars">
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:38%; background:#64748b;"></div></div><strong style="font-size:12px; width:62px;">15%</strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:50%; background:#64748b;"></div></div><strong style="font-size:12px; width:62px;">20%</strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:45%; background:#64748b;"></div></div><strong style="font-size:12px; width:62px;">18%</strong></div>
-          </div>
-        </div>
-
-        <!-- ROW 2: ALL 183 REAL CHARITIES -->
-        <div class="chart-group">
-          <div>
-            <div style="font-size:12.5px; font-weight:700;">All 183 Real Charities</div>
-            <div style="font-size:10.5px; color:var(--text-muted);">68 tracts in directory</div>
-          </div>
-          <div class="chart-bars">
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:48%; background:var(--blue);"></div></div><strong style="font-size:12px; width:62px;">19% <span style="font-weight:400; color:var(--text-muted);">/16</span></strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:70%; background:var(--primary);"></div></div><strong style="font-size:12px; width:62px;">28% <span style="font-weight:400; color:var(--text-muted);">/27</span></strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:48%; background:#f59e0b;"></div></div><strong style="font-size:12px; width:62px;">19% <span style="font-weight:400; color:var(--text-muted);">/12</span></strong></div>
-          </div>
-        </div>
-
-        <!-- ROW 3: VIEW 1 PER POSTING -->
-        <div class="chart-group" style="background:var(--primary-soft); border-color:var(--primary-border);">
-          <div>
-            <div style="font-size:12.5px; font-weight:800; color:var(--primary);">View 1 · Per Offer (n=10)</div>
-            <div style="font-size:10.5px; color:var(--primary);">Counted once per posting</div>
-          </div>
-          <div class="chart-bars">
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:55%; background:var(--blue);"></div></div><strong style="font-size:12px; width:62px;">22% <span style="font-weight:400; color:var(--text-muted);">/16</span></strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:75%; background:var(--primary);"></div></div><strong style="font-size:12px; width:62px;">30% <span style="font-weight:400; color:var(--text-muted);">/23</span></strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:48%; background:#f59e0b;"></div></div><strong style="font-size:12px; width:62px;">19% <span style="font-weight:400; color:var(--text-muted);">/11</span></strong></div>
-          </div>
-        </div>
-
-        <!-- ROW 4: VIEW 2 PER UNIQUE CHARITY -->
-        <div class="chart-group">
-          <div>
-            <div style="font-size:12.5px; font-weight:700;">View 2 · Unique Orgs (n=8)</div>
-            <div style="font-size:10.5px; color:var(--text-muted);">Counted once per recipient</div>
-          </div>
-          <div class="chart-bars">
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:40%; background:var(--blue);"></div></div><strong style="font-size:12px; width:62px;">16% <span style="font-weight:400; color:var(--text-muted);">/10</span></strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:60%; background:var(--primary);"></div></div><strong style="font-size:12px; width:62px;">24% <span style="font-weight:400; color:var(--text-muted);">/20</span></strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:38%; background:#f59e0b;"></div></div><strong style="font-size:12px; width:62px;">15% <span style="font-weight:400; color:var(--text-muted);">/6</span></strong></div>
-          </div>
-        </div>
-
-        <!-- ROW 5: VIEW 3 WEIGHTED BY PALLETS -->
-        <div class="chart-group" style="background:var(--amber-soft); border-color:var(--amber-border);">
-          <div>
-            <div style="font-size:12.5px; font-weight:800; color:var(--amber);">View 3 · By Volume (37.5 Plt)</div>
-            <div style="font-size:10.5px; color:var(--amber);">30 of 37.5 pallets are farm loads</div>
-          </div>
-          <div class="chart-bars">
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:35%; background:var(--blue);"></div></div><strong style="font-size:12px; width:62px;">14%</strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:80%; background:var(--primary);"></div></div><strong style="font-size:12px; width:62px;">32%</strong></div>
-            <div class="metric-bar-wrap"><div class="metric-track"><div class="metric-fill" style="width:22%; background:var(--red);"></div></div><strong style="font-size:12px; color:var(--red); width:62px;">9% ⚠️</strong></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TWO VISUAL DISCOVERY CALLOUTS -->
-      <div class="grid-2">
-        <div class="card teal" style="padding:12px 16px; display:flex; align-items:center; gap:12px;">
-          <div style="font-size:26px;">⚡</div>
-          <div>
-            <div style="font-size:12.5px; font-weight:800; color:var(--primary);">Why View 1 Is Higher (22% Pov) vs View 2 (16% Pov)</div>
-            <div style="font-size:11.5px; color:var(--text-secondary);"><strong>One fast pantry</strong> (<em>Shakespear Rose</em>, 45% poverty / 52% no-car) won <strong>3 of 4 retail offers</strong> because short clocks reward 2–3h pickup speed.</div>
-          </div>
-        </div>
-
-        <div class="card amber" style="padding:12px 16px; display:flex; align-items:center; gap:12px;">
-          <div style="font-size:26px;">🏭</div>
-          <div>
-            <div style="font-size:12.5px; font-weight:800; color:var(--amber);">Why Volume Drops to 9% Assistance (vs 19% Directory)</div>
-            <div style="font-size:11.5px; color:var(--text-secondary);">Only <strong>14 of 183 real orgs</strong> have a dock or room for 5+ pallets (10 fit 10+ pallets). Huge farm loads go where the docks are.</div>
-          </div>
+        <div class="card" style="padding:16px 20px; background:var(--amber-soft); border-color:var(--amber-border);">
+          <strong style="font-size:14.5px; color:var(--amber);">2. Why Volume Drops to 9% Assistance</strong>
+          <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">30 of 37.5 pallets are farm loads, and only <strong>14 of 183 real orgs</strong> fit 5+ pallets (10 fit 10+ pallets).</p>
         </div>
       </div>
     </div>
 
-    <div class="slide-footer">
-      <span>Caveat: 10 postings across 68 ZIP-centroid tracts cannot separate a real skew from small-sample noise.</span>
-      <span>Full audit &amp; SQL: <code>agent/food_broker/EQUITY-AUDIT.md</code></span>
+    <div class="footer">
+      <span>10 offers across 68 ZIP-centroid tracts cannot separate a real skew from small-sample noise.</span>
+      <span>Full audit: <code>agent/food_broker/EQUITY-AUDIT.md</code></span>
     </div>
   </section>
 
   <!-- ===================================================================== -->
-  <!-- SLIDE 8: HONEST LIMITS & VISUAL CLOSED-LOOP DAY-2 ARCHITECTURE -->
+  <!-- SLIDE 8: HONEST LIMITS & DAY-2 ROADMAP -->
   <!-- ===================================================================== -->
   <section class="slide" id="s8">
     <div>
-      <div class="slide-header">
-        <span class="slide-kicker"><span class="dot"></span> 8 · Honest Boundaries &amp; Day-2 Closed-Loop Architecture</span>
-        <div class="slide-meta">
-          <span class="judge-badge">Judge Check #4 · Honest Limits &amp; The Intake Agent Loop</span>
-          <span class="slide-num">Slide 8 / 8</span>
-        </div>
-      </div>
+      <div class="kicker">08 · Honest Boundaries &amp; What We Build Next · Judge Check #4 <span>Slide 8 / 8</span></div>
+      <h1>Honest Limits Today &amp; How We Close the Loop</h1>
+      <p class="sub">A trustworthy dispatch tool states its boundaries plainly—and builds the intake loop next.</p>
 
-      <h1>Honest Boundaries Today—and How We Close the Data Loop Next</h1>
-
-      <div class="grid-2" style="align-items:stretch;">
-        <!-- LEFT: 4 VISUAL LIMITATION TILES -->
-        <div class="card amber" style="display:flex; flex-direction:column; justify-content:space-between;">
-          <div>
-            <span class="pill amber" style="margin-bottom:10px;">⚠️ 4 Honest Boundaries Today</span>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div style="background:#fff; border:1px solid var(--amber-border); border-radius:10px; padding:12px;">
-                <div style="font-size:20px; margin-bottom:4px;">🎲</div>
-                <div style="font-size:13px; font-weight:800;">Generated Ops</div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;">183 IRS orgs are real, but cooler, pallets &amp; pickup hours are synthetic &rarr; <em>confirm by phone</em>.</div>
-              </div>
-
-              <div style="background:#fff; border:1px solid var(--amber-border); border-radius:10px; padding:12px;">
-                <div style="font-size:20px; margin-bottom:4px;">🌡️</div>
-                <div style="font-size:13px; font-weight:800;">Consumer USDA</div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;">FoodKeeper shelf life is home-storage guidance, not a commercial cold-chain guarantee.</div>
-              </div>
-
-              <div style="background:#fff; border:1px solid var(--amber-border); border-radius:10px; padding:12px;">
-                <div style="font-size:20px; margin-bottom:4px;">📍</div>
-                <div style="font-size:13px; font-weight:800;">ZIP Centroids</div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;">Locations are ZIP-level centers; no donor street address or drive-time routing in BigQuery.</div>
-              </div>
-
-              <div style="background:#fff; border:1px solid var(--amber-border); border-radius:10px; padding:12px;">
-                <div style="font-size:20px; margin-bottom:4px;">🔄</div>
-                <div style="font-size:13px; font-weight:800;">Single-Load Stateless</div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;">No delivery memory yet (1 fast pantry won 3x) &amp; no automatic multi-pantry load splitting.</div>
-              </div>
-            </div>
-          </div>
-
-          <div style="background:#fff; border:1px solid var(--amber-border); border-radius:8px; padding:8px 12px; font-size:11.5px; color:var(--amber); font-weight:600; text-align:center;">
-            Every limitation above directly shaped our three Day-2 engineering upgrades &rarr;
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-top:10px;">
+        <!-- LEFT: 4 LIMITS -->
+        <div class="card" style="background:var(--amber-soft); border-color:var(--amber-border); padding:28px;">
+          <span class="tag amber">⚠️ 4 Honest Boundaries Today</span>
+          <div style="display:flex; flex-direction:column; gap:16px; margin-top:18px; font-size:14.5px;">
+            <div><strong>1. Generated Ops Profiles:</strong> 183 IRS orgs are real, but cooler, pallets &amp; hours are synthetic &rarr; <em>confirm by phone</em>.</div>
+            <div><strong>2. Consumer USDA Guidance:</strong> Home shelf-life guidance, not a commercial cold-chain model.</div>
+            <div><strong>3. ZIP-Centroid Coordinates:</strong> No donor address or real drive-time routing in BigQuery.</div>
+            <div><strong>4. Stateless Single-Load Matching:</strong> One fast pantry won 3x; 5-ton farm loads aren’t split yet.</div>
           </div>
         </div>
 
-        <!-- RIGHT: VISUAL CLOSED-LOOP INTAKE AGENT DIAGRAM -->
-        <div class="card teal" style="display:flex; flex-direction:column; justify-content:space-between;">
-          <div>
-            <span class="pill green" style="margin-bottom:10px;">🚀 Day-2 Upgrade #1 · Conversational Pantry Intake Agent</span>
-            <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
-              Closes our #1 limitation: instead of a static form, a new pantry talks to an Intake Agent that asks the follow-up that matters:
-            </p>
-
-            <!-- VISUAL LOOP FLOW -->
-            <div style="display:grid; grid-template-columns: 1fr 22px 1fr 22px 1fr; align-items:center; gap:6px; margin-bottom:14px;">
-              <div style="background:#fff; border:1px solid var(--primary-border); border-radius:10px; padding:10px; text-align:center;">
-                <div style="font-size:20px;">🗣️</div>
-                <div style="font-size:12px; font-weight:800; margin-top:2px;">Pantry Check-In</div>
-                <div style="font-size:10.5px; color:var(--primary); margin-top:2px;"><em>“Can you take a pallet, or by hand?”</em></div>
-              </div>
-              <div style="text-align:center; font-weight:800; color:var(--primary);">➔</div>
-              <div style="background:#fff; border:1px solid var(--primary-border); border-radius:10px; padding:10px; text-align:center;">
-                <div style="font-size:20px;">🧬</div>
-                <div style="font-size:12px; font-weight:800; margin-top:2px;">Live AI.EMBED</div>
-                <div style="font-size:10.5px; color:var(--text-secondary); margin-top:2px;">Writes verified row &amp; embeds into BigQuery</div>
-              </div>
-              <div style="text-align:center; font-weight:800; color:var(--primary);">➔</div>
-              <div style="background:#ccfbf1; border:1px solid var(--primary); border-radius:10px; padding:10px; text-align:center;">
-                <div style="font-size:20px;">✅</div>
-                <div style="font-size:12px; font-weight:800; color:var(--primary); margin-top:2px;">Instant Match</div>
-                <div style="font-size:10.5px; color:#065f46; margin-top:2px;">Replaces synthetic profile same afternoon</div>
-              </div>
+        <!-- RIGHT: 3 UPGRADES -->
+        <div class="card" style="background:var(--teal-soft); border-color:var(--teal-border); padding:28px;">
+          <span class="tag teal">🚀 What We Build with Another 4 Hours</span>
+          <div style="display:flex; flex-direction:column; gap:16px; margin-top:18px; font-size:14.5px;">
+            <div>
+              <strong style="color:var(--teal);">1. Conversational Pantry Intake Agent:</strong>
+              <div style="font-size:13.5px; color:var(--text-secondary); margin-top:2px;">Asks <em>“Can you take a pallet, or by hand?”</em>, writes <code>profile_text</code>, and runs <code>AI.EMBED</code> into BigQuery immediately.</div>
             </div>
-
-            <!-- UPGRADES #2 AND #3 -->
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div style="background:#fff; border:1px solid var(--primary-border); border-radius:10px; padding:10px 12px;">
-                <span class="pill green" style="font-size:10px;">Upgrade #2 · Solves 9% Skew</span>
-                <div style="font-size:13px; font-weight:800; margin-top:4px;">✂️ Multi-Pantry Load Split</div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Split 5-ton farm loads across three 2-pallet neighborhood pantries + 3 SMS drafts.</div>
-              </div>
-
-              <div style="background:#fff; border:1px solid var(--primary-border); border-radius:10px; padding:10px 12px;">
-                <span class="pill green" style="font-size:10px;">Upgrade #3 · Solves 3x Repeat</span>
-                <div style="font-size:13px; font-weight:800; margin-top:4px;">🔒 Firestore Claim &amp; Rotation</div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Transactional pallet lock + fair rotation so one fast pantry isn’t called 3x in a row.</div>
-              </div>
+            <div>
+              <strong style="color:var(--teal);">2. Multi-Pantry Load Splitting:</strong>
+              <div style="font-size:13.5px; color:var(--text-secondary); margin-top:2px;">Split 5-ton farm loads across three 2-pallet neighborhood pantries (solving the 9% volume skew).</div>
             </div>
-          </div>
-
-          <div style="background:var(--primary); color:#fff; border-radius:8px; padding:8px 14px; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:700;">
-            <span>RescueBroker · Ready for Live Chicago Dispatch</span>
-            <span>Thank You · Agents for Impact 2026</span>
+            <div>
+              <strong style="color:var(--teal);">3. Firestore Claim Lock &amp; Fair Rotation:</strong>
+              <div style="font-size:13.5px; color:var(--text-secondary); margin-top:2px;">Prevent double-claiming and rotate fast pantries across the afternoon.</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="slide-footer">
-      <span>Repository: <code>github.com/jimmycgz/challenge2-117</code> · Tag: <code>submission</code></span>
-      <span>Live Evidence &amp; Transcripts: <code>docs/evidence/</code></span>
+    <div class="footer">
+      <span>RescueBroker · Chicago Food Rescue &amp; Surplus Broker · Agents for Impact 2026</span>
+      <span>Repo: <code>github.com/jimmycgz/challenge2-117</code> · Evidence: <code>docs/evidence/</code></span>
     </div>
   </section>
 
