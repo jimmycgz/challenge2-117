@@ -9,8 +9,8 @@
 # Required settings (from the environment or from lab.env next to this script; a missing one stops the script):
 #   A4I_EXPECTED_PROJECT           the lab project id
 #   A4I_EXPECTED_PRINCIPAL_SUFFIX  how the lab account's address ends
-# Optional: REGION (default us-east1), VERTEX_LOCATION (default us-central1), SERVICE (default food-broker),
-#   PYTHON (interpreter with the agent's requirements, default python3), A4I_MODEL, NO_UI=1 for the API only
+# Optional: REGION (default us-east1), VERTEX_LOCATION (default global, or GOOGLE_CLOUD_LOCATION when set), SERVICE (default food-broker),
+#   PYTHON (interpreter with the agent's requirements, default python3), A4I_MODEL, A4I_THINKING_LEVEL (LOW, MEDIUM or HIGH), NO_UI=1 for the API only
 #   (the chat page is on by default), OPEN=0 to require
 #   authentication (open by default, by the team's decision: ADK's API server has no authentication of its
 #   own, so spend is bounded by --max-instances, --concurrency and --timeout below), A4I_ALLOW_ORIGINS for CORS,
@@ -30,7 +30,12 @@ fi
 : "${A4I_EXPECTED_PROJECT:?set A4I_EXPECTED_PROJECT to the lab project id}"
 : "${A4I_EXPECTED_PRINCIPAL_SUFFIX:?set A4I_EXPECTED_PRINCIPAL_SUFFIX to the lab account suffix}"
 REGION="${REGION:-us-east1}"
-VERTEX_LOCATION="${VERTEX_LOCATION:-${GOOGLE_CLOUD_LOCATION:-us-central1}}"
+VERTEX_LOCATION="${VERTEX_LOCATION:-${GOOGLE_CLOUD_LOCATION:-global}}"
+# Say what will run, and stop on a combination that fails at the first question: gemini-3.x models exist only in the
+# global location, and setup.sh tells people to export GOOGLE_CLOUD_LOCATION=us-central1.
+echo "model: ${A4I_MODEL:-<default>}  location: ${VERTEX_LOCATION}  thinking: ${A4I_THINKING_LEVEL:-<default>}"
+[[ "${A4I_MODEL:-}" == gemini-3* && "${VERTEX_LOCATION}" != "global" ]] \
+  && { echo "REFUSED: ${A4I_MODEL} needs location global, got ${VERTEX_LOCATION} (unset GOOGLE_CLOUD_LOCATION and VERTEX_LOCATION)" >&2; exit 2; }
 SERVICE="${SERVICE:-food-broker}"
 PYTHON="${PYTHON:-python3}"
 
@@ -61,6 +66,7 @@ ENV_VARS+=",A4I_EXPECTED_PRINCIPAL_SUFFIX=${A4I_EXPECTED_PRINCIPAL_SUFFIX}"
 ENV_VARS+=",A4I_EXPECTED_PROJECT_NUMBER=${PROJECT_NUMBER}"
 ENV_VARS+=",GOOGLE_GENAI_USE_VERTEXAI=1,GOOGLE_CLOUD_LOCATION=${VERTEX_LOCATION}"
 [[ -n "${A4I_MODEL:-}" ]] && ENV_VARS+=",A4I_MODEL=${A4I_MODEL}"
+[[ -n "${A4I_THINKING_LEVEL:-}" ]] && ENV_VARS+=",A4I_THINKING_LEVEL=${A4I_THINKING_LEVEL}"
 # ADK's chat page is served by default; NO_UI=1 serves the API only.
 [[ "${NO_UI:-0}" != "1" ]] && ENV_VARS+=",A4I_UI_FLAG=--with_ui"
 # One instance only: ADK keeps chat sessions in that instance's memory, so a second instance would lose a follow-up.
@@ -74,6 +80,6 @@ gcloud run deploy "${SERVICE}" \
   --region "${REGION}" \
   --source "${HERE}" \
   "${AUTH_FLAG}" \
-  --min-instances 1 --max-instances 1 --concurrency 8 --timeout 120 \
+  --min-instances 1 --max-instances 1 --concurrency 8 --timeout 300 \
   --memory 1Gi \
   --set-env-vars "${ENV_VARS}"

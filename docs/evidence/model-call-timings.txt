@@ -1,0 +1,15 @@
+One model call per setting with the agent's real instructions and a saved Match Brief, captured 2026-10-20 13:17 EDT. The six calls ran at the same time, so read the ratios, not the seconds. Thinking tokens are what the model spent before answering.
+
+| Model | Thinking | Region | Seconds | Thinking tokens | Output tokens |
+|---|---|---|---|---|---|
+| gemini-2.5-flash | default | us-central1 | 8.9 s | 840 | 645 |
+| gemini-3.8-flash | default | global | 18.0 s | 1563 | 730 |
+| gemini-3.8-flash | LOW | global | 9.0 s | None | 690 |
+| gemini-3.8-flash | MEDIUM | global | 13.4 s | 1618 | 702 |
+| gemini-3.8-flash | HIGH | global | 24.2 s | 4196 | 672 |
+| gemini-4-argon | LOW | global | 14.0 s | None | 805 |
+
+Later runs on the final branch (gemini-3.8-flash, LOW, global, BigQuery MCP toolset on), spinach posting, one after another, no other job of ours running
+13:29:20 EDT  28.5 s   (via a one-off script)
+13:30:01 EDT  23.1, 22.5, 27.1 s   (a local script that times the spinach posting three times in a row; not in the repo)
+Earlier the same day, same model and level: 15.6, 16.8, 17.2 s. The difference is not explained; API load at the time is one candidate.

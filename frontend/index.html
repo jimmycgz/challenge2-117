@@ -23,7 +23,7 @@
     crossorigin=""
   ></script>
 
-  <!-- Real 192 Recipient Coordinates & Pre-Cached Cloud Run Evidence -->
+  <!-- Recipient locations (183 real organizations plus nine invented teaching cases, all ZIP-level) & saved Cloud Run briefs for four postings -->
   <script src="recipients_data.js"></script>
 
   <style>
@@ -154,6 +154,14 @@
 
     .dot.amber { background: var(--amber); }
     .dot.red { background: var(--red); }
+    .dot.muted { background: var(--text-muted); }
+
+    .source-note {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .source-note.warn { color: var(--amber); font-weight: 500; }
 
     /* BUTTONS */
     button {
@@ -976,8 +984,8 @@
 
     <div class="topbar-right">
       <div class="status-indicator" title="Connected to Cloud Run ADK Agent">
-        <span class="dot" id="connDot"></span>
-        <span id="connBadge">Cloud Run Live</span>
+        <span class="dot muted" id="connDot"></span>
+        <span id="connBadge">Connecting...</span>
       </div>
       <label class="status-indicator" style="cursor:pointer;">
         <input type="checkbox" id="liveApiToggle" checked style="accent-color:var(--text);" />
@@ -1082,10 +1090,10 @@
           <!-- Subtle Top Strip: openFDA Recall Status + Candidate Pool -->
           <div class="match-card-strip" id="recallBanner">
             <div class="strip-left">
-              <span class="dot" id="recallDot"></span>
-              <span id="recallStatusBadge" style="font-weight:600; color:var(--text);">openFDA Safety Clear</span>
+              <span class="dot muted" id="recallDot"></span>
+              <span id="recallStatusBadge" style="font-weight:600; color:var(--text);">openFDA not checked yet</span>
               <span style="color:var(--border-strong);">·</span>
-              <span id="recallDetail">0 active recalls for this commodity. Confirm sealed lot on pickup.</span>
+              <span id="recallDetail">Confirm sealed lot on pickup.</span>
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
               <span id="searchPoolBadge" style="font-weight:500;">80 searched → 12 viable</span>
@@ -1093,15 +1101,18 @@
           </div>
 
           <div class="match-card-body">
+            <!-- Where the answer on this card came from: live, saved for this posting, or none -->
+            <div class="source-note" id="briefSourceNote"></div>
+            <div class="source-note warn" id="liveStatusNote" style="display:none;"></div>
             <!-- Header & Primary Actions -->
             <div class="recipient-header">
               <div>
                 <div class="recipient-badge-row">
                   <span class="eyebrow-pill" id="matchEyebrow">Top Match</span>
-                  <span class="rank-meta" id="meaningRankLabel">Meaning Rank #3 of 80</span>
+                  <span class="rank-meta" id="meaningRankLabel">Meaning Rank #17 of 80</span>
                 </div>
                 <h2 class="recipient-name" id="orgName">Habibi Care</h2>
-                <div class="recipient-address" id="orgAddress">4346 W 63rd St, Chicago, IL 60629</div>
+                <div class="recipient-address" id="orgAddress">4845 N Washtenaw Ave, Chicago, IL 60625</div>
               </div>
 
               <div class="cta-group">
@@ -1162,7 +1173,7 @@
               <div class="metric-cell">
                 <span class="metric-label">Pallet Capacity</span>
                 <span class="metric-val" id="kpiPallets">0.5 of 1 pallet</span>
-                <span class="metric-sub" id="kpiServiceDays">Open Wed, Sat</span>
+                <span class="metric-sub" id="kpiServiceDays">Open Monday</span>
               </div>
               <div class="metric-cell">
                 <span class="metric-label">Window & Margin</span>
@@ -1226,13 +1237,14 @@
               <div id="map"></div>
               <div class="map-caption">
                 <div>
-                  <span><i class="legend-dot" style="background:#f59e0b;"></i>Donor</span>
+                  <span><i class="legend-dot" style="background:#f59e0b;"></i>Donor (illustrative: an invented point; the postings have no donor location)</span>
                   <span style="margin-left:10px;"><i class="legend-dot" style="background:#10b981;"></i>Top Match</span>
                   <span style="margin-left:10px;"><i class="legend-dot" style="background:#0284c7;"></i>Backups</span>
                   <span style="margin-left:10px;"><i class="legend-dot" style="background:#e11d48;"></i>Filtered Out</span>
                 </div>
-                <span>ZIP-centroid coordinates</span>
+                <span>ZIP-centroid coordinates; no distances shown</span>
               </div>
+              <div class="map-caption" id="mapUnplottedNote" style="display:none;"></div>
             </div>
 
             <div class="timeline-panel">
@@ -1357,31 +1369,36 @@
   <div class="modal-backdrop" id="equityModal">
     <div class="modal">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="font-size:16px; font-weight:600;">10-Posting Equity Study & Search Pool Analysis</h3>
+        <h3 style="font-size:16px; font-weight:600;">10-Posting Equity Audit</h3>
         <button class="btn-ghost" onclick="closeModal('equityModal')">Close</button>
       </div>
       <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">
-        Evaluated across all 10 official <code>a4i_food.surplus_postings</code> against 1,004 Chicago ACS Census tracts and 192 recipients.
+        The ten <code>a4i_food.surplus_postings</code>, 1,004 census tracts (ACS) and 183 recipients. The nine invented teaching cases are left out of the corpus and the matches. Each recipient's figures are for the tract nearest its ZIP-level location, so they describe the surrounding area. Cells are mean / median where both exist.
       </p>
       <table class="clean-table">
         <thead>
           <tr>
             <th>Group</th>
-            <th>Sample</th>
+            <th>n</th>
             <th>Poverty</th>
-            <th>No Vehicle</th>
-            <th>Public Assist</th>
+            <th>Households without a vehicle</th>
+            <th>Food or cash assistance</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Chicago Metro Baseline</td><td>1,004 tracts</td><td>15%</td><td>20%</td><td>18%</td></tr>
-          <tr><td>All Recipients Corpus (Mean / Med)</td><td>192 orgs</td><td>19% / 15%</td><td>27% / 25%</td><td>20% / 12%</td></tr>
-          <tr><td>Recipients w/ Dock or 5+ Pallets</td><td>17 orgs</td><td>16%</td><td>27%</td><td>17%</td></tr>
-          <tr><td><b>Top Matches — Per Posting</b></td><td>10 postings</td><td><b>22%</b> / 17%</td><td><b>31%</b> / 23%</td><td><b>20%</b> / 16%</td></tr>
-          <tr><td>Top Matches — Distinct Orgs</td><td>8 orgs</td><td>17% / 14%</td><td>26% / 20%</td><td>16% / 11%</td></tr>
-          <tr><td>Top Matches — Pallet-Weighted</td><td>37.5 pallets</td><td>15%</td><td>32%</td><td>9%</td></tr>
+          <tr><td>Metro, tracts weighted by population</td><td>1,004 tracts</td><td>15%</td><td>20%</td><td>18%</td></tr>
+          <tr><td>All recipients</td><td>183</td><td>19% / 16%</td><td>28% / 27%</td><td>19% / 12%</td></tr>
+          <tr><td>Recipients with a dock or room for 5+ pallets</td><td>14</td><td>17% / 14%</td><td>29% / 27%</td><td>16% / 14%</td></tr>
+          <tr><td>All other recipients</td><td>169</td><td>20% / 16%</td><td>27% / 27%</td><td>20% / 12%</td></tr>
+          <tr><td>Top matches, once per posting</td><td>10</td><td>22% / 16%</td><td>30% / 23%</td><td>19% / 11%</td></tr>
+          <tr><td>Top matches, once per distinct recipient</td><td>8</td><td>16% / 10%</td><td>24% / 20%</td><td>15% / 6%</td></tr>
+          <tr><td>Top matches, weighted by estimated pallets (37.5 total)</td><td>10</td><td>14%</td><td>32%</td><td>9%</td></tr>
         </tbody>
       </table>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">
+        The 183 recipients sit on 68 distinct tracts and there are ten postings, so the sample is small and has no confidence interval. Method, per-posting rows and the version with the nine invented cases:
+        <a href="../agent/food_broker/EQUITY-AUDIT.md" target="_blank" rel="noopener">EQUITY-AUDIT.md</a>.
+      </p>
     </div>
   </div>
 
@@ -1413,7 +1430,7 @@
         needs_cold: true,
         donor_lat: 41.8840,
         donor_lon: -87.6280,
-        cacheKey: "spinach",
+        cacheKey: null, // no saved brief for this posting; a different posting's brief is never shown
         prompt: "A retail deli in Chicago has prepared sandwiches and salads from the deli case (about half a pallet, needs cold storage) that must move within 4 hours."
       },
       {
@@ -1439,7 +1456,7 @@
         needs_cold: true,
         donor_lat: 41.9200,
         donor_lon: -87.6800,
-        cacheKey: "spinach",
+        cacheKey: null, // no saved brief for this posting; a different posting's brief is never shown
         prompt: "A Chicago grocer has mixed dairy - about 60 gallons of milk and some yogurt (1 pallet, needs cold storage), dock closes in 8 hours."
       },
       {
@@ -1452,7 +1469,7 @@
         needs_cold: true,
         donor_lat: 41.8700,
         donor_lon: -87.6700,
-        cacheKey: "spinach",
+        cacheKey: null, // no saved brief for this posting; a different posting's brief is never shown
         prompt: "We have temperature-sensitive nutritional supplements for a clinic (half a pallet, cold chain required) that must be picked up within 8 hours."
       },
       {
@@ -1465,7 +1482,7 @@
         needs_cold: true,
         donor_lat: 41.6800,
         donor_lon: -87.6500,
-        cacheKey: "farm-potatoes",
+        cacheKey: null, // no saved brief for this posting; a different posting's brief is never shown
         prompt: "A farm near Chicago has half a truckload of blueberries (10 pallets), picked this morning, extremely perishable, needs cold storage within 12 hours."
       },
       {
@@ -1478,7 +1495,7 @@
         needs_cold: false,
         donor_lat: 41.8950,
         donor_lon: -87.6400,
-        cacheKey: "farm-potatoes",
+        cacheKey: null, // no saved brief for this posting; a different posting's brief is never shown
         prompt: "Three grocery store locations in Chicago have roughly 200 loaves of day-old bread and pastries (2 pallets, room temperature) available for pickup within 24 hours."
       },
       {
@@ -1504,7 +1521,7 @@
         needs_cold: false,
         donor_lat: 41.6500,
         donor_lon: -87.7200,
-        cacheKey: "farm-potatoes",
+        cacheKey: null, // no saved brief for this posting; a different posting's brief is never shown
         prompt: "A farm has surplus winter squash, about 30 bins (15 pallets), no refrigeration needed, must move within 5 days (120 hours)."
       },
       {
@@ -1530,7 +1547,7 @@
         needs_cold: false,
         donor_lat: 41.8900,
         donor_lon: -87.6600,
-        cacheKey: "sealed-formula",
+        cacheKey: null, // no saved brief for this posting; a different posting's brief is never shown
         prompt: "A distributor in Chicago has 1 pallet of diapers and wipes, sizes 1 through 4, available within 30 days."
       }
     ];
@@ -1539,8 +1556,8 @@
     // 2. STATE
     // ============================================================================
     let currentPosting = SURPLUS_QUEUE[2];
-    let currentBrief = (window.EVIDENCE_CACHE && window.EVIDENCE_CACHE["spinach"]) ? window.EVIDENCE_CACHE["spinach"].brief : null;
-    let currentAnswer = (window.EVIDENCE_CACHE && window.EVIDENCE_CACHE["spinach"]) ? window.EVIDENCE_CACHE["spinach"].answer : "";
+    let currentBrief = null;   // set by showSavedBriefFor() on load, or by a live find_matches answer
+    let currentAnswer = "";
     let sessionId = "coord-" + Math.random().toString(36).substring(2, 9);
     let sessionReady = false;
     let claimedPalletsByOrg = {};
@@ -1550,6 +1567,66 @@
     let uploadedPhotoMime = "image/png";
     let map = null;
     let mapLayerGroup = null;
+
+    // The nine invented teaching cases the challenge adds to the corpus (profile_source "planted"). They have no
+    // real street or ZIP and their coordinates were placed by formula, so they are labelled and never plotted.
+    const INVENTED_CASE_NAMES = [
+      "Greenline Community Pantry", "Harborview Neighbors Trust", "Cedar Street Produce Alliance",
+      "Maple Street Produce Alliance", "Ridgeway Avenue Food Ministry", "Southline Neighbors Pantry",
+      "Third Ward Community Table", "Brookfield Family Resource Center", "Lakeshore Mutual Aid Collective"
+    ].map((n) => n.toLowerCase());
+    const INVENTED_LABEL = " (invented teaching case)";
+
+    function normName(name) {
+      return String(name || "").trim().replace(/\s+/g, " ").toLowerCase();
+    }
+
+    // Exact lookup (ignoring case and spacing) only: a name that is not on file gets no map pin.
+    function findRecipient(name) {
+      const all = window.RECIPIENT_COORDS || {};
+      if (!name) return null;
+      if (all[name]) return all[name];
+      const want = normName(name);
+      for (const [k, v] of Object.entries(all)) {
+        if (normName(k) === want) return v;
+      }
+      return null;
+    }
+
+    function isInventedCase(name, profileSource) {
+      if (profileSource === "planted") return true;
+      if (INVENTED_CASE_NAMES.includes(normName(name))) return true;
+      const rec = findRecipient(name);
+      return !!(rec && rec.zip === "");
+    }
+
+    function displayName(name, profileSource) {
+      return isInventedCase(name, profileSource) ? `${name}${INVENTED_LABEL}` : String(name || "");
+    }
+
+    function escapeHtml(value) {
+      const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+      return String(value ?? "").replace(/[&<>"']/g, (c) => entities[c]);
+    }
+
+    function savedCaptureTime(answer) {
+      const m = /Captured ([^.]+)\./.exec(answer || "");
+      return m ? m[1] : "an earlier run";
+    }
+
+    // What the match card is showing: a live answer, the saved answer for this posting, or nothing.
+    function setBriefSource(text, warn) {
+      const el = document.getElementById("briefSourceNote");
+      el.textContent = text;
+      el.className = "source-note" + (warn ? " warn" : "");
+    }
+
+    // Shown when the last request got no live answer.
+    function setLiveStatus(text) {
+      const el = document.getElementById("liveStatusNote");
+      el.textContent = text || "";
+      el.style.display = text ? "block" : "none";
+    }
 
     const CLOUD_RUN_URL = "https://food-broker-817377390808.us-east1.run.app";
     function getApiBase() {
@@ -1566,9 +1643,13 @@
       document.getElementById("sessionBadge").textContent = `Session ${sessionId}`;
       initMap();
       renderQueue();
-      renderBrief(currentBrief, currentAnswer);
+      if (!showSavedBriefFor(currentPosting)) {
+        renderNoAnswer("No answer yet for this posting. Press Match to ask the live agent.");
+      }
       checkOpenFDARecall(currentPosting.commodity);
-      addLogEntry("INIT", `Ready (192 Chicago pantries loaded; Session ${sessionId}).`);
+      const allNames = Object.keys(window.RECIPIENT_COORDS || {});
+      const inventedCount = allNames.filter((n) => isInventedCase(n)).length;
+      addLogEntry("INIT", `Ready (${allNames.length} recipient rows loaded: ${allNames.length - inventedCount} real organizations plus ${inventedCount} invented teaching cases, all ZIP-level; Session ${sessionId}).`);
       ensureAdkSession();
 
       document.addEventListener("click", (e) => {
@@ -1624,20 +1705,64 @@
       renderQueue();
       document.getElementById("promptInput").value = item.prompt;
       checkOpenFDARecall(item.commodity);
+      setLiveStatus("");
 
-      if (window.EVIDENCE_CACHE && window.EVIDENCE_CACHE[item.cacheKey]) {
-        const cached = window.EVIDENCE_CACHE[item.cacheKey];
-        currentBrief = JSON.parse(JSON.stringify(cached.brief));
-        currentBrief.the_clock.hours_remaining = item.hours;
-        currentAnswer = cached.answer;
-        renderBrief(currentBrief, currentAnswer);
+      const live = document.getElementById("liveApiToggle").checked;
+      if (!showSavedBriefFor(item)) {
+        renderNoAnswer(live
+          ? "Waiting for the live agent. There is no saved answer for this posting, and a saved answer from a different posting is not shown."
+          : "No live answer available: replay mode is on (Live Agent unchecked). There is no saved answer for this posting, and a saved answer from a different posting is NOT being shown.");
       }
 
-      if (document.getElementById("liveApiToggle").checked) {
+      if (live) {
         await submitPrompt(item.prompt);
       } else {
         addLogEntry("QUEUE", `Selected "${item.title}" (${item.hours}h window).`);
       }
+    }
+
+    // Shows a saved brief only for the posting it was captured for (spinach, potatoes, infant formula, bakery).
+    // Returns false when this posting has no saved brief of its own.
+    function showSavedBriefFor(item) {
+      const cached = (item && item.cacheKey && window.EVIDENCE_CACHE) ? window.EVIDENCE_CACHE[item.cacheKey] : null;
+      if (!cached) return false;
+      currentBrief = JSON.parse(JSON.stringify(cached.brief));
+      currentAnswer = cached.answer;
+      renderBrief(currentBrief, currentAnswer);
+      setBriefSource(`Saved answer for this posting, captured ${savedCaptureTime(cached.answer)}. Not a live run.`, false);
+      return true;
+    }
+
+    // Clears the match card when there is no answer for the current posting.
+    function renderNoAnswer(message) {
+      currentBrief = null;
+      currentAnswer = "";
+      document.getElementById("agentTranscript").textContent = message;
+      const eyebrow = document.getElementById("matchEyebrow");
+      eyebrow.textContent = "No Answer";
+      eyebrow.style.background = "var(--amber-soft)";
+      eyebrow.style.color = "var(--amber)";
+      const blank = {
+        orgName: "No answer for this posting yet", orgAddress: "", meaningRankLabel: "", orgExcerpt: "",
+        kpiStorage: "—", kpiPallets: "—", kpiServiceDays: "", kpiClock: `${currentPosting.hours}h clock`,
+        kpiMargin: "—", kpiDriver: "—", kpiDriverSub: "", neighborhoodText: "", outreachBox: "", searchPoolBadge: "—"
+      };
+      for (const [id, text] of Object.entries(blank)) document.getElementById(id).textContent = text;
+      document.getElementById("kpiMargin").style.color = "";
+
+      const badge = document.getElementById("marginRiskBadge");
+      badge.className = "time-pill urg";
+      badge.textContent = "No answer";
+      document.getElementById("timelineSummary").textContent =
+        `Food has ${currentPosting.hours}h remaining. No recipient is on screen.`;
+      document.getElementById("timelineLeadBar").style.width = "0%";
+      document.getElementById("timelineSlackBar").style.width = "0%";
+      document.getElementById("leadBarLabel").textContent = "";
+      document.getElementById("slackBarLabel").textContent = "";
+
+      renderBackupsAndDecoys({});
+      updateMap(null);
+      setBriefSource(message, true);
     }
 
     // ============================================================================
@@ -1651,25 +1776,7 @@
       mapLayerGroup = L.layerGroup().addTo(map);
     }
 
-    function lookupCoords(orgName) {
-      if (!orgName || !window.RECIPIENT_COORDS) return { lat: 41.885, lon: -87.65 };
-      if (window.RECIPIENT_COORDS[orgName]) return window.RECIPIENT_COORDS[orgName];
-      const lower = orgName.toLowerCase();
-      for (const [k, v] of Object.entries(window.RECIPIENT_COORDS)) {
-        if (k.toLowerCase().includes(lower) || lower.includes(k.toLowerCase())) return v;
-      }
-      return { lat: 41.885, lon: -87.65 };
-    }
-
-    function haversineMiles(lat1, lon1, lat2, lon2) {
-      const R = 3958.8;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat / 2) ** 2 +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
-      return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).toFixed(1);
-    }
-
+    // No route lines and no distances: the postings table has no donor location, so any donor point is invented.
     function updateMap(brief) {
       if (!map || !mapLayerGroup) return;
       mapLayerGroup.clearLayers();
@@ -1679,45 +1786,50 @@
 
       const donorMarker = L.circleMarker([dLat, dLon], {
         radius: 7, color: "#d97706", fillColor: "#f59e0b", fillOpacity: 0.9, weight: 2
-      }).bindPopup(`<b>Donor Origin</b><br>${currentPosting.title}`);
+      }).bindPopup(`<b>Donor (illustrative)</b><br>${escapeHtml(currentPosting.title)}<br>Invented point: the postings have no donor location.`);
       mapLayerGroup.addLayer(donorMarker);
 
       const bounds = [[dLat, dLon]];
+      const unplotted = [];
+
+      // Invented teaching cases and names not on file are listed under the map instead of being pinned.
+      function plotRecipient(name, profileSource, style, popupHtml) {
+        if (isInventedCase(name, profileSource)) {
+          unplotted.push(`${name}${INVENTED_LABEL}`);
+          return;
+        }
+        const rec = findRecipient(name);
+        if (!rec || typeof rec.lat !== "number" || typeof rec.lon !== "number") {
+          unplotted.push(`${name} (no location on file)`);
+          return;
+        }
+        bounds.push([rec.lat, rec.lon]);
+        mapLayerGroup.addLayer(L.circleMarker([rec.lat, rec.lon], style).bindPopup(popupHtml));
+      }
 
       (brief?.rejected_but_close || []).forEach((decoy) => {
-        const c = lookupCoords(decoy.name);
-        bounds.push([c.lat, c.lon]);
-        const m = L.circleMarker([c.lat, c.lon], {
+        plotRecipient(decoy.name, decoy.profile_source, {
           radius: 6, color: "#e11d48", fillColor: "#f43f5e", fillOpacity: 0.85, weight: 1.5
-        }).bindPopup(`<b>Filtered: ${decoy.name}</b><br>Rank #${decoy.semantic_rank || "?"}<br>${decoy.because}`);
-        mapLayerGroup.addLayer(m);
+        }, `<b>Filtered: ${escapeHtml(decoy.name)}</b><br>Rank #${escapeHtml(decoy.semantic_rank || "?")}<br>${escapeHtml(decoy.because)}`);
       });
 
       (brief?.next_two_options || []).forEach((opt) => {
-        const c = lookupCoords(opt.name);
-        bounds.push([c.lat, c.lon]);
-        const dist = haversineMiles(dLat, dLon, c.lat, c.lon);
-        const m = L.circleMarker([c.lat, c.lon], {
+        plotRecipient(opt.name, opt.profile_source, {
           radius: 7, color: "#0284c7", fillColor: "#38bdf8", fillOpacity: 0.9, weight: 2
-        }).bindPopup(`<b>Backup #${opt.rank}: ${opt.name}</b><br>${opt.why} (~${dist} mi)`);
-        mapLayerGroup.addLayer(m);
+        }, `<b>Backup #${escapeHtml(opt.rank)}: ${escapeHtml(opt.name)}</b><br>${escapeHtml(opt.why)}`);
       });
 
       if (brief?.organization_and_why?.name) {
-        const topName = brief.organization_and_why.name;
-        const c = lookupCoords(topName);
-        bounds.push([c.lat, c.lon]);
-        const dist = haversineMiles(dLat, dLon, c.lat, c.lon);
-
-        const routeLine = L.polyline([[dLat, dLon], [c.lat, c.lon]], {
-          color: "#059669", weight: 2.5, dashArray: "5, 5"
-        });
-        mapLayerGroup.addLayer(routeLine);
-
-        const topMarker = L.circleMarker([c.lat, c.lon], {
+        const top = brief.organization_and_why;
+        plotRecipient(top.name, top.profile_source, {
           radius: 9, color: "#047857", fillColor: "#10b981", fillOpacity: 0.95, weight: 2.5
-        }).bindPopup(`<b>Top Match: ${topName}</b><br>${brief.organization_and_why.address} (~${dist} mi)`);
-        mapLayerGroup.addLayer(topMarker);
+        }, `<b>Top Match: ${escapeHtml(top.name)}</b><br>${escapeHtml(top.address)}`);
+      }
+
+      const note = document.getElementById("mapUnplottedNote");
+      if (note) {
+        note.textContent = unplotted.length ? `Not on the map: ${unplotted.join("; ")}.` : "";
+        note.style.display = unplotted.length ? "block" : "none";
       }
 
       if (bounds.length > 1) {
@@ -1775,7 +1887,7 @@
       const claimed = claimedPalletsByOrg[org.name] || 0;
       const remainingCap = Math.max(0, (cap.max_pallets || 0) - claimed);
 
-      document.getElementById("orgName").textContent = org.name;
+      document.getElementById("orgName").textContent = displayName(org.name, org.profile_source);
       document.getElementById("orgAddress").textContent = org.address || "";
       document.getElementById("meaningRankLabel").textContent =
         `Meaning Rank #${topRankCard.meaning_rank || "?"} of ${s.candidates_searched}`;
@@ -1831,11 +1943,11 @@
           d.className = "alt-item";
           d.innerHTML = `
             <div class="alt-item-top">
-              <span>#${b.rank} · ${b.name}</span>
-              <span class="time-pill ok">+${b.margin_hours}h buffer</span>
+              <span>#${escapeHtml(b.rank)} · ${escapeHtml(displayName(b.name, b.profile_source))}</span>
+              <span class="time-pill ok">+${escapeHtml(b.margin_hours)}h buffer</span>
             </div>
             <div class="alt-item-sub">
-              ${b.address} — ${b.why} (${b.needs_driver ? "Needs driver" : "Own van"})
+              ${escapeHtml(b.address)} — ${escapeHtml(b.why)} (${b.needs_driver ? "Needs driver" : "Own van"})
             </div>
           `;
           nextEl.appendChild(d);
@@ -1849,11 +1961,11 @@
         d.className = "alt-item";
         d.innerHTML = `
           <div class="alt-item-top">
-            <span>${r.name}</span>
-            <span class="time-pill crit">Meaning #${r.semantic_rank || "?"}</span>
+            <span>${escapeHtml(displayName(r.name, r.profile_source))}</span>
+            <span class="time-pill crit">Meaning #${escapeHtml(r.semantic_rank || "?")}</span>
           </div>
           <div class="alt-item-sub">
-            Filtered out: ${r.because}
+            Filtered out: ${escapeHtml(r.because)}
           </div>
         `;
         decoyEl.appendChild(d);
@@ -1947,8 +2059,17 @@
       const badge = document.getElementById("recallStatusBadge");
       const detail = document.getElementById("recallDetail");
       banner.className = "match-card-strip";
-      dot.className = "dot";
+      dot.className = "dot muted";
       badge.textContent = `Checking openFDA (${commodity})...`;
+      detail.textContent = "";
+
+      // A check that could not run is shown as "not checked", never as clear.
+      const showNotChecked = (why) => {
+        banner.className = "match-card-strip";
+        dot.className = "dot muted";
+        badge.textContent = `openFDA not checked (${commodity})`;
+        detail.textContent = `The recall check could not run (${why}). Check recalls by hand and confirm sealed packaging and lot code at pickup.`;
+      };
 
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 3500);
@@ -1959,8 +2080,13 @@
         clearTimeout(timer);
 
         if (resp.status === 404) {
+          dot.className = "dot";
           badge.textContent = `openFDA Clear (${commodity})`;
           detail.textContent = `0 active recalls. Confirm sealed packaging & lot code at pickup.`;
+          return;
+        }
+        if (!resp.ok) {
+          showNotChecked(`HTTP ${resp.status}`);
           return;
         }
         const data = await resp.json();
@@ -1972,14 +2098,16 @@
           badge.textContent = `${total} FDA Recall Notice(s) for ${commodity}`;
           const reason = (first.reason_for_recall || "").slice(0, 85);
           detail.textContent = `"${reason}..." — Verify donor lot/UPC before loading.`;
-        } else {
+        } else if (data?.meta?.results) {
+          dot.className = "dot";
           badge.textContent = `openFDA Clear (${commodity})`;
-          detail.textContent = `Verified against openFDA Enforcement API. Confirm lot code on pickup.`;
+          detail.textContent = `0 ongoing recalls found in the openFDA enforcement data. Confirm lot code on pickup.`;
+        } else {
+          showNotChecked("unexpected response");
         }
       } catch (err) {
         clearTimeout(timer);
-        badge.textContent = `Safety Gate Active (${commodity})`;
-        detail.textContent = `Confirm sealed packaging and lot code on dock pickup.`;
+        showNotChecked(err && err.name === "AbortError" ? "timed out" : "request failed");
       }
     }
 
@@ -2125,7 +2253,11 @@
 
     async function reportDiscrepancy(issueLabel, fieldName, reportedValue) {
       document.getElementById("problemDropdown").classList.remove("open");
-      const org = currentBrief?.organization_and_why?.name || "Habibi Care";
+      const org = currentBrief?.organization_and_why?.name;
+      if (!org) {
+        addLogEntry("DISCREPANCY", `No recipient is on screen, so "${issueLabel}" was not recorded.`);
+        return;
+      }
       const oldVal = currentBrief?.what_they_can_take?.[fieldName] ?? "on-file";
       discrepancyEntries.push({
         timestamp: new Date().toISOString(),
@@ -2181,9 +2313,12 @@
           sessionReady = true;
           document.getElementById("connBadge").textContent = "Cloud Run Live";
           document.getElementById("connDot").className = "dot";
+        } else {
+          document.getElementById("connBadge").textContent = `Agent not reachable (HTTP ${resp.status})`;
+          document.getElementById("connDot").className = "dot amber";
         }
       } catch (e) {
-        document.getElementById("connBadge").textContent = "Instant Replay";
+        document.getElementById("connBadge").textContent = "Agent not reachable";
         document.getElementById("connDot").className = "dot amber";
       }
     }
@@ -2203,7 +2338,7 @@
     }
 
     async function sendMcpWalkInQuery() {
-      const q = "How many recipients in the corpus have walk-in cold storage, and what share of all recipients is that?";
+      const q = "Not counting the invented teaching cases (profile_source 'planted'), how many recipients have walk-in cold storage, and what share is that?";
       document.getElementById("promptInput").value = q;
       switchTab("agentTab");
       await submitPrompt(q);
@@ -2215,9 +2350,19 @@
 
       const sendBtn = document.getElementById("sendBtn");
       const latencyBadge = document.getElementById("latencyBadge");
+
+      // Replay mode covers every send: nothing goes to the agent, and nothing is made up in its place.
+      if (!document.getElementById("liveApiToggle").checked) {
+        handleOfflineFallback(text, "replay mode is on (Live Agent unchecked)");
+        latencyBadge.textContent = "No live answer";
+        return;
+      }
+
+      const postingAtSend = currentPosting;
       sendBtn.disabled = true;
       const t0 = performance.now();
       latencyBadge.textContent = "Matching...";
+      setLiveStatus("");
 
       try {
         const base = getApiBase();
@@ -2262,54 +2407,52 @@
         if (toolsCalled.length > 0) {
           addLogEntry("AGENT", `Tools: ${toolsCalled.join(" -> ")} (${elapsed}s)`);
         }
-        if (newBrief) currentBrief = newBrief;
+        if (currentPosting !== postingAtSend) {
+          // The coordinator moved to another posting while this turn ran: never show it under the wrong title.
+          addLogEntry("AGENT", `Answer for "${postingAtSend.title}" arrived after switching postings; not shown on the card.`);
+          return;
+        }
+        if (newBrief) {
+          currentBrief = newBrief;
+          setBriefSource(`Live answer from the agent (session ${sessionId}, ${elapsed}s).`, false);
+        } else if (!currentBrief) {
+          setBriefSource("The live agent replied without a match brief for this posting; its reply is under Agent Reasoning & Log.", true);
+        }
         currentAnswer = finalReply || currentAnswer;
-        renderBrief(currentBrief, currentAnswer);
+        if (currentBrief) {
+          renderBrief(currentBrief, currentAnswer);
+        } else {
+          document.getElementById("agentTranscript").textContent = currentAnswer || "The agent returned no text.";
+        }
       } catch (err) {
-        handleOfflineFallback(text);
-        latencyBadge.textContent = "Instant Replay";
+        handleOfflineFallback(text, `the live call failed (${err && err.message ? err.message : "network error"})`);
+        latencyBadge.textContent = "No live answer";
+        document.getElementById("connBadge").textContent = "Agent not reachable";
+        document.getElementById("connDot").className = "dot amber";
       } finally {
         sendBtn.disabled = false;
       }
     }
 
-    function handleOfflineFallback(text) {
+    // No live answer: say so plainly. Nothing is promoted or written into the transcript on the agent's behalf.
+    // The only saved text shown is a saved answer to the same question, labelled as saved.
+    function handleOfflineFallback(text, reason) {
+      const notice = `No live answer available: ${reason}. A saved answer from a different posting is NOT being shown.`;
+      setLiveStatus(notice);
+      if (!currentBrief) setBriefSource("No answer on screen for this posting.", true);
+      addLogEntry("NO LIVE ANSWER", `${reason}. Not answered: "${text.slice(0, 80)}"`);
+
       const lower = text.toLowerCase();
+      let saved = "";
       if (lower.includes("walk-in")) {
-        document.getElementById("agentTranscript").textContent =
-          `[BigQuery MCP execute_sql]\nSELECT COUNT(*) FROM a4i_food.recipients WHERE cold_storage = 'walk-in'\n\n13 of the 192 recipients in the Chicago corpus have walk-in cold storage (6.8%).`;
-        return;
+        saved = "\n\nSaved answer (not live), captured 2026-10-20 12:41 EDT, to the question \"Not counting the invented teaching cases (profile_source 'planted'), how many recipients have walk-in cold storage, and what share is that?\":\n" +
+          "Not counting the 9 invented teaching cases, 6 recipients have walk-in cold storage, which is 3.3% of the total.";
+      } else if (lower.includes("greenline") && currentPosting.id === "post-1") {
+        saved = "\n\nSaved answer (not live) for this spinach posting, captured 2026-10-20 11:29 EDT. Greenline Community Pantry is an invented teaching case, and ranks by meaning differ from run to run:\n" +
+          "Greenline Community Pantry was ranked 7th by meaning, but was removed because they have no cold storage and need 12 hours to collect, and the food only has 6 hours remaining.";
       }
-      if (lower.includes("greenline")) {
-        document.getElementById("agentTranscript").textContent =
-          `[explain_candidate("Greenline Community Pantry")]\n\nGreenline Community Pantry ranked #1–#7 by meaning (their profile explicitly asks for fresh greens), but was filtered out because they have no cold storage (cold_storage="none") and require 12h pickup lead time (load has 6h).`;
-        switchTab("agentTab");
-        return;
-      }
-      if (lower.includes("said no") || lower.includes("cannot take")) {
-        if (currentBrief && currentBrief.next_two_options && currentBrief.next_two_options.length > 0) {
-          const promoted = currentBrief.next_two_options[0];
-          const remaining = currentBrief.next_two_options.slice(1);
-          const coords = lookupCoords(promoted.name);
-          currentBrief.organization_and_why = {
-            name: promoted.name,
-            address: promoted.address,
-            why: promoted.why,
-            profile_excerpt: `Promoted from Backup #${promoted.rank} after primary recipient declined.`
-          };
-          currentBrief.what_they_can_take.max_pallets = coords.max_pallets || 1;
-          currentBrief.what_they_can_take.cold_storage = coords.cold_storage || "domestic";
-          currentBrief.the_clock.collection_lead_hours = coords.pickup_window_hours || 4;
-          currentBrief.the_clock.margin_hours = currentBrief.the_clock.hours_remaining - (coords.pickup_window_hours || 4);
-          currentBrief.the_clock.needs_driver = promoted.needs_driver;
-          currentBrief.outreach_message = currentBrief.outreach_message.replace(/Hello .* team,/, `Hello ${promoted.name} team,`);
-          currentBrief.next_two_options = remaining;
-          currentAnswer = `${promoted.name} promoted to Top Match.\n\n${currentBrief.outreach_message}`;
-          renderBrief(currentBrief, currentAnswer);
-        }
-        return;
-      }
-      renderBrief(currentBrief, currentAnswer);
+      document.getElementById("agentTranscript").textContent = notice + saved;
+      if (saved) switchTab("agentTab");
     }
 
     function copyOutreachSms() {

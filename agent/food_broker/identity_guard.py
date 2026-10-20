@@ -80,7 +80,10 @@ def _principal_of(creds) -> tuple[str, bool, bool]:
         creds.refresh(google.auth.transport.requests.Request())
         sa = creds.service_account_email
     if sa:
-        return sa, True, False
+        # In Cloud Shell, Workbench and Workstations the credentials come from the metadata server and report the
+        # signed-in PERSON's email here. Only an address ending in .gserviceaccount.com is a service account; anything
+        # else is a user and is judged by A4I_EXPECTED_PRINCIPAL_SUFFIX.
+        return sa, sa.endswith(".gserviceaccount.com"), False
     # User credentials from `gcloud auth application-default login`: ask Google who the token is.
     import google.auth.transport.requests
     creds.refresh(google.auth.transport.requests.Request())

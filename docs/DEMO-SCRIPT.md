@@ -14,7 +14,7 @@ cannot ask questions, so every point below has to be said out loud or shown on s
 - The page lists everyone's test sessions. Type nothing personal.
 - Answers vary a little from run to run: the Gemini model rewrites the search and estimates the load, so the top
   recipient's name and the pallet estimate can change. Point at the structure, not at a name you expect.
-- Each answer takes 10 to 20 seconds. Say something while it works, or cut the wait when you edit.
+- Each answer takes about 13 seconds on Cloud Run and about 22 locally on gemini-2.5-flash (one measurement each; re-time on 3.8 after the deploy). Say something while it works, or cut the wait when you edit.
 - Keep a second window open on [the evidence folder](evidence/README.md). If the live page is slow or gone, show the
   same answers from there (see the fallback at the end).
 
@@ -40,7 +40,7 @@ Point at, in this order:
    a match with 20 minutes of slack is a warning, not a win.
 3. Part 6, the next two options and the "closest rejected matches", each with its rank by meaning. This is the moment
    to slow down, and to say it in your own words. The facts to land: in the saved run, the three nearest recipients by
-   meaning were all removed; two could not collect in time; one, Greenline Community Pantry at rank 3 (an invented teaching case in the challenge data), writes that its
+   meaning were all removed; all three needed longer to collect than the food had; one, Greenline Community Pantry at rank 3 (an invented teaching case in the challenge data), writes that its
    families ask for fresh greens and that it has no refrigeration of any kind; the nearest recipient that works is
    11th by meaning, and the ranking's top three sit at 50th to 63rd. A live run can pick a different recipient for the rejected list, so read what is on screen;
    the saved version is in [demo-tracks.txt](evidence/demo-tracks.txt).
@@ -67,7 +67,7 @@ Type:
 ```
 
 Point at: the clock in part 3 is the donor's eight months, not an hour. Say: the shelf-life table gave sealed formula
-one hour, which is FoodKeeper's figure for an opened container. We found it while auditing, and the agent now warns on
+one hour, which is FoodKeeper's figure for a prepared formula. We found it while auditing, and the agent now warns on
 very short figures and trusts the donor's expiry.
 
 ## "They said no" (30 seconds)
@@ -119,7 +119,7 @@ Show the group table in [the equity audit](../agent/food_broker/EQUITY-AUDIT.md)
 posting, the matches are close to the corpus with no consistent direction; counted per recipient, they sit lower on all three, because one
 pantry won three postings; weighted by volume, assistance is 9% against a corpus mean of 19% (compared as means). The audit searches with
 the raw posting text, while the live agent searches with a rewrite Gemini writes. Ten postings cannot separate a real
-skew from noise. The big farm loads can only go to the 14 recipients with room; their tracts show lower need on the means but not the medians.
+skew from noise. The big farm loads can go to only a few recipients (10 have room for ten or more pallets); their tracts show lower mean poverty and assistance, a similar share without a vehicle, and medians about level.
 
 ## The close (15 seconds)
 

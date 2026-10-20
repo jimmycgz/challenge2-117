@@ -13,7 +13,7 @@ Presenter: ______ (write the name here, and use it in the opening line).
 
 - Open the chat page: the service address, then `/dev-ui/`. Pick the `food_broker` agent and start a new session.
 - The page lists everyone's test sessions. Type nothing personal.
-- An answer takes about 13 seconds on Cloud Run and about 22 locally. The table says which waits you talk over and
+- An answer took about 13 seconds on Cloud Run and about 22 locally on gemini-2.5-flash (re-time on 3.8 after the deploy). The table says which waits you talk over and
   which the editor cuts.
 - Answers vary from run to run: Gemini rewrites the search, so the recipient names and ranks on screen can change.
   Read names off the screen. The only recipient this script names is from a saved run, and it says so.
@@ -40,8 +40,8 @@ Segment 7, the data question, is not in the plan: it is an optional extra, under
 | | **Total** | **153** | | | **about 339** | Two live answers, 26 s of waiting: 20 s talked over, 6 s cut |
 
 153 seconds is 2:33, which leaves 7 seconds for a slow answer or a stumble before the 2:40 target. If the editor does
-not cut the wait in segment 5, the total is 159. Recorded against the local server with no cuts at all, it is about
-168, so cut the waits.
+not cut the wait in segment 5, the total is 159. Recorded against the local server with no cuts at all, it is at least
+about 168, so cut the waits.
 
 About 339 words in 153 seconds is about 133 words a minute, in the planned range once the waiting is paid for. Six
 segments are scripted and counted exactly (204 words). The two own-words counts (about 90 for segment 4, about 45 for
@@ -107,7 +107,7 @@ Never drop segment 1 (the track), the real-or-generated sentence in segment 2, t
 the limits in the close.
 
 The other way round: if a take comes in short, at 2:31 or under, you may add segment 7, the data question, after
-segment 6. It takes about 9 seconds and 25 words, so the take still ends by 2:40. Show the saved answer,
+segment 6. It takes about 9 seconds and 22 words, so the take still ends by 2:40. Show the saved answer,
 [mcp-walk-in-answer.md](evidence/mcp-walk-in-answer.md), and say: "Data questions go through Google's managed BigQuery
 MCP server, read-only: of the hundred and eighty-three real recipients, six have a walk-in cooler." Typing it live adds about 13 s more, so
 do that only if the take is at 2:18 or under. The question to type, in the same session:
@@ -141,4 +141,4 @@ The saved spinach answer ranks its rejections differently from demo-tracks.txt. 
 | 7 (optional) | 6 of 183 real recipients (the table has 13 of 192; seven of those walk-ins are invented cases). The saved file was recaptured at 12:41 EDT on 2026-10-20 from the agent running locally and shows the query filtering on `profile_source`; it is recaptured again from the live service after the next deploy | [mcp-walk-in-answer.md](evidence/mcp-walk-in-answer.md) |
 | 8 | Per posting, per recipient, three of four retail offers, 9% against a mean of 19%, ten postings | [equity audit](../agent/food_broker/EQUITY-AUDIT.md), group table and "What the numbers say" |
 | 9 | Shelf life is consumer guidance; locations are ZIP-level | [agent README](../agent/food_broker/README.md), "Results and limits" |
-| Before you record | About 13 s on Cloud Run, about 22 s locally | [agent README](../agent/food_broker/README.md), "Speed" |
+| Before you record | About 13 s on Cloud Run, about 22 s locally (gemini-2.5-flash; re-time on 3.8) | [agent README](../agent/food_broker/README.md), "Speed" |
