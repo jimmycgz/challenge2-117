@@ -34,7 +34,7 @@ A grocer in Chicago has ten crates of spinach, harvested yesterday, that must le
 ```
 
 **Point at the Match Brief card & say out loud:**
-> *"In about 15 seconds, RescueBroker gives me a complete Match Brief I can act on immediately: the charity's name and
+> *"In about 20 seconds, RescueBroker gives me a complete Match Brief I can act on immediately: the charity's name and
 > real street address, their cooler and pallet room, the time buffer on the clock, a clear flag that we need to send a
 > volunteer driver, neighborhood need, and a ready-to-send text message.*
 > *Here is why smart search alone fails without physical safety rules: RescueBroker searched the 80 closest charities in

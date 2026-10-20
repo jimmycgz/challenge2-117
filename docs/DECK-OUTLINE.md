@@ -1,4 +1,4 @@
-# Deck outline: RescueBroker — Turning 45 Minutes of Phone Tag into a 15-Second Food Rescue Dispatch
+# Deck outline: RescueBroker — Turning 45 Minutes of Phone Tag into a 20-Second Food Rescue Dispatch
 
 Navigation: [visual slide deck (HTML/PDF)](pitch-deck.html) · [demo script](DEMO-SCRIPT.md) ·
 [submission checklist](SUBMISSION.md) · [agent README](../agent/food_broker/README.md) ·
@@ -19,7 +19,7 @@ afternoon user journey on Slide 3.
   Chicago charities, and a group text of volunteer drivers. Before sending a van, they must answer **four questions in
   the same minute**: *Who needs fresh greens? Who actually has a working cooler? Can they collect before 8 PM? Do they
   have a refrigerated van, or do we send a volunteer?* By the time a human calls down the list, the dock closes.
-- **With RescueBroker (A Verified Match Brief in ~16 Seconds):** The coordinator pastes the grocer's text (or snaps a
+- **With RescueBroker (A Verified Match Brief in About 20 Seconds):** The coordinator pastes the grocer's text (or snaps a
   photo of the pallet tag) and gets a ranked recommendation, a safety buffer check, a ready-to-send text message, and
   backup pantries ready to call.
 - **Transparent Data Provenance (Judge Check #1):** **183 real IRS-registered Chicago charities** (names, addresses,
@@ -71,10 +71,12 @@ phone call until the food is claimed (`docs/evidence/follow-ups-transcript.md`):
 - **2:18 PM — "Why Them and Not the Big Food Bank Downtown?":** Coordinator asks why a major food bank wasn't picked.
   $\rightarrow$ RescueBroker looks up **Americas Food Bank** (ranked 29th by meaning) and explains it was removed
   because it has 0 pallets room and needs **41 hours notice** against a 6-hour clock.
-- **Why It Responds in ~16 Seconds:** Early prototypes that passed 80 charities between multiple AI chatbots took
-  **76–86 seconds per step**. Keeping the physical safety rules in fast, offline-tested code and using Google's fastest
-  reasoning model (verified across 42 test runs: **41/42 passed**, zero prompt-injection leaks) delivers complete
-  answers in **15.6 to 17.2 seconds**.
+- **Why It Responds in About 20 Seconds:** Early prototypes that passed 80 charities between multiple AI chatbots took
+  **76–86 seconds per step**. Keeping the physical safety rules in fast, offline-tested code, with Google's
+  `gemini-3-flash-preview` at low thinking, delivers answers in **about 20 seconds** on the live service (`19.9s`,
+  `22.5s`, and `20.3s`, one sample each). We chose that model for correctness, not speed: it passed **41 of 42** test
+  checks against **38 of 42** for `gemini-2.5-flash`, which was quicker on Cloud Run (about 13s) and ran SQL it should
+  have refused in one of three runs.
 
 ---
 

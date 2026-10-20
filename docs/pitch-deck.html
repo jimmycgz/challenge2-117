@@ -262,7 +262,7 @@
 <body>
 
   <div class="deck-toolbar">
-    <div><strong>RescueBroker Pitch Deck</strong> · Turning 45 Minutes of Phone Tag into a 15-Second Food Rescue Dispatch</div>
+    <div><strong>RescueBroker Pitch Deck</strong> · Turning 45 Minutes of Phone Tag into a 20-Second Food Rescue Dispatch</div>
     <button onclick="window.print()">Export / Print to PDF (8 Slides)</button>
   </div>
 
@@ -289,7 +289,7 @@
           </ul>
         </div>
         <div class="card highlight">
-          <h3>✅ With RescueBroker: A Verified Dispatch in 15 Seconds</h3>
+          <h3>✅ With RescueBroker: A Verified Dispatch in About 20 Seconds</h3>
           <ul>
             <li>The coordinator pastes the grocer’s text—or snaps a photo of the pallet tag.</li>
             <li>RescueBroker checks USDA shelf life, searches every pantry in Chicago by meaning, filters out anyone without cooler space or time to collect, and outputs an actionable <strong>6-Part Match Brief</strong> with a ready-to-send SMS and backup list.</li>
@@ -301,7 +301,7 @@
       <div class="grid-4">
         <div class="card"><div class="stat-big">183 + 9</div><div class="stat-label">Real IRS Charities + 9 Safety Test Decoys</div></div>
         <div class="card"><div class="stat-big">6 of 183</div><div class="stat-label">Real Charities w/ Walk-In Cooler (3.3%)</div></div>
-        <div class="card"><div class="stat-big">~16 sec</div><div class="stat-label">End-to-End Dispatch Brief Speed</div></div>
+        <div class="card"><div class="stat-big">~20 sec</div><div class="stat-label">End-to-End Dispatch Brief Speed</div></div>
         <div class="card"><div class="stat-big">41 / 42</div><div class="stat-label">Safety &amp; Accuracy Checks Passed</div></div>
       </div>
     </div>
@@ -398,9 +398,9 @@
       </div>
 
       <div class="card">
-        <h3>⚡ Why It Responds in ~16 Seconds (And Never Hallucinates a Filter)</h3>
+        <h3>⚡ Why It Responds in About 20 Seconds (And Why We Chose Correctness Over Raw Speed)</h3>
         <p>
-          Early prototypes that passed 80 charities back and forth between multiple AI chatbots took <strong>76 to 86 seconds per step</strong>—far too slow while a grocer is on hold. We kept the physical safety rules in fast, offline-verified code and benchmarked Google’s reasoning models across 42 test runs—delivering complete answers in <strong>15.6 to 17.2 seconds</strong> with zero prompt-injection leaks.
+          Early prototypes that passed 80 charities back and forth between multiple AI chatbots took <strong>76 to 86 seconds per step</strong>—far too slow while a grocer is on hold. Keeping the physical safety rules in fast, offline-tested code with Google’s <code>gemini-3-flash-preview</code> at low thinking delivers answers in <strong>about 20 seconds</strong> on the live service (<strong>19.9s</strong>, <strong>22.5s</strong>, and <strong>20.3s</strong>, one sample each). We chose that model for correctness, not speed: it passed <strong>41 of 42</strong> test checks against <strong>38 of 42</strong> for <code>gemini-2.5-flash</code>, which was quicker on Cloud Run (~13s) and ran SQL it should have refused in one of three runs.
         </p>
       </div>
     </div>
