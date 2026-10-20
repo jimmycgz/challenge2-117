@@ -40,8 +40,8 @@ Segment 7, the data question, is not in the plan: it is an optional extra, under
 | | **Total** | **153** | | | **about 339** | Two live answers, 26 s of waiting: 20 s talked over, 6 s cut |
 
 153 seconds is 2:33, which leaves 7 seconds for a slow answer or a stumble before the 2:40 target. If the editor does
-not cut the wait in segment 5, the total is 159. Recorded against the local server with no cuts at all, it is about
-168, so cut the waits.
+not cut the wait in segment 5, the total is 159. Recorded against the local server with no cuts at all, it is at least
+about 168, so cut the waits.
 
 About 339 words in 153 seconds is about 133 words a minute, in the planned range once the waiting is paid for. Six
 segments are scripted and counted exactly (204 words). The two own-words counts (about 90 for segment 4, about 45 for
@@ -107,7 +107,7 @@ Never drop segment 1 (the track), the real-or-generated sentence in segment 2, t
 the limits in the close.
 
 The other way round: if a take comes in short, at 2:31 or under, you may add segment 7, the data question, after
-segment 6. It takes about 9 seconds and 25 words, so the take still ends by 2:40. Show the saved answer,
+segment 6. It takes about 9 seconds and 22 words, so the take still ends by 2:40. Show the saved answer,
 [mcp-walk-in-answer.md](evidence/mcp-walk-in-answer.md), and say: "Data questions go through Google's managed BigQuery
 MCP server, read-only: of the hundred and eighty-three real recipients, six have a walk-in cooler." Typing it live adds about 13 s more, so
 do that only if the take is at 2:18 or under. The question to type, in the same session:

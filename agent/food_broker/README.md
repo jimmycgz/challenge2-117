@@ -54,8 +54,8 @@ recipients, a 6-hour spinach offer left this many viable recipients after the fi
 A pool of 15 leaves one viable recipient and no fallback. Forty is enough to find the best matches (the nearest three viable
 recipients are the same at 40 and at 80); 80 is what gives a coordinator nine more to call when the first ones decline.
 The closest recipients by meaning are often the wrong ones. For that spinach offer the three nearest were all
-removed: two could not collect in time, and Greenline Community Pantry (an invented case in the challenge corpus)
-wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest recipient
+removed: all three needed longer to collect than the food had, and one of them, Greenline Community Pantry (an invented
+case in the challenge corpus), also wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest recipient
 that passes the filters is 11th by meaning. The three the ranking puts first sit at 50th, 54th and 63rd, because the
 ranking prefers sturdier cold storage and a comfortable margin over closeness. That is deliberate: the nearest passing
 recipient (Deborahs Place) has a household fridge and one hour of slack, and the agent's picks have two or three hours and,
@@ -101,7 +101,7 @@ reach the model. A full answer now takes about 22 seconds locally and about 13 o
 answer changes with the count. Per posting, the matches are close to the corpus with no consistent direction. Per distinct
 recipient they sit lower on all three measures, because one pantry was the top match for three of the four retail offers (spinach, dairy,
 deli). Weighted by estimated volume they sit in tracts with much less assistance (9%, against a corpus mean of 19%),
-because the large loads can only go to the 14 recipients with room. With ten postings and eight distinct recipients the
+because the largest loads can go to only a few recipients (14 have a dock or room for five pallets; 10 have room for ten or more). With ten postings and eight distinct recipients the
 audit cannot separate a real skew from noise, and it searches with the raw posting text where the live agent searches
 with a rewrite. It does not show why that one pantry won three times; the matcher keeps no record of who received food
 recently.
@@ -122,7 +122,7 @@ Known limits:
   The filters use the numbers, and the agent is told not to repeat what a profile says about timing.
 - `pickup_window_hours` is read as the lead time a recipient needs to collect. The data fits that reading (small
   pantries 2 to 6 hours, regional food banks 14 to 45), but the generator does not define it.
-- The shelf-life table gave sealed infant formula a 1-hour shelf life, an opened-container figure. The shelf-life
+- The shelf-life table gave sealed infant formula a 1-hour shelf life, a prepared-formula figure. The shelf-life
   lookup now adds a caution at 2 hours or less, and the agent then uses the donor's own figure.
 
 ## How to run
