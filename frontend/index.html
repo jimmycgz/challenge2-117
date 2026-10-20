@@ -3664,7 +3664,34 @@
       wfPill.className = "time-pill " + (isWarning ? "urg" : "green");
     }
 
-    function acceptAndConfirmDelivery() {
+    async function syncServerState() {
+      try {
+        const resp = await fetch("/api/state");
+        if (!resp.ok) return;
+        const st = await resp.json();
+        if (st && st.claimed_pallets_by_org) {
+          for (const [org, p] of Object.entries(st.claimed_pallets_by_org)) {
+            claimedPalletsByOrg[org] = Math.max(claimedPalletsByOrg[org] || 0, Number(p) || 0);
+          }
+        }
+        if (st && st.onboarded_pantries && window.RECIPIENT_COORDS) {
+          for (const [name, prof] of Object.entries(st.onboarded_pantries)) {
+            window.RECIPIENT_COORDS[name] = { ...prof, onboarded: true };
+            if (!targetStateByOrg[name]) {
+              targetStateByOrg[name] = { accepting: true, lastDelivery: "Verified (#10)" };
+            }
+          }
+        }
+        updateAcceptingKPIs();
+        renderTargetsTable();
+        renderLocksAndDeclines();
+        computeLoadSplit();
+      } catch (_) {
+        // Running as static file or Cloud Run direct without local /api/state
+      }
+    }
+
+    async function acceptAndConfirmDelivery() {
       copyOutreachSms();
       if (!currentBrief?.organization_and_why?.name) {
         showWorkflowStatusBanner("No pantry is matched yet — choose one of the recovery options below.", "Action Needed", true);
@@ -3672,6 +3699,34 @@
       }
       const org = currentBrief.organization_and_why.name;
       const load = currentBrief.what_they_can_take?.load_pallets || currentPosting.pallets || 0.5;
+      const maxP = window.RECIPIENT_COORDS?.[org]?.max_pallets || currentBrief.what_they_can_take?.max_pallets || 0;
+
+      try {
+        const resp = await fetch("/api/state/claim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            posting_id: currentPosting.id,
+            posting_title: currentPosting.title,
+            org_name: org,
+            pallets: load,
+            max_pallets: maxP,
+            session_id: sessionId
+          })
+        });
+        if (resp.status === 409) {
+          const conflict = await resp.json();
+          const banner = document.getElementById("lockConflictBanner");
+          if (banner) {
+            banner.style.display = "block";
+            banner.textContent = conflict.message || `Space already reserved at ${org}.`;
+          }
+          showWorkflowStatusBanner(conflict.message || `Double-claim conflict prevented at ${org}.`, "409 Conflict", true);
+          addLogEntry("409 LOCK CONFLICT", conflict.message || `Prevented double claim at ${org}.`);
+          return;
+        }
+      } catch (_) {}
+
       claimedPalletsByOrg[org] = (claimedPalletsByOrg[org] || 0) + load;
       if (targetStateByOrg[org]) targetStateByOrg[org].lastDelivery = "Confirmed · Driver on the way";
       deliveryStatusByPostingId[currentPosting.id] = "accepted";
@@ -3693,6 +3748,7 @@
       updateAcceptingKPIs();
       renderTargetsTable();
       renderLocksAndDeclines();
+      computeLoadSplit();
       renderBrief(currentBrief, currentAnswer);
     }
 
@@ -3736,10 +3792,23 @@
     async function promoteNextViableMatch() {
       const org = currentBrief?.organization_and_why?.name;
       if (org) {
-        excludedOrgs.push(org);
+        if (!excludedOrgs.includes(org)) excludedOrgs.push(org);
         addLogEntry("DECLINED", `${org} could not take "${currentPosting.title}". Switching to next backup pantry...`);
+        try {
+          await fetch("/api/state/decline", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              posting_id: currentPosting.id,
+              org_name: org,
+              reason: "They said no / unavailable today",
+              session_id: sessionId
+            })
+          });
+        } catch (_) {}
       }
       renderLocksAndDeclines();
+      computeLoadSplit();
 
       // If we have next_two_options in the current brief and Live Agent is off (or for instant UI feedback), promote Backup #2
       if (!document.getElementById("liveApiToggle").checked && currentBrief?.next_two_options?.length > 0) {
@@ -3832,30 +3901,400 @@
       }
     }
 
-    function simulateConcurrentClaimConflict() {
+    async function simulateConcurrentClaimConflict() {
       const org = currentBrief?.organization_and_why?.name || "Habibi Care";
+      const load = currentBrief?.what_they_can_take?.load_pallets || currentPosting.pallets || 0.5;
+      const maxP = window.RECIPIENT_COORDS?.[org]?.max_pallets || 2;
+      let msg = `HTTP 409 LOCK_CONFLICT — Another coordinator (coord-session-2) attempted to claim "${currentPosting.title}" after ${sessionId} already locked ${org}. Double dispatch prevented.`;
+      try {
+        await fetch("/api/state/claim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            posting_id: currentPosting.id,
+            posting_title: currentPosting.title,
+            org_name: org,
+            pallets: load,
+            max_pallets: maxP,
+            session_id: sessionId
+          })
+        });
+        const conflictResp = await fetch("/api/state/claim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            posting_id: currentPosting.id,
+            posting_title: currentPosting.title,
+            org_name: org,
+            pallets: load,
+            max_pallets: maxP,
+            session_id: "competing-coord-2"
+          })
+        });
+        if (conflictResp.status === 409) {
+          const data = await conflictResp.json();
+          if (data.message) msg = `HTTP 409 LOCK_CONFLICT — ${data.message}`;
+        }
+      } catch (_) {}
       const banner = document.getElementById("lockConflictBanner");
       if (banner) {
         banner.style.display = "block";
-        banner.textContent = `Space Already Reserved — Another coordinator just reserved the last open cooler space at ${org}. Switch to Backup #2 or split the load.`;
+        banner.textContent = msg;
       }
-      addLogEntry("DOUBLE BOOKING PREVENTED", `Prevented two drivers from being sent to the same cooler space at ${org}.`);
+      addLogEntry("DOUBLE BOOKING PREVENTED", msg);
+      syncServerState();
     }
 
     function recordDeclineAndAdvance() {
       promoteNextViableMatch();
     }
 
-    function releaseAllLocks() {
+    async function releaseAllLocks() {
       claimedPalletsByOrg = {};
       excludedOrgs = [];
+      try {
+        await fetch("/api/state/release", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reset_all: true })
+        });
+      } catch (_) {}
       const banner = document.getElementById("lockConflictBanner");
       if (banner) banner.style.display = "none";
       updateAcceptingKPIs();
       renderTargetsTable();
       renderLocksAndDeclines();
+      computeLoadSplit();
       if (currentBrief) renderBrief(currentBrief, currentAnswer);
       addLogEntry("RESERVATIONS CLEARED", "Cleared all reserved cooler space and declined pantry notes.");
+    }
+
+    // ============================================================================
+    // STRETCH GOAL #6: MULTI-RECIPIENT LOAD SPLITTER
+    // ============================================================================
+    let currentSplitPlan = [];
+
+    function loadSplitPreset(key) {
+      if (key === "blueberries") {
+        document.getElementById("splitCommodity").value = "10 Pallets Fresh Blueberries (Posting #6)";
+        document.getElementById("splitPallets").value = "10";
+        document.getElementById("splitHours").value = "12";
+        document.getElementById("splitCold").value = "walk-in";
+        document.getElementById("splitMaxStops").value = "2";
+      } else if (key === "squash") {
+        document.getElementById("splitCommodity").value = "15 Pallets Acorn Squash (Posting #7)";
+        document.getElementById("splitPallets").value = "15";
+        document.getElementById("splitHours").value = "120";
+        document.getElementById("splitCold").value = "dry";
+        document.getElementById("splitMaxStops").value = "2";
+      } else if (key === "potatoes") {
+        document.getElementById("splitCommodity").value = "5 Pallets Russet Potatoes (Posting #5)";
+        document.getElementById("splitPallets").value = "5";
+        document.getElementById("splitHours").value = "72";
+        document.getElementById("splitCold").value = "dry";
+        document.getElementById("splitMaxStops").value = "3";
+      }
+      computeLoadSplit();
+    }
+
+    function computeLoadSplit() {
+      const container = document.getElementById("splitResultsContainer");
+      if (!container || !window.RECIPIENT_COORDS) return;
+      const commodity = document.getElementById("splitCommodity")?.value || "10 Pallets Fresh Blueberries";
+      const totalPallets = Math.max(0.5, parseFloat(document.getElementById("splitPallets")?.value || "10"));
+      const hours = Math.max(1, parseFloat(document.getElementById("splitHours")?.value || "12"));
+      const coldRule = document.getElementById("splitCold")?.value || "walk-in";
+      const maxStops = parseInt(document.getElementById("splitMaxStops")?.value || "2", 10);
+
+      const viable = [];
+      for (const [name, info] of Object.entries(window.RECIPIENT_COORDS)) {
+        if (isInventedCase(name, info.profile_source)) continue;
+        if (excludedOrgs.includes(name)) continue;
+        if (targetStateByOrg[name] && !targetStateByOrg[name].accepting) continue;
+        const lead = Number(info.pickup_window_hours || 24);
+        if (lead > hours) continue;
+        if (coldRule === "walk-in" && !["walk-in", "commercial", "vehicle"].includes(info.cold_storage)) continue;
+        if (coldRule === "any-cold" && info.cold_storage === "none") continue;
+        const claimed = Number(claimedPalletsByOrg[name] || 0);
+        const openCap = Math.max(0, Number(info.max_pallets || 0) - claimed);
+        if (openCap <= 0) continue;
+        viable.push({ name, info, openCap, lead });
+      }
+
+      // Sort by open capacity desc, then fastest pickup notice, then refrigerated van availability
+      viable.sort((a, b) => {
+        if (b.openCap !== a.openCap) return b.openCap - a.openCap;
+        if (a.lead !== b.lead) return a.lead - b.lead;
+        return (b.info.refrigerated_transport ? 1 : 0) - (a.info.refrigerated_transport ? 1 : 0);
+      });
+
+      let remaining = totalPallets;
+      const chosen = [];
+      const perStopCap = Math.ceil((totalPallets / maxStops) * 2) / 2;
+
+      for (const cand of viable) {
+        if (chosen.length >= maxStops || remaining <= 0) break;
+        const alloc = Math.min(cand.openCap, remaining, chosen.length === maxStops - 1 ? remaining : Math.max(perStopCap, 2));
+        if (alloc > 0) {
+          chosen.push({ ...cand, allocated: Number(alloc.toFixed(1)) });
+          remaining = Number((remaining - alloc).toFixed(1));
+        }
+      }
+      if (remaining > 0) {
+        for (const stop of chosen) {
+          const extraRoom = stop.openCap - stop.allocated;
+          if (extraRoom > 0 && remaining > 0) {
+            const add = Math.min(extraRoom, remaining);
+            stop.allocated = Number((stop.allocated + add).toFixed(1));
+            remaining = Number((remaining - add).toFixed(1));
+          }
+        }
+      }
+
+      currentSplitPlan = chosen;
+      const allocatedTotal = Number((totalPallets - remaining).toFixed(1));
+      const slowestLead = chosen.length > 0 ? Math.max(...chosen.map(c => c.lead)) : 0;
+      const vansCount = chosen.filter(c => c.info.refrigerated_transport).length;
+
+      const elAlloc = document.getElementById("splitKpiAllocated");
+      const elStatus = document.getElementById("splitKpiStatus");
+      const elPool = document.getElementById("splitKpiPool");
+      const elLead = document.getElementById("splitKpiLead");
+      const elSlack = document.getElementById("splitKpiSlack");
+      const elVans = document.getElementById("splitKpiVans");
+
+      if (elAlloc) elAlloc.textContent = `${allocatedTotal} / ${totalPallets}p`;
+      if (elStatus) elStatus.textContent = remaining <= 0
+        ? `100% placed across ${chosen.length} verified pantries`
+        : `${remaining}p unplaced — increase stops or pickup window`;
+      if (elPool) elPool.textContent = `${viable.length} Pantries`;
+      if (elLead) elLead.textContent = chosen.length > 0 ? `${slowestLead}h notice` : "—";
+      if (elSlack) elSlack.textContent = chosen.length > 0 ? `+${(hours - slowestLead).toFixed(1)}h buffer before deadline` : "No stops";
+      if (elVans) elVans.textContent = `${vansCount} of ${chosen.length} Stops`;
+
+      if (chosen.length === 0) {
+        container.innerHTML = `<div style="padding:12px; border-radius:8px; background:var(--red-soft); color:var(--red); font-size:12.5px;">No verified pantries meet this cooler + pickup window combination. Try widening the pickup window or switching cooler type.</div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="clean-table">
+          <thead>
+            <tr>
+              <th>Stop</th>
+              <th>Verified Pantry</th>
+              <th>ZIP</th>
+              <th>Cooler Type</th>
+              <th>Open Space</th>
+              <th>Split Share</th>
+              <th>Pickup Notice</th>
+              <th>Transport</th>
+              <th>Outreach SMS</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${chosen.map((c, idx) => `
+              <tr>
+                <td><span class="time-pill green">Stop #${idx + 1}</span></td>
+                <td style="font-weight:600;">${escapeHtml(c.name)}</td>
+                <td>${escapeHtml(c.info.zip || "—")}</td>
+                <td>${escapeHtml(formatCoolerName(c.info.cold_storage))}</td>
+                <td>${c.openCap}p open</td>
+                <td><b>${c.allocated} pallets</b> (${Math.round((c.allocated / totalPallets) * 100)}%)</td>
+                <td>${c.lead}h (+${(hours - c.lead).toFixed(1)}h slack)</td>
+                <td>${c.info.refrigerated_transport ? "Own Cold Van" : "Needs Driver"}</td>
+                <td><button onclick="previewSplitSms(${idx})" style="padding:3px 8px; font-size:11px;">Draft Text</button></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function previewSplitSms(idx) {
+      const stop = currentSplitPlan[idx];
+      if (!stop) return;
+      const commodity = document.getElementById("splitCommodity")?.value || "Farm Load";
+      const hours = document.getElementById("splitHours")?.value || "12";
+      const box = document.getElementById("splitSmsPreview");
+      if (!box) return;
+      const msg = `[Split Load Stop #${idx + 1}/${currentSplitPlan.length}] Hi ${stop.name} team — we are splitting "${commodity}" across ${currentSplitPlan.length} Chicago pantries. Can your ${formatCoolerName(stop.info.cold_storage)} take ${stop.allocated} pallet(s) within ${hours}h (your ${stop.lead}h pickup window leaves +${(Number(hours) - stop.lead).toFixed(1)}h buffer)? Reply YES to lock your ${stop.allocated}p share.`;
+      box.style.display = "block";
+      box.textContent = msg;
+      navigator.clipboard?.writeText(msg);
+      addLogEntry("SPLIT SMS", `Copied split outreach SMS for Stop #${idx + 1}: ${stop.name} (${stop.allocated}p).`);
+    }
+
+    function pinSplitOnMap() {
+      if (currentSplitPlan.length === 0) return;
+      switchMainView("dispatch");
+      if (leafletMap && markersLayer) {
+        markersLayer.clearLayers();
+        const bounds = [];
+        currentSplitPlan.forEach((s, idx) => {
+          if (s.info.lat && s.info.lon) {
+            bounds.push([s.info.lat, s.info.lon]);
+            L.circleMarker([s.info.lat, s.info.lon], {
+              radius: 9,
+              fillColor: idx === 0 ? "#10b981" : "#2563eb",
+              color: "#ffffff",
+              weight: 2,
+              fillOpacity: 0.95
+            }).bindPopup(`<b>Split Stop #${idx + 1}: ${escapeHtml(s.name)}</b><br/>Share: ${s.allocated} pallets (${escapeHtml(formatCoolerName(s.info.cold_storage))})`).addTo(markersLayer);
+          }
+        });
+        if (bounds.length > 0) leafletMap.fitBounds(bounds, { padding: [36, 36] });
+      }
+      addLogEntry("SPLIT PINS", `Pinned ${currentSplitPlan.length} split-load recipients on map (ZIP-level pins, no invented route lines).`);
+    }
+
+    async function lockAllSplitAllocations() {
+      if (currentSplitPlan.length === 0) return;
+      const commodity = document.getElementById("splitCommodity")?.value || "Split Farm Load";
+      for (const stop of currentSplitPlan) {
+        claimedPalletsByOrg[stop.name] = (claimedPalletsByOrg[stop.name] || 0) + stop.allocated;
+        try {
+          await fetch("/api/state/claim", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              posting_id: `split-${Date.now()}`,
+              posting_title: `${commodity} (Split Share)`,
+              org_name: stop.name,
+              pallets: stop.allocated,
+              max_pallets: stop.info.max_pallets || 10,
+              session_id: sessionId,
+              allow_split: true
+            })
+          });
+        } catch (_) {}
+      }
+      updateAcceptingKPIs();
+      renderTargetsTable();
+      renderLocksAndDeclines();
+      computeLoadSplit();
+      addLogEntry("SPLIT LOCKED", `Reserved pallet shares across ${currentSplitPlan.length} pantries for "${commodity}".`);
+    }
+
+    async function askAgentToVerifySplit() {
+      const commodity = document.getElementById("splitCommodity")?.value || "10 Pallets Fresh Blueberries";
+      const hours = document.getElementById("splitHours")?.value || "12";
+      const summary = currentSplitPlan.map((s, i) => `Stop #${i + 1}: ${s.name} (${s.allocated} pallets, ${s.lead}h notice)`).join("; ");
+      const prompt = `We are splitting ${commodity} (${hours}h window) across ${currentSplitPlan.length} verified Chicago recipients: ${summary}. Please verify this multi-recipient split and confirm if any backup dock hub is needed.`;
+      openRightSidePanel("chat");
+      document.getElementById("promptInput").value = prompt;
+      await submitPrompt(prompt);
+    }
+
+    // ============================================================================
+    // STRETCH GOAL #11: DOCK SAFETY CHECKLIST & RECALL CONSULTATION
+    // ============================================================================
+    function signOffSafetyChecklist() {
+      const c1 = document.getElementById("chkFdaLot")?.checked;
+      const c2 = document.getElementById("chkSealIntact")?.checked;
+      const c3 = document.getElementById("chkDockTemp")?.checked;
+      const report = document.getElementById("fdaFullReport");
+      if (!c1 || !c2 || !c3) {
+        if (report) {
+          report.innerHTML = `<span style="color:var(--red); font-weight:600;">⚠️ Hold Dispatch:</span> All 3 dock safety checks (FDA Lot/UPC, Unopened Package Seal, and ≤ 40°F Cooler Temp) must be verified before a truck rolls.`;
+        }
+        addLogEntry("SAFETY HOLD", `Dock safety checklist incomplete for "${currentPosting.title}".`);
+        return;
+      }
+      const ts = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      if (report) {
+        report.innerHTML = `<span style="color:var(--accent-dark); font-weight:600;">✓ 3-Point Dock Safety Checklist Signed Off (${ts}):</span> Lot/UPC verified, commercial seal intact, and dock temperature ≤ 40°F confirmed for <b>${escapeHtml(currentPosting.title)}</b>.`;
+      }
+      addLogEntry("SAFETY VERIFIED", `Signed off 3-point dock safety checklist for "${currentPosting.title}" (${sessionId}).`);
+    }
+
+    async function askAgentAboutRecall(commodity) {
+      const item = (commodity || currentPosting.commodity || "Spinach").trim();
+      const prompt = `Before we dispatch "${item}", what food safety, cold-chain, or sealed-packaging rules apply to this donation?`;
+      openRightSidePanel("chat");
+      document.getElementById("promptInput").value = prompt;
+      await submitPrompt(prompt);
+    }
+
+    // ============================================================================
+    // STRETCH GOAL #13: 10-POSTING EQUITY STUDY & COUNTERFACTUAL EXPLORER
+    // ============================================================================
+    let currentEquityMode = "real183";
+    let currentEquityTrack = "all";
+
+    const EQUITY_POSTINGS_DATA = [
+      { num: 1, track: "Retail", offer: "10 Crates Fresh Spinach (0.5p, 6h, Cold)", viable183: "45 / 79", winner183: "Habibi Care", zip183: "60625", pov183: "12.9%", nocar183: "20.2%", snap183: "9.4%", viable192: "46 / 80", winner192: "Lakeview Pantry — Sheridan", zip192: "60613", pov192: "10.3%", nocar192: "37.6%", snap192: "5.2%" },
+      { num: 2, track: "Retail", offer: "80 Rotisserie Chickens (0.5p, 2h, Cold)", viable183: "2 / 79", winner183: "Irving Park Community Food Pantry", zip183: "60641", pov183: "12.1%", nocar183: "17.7%", snap183: "12.1%", viable192: "3 / 80", winner192: "Irving Park Community Food Pantry", zip192: "60641", pov192: "12.1%", nocar192: "17.7%", snap192: "12.1%" },
+      { num: 3, track: "Retail", offer: "60 Gal Milk & Yogurt (1.0p, 5h, Cold)", viable183: "8 / 79", winner183: "Deeper Life Christian — Comforting Center", zip183: "60640", pov183: "17.2%", nocar183: "48.8%", snap183: "11.5%", viable192: "9 / 80", winner192: "Deeper Life Christian — Comforting Center", zip192: "60640", pov192: "17.2%", nocar192: "48.8%", snap192: "11.5%" },
+      { num: 4, track: "Retail", offer: "Deli Sandwiches & Salads (0.5p, 4h, Cold)", viable183: "24 / 79", winner183: "Nourishing Hope — El Mercadito", zip183: "60613", pov183: "10.3%", nocar183: "37.6%", snap183: "5.2%", viable192: "25 / 80", winner192: "Nourishing Hope — El Mercadito", zip192: "60613", pov192: "10.3%", nocar192: "37.6%", snap192: "5.2%" },
+      { num: 5, track: "Farm", offer: "5 Pallets Russet Potatoes (5.0p, 72h, Dry)", viable183: "6 / 79", winner183: "St. Moses the Black Parish Food Pantry", zip183: "60621", pov183: "41.8%", nocar183: "41.8%", snap183: "40.5%", viable192: "7 / 80", winner192: "South Side Bulk Cold Hub (planted)", zip192: "60621", pov192: "41.8%", nocar192: "41.8%", snap192: "40.5%" },
+      { num: 6, track: "Farm", offer: "10 Pallets Fresh Blueberries (10.0p, 12h, Cold)", viable183: "2 / 79", winner183: "Christian Fellowship Flock — Walk-In Hub", zip183: "60628", pov183: "24.1%", nocar183: "23.6%", snap183: "27.8%", viable192: "3 / 80", winner192: "Christian Fellowship Flock — Walk-In Hub", zip192: "60628", pov192: "24.1%", nocar192: "23.6%", snap192: "27.8%" },
+      { num: 7, track: "Farm", offer: "15 Pallets Acorn Squash (15.0p, 120h, Dry)", viable183: "2 / 79", winner183: "Greater Chicago Food Depository", zip183: "60632", pov183: "19.3%", nocar183: "16.5%", snap183: "23.0%", viable192: "2 / 80", winner192: "Greater Chicago Food Depository", zip192: "60632", pov192: "19.3%", nocar192: "16.5%", snap192: "23.0%" },
+      { num: 8, track: "Essentials", offer: "3 Pallets Canned Black Beans (3.0p, 240h, Dry)", viable183: "9 / 79", winner183: "St. Moses the Black Parish Food Pantry", zip183: "60621", pov183: "41.8%", nocar183: "41.8%", snap183: "40.5%", viable192: "9 / 80", winner192: "St. Moses the Black Parish Food Pantry", zip192: "60621", pov192: "41.8%", nocar192: "41.8%", snap192: "40.5%" },
+      { num: 9, track: "Essentials", offer: "48 Cases Sealed Infant Formula (0.5p, 168h, Dry)", viable183: "79 / 79", winner183: "Care For Friends", zip183: "60614", pov183: "8.2%", nocar183: "28.8%", snap183: "2.3%", viable192: "80 / 80", winner192: "LittleSteps Infant & Family Aid (planted)", zip192: "—", pov192: "—", nocar192: "—", snap192: "—" },
+      { num: 10, track: "Repeat", offer: "Weekly Produce Box · 8 Crates (0.4p, 5h, Cold)", viable183: "31 / 79", winner183: "The Friendship Center", zip183: "60659", pov183: "15.1%", nocar183: "22.8%", snap183: "10.0%", viable192: "31 / 80", winner192: "The Friendship Center", zip192: "60659", pov192: "15.1%", nocar192: "22.8%", snap192: "10.0%" }
+    ];
+
+    function setEquityMode(mode) {
+      currentEquityMode = mode;
+      document.getElementById("eqModeRealBtn")?.classList.toggle("active", mode === "real183");
+      document.getElementById("eqModeAllBtn")?.classList.toggle("active", mode === "all192");
+      const topRow = document.getElementById("eqSummaryTopRow");
+      if (mode === "real183") {
+        document.getElementById("eqKpiTopPov").textContent = "21.9% vs 15.3%";
+        document.getElementById("eqKpiTopPovSub").textContent = "+6.6 pts above Chicago tract mean (183 real)";
+        document.getElementById("eqKpiTopNoCar").textContent = "29.7% vs 19.7%";
+        document.getElementById("eqKpiTopNoCarSub").textContent = "+10.0 pts above citywide mean";
+        document.getElementById("eqKpiUnique").textContent = "8 Distinct Orgs";
+        document.getElementById("eqKpiUniqueSub").textContent = "Across 7 ZIPs (183 verified pool)";
+        if (topRow) {
+          topRow.innerHTML = `<td>Top-1 recommended matches (183 verified pool)</td><td>10 postings (8 unique)</td><td>21.9% avg (16.1% median)</td><td>29.7% avg (23.2% median)</td><td>19.2% avg (10.7% median)</td>`;
+        }
+      } else {
+        document.getElementById("eqKpiTopPov").textContent = "22.1% vs 15.3%";
+        document.getElementById("eqKpiTopPovSub").textContent = "With 9 planted teaching cases included (192 rows)";
+        document.getElementById("eqKpiTopNoCar").textContent = "31.9% vs 19.7%";
+        document.getElementById("eqKpiTopNoCarSub").textContent = "9 of 10 have tract data (Posting #9 has no ZIP)";
+        document.getElementById("eqKpiUnique").textContent = "10 Distinct Orgs";
+        document.getElementById("eqKpiUniqueSub").textContent = "Postings #5 and #9 flip to planted teaching cases";
+        if (topRow) {
+          topRow.innerHTML = `<td>Top-1 matches (with 9 planted teaching cases, 192 rows)</td><td>10 postings (9 w/ ZIP)</td><td>22.1% avg (17.2% median)</td><td>31.9% avg (37.6% median)</td><td>19.8% avg (12.1% median)</td>`;
+        }
+      }
+      renderEquityPostingsTable();
+    }
+
+    function filterEquityTrack(track) {
+      currentEquityTrack = track;
+      renderEquityPostingsTable();
+    }
+
+    function renderEquityPostingsTable() {
+      const tbody = document.getElementById("equityPostingsTableBody");
+      if (!tbody) return;
+      const rows = EQUITY_POSTINGS_DATA.filter(r => currentEquityTrack === "all" || r.track === currentEquityTrack);
+      tbody.innerHTML = rows.map(r => {
+        const is183 = currentEquityMode === "real183";
+        const winner = is183 ? r.winner183 : r.winner192;
+        const zip = is183 ? r.zip183 : r.zip192;
+        const pov = is183 ? r.pov183 : r.pov192;
+        const nocar = is183 ? r.nocar183 : r.nocar192;
+        const snap = is183 ? r.snap183 : r.snap192;
+        const viable = is183 ? r.viable183 : r.viable192;
+        return `
+          <tr>
+            <td><b>#${r.num}</b></td>
+            <td><span class="time-pill ok">${escapeHtml(r.track)}</span></td>
+            <td>${escapeHtml(r.offer)}</td>
+            <td>${escapeHtml(viable)}</td>
+            <td style="font-weight:600;">${escapeHtml(winner)}</td>
+            <td>${escapeHtml(zip)}</td>
+            <td><b>${escapeHtml(pov)}</b></td>
+            <td>${escapeHtml(nocar)}</td>
+            <td>${escapeHtml(snap)}</td>
+          </tr>
+        `;
+      }).join("");
     }
 
     async function reportDiscrepancy(issueLabel, fieldName, reportedValue) {
@@ -4171,8 +4610,26 @@
       addLogEntry("TEXT COPIED", `Copied text message for pantry contact.`);
     }
 
-    function openModal(id) { document.getElementById(id).style.display = "flex"; }
+    function openModal(id) {
+      document.getElementById(id).style.display = "flex";
+      if (id === "onboardModal") updateOnboardPreview();
+    }
     function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+    function updateOnboardPreview() {
+      const preview = document.getElementById("obProfilePreview");
+      if (!preview) return;
+      const name = document.getElementById("obName")?.value || "New Pantry";
+      const addr = document.getElementById("obAddr")?.value || "Chicago, IL";
+      const cold = document.getElementById("obCold")?.value || "walk-in";
+      const dock = document.getElementById("obDock")?.value || "hand-unloaded crates (up to 2 pallets)";
+      const lead = document.getElementById("obLead")?.value || "2";
+      const van = document.getElementById("obVan")?.value === "true";
+      const days = document.getElementById("obDays")?.value || "Mon–Sat";
+      const foods = document.getElementById("obFoods")?.value || "Produce, dairy";
+      const trackBadge = dock.includes("8") ? "Track 2 Farm + Track 1 Retail (Dock + Pallet Jack)" : "Track 1 Retail Only (Hand-Unloaded Crates)";
+      preview.innerHTML = `<b>[${escapeHtml(trackBadge)}]</b> ${escapeHtml(name)} (${escapeHtml(addr)}) operates ${escapeHtml(days)}. Refrigeration: <b>${escapeHtml(formatCoolerName(cold))}</b>; unloading: <b>${escapeHtml(dock)}</b>; pickup lead time: <b>${escapeHtml(lead)}h</b>; transport: <b>${van ? "own refrigerated van" : "needs volunteer driver"}</b>. Priority foods: ${escapeHtml(foods)}.`;
+    }
 
     async function submitPantryOnboarding() {
       const name = document.getElementById("obName").value;
@@ -4181,20 +4638,36 @@
       const dock = document.getElementById("obDock").value;
       const lead = document.getElementById("obLead").value;
       const van = document.getElementById("obVan").value === "true";
+      const days = document.getElementById("obDays")?.value || "Mon–Sat 8am–5pm";
+      const foods = document.getElementById("obFoods")?.value || "Fresh produce, dairy";
+      const zipMatch = addr.match(/\b(60\d{3})\b/);
+      const zip = zipMatch ? zipMatch[1] : "60608";
 
-      window.RECIPIENT_COORDS[name] = {
-        lat: 41.8565, lon: -87.6612, zip: "60608",
+      const profile = {
+        lat: 41.8565, lon: -87.6612, zip,
         cold_storage: cold, max_pallets: dock.includes("8") ? 8 : 2,
-        pickup_window_hours: parseFloat(lead), refrigerated_transport: van
+        pickup_window_hours: parseFloat(lead), refrigerated_transport: van,
+        service_days: days, foods_needed: foods, onboarded: true
       };
-      targetStateByOrg[name] = { accepting: true, lastDelivery: "Just added" };
+      window.RECIPIENT_COORDS[name] = profile;
+      targetStateByOrg[name] = { accepting: true, lastDelivery: "Verified · #10" };
+
+      try {
+        await fetch("/api/state/onboard", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, profile })
+        });
+      } catch (_) {}
+
       closeModal("onboardModal");
       updateAcceptingKPIs();
       renderTargetsTable();
-      addLogEntry("NEW PANTRY", `Added "${name}" (${formatCoolerName(cold)}, ${lead}h pickup notice).`);
+      computeLoadSplit();
+      addLogEntry("NEW PANTRY (#10)", `Verified & added "${name}" (${formatCoolerName(cold)}, ${dock}, ${lead}h pickup notice).`);
       switchMainView("dispatch");
 
-      const p = `We just added a new partner pantry "${name}" at ${addr} (${formatCoolerName(cold)}, takes ${dock}, can pick up within ${lead} hours, ${van ? "has its own refrigerated van" : "needs a volunteer driver"}). We have 10 crates of fresh spinach that must move in 6 hours and stay cold—can they take this delivery?`;
+      const p = `We just onboarded and verified a new partner pantry "${name}" at ${addr} (${formatCoolerName(cold)}, unloading: ${dock}, open ${days}, priority foods: ${foods}, can pick up within ${lead} hours, ${van ? "has its own refrigerated van" : "needs a volunteer driver"}). We have 10 crates of fresh spinach that must move in 6 hours and stay cold—can they take this delivery?`;
       document.getElementById("promptInput").value = p;
       await submitPrompt(p);
     }
