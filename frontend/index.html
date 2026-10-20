@@ -3,706 +3,1214 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chicago Food Rescue — Coordinator Dispatch Console</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <title>Chicago Food Rescue Broker — Coordinator Console</title>
+
+  <!-- Leaflet Map CSS & JS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- Real 192 Recipient Coordinates & Pre-Cached Cloud Run Evidence -->
   <script src="recipients_data.js"></script>
+
   <style>
     :root {
-      --bg: #0b1120;
-      --panel: #111827;
-      --panel-alt: #1e293b;
-      --border: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --green: #10b981;
-      --green-bg: rgba(16, 185, 129, 0.14);
-      --amber: #f59e0b;
-      --amber-bg: rgba(245, 158, 11, 0.15);
-      --red: #ef4444;
-      --red-bg: rgba(239, 68, 68, 0.15);
-      --blue: #3b82f6;
-      --blue-bg: rgba(59, 130, 246, 0.15);
-      --purple: #8b5cf6;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-soft: #e0f2fe;
+      --green: #059669;
+      --green-soft: #ecfdf5;
+      --green-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --amber-border: #fde68a;
+      --red: #dc2626;
+      --red-soft: #fef2f2;
+      --red-border: #fecaca;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+      --radius: 12px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
     }
+
+    /* TOP NAVIGATION BAR */
     header {
-      background: #0f172a;
+      height: 56px;
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 10px 18px;
+      padding: 0 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
       flex-shrink: 0;
     }
+
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--green-soft);
+      border: 1px solid var(--green-border);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand h1 {
+      font-size: 15px;
       font-weight: 700;
-      font-size: 16px;
+      color: var(--text);
+      letter-spacing: -0.01em;
     }
-    .brand span.sub {
-      font-weight: 400;
+
+    .brand-subtitle {
       font-size: 12px;
-      color: var(--muted);
-      background: var(--panel-alt);
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
+      color: var(--text-muted);
     }
-    .top-actions {
+
+    .header-controls {
       display: flex;
       align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
     }
-    button, .btn {
-      background: var(--panel-alt);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 6px 11px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
+
+    .status-pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--surface-subtle);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
     }
-    button:hover { background: #334155; border-color: #475569; }
-    button.primary { background: var(--blue); border-color: #2563eb; color: #fff; }
-    button.primary:hover { background: #2563eb; }
-    button.success { background: var(--green-bg); border-color: var(--green); color: #34d399; }
-    button.warn { background: var(--amber-bg); border-color: var(--amber); color: #fbbf24; }
-    button.danger { background: var(--red-bg); border-color: var(--red); color: #f87171; }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      flex: 1;
-      overflow: hidden;
+    .status-pill.live {
+      background: var(--green-soft);
+      color: var(--green);
+      border-color: var(--green-border);
     }
-    .left-rail {
-      background: var(--panel);
+
+    /* BUTTONS */
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    button:hover {
+      background: var(--surface-subtle);
+      border-color: var(--border-strong);
+    }
+
+    button.btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    button.btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    button.btn-success {
+      background: var(--green);
+      border-color: var(--green);
+      color: #ffffff;
+    }
+
+    button.btn-success:hover {
+      background: #047857;
+    }
+
+    button.btn-ghost {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+      color: var(--text-secondary);
+    }
+
+    button.btn-ghost:hover {
+      background: var(--surface-subtle);
+      color: var(--text);
+    }
+
+    .mic-recording {
+      background: var(--red-soft) !important;
+      border-color: var(--red) !important;
+      color: var(--red) !important;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+
+    /* 2-COLUMN WORKSPACE */
+    .workspace {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* LEFT SIDEBAR: COMPOSER + SURPLUS QUEUE */
+    .sidebar {
+      background: var(--surface);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      min-height: 0;
     }
-    .rail-section {
-      padding: 12px 14px;
+
+    .composer-section {
+      padding: 16px;
       border-bottom: 1px solid var(--border);
+      background: var(--surface);
     }
-    .section-title {
+
+    .section-label {
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
       margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
+    .composer-box {
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      background: var(--surface);
+      padding: 10px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s;
+    }
+
+    .composer-box:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+
+    .composer-box textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--text);
+      min-height: 58px;
+      background: transparent;
+    }
+
+    .composer-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--surface-subtle);
+    }
+
+    .composer-tools-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .icon-btn {
+      padding: 5px 8px;
+      font-size: 12px;
+      border-radius: 6px;
+      background: var(--surface-subtle);
+      border: 1px solid transparent;
+      box-shadow: none;
+      color: var(--text-secondary);
+    }
+
+    .icon-btn:hover {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    /* Photo attachment drawer inside composer */
+    .photo-drawer {
+      display: none;
+      margin-top: 8px;
+      padding: 8px 10px;
+      background: var(--amber-soft);
+      border: 1px solid var(--amber-border);
+      border-radius: 8px;
+      font-size: 12px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .photo-drawer.active {
+      display: flex;
+    }
+
+    .photo-drawer img {
+      height: 36px;
+      border-radius: 4px;
+      border: 1px solid var(--amber-border);
+    }
+
+    /* Quick Prompt Pills */
+    .quick-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .pill-btn {
+      font-size: 11.5px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-weight: 500;
+      box-shadow: none;
+    }
+
+    .pill-btn:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: #bae6fd;
+    }
+
+    /* Queue List */
+    .queue-section {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px;
+    }
+
     .queue-list {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      max-height: 250px;
-      overflow-y: auto;
-      padding-right: 2px;
     }
+
     .queue-item {
-      background: var(--panel-alt);
+      padding: 10px 12px;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 8px 10px;
+      background: var(--surface);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.12s ease;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .queue-item:hover, .queue-item.active {
-      border-color: var(--blue);
-      background: rgba(59, 130, 246, 0.12);
-    }
-    .queue-top {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .queue-item:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-subtle);
+    }
+
+    .queue-item.active {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      box-shadow: 0 1px 4px rgba(2, 132, 199, 0.12);
+    }
+
+    .queue-item-title {
+      font-size: 13px;
       font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
     }
-    .queue-desc {
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.35;
+
+    .queue-item-meta {
+      font-size: 11.5px;
+      color: var(--text-muted);
     }
+
+    /* Badges */
     .badge {
-      padding: 2px 7px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 700;
       display: inline-flex;
       align-items: center;
       gap: 4px;
-    }
-    .badge.crit { background: var(--red-bg); color: #f87171; border: 1px solid var(--red); }
-    .badge.urg { background: var(--amber-bg); color: #fbbf24; border: 1px solid var(--amber); }
-    .badge.ok { background: var(--green-bg); color: #34d399; border: 1px solid var(--green); }
-    .badge.info { background: var(--blue-bg); color: #60a5fa; border: 1px solid var(--blue); }
-
-    .photo-box {
-      border: 1px dashed #475569;
-      background: rgba(30, 41, 59, 0.5);
-      border-radius: 7px;
-      padding: 8px;
-      text-align: center;
-      font-size: 11px;
-      color: var(--muted);
-    }
-    .photo-preview {
-      margin-top: 6px;
-      max-width: 100%;
-      border-radius: 5px;
-      border: 1px solid var(--border);
-      display: none;
-    }
-    .chat-box {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-    .chat-input-row {
-      display: flex;
-      gap: 6px;
-    }
-    textarea#promptInput {
-      flex: 1;
-      background: #0f172a;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px;
-      font-size: 12px;
-      resize: none;
-      height: 54px;
-      font-family: inherit;
-    }
-    button.mic-recording {
-      background: var(--red) !important;
-      color: #fff !important;
-      animation: pulse 1.1s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.06); }
-    }
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-    .chip {
-      font-size: 11px;
-      padding: 4px 8px;
+      padding: 3px 8px;
       border-radius: 999px;
-      background: #0f172a;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      color: #cbd5e1;
-    }
-    .chip:hover { border-color: var(--blue); color: #fff; }
-
-    .log-list {
       font-size: 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      max-height: 150px;
-      overflow-y: auto;
-    }
-    .log-entry {
-      background: #0f172a;
-      border-left: 3px solid var(--amber);
-      padding: 5px 8px;
-      border-radius: 4px;
-      line-height: 1.35;
+      font-weight: 600;
+      white-space: nowrap;
     }
 
-    /* Main Panel */
-    .main-panel {
+    .badge.crit {
+      background: var(--red-soft);
+      color: var(--red);
+      border: 1px solid var(--red-border);
+    }
+
+    .badge.urg {
+      background: var(--amber-soft);
+      color: var(--amber);
+      border: 1px solid var(--amber-border);
+    }
+
+    .badge.ok {
+      background: var(--green-soft);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
+
+    .badge.info {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid #bae6fd;
+    }
+
+    /* MAIN STAGE */
+    .main-stage {
+      padding: 20px 28px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
-      padding: 14px 18px;
-      gap: 14px;
+      gap: 16px;
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
     }
-    .recall-banner {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
+
+    /* TOP STATUS BAR (Safety + Active Offer Info) */
+    .context-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .context-bar.warn {
+      background: var(--amber-soft);
+      border-color: var(--amber-border);
+    }
+
+    .context-bar.halt {
+      background: var(--red-soft);
+      border-color: var(--red-border);
+    }
+
+    .context-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* PRIMARY HERO MATCH CARD */
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--green);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .hero-address {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       flex-wrap: wrap;
     }
-    .recall-banner.safe { border-left: 4px solid var(--green); }
-    .recall-banner.warn { border-left: 4px solid var(--amber); }
-    .recall-banner.halt { border-left: 4px solid var(--red); background: rgba(239, 68, 68, 0.12); }
 
+    /* Dropdown Menu for Report Problem */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 250px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+      padding: 6px;
+      z-index: 100;
+    }
+
+    .dropdown.open .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-item {
+      width: 100%;
+      text-align: left;
+      border: none;
+      box-shadow: none;
+      padding: 8px 10px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dropdown-item:hover {
+      background: var(--surface-subtle);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0;
+    }
+
+    /* Key Specs Bar (4 Clean Metrics) */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .spec-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .spec-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .spec-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 3px;
+    }
+
+    .spec-sub {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Quote & Outreach Row inside Hero */
+    .hero-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .why-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .excerpt-quote {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      background: var(--surface-subtle);
+      border-left: 3px solid var(--primary);
+      padding: 10px 12px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .neighborhood-pill {
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 8px;
+      line-height: 1.4;
+    }
+
+    .outreach-card {
+      background: var(--green-soft);
+      border: 1px solid var(--green-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .outreach-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .outreach-text {
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: #064e3b;
+      white-space: pre-wrap;
+    }
+
+    /* SEGMENTED TABS FOR PROGRESSIVE DISCLOSURE */
+    .tabs-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: var(--surface-subtle);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: var(--surface);
+    }
+
+    .tab-panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* TAB 1: MAP & DELIVERY TIMELINE */
     .map-timeline-grid {
       display: grid;
-      grid-template-columns: 1.25fr 1fr;
-      gap: 14px;
-      min-height: 270px;
-    }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-      position: relative;
-    }
-    #map {
-      width: 100%;
-      height: 245px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-    }
-    .map-honesty-badge {
-      position: absolute;
-      bottom: 18px;
-      left: 20px;
-      right: 20px;
-      z-index: 500;
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid #475569;
-      color: #cbd5e1;
-      font-size: 10.5px;
-      padding: 4px 8px;
-      border-radius: 5px;
-      pointer-events: none;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 20px;
+      align-items: start;
     }
 
-    .timeline-bar-wrap {
-      margin: 12px 0;
-      background: #0f172a;
+    #map {
+      width: 100%;
+      height: 290px;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px;
     }
+
+    .timeline-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
     .timeline-track {
-      height: 18px;
-      background: #1e293b;
+      height: 22px;
+      background: #e2e8f0;
       border-radius: 999px;
       overflow: hidden;
       display: flex;
-      margin: 8px 0;
     }
-    .timeline-lead {
-      background: var(--blue);
+
+    .timeline-fill-lead {
+      background: var(--primary);
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
       transition: width 0.3s ease;
     }
-    .timeline-slack {
+
+    .timeline-fill-slack {
       background: var(--green);
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
       transition: width 0.3s ease;
     }
-    .timeline-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--muted);
+
+    /* TAB 2: BACKUPS & REJECTED SEMANTIC DECOYS */
+    .two-col-lists {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
-    .brief-grid {
-      display: grid;
-      grid-template-columns: 1.35fr 1fr;
-      gap: 14px;
-    }
-    .kpi-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 10px 0;
-    }
-    .kpi-box {
-      background: var(--panel-alt);
+    .list-card {
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px 10px;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      background: var(--surface);
     }
-    .kpi-label { font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-    .kpi-val { font-size: 14px; font-weight: 700; margin-top: 3px; }
-    .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-    .sms-box {
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11.5px;
-      white-space: pre-wrap;
-      line-height: 1.45;
-      color: #e2e8f0;
-      margin-top: 6px;
+    .list-card.decoy {
+      background: var(--red-soft);
+      border-color: var(--red-border);
     }
-    .option-row, .decoy-row {
-      background: var(--panel-alt);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px 10px;
-      margin-top: 6px;
-      font-size: 12px;
-    }
-    .decoy-row {
-      border-left: 3px solid var(--red);
-      background: rgba(239, 68, 68, 0.07);
-    }
-    .option-row {
-      border-left: 3px solid var(--blue);
-    }
-    .agent-transcript {
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 12px;
+
+    /* TAB 3: FULL AGENT REPLY & ACTIVITY LOG */
+    .transcript-box {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 12.5px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      max-height: 220px;
+      line-height: 1.55;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      max-height: 280px;
       overflow-y: auto;
+      white-space: pre-wrap;
+      color: var(--text);
     }
 
-    /* Modals */
+    .log-item {
+      font-size: 12px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    /* MODALS */
     .modal-backdrop {
+      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.72);
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(2px);
       z-index: 2000;
-      display: none;
       align-items: center;
       justify-content: center;
       padding: 20px;
     }
+
     .modal {
-      background: var(--panel);
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      max-width: 780px;
+      border-radius: 14px;
+      max-width: 720px;
       width: 100%;
-      max-height: 85vh;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+      max-height: 88vh;
       overflow-y: auto;
-      padding: 18px 20px;
     }
-    table.audit-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      margin-top: 10px;
-    }
-    table.audit-table th, table.audit-table td {
-      border: 1px solid var(--border);
-      padding: 6px 8px;
-      text-align: left;
-    }
-    table.audit-table th { background: var(--panel-alt); }
+
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 12px;
+      margin-top: 14px;
     }
-    .form-grid label { font-size: 11px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
-    .form-grid input, .form-grid select {
-      background: #0f172a;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 7px;
-      border-radius: 5px;
+
+    .form-grid label {
       font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-grid input,
+    .form-grid select {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    .audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 12.5px;
+    }
+
+    .audit-table th,
+    .audit-table td {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .audit-table th {
+      background: var(--surface-subtle);
+      font-weight: 700;
+    }
+
+    @media (max-width: 1024px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+      .specs-grid,
+      .hero-details-grid,
+      .map-timeline-grid,
+      .two-col-lists {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP NAVIGATION BAR -->
+  <!-- CLEAN TOP HEADER -->
   <header>
     <div class="brand">
-      <span>🥬 Chicago Food Rescue — Coordinator Dispatch Console</span>
-      <span class="sub" id="sessionBadge">Session: initializing...</span>
-      <span class="badge ok" id="connBadge">🟢 Cloud Run + Instant Replay Ready</span>
+      <div class="brand-logo">🥬</div>
+      <div>
+        <h1>Chicago Food Rescue Broker</h1>
+        <div class="brand-subtitle">Coordinator Dispatch Console · 192 Chicago Pantries · BigQuery Vector Search</div>
+      </div>
     </div>
-    <div class="top-actions">
-      <label style="font-size:11px; color:var(--muted); display:flex; align-items:center; gap:5px;">
-        <input type="checkbox" id="liveApiToggle" checked />
-        Call Live Cloud Run (`/run`)
+
+    <div class="header-controls">
+      <span class="status-pill live" id="connBadge">🟢 Live Cloud Run</span>
+      <label class="status-pill" style="cursor:pointer;" title="Send live queries to Cloud Run ADK agent">
+        <input type="checkbox" id="liveApiToggle" checked /> Live Agent
       </label>
-      <button onclick="openModal('onboardModal')">➕ Onboard Pantry (#10)</button>
-      <button onclick="openModal('equityModal')">📊 Equity Audit & Top-K Study (#5/#13)</button>
-      <button class="warn" onclick="reportSystemBug()">🐛 Report System Bug</button>
-      <button onclick="resetSession()">🔄 New Session</button>
+      <button onclick="openModal('onboardModal')">➕ Onboard Pantry</button>
+      <button onclick="openModal('equityModal')">📊 Equity Audit</button>
+      <button class="btn-ghost" onclick="resetSession()" title="Start a fresh multi-turn session">🔄 New Session</button>
     </div>
   </header>
 
-  <!-- MAIN 2-COLUMN WORKSPACE -->
-  <div class="layout">
+  <!-- 2-COLUMN WORKSPACE -->
+  <div class="workspace">
 
-    <!-- LEFT RAIL: QUEUE (#14), MULTIMODAL PHOTO (#14), VOICE + CHAT, DISCREPANCY LOG -->
-    <aside class="left-rail">
+    <!-- LEFT SIDEBAR: UNIFIED COMPOSER + SURPLUS QUEUE -->
+    <aside class="sidebar">
 
-      <!-- 1. TICKING-CLOCK SURPLUS QUEUE (#14) -->
-      <div class="rail-section">
-        <div class="section-title">
-          <span>⏱️ Ticking-Clock Surplus Queue (#14)</span>
-          <span style="font-size:10px; color:#60a5fa;">Sorted by Urgency ASC</span>
+      <!-- Unified Conversational Intake (Text + Voice + Photo) -->
+      <div class="composer-section">
+        <div class="section-label">
+          <span>1. Describe Surplus or Ask Follow-Up</span>
+          <span id="latencyBadge" style="font-weight:600; color:var(--green); text-transform:none;">Ready</span>
+        </div>
+
+        <div class="composer-box">
+          <textarea
+            id="promptInput"
+            placeholder="Describe a surplus load, or ask a follow-up (e.g. 'They said no, who's next?')..."
+          >A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.</textarea>
+
+          <!-- Optional Photo Attachment Drawer (Hidden until clicked) -->
+          <div class="photo-drawer" id="photoDrawer">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <img id="photoPreview" alt="Crate Tag" />
+              <div>
+                <div style="font-weight:700; color:var(--amber);">Crate Tag Attached</div>
+                <div style="font-size:11px; color:var(--text-secondary);">Gemini Vision extracts item & deadline</div>
+              </div>
+            </div>
+            <button class="btn-primary" style="padding:5px 10px; font-size:11.5px;" onclick="dispatchPhotoOffer()">
+              Extract & Match
+            </button>
+          </div>
+
+          <div class="composer-toolbar">
+            <div class="composer-tools-left">
+              <button class="icon-btn" id="micBtn" onclick="toggleVoiceInput()" title="Push-to-Talk Voice Input">
+                🎙️ Voice
+              </button>
+              <button class="icon-btn" onclick="loadSampleCratePhoto()" title="Load sample spinach pallet tag photo">
+                📷 Sample Tag
+              </button>
+              <label class="icon-btn" style="cursor:pointer;" title="Upload your own crate photo">
+                ⬆️ Photo
+                <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)" />
+              </label>
+            </div>
+
+            <button class="btn-primary" id="sendBtn" onclick="submitPrompt()">
+              Match Load ↵
+            </button>
+          </div>
+        </div>
+
+        <!-- Clean Follow-Up Pills -->
+        <div class="quick-pills">
+          <button class="pill-btn" onclick="quickFollowUp('They said no. Who\'s next?')">🔄 "They said no"</button>
+          <button class="pill-btn" onclick="quickFollowUp('Why didn\'t you pick Greenline Community Pantry?')">❓ Why not Greenline?</button>
+          <button class="pill-btn" onclick="sendMcpWalkInQuery()">🗄️ Walk-in coolers (SQL)</button>
+        </div>
+      </div>
+
+      <!-- Incoming Surplus Queue (#14) -->
+      <div class="queue-section">
+        <div class="section-label">
+          <span>2. Ticking-Clock Surplus Queue</span>
+          <span style="text-transform:none; font-weight:500;">Sorted by urgency</span>
         </div>
         <div class="queue-list" id="queueList"></div>
       </div>
 
-      <!-- 2. MULTIMODAL CRATE / LABEL PHOTO INTAKE (#14) -->
-      <div class="rail-section">
-        <div class="section-title">
-          <span>📷 Multimodal Crate / Tag Photo (#14)</span>
-          <button onclick="loadSampleCratePhoto()" style="font-size:10.5px; padding:3px 7px;">🥬 Load Sample Crate Tag</button>
+    </aside>
+
+    <!-- MAIN STAGE: FOCUSED MATCH DECISION + PROGRESSIVE TABS -->
+    <main class="main-stage">
+
+      <!-- Compact Context & openFDA Food Safety Bar (#11) -->
+      <div class="context-bar" id="recallBanner">
+        <div class="context-left">
+          <span class="badge ok" id="recallStatusBadge">🟢 openFDA Safety Check: Clear</span>
+          <span id="recallDetail">Verified against api.fda.gov — confirm lot code & sealed packaging at pickup.</span>
         </div>
-        <div class="photo-box">
-          <input type="file" id="photoInput" accept="image/*" style="font-size:11px; width:100%;" onchange="handlePhotoUpload(event)" />
-          <div style="margin-top:4px;">Drop a produce crate photo or printed "USE BY" pallet tag</div>
-          <img id="photoPreview" class="photo-preview" alt="Crate tag preview" />
-          <button id="sendPhotoBtn" class="primary" style="margin-top:6px; width:100%; justify-content:center; display:none;" onclick="dispatchPhotoOffer()">
-            🚀 Extract from Photo & Run Match
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span class="badge info" id="searchPoolBadge" title="Vector search pool vs. viable survivors">Pool: 80 → 12 Viable</span>
+          <button class="btn-ghost" style="font-size:11.5px; padding:4px 8px; color:var(--red);" onclick="triggerSafetyHalt()">
+            🛑 Flag Recall Halt
           </button>
         </div>
       </div>
 
-      <!-- 3. VOICE + CONVERSATIONAL INTAKE & FOLLOW-UPS -->
-      <div class="rail-section">
-        <div class="section-title">
-          <span>💬 Coordinator Voice & Chat</span>
-          <button onclick="sendMcpWalkInQuery()" style="font-size:10px; padding:2px 6px;">🗄️ MCP: Count Walk-In Coolers</button>
-        </div>
-        <div class="chat-box">
-          <div class="chat-input-row">
-            <button id="micBtn" onclick="toggleVoiceInput()" title="Push-to-Talk Voice Dictation (Web Speech API)">🎙️ Speak</button>
-            <textarea id="promptInput" placeholder="Paste messy grocer text, speak via 🎙️, or ask a follow-up..."></textarea>
-            <button class="primary" id="sendBtn" onclick="submitPrompt()">Send</button>
-          </div>
-          <div class="chips">
-            <span class="chip" onclick="quickFollowUp('They said no. Who\'s next?')">❌ They Said No — Who's Next?</span>
-            <span class="chip" onclick="simulateDelay(3.5)">🚨 Driver Delayed +3.5h — Reroute</span>
-            <span class="chip" onclick="quickFollowUp('Why them and not Greenline Community Pantry?')">🔍 Why Not Greenline?</span>
-            <span class="chip" onclick="quickFollowUp('Why them and not the big food bank downtown?')">🏢 Why Not Downtown Food Bank?</span>
-            <span class="chip" onclick="quickFollowUp('Can they collect it themselves, or do I need to send a driver?')">🚚 Need Driver?</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. LIVE DISCREPANCY, PALLET LOCK & SAFETY LOG (#12 & Problem Reporting) -->
-      <div class="rail-section" style="border-bottom:none; flex:1;">
-        <div class="section-title">
-          <span>📋 Live Discrepancy, Lock & Safety Log</span>
-          <button onclick="exportDiscrepancyLog()" style="font-size:10px; padding:2px 6px;">📥 Export JSON</button>
-        </div>
-        <div class="log-list" id="discrepancyLog"></div>
-      </div>
-
-    </aside>
-
-    <!-- RIGHT MAIN PANEL -->
-    <main class="main-panel">
-
-      <!-- A. LIVE openFDA FOOD RECALL & SAFETY GATE (#11) -->
-      <div class="recall-banner safe" id="recallBanner">
-        <div>
-          <div style="font-size:12px; font-weight:700; display:flex; align-items:center; gap:8px;">
-            <span id="recallIcon">🛡️</span>
-            <span id="recallTitle">Food Safety & openFDA Recall Gate (#11 — Public Domain CC0 US Gov API)</span>
-            <span class="badge info" id="recallStatusBadge">Checking api.fda.gov...</span>
-          </div>
-          <div style="font-size:11.5px; color:var(--muted); margin-top:3px;" id="recallDetail">
-            Queries live openFDA Enforcement API for active Class I/II/III food recalls before rolling a truck.
-          </div>
-        </div>
-        <div style="display:flex; gap:6px;">
-          <button onclick="recheckOpenFDA()">🔍 Re-Check openFDA</button>
-          <button class="danger" onclick="triggerSafetyHalt()">🛑 Halt Load: Flag Recall / Spoilage</button>
-        </div>
-      </div>
-
-      <!-- B. CHICAGO DISPATCH MAP + DELIVERY TIMELINE & UNEXPECTED DELAY RE-ROUTER -->
-      <div class="map-timeline-grid">
-
-        <!-- Interactive Leaflet Map -->
-        <div class="card" style="padding:10px;">
-          <div class="section-title" style="margin-bottom:6px;">
-            <span>🗺️ Chicago Live Dispatch Map (Donor → Viable vs. Rejected Decoys)</span>
-            <span id="mapLegend" style="font-size:10.5px; color:var(--muted);">🟢 #1 Match · 🔵 Backups · 🔴 Rejected Decoys</span>
-          </div>
-          <div id="map"></div>
-          <div class="map-honesty-badge">
-            ℹ️ <b>Architectural Honesty:</b> Recipient coordinates are IRS ZIP-code centroids; distances use straight-line BigQuery <code>ST_DISTANCE</code> (not street-level turn-by-turn traffic).
-          </div>
-        </div>
-
-        <!-- Delivery & Expiry Timeline + Delay Simulator -->
-        <div class="card">
-          <div class="section-title">
-            <span>⏱️ Delivery & Biological Expiry Timeline</span>
-            <span class="badge ok" id="marginRiskBadge">+3.0h Comfortable Slack</span>
-          </div>
-          <div style="font-size:12px; color:#cbd5e1; line-height:1.4;" id="timelineSummary">
-            Food has <b>6.0h</b> remaining. Top recipient collects within <b>3.0h</b>, leaving <b>3.0h</b> safety margin.
-          </div>
-
-          <div class="timeline-bar-wrap">
-            <div class="timeline-labels">
-              <span>Now (0h)</span>
-              <span id="leadTimeLabel">Pickup Complete: 3.0h</span>
-              <span id="deadlineLabel">Deadline: 6.0h</span>
+      <!-- PRIMARY MATCH HERO CARD -->
+      <section class="hero-card">
+        <div class="hero-top">
+          <div>
+            <div class="hero-eyebrow">
+              <span>Recommended Primary Recipient</span>
+              <span class="badge info" id="meaningRankLabel">Meaning Rank #3 of 80</span>
             </div>
-            <div class="timeline-track">
-              <div class="timeline-lead" id="timelineLeadBar" style="width:50%;"></div>
-              <div class="timeline-slack" id="timelineSlackBar" style="width:50%;"></div>
-            </div>
-            <div style="font-size:11px; color:var(--muted); display:flex; justify-content:space-between;">
-              <span>🔵 Recipient Collection Lead Time</span>
-              <span>🟢 Remaining Safety Margin</span>
-            </div>
+            <div class="hero-title" id="orgName">Habibi Care</div>
+            <div class="hero-address" id="orgAddress">4346 W 63rd St, Chicago, IL 60629</div>
           </div>
 
-          <div class="section-title" style="margin-top:10px;">
-            <span>⚡ Simulate Unexpected Field / Traffic Delay</span>
-          </div>
-          <div style="font-size:11px; color:var(--muted); margin-bottom:8px;">
-            If a truck is delayed and remaining clock drops below recipient lead time, the agent automatically re-evaluates and re-routes.
-          </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="warn" onclick="simulateDelay(1.5)">⚠️ +1.5h Delay (Thin Margin)</button>
-            <button class="danger" onclick="simulateDelay(3.5)">🚨 +3.5h Delay (At Risk → Auto Re-Route)</button>
-            <button onclick="resetTimelineClock()">↺ Reset Clock</button>
-          </div>
-        </div>
+          <div class="hero-actions">
+            <button class="btn-success" onclick="copyAndClaimPrimary()">
+              📋 Copy SMS & Claim Load
+            </button>
+            <button onclick="quickFollowUp('They said no. Who\'s next?')">
+              ❌ They Said No — Next Match
+            </button>
 
-      </div>
-
-      <!-- C. 6-PART STRUCTURED MATCH BRIEF & REJECTED DECOYS -->
-      <div class="brief-grid">
-
-        <!-- Left Column: Parts 1, 2, 3, 4, 5 + Action Buttons -->
-        <div class="card" id="primaryMatchCard">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
-            <div>
-              <div style="font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase;">
-                Part 1 · Primary Recommended Recipient
+            <!-- Progressive Disclosure: Single "Report Problem" Menu -->
+            <div class="dropdown" id="problemDropdown">
+              <button onclick="toggleProblemMenu(event)">
+                ⚠️ Report Problem ▾
+              </button>
+              <div class="dropdown-menu">
+                <div style="font-size:11px; font-weight:700; color:var(--text-muted); padding:4px 10px; text-transform:uppercase;">
+                  Pantry Profile Discrepancy
+                </div>
+                <button class="dropdown-item" onclick="reportDiscrepancy('Cooler Broken / No Cold Storage', 'cold_storage', 'none')">
+                  ❄️ Cooler Broken / No Fridge
+                </button>
+                <button class="dropdown-item" onclick="reportDiscrepancy('Capacity Full Today', 'max_pallets', '0')">
+                  📦 Capacity Full Today
+                </button>
+                <button class="dropdown-item" onclick="reportDiscrepancy('Closed / Unreachable by Phone', 'pickup_window_hours', 'closed')">
+                  📵 Closed / Unreachable
+                </button>
+                <div class="dropdown-divider"></div>
+                <div style="font-size:11px; font-weight:700; color:var(--text-muted); padding:4px 10px; text-transform:uppercase;">
+                  Route & System Issues
+                </div>
+                <button class="dropdown-item" onclick="switchTab('mapTab'); simulateDelay(3.5);">
+                  🚚 Truck Delayed (+3.5h Re-Route)
+                </button>
+                <button class="dropdown-item" onclick="triggerSafetyHalt()">
+                  🛑 Food Safety / Recall Halt
+                </button>
+                <button class="dropdown-item" onclick="reportSystemBug()">
+                  🐞 Open GitHub Bug Issue
+                </button>
               </div>
-              <h2 id="orgName" style="font-size:18px; margin-top:2px;">Habibi Care</h2>
-              <div id="orgAddress" style="font-size:12px; color:var(--muted);">4845 N WASHTENAW AVE, CHICAGO, IL 60625</div>
             </div>
-            <div style="text-align:right;">
-              <span class="badge info" id="searchPoolBadge">Pool: 80 · Viable: 14</span>
-              <div style="font-size:11px; color:var(--muted); margin-top:4px;" id="meaningRankLabel">Meaning Rank: #17</div>
-            </div>
-          </div>
-
-          <div style="margin-top:8px; font-size:12px; background:var(--panel-alt); padding:8px 10px; border-radius:6px; border-left:3px solid var(--green);" id="orgExcerpt">
-            "Emergency shelter providing three meals a day to residents. Two household fridges. Dry storage is a converted closet..."
-          </div>
-
-          <!-- KPIs: Part 2 (Capacity) & Part 3 (Clock & Transport) -->
-          <div class="kpi-row">
-            <div class="kpi-box">
-              <div class="kpi-label">❄️ Part 2 · Storage & Cap</div>
-              <div class="kpi-val" id="kpiStorage">domestic cold</div>
-              <div class="kpi-sub" id="kpiPallets">Load: 0.5 / Max: 1 pallet</div>
-            </div>
-            <div class="kpi-box">
-              <div class="kpi-label">⏱️ Part 3 · The Clock</div>
-              <div class="kpi-val" id="kpiClock">6h left · 3h lead</div>
-              <div class="kpi-sub" id="kpiMargin">Margin: +3h slack</div>
-            </div>
-            <div class="kpi-box">
-              <div class="kpi-label">🚚 Part 3 · Transport</div>
-              <div class="kpi-val" id="kpiDriver" style="color:#fbbf24;">⚠️ Needs Driver</div>
-              <div class="kpi-sub" id="kpiServiceDays">Service: Monday</div>
-            </div>
-          </div>
-
-          <div style="font-size:11px; color:var(--amber); margin-bottom:8px;">
-            ⚠️ <b>Data Honesty Note:</b> Org name & address are real (IRS 990); cold storage, pallet capacity & pickup window are generated ("profile on file") — confirm by phone before rolling a truck.
-          </div>
-
-          <!-- Dispatch, Pallet Lock (#12) & Discrepancy Reporting Buttons -->
-          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
-            <button class="success" onclick="lockPalletsForPrimary()">🔒 Claim & Lock Pallets (#12)</button>
-            <button class="primary" onclick="quickFollowUp('They said no. Who\'s next?')">❌ They Said No — Next Match</button>
-            <button class="warn" onclick="reportDiscrepancy('Cooler Broken / No Cold Storage', 'cold_storage', 'none')">⚠️ Cooler Broken</button>
-            <button class="warn" onclick="reportDiscrepancy('Capacity Lower Than Profile', 'max_pallets', '0')">⚠️ Capacity Full</button>
-            <button class="warn" onclick="reportDiscrepancy('Closed / Unreachable by Phone', 'pickup_window_hours', 'closed')">⚠️ Closed Today</button>
-          </div>
-
-          <!-- Part 4: Whose Neighborhood It Helps -->
-          <div style="border-top:1px solid var(--border); padding-top:8px; margin-top:4px;">
-            <div class="section-title" style="margin-bottom:4px;">
-              <span>📊 Part 4 · Whose Neighborhood It Helps (Descriptive — Never Used to Rank)</span>
-            </div>
-            <div style="font-size:12px; color:#cbd5e1;" id="neighborhoodText">
-              Nearest census tract: 13% below poverty line, 5% without a vehicle, 12% on food/cash assistance (Serves: Families with children · 165 households/wk).
-            </div>
-          </div>
-
-          <!-- Part 5: Outreach Message -->
-          <div style="border-top:1px solid var(--border); padding-top:8px; margin-top:8px;">
-            <div class="section-title" style="margin-bottom:4px;">
-              <span>✉️ Part 5 · Ready-to-Send Outreach Message</span>
-              <button onclick="copyOutreachSms()" style="font-size:11px; padding:3px 8px;">📋 Copy SMS</button>
-            </div>
-            <div class="sms-box" id="outreachBox"></div>
           </div>
         </div>
 
-        <!-- Right Column: Part 6 (Backups & Rejected Semantic Decoys) + Live Agent Transcript -->
-        <div style="display:flex; flex-direction:column; gap:14px;">
+        <!-- 4 Crisp Operational Specs -->
+        <div class="specs-grid">
+          <div class="spec-box">
+            <div class="spec-label">Cold Storage</div>
+            <div class="spec-value" id="kpiStorage">Domestic Cold</div>
+            <div class="spec-sub">Confirm working cooler by phone</div>
+          </div>
+          <div class="spec-box">
+            <div class="spec-label">Pallet Capacity</div>
+            <div class="spec-value" id="kpiPallets">0.5 / 1 Pallet</div>
+            <div class="spec-sub" id="kpiServiceDays">Days: Wed, Sat</div>
+          </div>
+          <div class="spec-box">
+            <div class="spec-label">The Clock</div>
+            <div class="spec-value" id="kpiClock">6h left · 3h pickup</div>
+            <div class="spec-sub" id="kpiMargin" style="color:var(--green); font-weight:600;">+3h safety margin</div>
+          </div>
+          <div class="spec-box">
+            <div class="spec-label">Transport</div>
+            <div class="spec-value" id="kpiDriver">⚠️ Dispatch Driver</div>
+            <div class="spec-sub">No refrigerated van on file</div>
+          </div>
+        </div>
 
-          <div class="card">
-            <div class="section-title">
-              <span>🔄 Part 6A · Next Two Viable Options (If #1 Declines)</span>
+        <!-- Why They Fit + Ready-to-Send SMS -->
+        <div class="hero-details-grid">
+          <div class="why-box">
+            <div class="excerpt-quote" id="orgExcerpt">
+              "Neighborhood food pantry with household refrigeration. Can take a few crates of fresh produce, dairy, or eggs (up to 1 pallet)."
             </div>
-            <div id="nextOptionsList"></div>
-
-            <div class="section-title" style="margin-top:12px;">
-              <span>🛡️ Part 6B · Rejected Semantic Decoys (Why Top Meaning Hits Were Blocked)</span>
+            <div class="neighborhood-pill" id="neighborhoodText">
+              <b>Neighborhood Context (Descriptive only):</b> Nearest tract has 13% poverty, 5% no-vehicle households, 12% on public assistance (Serves: Families with children · 165 households/wk).
             </div>
-            <div id="rejectedDecoysList"></div>
           </div>
 
-          <div class="card" style="flex:1;">
-            <div class="section-title">
-              <span>🤖 Agent Response & Multi-Turn Transcript (`food_broker`)</span>
-              <span id="latencyBadge" style="font-size:10px; color:var(--green);">Ready</span>
+          <div class="outreach-card">
+            <div class="outreach-header">
+              <span>✉️ Ready-to-Send Coordinator SMS</span>
+              <button style="padding:3px 8px; font-size:11px;" onclick="copyOutreachSms()">Copy Text</button>
             </div>
-            <div class="agent-transcript" id="agentTranscript"></div>
+            <div class="outreach-text" id="outreachBox"></div>
           </div>
+        </div>
+      </section>
 
+      <!-- PROGRESSIVE DISCLOSURE TABS (Only 1 secondary panel visible at a time) -->
+      <div>
+        <div class="tabs-bar">
+          <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="mapTab" onclick="switchTab('mapTab')">
+              🗺️ Route Map & Delay Simulator
+            </button>
+            <button class="tab-btn" data-tab="backupsTab" onclick="switchTab('backupsTab')">
+              🔄 Backups & Why Others Were Blocked <span id="backupsCountBadge" class="badge info" style="margin-left:4px;">5</span>
+            </button>
+            <button class="tab-btn" data-tab="agentTab" onclick="switchTab('agentTab')">
+              💬 Full Agent Reply & Activity Log
+            </button>
+          </div>
+          <div style="font-size:11.5px; color:var(--text-muted); padding-bottom:6px;" id="sessionBadge">
+            Session: coord-init
+          </div>
+        </div>
+
+        <!-- TAB 1: INTERACTIVE MAP & DELIVERY TIMELINE -->
+        <div class="tab-panel active" id="mapTab" style="margin-top:12px;">
+          <div class="map-timeline-grid">
+            <div>
+              <div id="map"></div>
+              <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-muted); margin-top:8px;">
+                <span>🟠 Donor · 🟢 #1 Match · 🔵 Backups (#2–3) · 🔴 Blocked Decoys</span>
+                <span><i>Note: Coordinates are ZIP-centroid approximate</i></span>
+              </div>
+            </div>
+
+            <div class="timeline-box">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:13px; font-weight:700;">⏱️ Delivery Timeline & Spoilage Risk</span>
+                <span class="badge ok" id="marginRiskBadge">🟢 +3.0h Slack</span>
+              </div>
+
+              <div id="timelineSummary" style="font-size:12.5px; color:var(--text-secondary); line-height:1.45;">
+                Food has <b>6.0h</b> remaining. Recipient collects within <b>3.0h</b>, leaving <b>+3.0h</b> safety margin.
+              </div>
+
+              <div class="timeline-track">
+                <div class="timeline-fill-lead" id="timelineLeadBar" style="width:50%;">Pickup: 3h</div>
+                <div class="timeline-fill-slack" id="timelineSlackBar" style="width:50%;">Margin: +3h</div>
+              </div>
+
+              <div style="border-top:1px solid var(--border); padding-top:12px; margin-top:4px;">
+                <div style="font-size:11.5px; font-weight:700; color:var(--text-secondary); margin-bottom:8px;">
+                  Simulate Unexpected Traffic / Dock Delay (Live Agent Re-Route):
+                </div>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button onclick="simulateDelay(1.5)">⏳ +1.5h Minor Delay</button>
+                  <button style="color:var(--red); border-color:var(--red-border);" onclick="simulateDelay(3.5)">
+                    🚨 +3.5h Major Delay (Re-Route)
+                  </button>
+                  <button class="btn-ghost" onclick="resetTimelineClock()">↺ Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: BACKUPS & REJECTED SEMANTIC DECOYS -->
+        <div class="tab-panel" id="backupsTab" style="margin-top:12px;">
+          <div class="two-col-lists">
+            <div>
+              <div class="section-label">
+                <span>🔄 Next Two Viable Backups (If #1 Declines)</span>
+              </div>
+              <div id="nextOptionsList"></div>
+            </div>
+
+            <div>
+              <div class="section-label">
+                <span>🛡️ Rejected Semantic Decoys (Matched by Meaning, Blocked by Rules)</span>
+              </div>
+              <div id="rejectedDecoysList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: FULL AGENT REPLY & ACTIVITY LOG -->
+        <div class="tab-panel" id="agentTab" style="margin-top:12px;">
+          <div class="two-col-lists">
+            <div>
+              <div class="section-label">
+                <span>🤖 Full `food_broker` Response</span>
+              </div>
+              <div class="transcript-box" id="agentTranscript"></div>
+            </div>
+
+            <div>
+              <div class="section-label">
+                <span>📋 Session Activity & Discrepancy Log</span>
+                <button style="padding:3px 8px; font-size:11px;" onclick="exportDiscrepancyLog()">⬇️ Export JSON</button>
+              </div>
+              <div style="max-height:280px; overflow-y:auto; border:1px solid var(--border); border-radius:10px;" id="discrepancyLog"></div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -715,11 +1223,11 @@
   <div class="modal-backdrop" id="onboardModal">
     <div class="modal">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>➕ Conversational Pantry Onboarding (#10 — Closing the Synthetic Data Loop)</h3>
+        <h3>➕ Onboard Verified Pantry Profile (#10)</h3>
         <button onclick="closeModal('onboardModal')">✕ Close</button>
       </div>
-      <p style="font-size:12px; color:var(--muted); margin-top:6px;">
-        Because operational capability data (coolers, pallet capacity, pickup windows) does not exist publicly, this intake captures verified ground truth from a Pantry Manager—including the Track 1/2 pallet-jack vs. hand-unloading check.
+      <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">
+        Captures ground-truth cooler, pallet-jack, and pickup lead-time capabilities from a Pantry Manager so coordinators aren't relying solely on synthetic profiles.
       </p>
       <div class="form-grid">
         <label>Organization Name
@@ -732,14 +1240,14 @@
           <select id="obCold">
             <option value="walk-in">Walk-in Cooler (Commercial)</option>
             <option value="commercial">Commercial Reach-in Fridge</option>
-            <option value="domestic">Household / Domestic Fridge (<=1 pallet)</option>
+            <option value="domestic">Household / Domestic Fridge (&lt;=1 pallet)</option>
             <option value="none">No Cold Storage (Dry Only)</option>
           </select>
         </label>
-        <label>Unloading Mode (Track 1 vs Track 2 Question)
+        <label>Unloading Mode (Track 1 vs Track 2)
           <select id="obDock">
             <option value="hand-unloaded crates (up to 2 pallets)">By hand / crates only (No loading dock, max 2 pallets)</option>
-            <option value="full pallets on a pallet jack (loading dock, up to 8 pallets)">Full pallet on a jack (Has loading dock, up to 8 pallets)</option>
+            <option value="full pallets on a pallet jack (loading dock, up to 8 pallets)">Full pallet on a jack (Has loading dock, max 8 pallets)</option>
           </select>
         </label>
         <label>Collection Lead Time (Hours)
@@ -747,14 +1255,14 @@
         </label>
         <label>Own Refrigerated Transport?
           <select id="obVan">
-            <option value="true">Yes — Has refrigerated van (Can self-collect)</option>
+            <option value="true">Yes — Has refrigerated van (Self-collects)</option>
             <option value="false">No — Needs volunteer driver dispatch</option>
           </select>
         </label>
       </div>
-      <div style="margin-top:14px; display:flex; justify-content:flex-end; gap:8px;">
+      <div style="margin-top:18px; display:flex; justify-content:flex-end; gap:8px;">
         <button onclick="closeModal('onboardModal')">Cancel</button>
-        <button class="primary" onclick="submitPantryOnboarding()">✅ Verify Profile & Test Match in Agent</button>
+        <button class="btn-primary" onclick="submitPantryOnboarding()">✅ Save & Test Match in Agent</button>
       </div>
     </div>
   </div>
@@ -763,11 +1271,11 @@
   <div class="modal-backdrop" id="equityModal">
     <div class="modal">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>📊 10-Posting Equity Audit & Vector Search Pool Study (`EQUITY-AUDIT.md`)</h3>
+        <h3>📊 10-Posting Equity Audit & Vector Search Pool Study</h3>
         <button onclick="closeModal('equityModal')">✕ Close</button>
       </div>
-      <p style="font-size:12px; color:var(--muted); margin-top:6px;">
-        Executed across all 10 rows of <code>a4i_food.surplus_postings</code> against <code>1,004</code> Chicago ACS Census tracts and <code>192</code> recipients on <code>76</code> distinct tracts.
+      <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">
+        Executed across all 10 official <code>a4i_food.surplus_postings</code> against <code>1,004</code> Chicago ACS Census tracts and <code>192</code> recipients.
       </p>
       <table class="audit-table">
         <thead>
@@ -788,12 +1296,12 @@
           <tr><td><b>Top Matches — Weighted by Pallets (37.5 pallets)</b></td><td>10 postings</td><td>15%</td><td>32%</td><td>9%</td></tr>
         </tbody>
       </table>
-      <div style="margin-top:12px; font-size:12px; line-height:1.5; color:#cbd5e1;">
-        <b>Key Rigor Findings for Judges:</b>
+      <div style="margin-top:14px; font-size:12.5px; line-height:1.55; color:var(--text-secondary);">
+        <b>Key Findings:</b>
         <ul style="padding-left:18px; margin-top:4px;">
-          <li><b>Why Per-Posting vs. Per-Recipient Reverses:</b> One high-need pantry (<i>Shakespear Rose Community Table</i>, 45% poverty / 52% no-vehicle) won 3 short-clock retail postings (#1, #2, #4). Counting each recipient once lowers the mean from 22% to 17% poverty.</li>
-          <li><b>The Loading-Dock Bottleneck:</b> Only 17 of 192 recipients have a dock or room for 5+ pallets. The 3 farm postings represent 30 of the 37.5 total pallets, steering pallet-weighted assistance to 9% vs. 20% corpus average.</li>
-          <li><b>Why Wide Vector Search (<code>top_k=80</code>) Matters:</b> For the 6-hour spinach offer, <code>top_k=15</code> left only <b>1</b> viable match; <code>top_k=40</code> left <b>3</b>; <code>top_k=80</code> left <b>12–14</b> viable matches (and caught <i>Greenline Community Pantry</i> as a no-fridge semantic decoy).</li>
+          <li><b>Per-Posting vs. Per-Recipient:</b> One high-need pantry (<i>Shakespear Rose Community Table</i>, 45% poverty / 52% no-vehicle) won 3 short-clock retail postings (#1, #2, #4).</li>
+          <li><b>Loading-Dock Bottleneck:</b> Only 17 of 192 recipients have a dock or room for 5+ pallets (30 of 37.5 total pallets are farm loads).</li>
+          <li><b>Why Wide Vector Search (<code>top_k=80</code>) Matters:</b> For the 6-hour spinach offer, <code>top_k=15</code> left only <b>1</b> viable match; <code>top_k=80</code> left <b>12–14</b> viable matches while catching <i>Greenline Community Pantry</i> as a no-fridge semantic decoy.</li>
         </ul>
       </div>
     </div>
@@ -801,13 +1309,13 @@
 
   <script>
     // ============================================================================
-    // 1. OFFICIAL 10 SURPLUS POSTINGS + DEMO EDGE CASES (Sorted by Urgency ASC)
+    // 1. OFFICIAL 10 SURPLUS POSTINGS + REFUSAL CASE (Sorted by Urgency ASC)
     // ============================================================================
     const SURPLUS_QUEUE = [
       {
         id: "demo-bakery",
-        track: "RETAIL",
-        title: "40 Trays Cream Pastries (Refusal Case)",
+        track: "Retail",
+        title: "40 Trays Cream Pastries (Refusal Demo)",
         commodity: "Pastry",
         hours: 1.0,
         pallets: 0.25,
@@ -819,7 +1327,7 @@
       },
       {
         id: "post-4",
-        track: "RETAIL",
+        track: "Retail",
         title: "Prepared Deli Sandwiches & Salads (#4)",
         commodity: "Salad",
         hours: 4.0,
@@ -832,8 +1340,8 @@
       },
       {
         id: "post-1",
-        track: "RETAIL",
-        title: "10 Crates Fresh Spinach (#1 Primary Demo)",
+        track: "Retail",
+        title: "10 Crates Fresh Spinach (#1 Primary)",
         commodity: "Spinach",
         hours: 6.0,
         pallets: 0.5,
@@ -845,7 +1353,7 @@
       },
       {
         id: "post-2",
-        track: "RETAIL",
+        track: "Retail",
         title: "60 Gal Milk & Yogurt (#2 Dairy)",
         commodity: "Milk",
         hours: 8.0,
@@ -858,7 +1366,7 @@
       },
       {
         id: "post-10",
-        track: "ESSENTIALS",
+        track: "Essentials",
         title: "Clinic Cold-Chain Supplements (#10)",
         commodity: "Dietary Supplement",
         hours: 8.0,
@@ -871,7 +1379,7 @@
       },
       {
         id: "post-6",
-        track: "FARM",
+        track: "Farm",
         title: "Half Truckload Fresh Blueberries (#6)",
         commodity: "Blueberries",
         hours: 12.0,
@@ -884,7 +1392,7 @@
       },
       {
         id: "post-3",
-        track: "RETAIL",
+        track: "Retail",
         title: "200 Loaves Day-Old Bread (#3)",
         commodity: "Bread",
         hours: 24.0,
@@ -897,7 +1405,7 @@
       },
       {
         id: "post-5",
-        track: "FARM",
+        track: "Farm",
         title: "5 Tons Field Potatoes (#5 Farm Track)",
         commodity: "Potatoes",
         hours: 72.0,
@@ -910,7 +1418,7 @@
       },
       {
         id: "post-7",
-        track: "FARM",
+        track: "Farm",
         title: "30 Bins Winter Squash (#7)",
         commodity: "Squash",
         hours: 120.0,
@@ -923,8 +1431,8 @@
       },
       {
         id: "post-8",
-        track: "ESSENTIALS",
-        title: "48 Cases Sealed Infant Formula (#8 USDA Bug)",
+        track: "Essentials",
+        title: "48 Cases Sealed Infant Formula (#8)",
         commodity: "Infant Formula",
         hours: 168.0,
         pallets: 2.0,
@@ -936,7 +1444,7 @@
       },
       {
         id: "post-9",
-        track: "ESSENTIALS",
+        track: "Essentials",
         title: "1 Pallet Diapers & Wipes (#9)",
         commodity: "Diapers",
         hours: 720.0,
@@ -965,7 +1473,6 @@
     let map = null;
     let mapLayerGroup = null;
 
-    // Determine API base URL: use current origin if served via serve.py or Cloud Run, else Cloud Run URL
     const CLOUD_RUN_URL = "https://food-broker-817377390808.us-east1.run.app";
     function getApiBase() {
       if (window.location.protocol.startsWith("http") && (window.location.port === "8090" || window.location.hostname.includes("run.app"))) {
@@ -975,7 +1482,7 @@
     }
 
     // ============================================================================
-    // 3. INITIALIZATION & TICKING-CLOCK QUEUE (#14)
+    // 3. INITIALIZATION & UI HELPERS
     // ============================================================================
     window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("sessionBadge").textContent = `Session: ${sessionId}`;
@@ -983,9 +1490,32 @@
       renderQueue();
       renderBrief(currentBrief, currentAnswer);
       checkOpenFDARecall(currentPosting.commodity);
-      addLogEntry("SYSTEM", `Initialized Coordinator Console (192 Chicago IRS recipients loaded; Session ${sessionId}).`);
+      addLogEntry("SYSTEM", `Initialized Coordinator Console (192 Chicago pantries loaded; Session ${sessionId}).`);
       ensureAdkSession();
+
+      // Close problem dropdown when clicking outside
+      document.addEventListener("click", (e) => {
+        const dd = document.getElementById("problemDropdown");
+        if (dd && !dd.contains(e.target)) dd.classList.remove("open");
+      });
     });
+
+    function toggleProblemMenu(e) {
+      e.stopPropagation();
+      document.getElementById("problemDropdown").classList.toggle("open");
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.getAttribute("data-tab") === tabId);
+      });
+      document.querySelectorAll(".tab-panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.id === tabId);
+      });
+      if (tabId === "mapTab" && map) {
+        setTimeout(() => map.invalidateSize(), 60);
+      }
+    }
 
     function renderQueue() {
       const list = document.getElementById("queueList");
@@ -994,15 +1524,12 @@
         const div = document.createElement("div");
         div.className = "queue-item" + (currentPosting.id === item.id ? " active" : "");
         const badgeClass = item.hours <= 2 ? "crit" : item.hours <= 6 ? "urg" : "ok";
-        const badgeIcon = item.hours <= 2 ? "🔴" : item.hours <= 6 ? "🟡" : "🟢";
         div.innerHTML = `
-          <div class="queue-top">
-            <span>${item.title}</span>
-            <span class="badge ${badgeClass}">${badgeIcon} ${item.hours}h</span>
+          <div>
+            <div class="queue-item-title">${item.title}</div>
+            <div class="queue-item-meta">${item.track} · ${item.pallets}p · ${item.needs_cold ? "❄️ Cold" : "Ambient"}</div>
           </div>
-          <div class="queue-desc">
-            Track: <b>${item.track}</b> · ${item.pallets} pallet(s) · ${item.needs_cold ? "❄️ Cold Required" : "📦 Ambient"}
-          </div>
+          <span class="badge ${badgeClass}">${item.hours}h</span>
         `;
         div.onclick = () => selectQueuePosting(item);
         list.appendChild(div);
@@ -1016,7 +1543,6 @@
       document.getElementById("promptInput").value = item.prompt;
       checkOpenFDARecall(item.commodity);
 
-      // Immediately show cached evidence if available while live request runs (or if live toggle is off)
       if (window.EVIDENCE_CACHE && window.EVIDENCE_CACHE[item.cacheKey]) {
         const cached = window.EVIDENCE_CACHE[item.cacheKey];
         currentBrief = JSON.parse(JSON.stringify(cached.brief));
@@ -1028,16 +1554,16 @@
       if (document.getElementById("liveApiToggle").checked) {
         await submitPrompt(item.prompt);
       } else {
-        addLogEntry("QUEUE", `Loaded preset "${item.title}" (${item.hours}h clock) in Instant Replay mode.`);
+        addLogEntry("QUEUE", `Loaded "${item.title}" (${item.hours}h clock) in Instant Replay mode.`);
       }
     }
 
     // ============================================================================
-    // 4. INTERACTIVE CHICAGO DISPATCH MAP (Leaflet.js + Real 192 IRS Coordinates)
+    // 4. INTERACTIVE CHICAGO DISPATCH MAP (Clean Light CartoDB Positron Tiles)
     // ============================================================================
     function initMap() {
       map = L.map("map", { zoomControl: true }).setView([41.881, -87.68], 10);
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
         attribution: "&copy; OpenStreetMap &copy; CARTO"
       }).addTo(map);
       mapLayerGroup = L.layerGroup().addTo(map);
@@ -1069,36 +1595,32 @@
       const dLat = currentPosting.donor_lat || 41.90;
       const dLon = currentPosting.donor_lon || -87.65;
 
-      // Donor Marker
       const donorMarker = L.circleMarker([dLat, dLon], {
-        radius: 8, color: "#f59e0b", fillColor: "#f59e0b", fillOpacity: 0.9, weight: 2
+        radius: 8, color: "#d97706", fillColor: "#f59e0b", fillOpacity: 0.9, weight: 2
       }).bindPopup(`<b>🏪 Donor Origin</b><br>${currentPosting.title}<br>Clock: ${brief?.the_clock?.hours_remaining || currentPosting.hours}h`);
       mapLayerGroup.addLayer(donorMarker);
 
       const bounds = [[dLat, dLon]];
 
-      // Rejected Decoys (Red Markers)
       (brief?.rejected_but_close || []).forEach((decoy) => {
         const c = lookupCoords(decoy.name);
         bounds.push([c.lat, c.lon]);
         const m = L.circleMarker([c.lat, c.lon], {
-          radius: 7, color: "#ef4444", fillColor: "#ef4444", fillOpacity: 0.85, weight: 2
-        }).bindPopup(`<b>❌ Rejected Decoy: ${decoy.name}</b><br>Semantic Rank: #${decoy.semantic_rank || "?"}<br>Reason: ${decoy.because}`);
+          radius: 7, color: "#dc2626", fillColor: "#ef4444", fillOpacity: 0.85, weight: 2
+        }).bindPopup(`<b>❌ Blocked Decoy: ${decoy.name}</b><br>Semantic Rank: #${decoy.semantic_rank || "?"}<br>Reason: ${decoy.because}`);
         mapLayerGroup.addLayer(m);
       });
 
-      // Next Two Backups (Blue Markers)
       (brief?.next_two_options || []).forEach((opt) => {
         const c = lookupCoords(opt.name);
         bounds.push([c.lat, c.lon]);
         const dist = haversineMiles(dLat, dLon, c.lat, c.lon);
         const m = L.circleMarker([c.lat, c.lon], {
-          radius: 8, color: "#3b82f6", fillColor: "#3b82f6", fillOpacity: 0.9, weight: 2
-        }).bindPopup(`<b>🔵 Option #${opt.rank}: ${opt.name}</b><br>${opt.why}<br>Straight-line distance: ~${dist} mi`);
+          radius: 8, color: "#0284c7", fillColor: "#38bdf8", fillOpacity: 0.9, weight: 2
+        }).bindPopup(`<b>🔵 Option #${opt.rank}: ${opt.name}</b><br>${opt.why}<br>Distance: ~${dist} mi`);
         mapLayerGroup.addLayer(m);
       });
 
-      // Primary Match (Green Marker + Route Line)
       if (brief?.organization_and_why?.name) {
         const topName = brief.organization_and_why.name;
         const c = lookupCoords(topName);
@@ -1106,13 +1628,13 @@
         const dist = haversineMiles(dLat, dLon, c.lat, c.lon);
 
         const routeLine = L.polyline([[dLat, dLon], [c.lat, c.lon]], {
-          color: "#10b981", weight: 3, dashArray: "6, 6"
-        }).bindPopup(`Straight-line ST_DISTANCE: ~${dist} miles`);
+          color: "#059669", weight: 3, dashArray: "6, 6"
+        }).bindPopup(`Straight-line distance: ~${dist} miles`);
         mapLayerGroup.addLayer(routeLine);
 
         const topMarker = L.circleMarker([c.lat, c.lon], {
-          radius: 10, color: "#10b981", fillColor: "#10b981", fillOpacity: 0.95, weight: 3
-        }).bindPopup(`<b>🏆 #1 Primary Match: ${topName}</b><br>${brief.organization_and_why.address}<br>Straight-line distance: ~${dist} mi`);
+          radius: 10, color: "#047857", fillColor: "#10b981", fillOpacity: 0.95, weight: 3
+        }).bindPopup(`<b>🏆 #1 Match: ${topName}</b><br>${brief.organization_and_why.address}<br>Distance: ~${dist} mi`);
         mapLayerGroup.addLayer(topMarker);
         topMarker.openPopup();
       }
@@ -1123,7 +1645,7 @@
     }
 
     // ============================================================================
-    // 5. RENDER 6-PART MATCH BRIEF & DELIVERY TIMELINE
+    // 5. RENDER MATCH HERO CARD & PROGRESSIVE TABS
     // ============================================================================
     function renderBrief(brief, answerText) {
       document.getElementById("agentTranscript").textContent = answerText || "Waiting for agent response...";
@@ -1131,9 +1653,9 @@
 
       const s = brief.search || { candidates_searched: 80, viable_after_filters: 0 };
       document.getElementById("searchPoolBadge").textContent =
-        `Pool: ${s.candidates_searched} · Viable: ${s.viable_after_filters}`;
+        `Pool: ${s.candidates_searched} → ${s.viable_after_filters} Viable`;
 
-      // Handle Refusal Case
+      // Refusal Case
       if (brief.refusal || !brief.organization_and_why) {
         document.getElementById("orgName").textContent = "🛑 No Viable Recipient Found (Safe Refusal)";
         document.getElementById("orgAddress").textContent = brief.refusal || "No candidate passed all hard constraints.";
@@ -1144,6 +1666,7 @@
         document.getElementById("kpiPallets").textContent = "0 viable";
         document.getElementById("kpiClock").textContent = `${brief.the_clock?.hours_remaining || 1}h left`;
         document.getElementById("kpiMargin").textContent = "Margin < 0h";
+        document.getElementById("kpiMargin").style.color = "var(--red)";
         document.getElementById("kpiDriver").textContent = "Do Not Dispatch";
         document.getElementById("neighborhoodText").textContent = "No recipient matched.";
         document.getElementById("outreachBox").textContent = "No outreach message drafted — load cannot be safely placed inside the clock.";
@@ -1162,33 +1685,34 @@
       const claimed = claimedPalletsByOrg[org.name] || 0;
       const remainingCap = Math.max(0, (cap.max_pallets || 0) - claimed);
 
-      document.getElementById("orgName").textContent = `🏆 ${org.name}`;
+      document.getElementById("orgName").textContent = org.name;
       document.getElementById("orgAddress").textContent = org.address || "";
       document.getElementById("meaningRankLabel").textContent =
-        `Meaning Rank: #${topRankCard.meaning_rank || "?"} of ${s.candidates_searched}`;
+        `Meaning Rank #${topRankCard.meaning_rank || "?"} of ${s.candidates_searched}`;
       document.getElementById("orgExcerpt").textContent = `"${org.profile_excerpt || org.why}"`;
 
       document.getElementById("kpiStorage").textContent = `${cap.cold_storage || "none"} cold`;
       document.getElementById("kpiPallets").textContent =
-        `Load: ${cap.load_pallets}p · Avail: ${remainingCap}/${cap.max_pallets}p` + (claimed > 0 ? ` (🔒 ${claimed}p locked)` : "");
+        `${cap.load_pallets}p load (${remainingCap}/${cap.max_pallets}p open)` + (claimed > 0 ? ` 🔒` : "");
 
       document.getElementById("kpiClock").textContent =
-        `${clk.hours_remaining}h left · ${clk.collection_lead_hours}h lead`;
-      document.getElementById("kpiMargin").textContent =
-        `Margin: +${clk.margin_hours}h slack`;
+        `${clk.hours_remaining}h left · ${clk.collection_lead_hours}h pickup`;
+      const marginEl = document.getElementById("kpiMargin");
+      marginEl.textContent = `+${clk.margin_hours}h safety margin`;
+      marginEl.style.color = clk.margin_hours < 2 ? "var(--amber)" : "var(--green)";
 
       const driverEl = document.getElementById("kpiDriver");
       if (clk.needs_driver) {
         driverEl.textContent = "⚠️ Dispatch Driver";
-        driverEl.style.color = "#fbbf24";
+        driverEl.style.color = "var(--amber)";
       } else {
         driverEl.textContent = "✅ Self-Collects (Van)";
-        driverEl.style.color = "#34d399";
+        driverEl.style.color = "var(--green)";
       }
       document.getElementById("kpiServiceDays").textContent = `Days: ${cap.service_days || "All week"}`;
 
-      document.getElementById("neighborhoodText").textContent =
-        `${nb.tract || ""} (Serves: ${nb.populations_served || "General public"} · ${nb.households_per_week || "?"} households/wk)`;
+      document.getElementById("neighborhoodText").innerHTML =
+        `<b>Neighborhood Context (Descriptive only):</b> ${nb.tract || ""} (Serves: ${nb.populations_served || "General public"} · ${nb.households_per_week || "?"} households/wk).`;
 
       document.getElementById("outreachBox").textContent = brief.outreach_message || "";
 
@@ -1198,22 +1722,25 @@
     }
 
     function renderBackupsAndDecoys(brief) {
+      const backups = brief.next_two_options || [];
+      const decoys = brief.rejected_but_close || [];
+      document.getElementById("backupsCountBadge").textContent = String(backups.length + decoys.length);
+
       const nextEl = document.getElementById("nextOptionsList");
       nextEl.innerHTML = "";
-      const backups = brief.next_two_options || [];
       if (backups.length === 0) {
-        nextEl.innerHTML = `<div style="font-size:11.5px; color:var(--muted);">No backup options available.</div>`;
+        nextEl.innerHTML = `<div style="font-size:12.5px; color:var(--text-muted);">No backup options available inside this clock.</div>`;
       } else {
         backups.forEach((b) => {
           const d = document.createElement("div");
-          d.className = "option-row";
+          d.className = "list-card";
           d.innerHTML = `
-            <div style="display:flex; justify-content:space-between; font-weight:700;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px;">
               <span>Option #${b.rank}: ${b.name}</span>
-              <span style="font-size:11px; color:#60a5fa;">Meaning Rank #${b.meaning_rank || "?"} · Margin +${b.margin_hours}h</span>
+              <span class="badge info">Rank #${b.meaning_rank || "?"} · +${b.margin_hours}h margin</span>
             </div>
-            <div style="font-size:11px; color:var(--muted); margin-top:2px;">
-              ${b.address} — ${b.why} (${b.needs_driver ? "⚠️ Needs driver" : "✅ Own transport"})
+            <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">
+              ${b.address} — ${b.why} (${b.needs_driver ? "⚠️ Needs driver" : "✅ Own van"})
             </div>
           `;
           nextEl.appendChild(d);
@@ -1222,16 +1749,16 @@
 
       const decoyEl = document.getElementById("rejectedDecoysList");
       decoyEl.innerHTML = "";
-      (brief.rejected_but_close || []).forEach((r) => {
+      decoys.forEach((r) => {
         const d = document.createElement("div");
-        d.className = "decoy-row";
+        d.className = "list-card decoy";
         d.innerHTML = `
-          <div style="display:flex; justify-content:space-between; font-weight:700; color:#fca5a5;">
+          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px; color:var(--red);">
             <span>❌ ${r.name}</span>
-            <span class="badge crit">Ranked #${r.semantic_rank || "?"} by Meaning</span>
+            <span class="badge crit">Meaning Rank #${r.semantic_rank || "?"}</span>
           </div>
-          <div style="font-size:11px; color:#fecaca; margin-top:2px;">
-            <b>Eliminated because:</b> ${r.because}
+          <div style="font-size:12px; color:#7f1d1d; margin-top:4px;">
+            <b>Blocked because:</b> ${r.because}
           </div>
         `;
         decoyEl.appendChild(d);
@@ -1244,44 +1771,49 @@
       const leadBar = document.getElementById("timelineLeadBar");
       const slackBar = document.getElementById("timelineSlackBar");
 
-      document.getElementById("deadlineLabel").textContent = `Deadline: ${hoursRemaining}h`;
-
       if (leadHours === null || leadHours === undefined) {
         badge.className = "badge crit";
         badge.textContent = "🛑 0 Viable — Refused";
         summary.innerHTML = `Food has only <b>${hoursRemaining}h</b> remaining. No recipient in Chicago can collect inside this window.`;
         leadBar.style.width = "100%";
-        leadBar.style.background = "#ef4444";
+        leadBar.style.background = "var(--red)";
+        leadBar.textContent = `Clock: ${hoursRemaining}h (Too short)`;
         slackBar.style.width = "0%";
+        slackBar.textContent = "";
         return;
       }
 
       const margin = +(hoursRemaining - leadHours).toFixed(1);
-      document.getElementById("leadTimeLabel").textContent = `Pickup Lead: ${leadHours}h`;
 
       if (margin < 0) {
         badge.className = "badge crit";
-        badge.textContent = `🚨 SPOILAGE RISK (${margin}h)`;
-        summary.innerHTML = `<b>ALERT:</b> Remaining clock dropped to <b>${hoursRemaining}h</b>, but active recipient needs <b>${leadHours}h</b>! Automatic re-routing required.`;
+        badge.textContent = `🚨 Spoilage Risk (${margin}h)`;
+        summary.innerHTML = `<b>ALERT:</b> Clock dropped to <b>${hoursRemaining}h</b>, but active recipient needs <b>${leadHours}h</b>! Automatic re-routing triggered.`;
         leadBar.style.width = "100%";
-        leadBar.style.background = "#ef4444";
+        leadBar.style.background = "var(--red)";
+        leadBar.textContent = `Pickup needs ${leadHours}h (> ${hoursRemaining}h)`;
         slackBar.style.width = "0%";
+        slackBar.textContent = "";
       } else if (margin < 2.0) {
         badge.className = "badge urg";
         badge.textContent = `⚠️ Thin Margin (+${margin}h)`;
-        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> left; recipient needs <b>${leadHours}h</b>. <b>+${margin}h slack</b> is thin — confirm immediately by phone.`;
-        const leadPct = Math.min(95, Math.round((leadHours / hoursRemaining) * 100));
+        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> left; recipient needs <b>${leadHours}h</b>. <b>+${margin}h slack</b> is tight — confirm by phone immediately.`;
+        const leadPct = Math.min(92, Math.round((leadHours / hoursRemaining) * 100));
         leadBar.style.width = `${leadPct}%`;
-        leadBar.style.background = "#f59e0b";
+        leadBar.style.background = "var(--amber)";
+        leadBar.textContent = `Pickup: ${leadHours}h`;
         slackBar.style.width = `${100 - leadPct}%`;
+        slackBar.textContent = `+${margin}h`;
       } else {
         badge.className = "badge ok";
-        badge.textContent = `🟢 +${margin}h Comfortable Slack`;
+        badge.textContent = `🟢 +${margin}h Slack`;
         summary.innerHTML = `Food has <b>${hoursRemaining}h</b> remaining. Recipient collects within <b>${leadHours}h</b>, leaving <b>+${margin}h</b> safety margin.`;
-        const leadPct = Math.min(85, Math.round((leadHours / hoursRemaining) * 100));
+        const leadPct = Math.min(82, Math.round((leadHours / hoursRemaining) * 100));
         leadBar.style.width = `${leadPct}%`;
-        leadBar.style.background = "#3b82f6";
+        leadBar.style.background = "var(--primary)";
+        leadBar.textContent = `Pickup: ${leadHours}h`;
         slackBar.style.width = `${100 - leadPct}%`;
+        slackBar.textContent = `Margin: +${margin}h`;
       }
     }
 
@@ -1289,13 +1821,14 @@
     // 6. UNEXPECTED DELAY SIMULATOR & AUTOMATIC AGENT RE-ROUTING
     // ============================================================================
     async function simulateDelay(delayHours) {
+      document.getElementById("problemDropdown").classList.remove("open");
       const origHours = currentPosting.hours || 6.0;
       const newHours = Math.max(0.5, +(origHours - delayHours).toFixed(1));
       const lead = currentBrief?.the_clock?.collection_lead_hours || 3.0;
       updateTimelineBar(newHours, lead);
 
       const activeOrg = currentBrief?.organization_and_why?.name || "the current recipient";
-      addLogEntry("DELAY ALERT", `Simulated +${delayHours}h driver/dock delay -> Clock shrunk from ${origHours}h to ${newHours}h.`);
+      addLogEntry("DELAY ALERT", `Simulated +${delayHours}h delay -> Clock shrunk from ${origHours}h to ${newHours}h.`);
 
       const followUpPrompt =
         `URGENT DELAY UPDATE: Due to a ${delayHours}-hour traffic/dock delay, the food now has only ${newHours} hours remaining before spoilage/dock closure (down from ${origHours} hours). ` +
@@ -1313,15 +1846,15 @@
     }
 
     // ============================================================================
-    // 7. LIVE openFDA FOOD RECALL & SAFETY GATE (#11 — Public Domain CC0 API)
+    // 7. LIVE openFDA FOOD RECALL & SAFETY GATE (#11)
     // ============================================================================
     async function checkOpenFDARecall(commodity) {
       const banner = document.getElementById("recallBanner");
       const badge = document.getElementById("recallStatusBadge");
       const detail = document.getElementById("recallDetail");
-      banner.className = "recall-banner safe";
+      banner.className = "context-bar";
       badge.className = "badge info";
-      badge.textContent = `Querying openFDA for "${commodity}"...`;
+      badge.textContent = `Checking openFDA (${commodity})...`;
 
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 3500);
@@ -1333,49 +1866,46 @@
 
         if (resp.status === 404) {
           badge.className = "badge ok";
-          badge.textContent = `🟢 0 Ongoing FDA Recalls ("${commodity}")`;
-          detail.textContent = `Verified live against api.fda.gov/food/enforcement.json (CC0 Public Domain) — No active recalls found for "${commodity}". Confirm lot code on pickup.`;
+          badge.textContent = `🟢 openFDA Clear (${commodity})`;
+          detail.textContent = `0 active FDA recalls for "${commodity}". Confirm sealed packaging & lot code on pickup.`;
           return;
         }
         const data = await resp.json();
         const total = data?.meta?.results?.total || 0;
         const first = (data?.results && data.results[0]) ? data.results[0] : null;
         if (total > 0 && first) {
-          banner.className = "recall-banner warn";
+          banner.className = "context-bar warn";
           badge.className = "badge urg";
-          badge.textContent = `⚠️ ${total} Ongoing FDA Recall Notice(s) for "${commodity}"`;
-          const reason = (first.reason_for_recall || "").slice(0, 110);
-          detail.innerHTML = `<b>openFDA Alert (${first.classification || "Class II"}):</b> "${reason}..." (Firm: ${first.recalling_firm || "Various"}). <b>Action:</b> Verify donor lot/UPC is not part of this recall before dispatch!`;
+          badge.textContent = `⚠️ ${total} FDA Recall Notice(s): ${commodity}`;
+          const reason = (first.reason_for_recall || "").slice(0, 95);
+          detail.innerHTML = `<b>openFDA (${first.classification || "Class II"}):</b> "${reason}..." — Verify donor lot/UPC before loading!`;
         } else {
           badge.className = "badge ok";
-          badge.textContent = `🟢 openFDA Checked ("${commodity}")`;
-          detail.textContent = `Verified against openFDA Enforcement API — Clear to proceed with standard lot inspection.`;
+          badge.textContent = `🟢 openFDA Clear (${commodity})`;
+          detail.textContent = `Verified against openFDA Enforcement API — proceed with standard lot inspection.`;
         }
       } catch (err) {
         clearTimeout(timer);
         badge.className = "badge ok";
-        badge.textContent = `🟢 Safety Gate Active ("${commodity}")`;
-        detail.textContent = `openFDA CC0 Safety Check: Verify sealed packaging & lot numbers on dock pickup before loading.`;
+        badge.textContent = `🟢 Safety Gate Active (${commodity})`;
+        detail.textContent = `Verify sealed packaging & lot numbers on dock pickup before loading.`;
       }
     }
 
-    function recheckOpenFDA() {
-      checkOpenFDARecall(currentPosting.commodity || "Spinach");
-    }
-
     function triggerSafetyHalt() {
+      document.getElementById("problemDropdown").classList.remove("open");
       const banner = document.getElementById("recallBanner");
       const badge = document.getElementById("recallStatusBadge");
       const detail = document.getElementById("recallDetail");
-      banner.className = "recall-banner halt";
+      banner.className = "context-bar halt";
       badge.className = "badge crit";
       badge.textContent = "🛑 SAFETY HALT — DO NOT DISPATCH";
-      detail.innerHTML = `<b>LOAD HALTED BY COORDINATOR:</b> "${currentPosting.title}" flagged for food safety / recall / temperature violation. Dispatch blocked.`;
+      detail.innerHTML = `<b>LOAD HALTED:</b> "${currentPosting.title}" flagged for food safety / recall / temperature violation.`;
       addLogEntry("SAFETY HALT", `Coordinator halted "${currentPosting.title}" due to recall/spoilage risk.`);
     }
 
     // ============================================================================
-    // 8. PUSH-TO-TALK VOICE INPUT (Web Speech API) & MULTIMODAL PHOTO (#14)
+    // 8. PUSH-TO-TALK VOICE INPUT & MULTIMODAL PHOTO (#14)
     // ============================================================================
     let recognition = null;
     let isRecording = false;
@@ -1384,7 +1914,7 @@
       const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
       const micBtn = document.getElementById("micBtn");
       if (!SpeechRec) {
-        alert("Web Speech API is supported in Chrome/Edge. Simulating voice transcript for demo!");
+        alert("Web Speech API is supported in Chrome/Edge. Populating sample voice transcript!");
         document.getElementById("promptInput").value =
           "A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.";
         return;
@@ -1413,7 +1943,7 @@
       recognition.onend = () => {
         isRecording = false;
         micBtn.classList.remove("mic-recording");
-        micBtn.textContent = "🎙️ Speak";
+        micBtn.textContent = "🎙️ Voice";
         const val = document.getElementById("promptInput").value.trim();
         if (val) {
           addLogEntry("VOICE", `Transcribed voice command: "${val}"`);
@@ -1453,11 +1983,9 @@
       uploadedPhotoBase64 = dataUrl.split(",")[1];
       uploadedPhotoMime = "image/png";
 
-      const img = document.getElementById("photoPreview");
-      img.src = dataUrl;
-      img.style.display = "block";
-      document.getElementById("sendPhotoBtn").style.display = "inline-flex";
-      addLogEntry("PHOTO (#14)", "Loaded sample produce crate pallet tag image for multimodal Gemini extraction.");
+      document.getElementById("photoPreview").src = dataUrl;
+      document.getElementById("photoDrawer").classList.add("active");
+      addLogEntry("PHOTO (#14)", "Attached sample spinach crate tag image.");
     }
 
     function handlePhotoUpload(event) {
@@ -1468,10 +1996,8 @@
         const dataUrl = e.target.result;
         uploadedPhotoBase64 = dataUrl.split(",")[1];
         uploadedPhotoMime = file.type || "image/png";
-        const img = document.getElementById("photoPreview");
-        img.src = dataUrl;
-        img.style.display = "block";
-        document.getElementById("sendPhotoBtn").style.display = "inline-flex";
+        document.getElementById("photoPreview").src = dataUrl;
+        document.getElementById("photoDrawer").classList.add("active");
       };
       reader.readAsDataURL(file);
     }
@@ -1481,43 +2007,45 @@
       const textPrompt =
         "Read this produce crate / pallet tag image. Extract the product name, quantity in crates/pallets, whether it needs cold storage, and the donor deadline in hours. State what you extracted from the tag, then call lookup_shelf_life and find_matches to give the 6-part Match Brief.";
       document.getElementById("promptInput").value = "[📷 Attached Crate Tag Photo] " + textPrompt;
+      document.getElementById("photoDrawer").classList.remove("active");
       await submitPrompt(textPrompt, {
         inlineData: { mimeType: uploadedPhotoMime, data: uploadedPhotoBase64 }
       });
     }
 
     // ============================================================================
-    // 9. STATEFUL PALLET LOCKING (#12) & 3-TIER PROBLEM REPORTING
+    // 9. CLAIM LOAD (#12) & PROBLEM REPORTING
     // ============================================================================
-    function lockPalletsForPrimary() {
+    function copyAndClaimPrimary() {
+      copyOutreachSms();
       if (!currentBrief?.organization_and_why?.name) return;
       const org = currentBrief.organization_and_why.name;
       const load = currentBrief.what_they_can_take?.load_pallets || 0.5;
       claimedPalletsByOrg[org] = (claimedPalletsByOrg[org] || 0) + load;
       addLogEntry(
-        "PALLET LOCK (#12)",
-        `Locked ${load} pallet(s) at ${org} (Total claimed today: ${claimedPalletsByOrg[org]}p / Max ${currentBrief.what_they_can_take?.max_pallets}p). Prevents double-booking.`
+        "CLAIM & LOCK (#12)",
+        `Copied SMS & locked ${load} pallet(s) at ${org} (Claimed today: ${claimedPalletsByOrg[org]}p / Max ${currentBrief.what_they_can_take?.max_pallets}p).`
       );
       renderBrief(currentBrief, currentAnswer);
     }
 
     async function reportDiscrepancy(issueLabel, fieldName, reportedValue) {
+      document.getElementById("problemDropdown").classList.remove("open");
       const org = currentBrief?.organization_and_why?.name || "Habibi Care";
       const oldVal = currentBrief?.what_they_can_take?.[fieldName] ?? "on-file";
-      const entry = {
+      discrepancyEntries.push({
         timestamp: new Date().toISOString(),
         recipient: org,
         issue: issueLabel,
         field: fieldName,
         profile_on_file: oldVal,
         reported_reality: reportedValue
-      };
-      discrepancyEntries.push(entry);
+      });
       excludedOrgs.push(org);
 
       addLogEntry(
-        "PROFILE DISCREPANCY",
-        `${org}: Flagged "${issueLabel}" (${fieldName}: on-file="${oldVal}" -> actual="${reportedValue}"). Skipping ${org} & re-matching...`
+        "DISCREPANCY",
+        `${org}: Flagged "${issueLabel}" (${fieldName}: "${oldVal}" -> "${reportedValue}"). Re-matching next recipient...`
       );
 
       const prompt = `FIELD DISCREPANCY REPORT: We called ${org} and found "${issueLabel}" (${fieldName} is actually ${reportedValue}). They cannot take this load. Who's next?`;
@@ -1528,7 +2056,7 @@
     function addLogEntry(tag, text) {
       const list = document.getElementById("discrepancyLog");
       const div = document.createElement("div");
-      div.className = "log-entry";
+      div.className = "log-item";
       const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
       div.innerHTML = `<b>[${time} · ${tag}]</b> ${text}`;
       list.prepend(div);
@@ -1545,6 +2073,7 @@
     }
 
     function reportSystemBug() {
+      document.getElementById("problemDropdown").classList.remove("open");
       const title = encodeURIComponent(`[Coordinator Console Bug] Issue in session ${sessionId}`);
       const body = encodeURIComponent(
         `### Coordinator Console Bug / Data Anomaly Report\n` +
@@ -1570,10 +2099,10 @@
         });
         if (resp.ok) {
           sessionReady = true;
-          document.getElementById("connBadge").textContent = "🟢 Live Cloud Run Connected";
+          document.getElementById("connBadge").textContent = "🟢 Live Cloud Run";
         }
       } catch (e) {
-        document.getElementById("connBadge").textContent = "🟡 Instant Replay Mode (Run frontend/serve.py for CORS proxy)";
+        document.getElementById("connBadge").textContent = "🟡 Instant Replay Mode";
       }
     }
 
@@ -1594,6 +2123,7 @@
     async function sendMcpWalkInQuery() {
       const q = "How many recipients in the corpus have walk-in cold storage, and what share of all recipients is that?";
       document.getElementById("promptInput").value = q;
+      switchTab("agentTab");
       await submitPrompt(q);
     }
 
@@ -1605,8 +2135,8 @@
       const latencyBadge = document.getElementById("latencyBadge");
       sendBtn.disabled = true;
       const t0 = performance.now();
-      latencyBadge.textContent = "⏳ Running ADK Agent (VECTOR_SEARCH + Hard Filters)...";
-      document.getElementById("agentTranscript").textContent = `Sending to food_broker: "${text}"...\n(Calling lookup_shelf_life / find_matches / BigQuery MCP...)`;
+      latencyBadge.textContent = "⏳ Matching...";
+      document.getElementById("agentTranscript").textContent = `Sending to food_broker: "${text}"...`;
 
       try {
         const base = getApiBase();
@@ -1630,7 +2160,7 @@
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const events = await resp.json();
         const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
-        latencyBadge.textContent = `✅ Live Cloud Run (${elapsed}s)`;
+        latencyBadge.textContent = `✅ ${elapsed}s`;
 
         let newBrief = null;
         let finalReply = "";
@@ -1661,9 +2191,8 @@
         currentAnswer = finalReply || currentAnswer;
         renderBrief(currentBrief, currentAnswer);
       } catch (err) {
-        // Offline / CORS Fallback for instantaneous local demo resilience
         handleOfflineFallback(text);
-        latencyBadge.textContent = "⚡ Instant Replay Fallback";
+        latencyBadge.textContent = "⚡ Instant Replay";
       } finally {
         sendBtn.disabled = false;
       }
@@ -1679,11 +2208,7 @@
       if (lower.includes("greenline")) {
         document.getElementById("agentTranscript").textContent =
           `[Tool: explain_candidate("Greenline Community Pantry")]\n\nGreenline Community Pantry was ranked #1–#7 by meaning (their profile explicitly asks for fresh greens), but was eliminated by the hard constraint filter because they have NO cold storage (cold_storage="none") and require 12 hours to collect (food has 6 hours).`;
-        return;
-      }
-      if (lower.includes("downtown") || lower.includes("food bank") || lower.includes("depository")) {
-        document.getElementById("agentTranscript").textContent =
-          `[Tool: explain_candidate("food depository / food bank")]\n\nGreater Chicago Food Depository (23 pallets, walk-in cooler) and Americas Food Bank were eliminated because their pickup collection lead times (36h and 41h) exceed the 6-hour spinach deadline.`;
+        switchTab("agentTab");
         return;
       }
       if (lower.includes("said no") || lower.includes("cannot take")) {
@@ -1715,7 +2240,7 @@
     function copyOutreachSms() {
       const txt = document.getElementById("outreachBox").textContent;
       navigator.clipboard.writeText(txt);
-      addLogEntry("SMS COPIED", `Copied outreach SMS for ${currentBrief?.organization_and_why?.name || "recipient"} to clipboard.`);
+      addLogEntry("SMS COPIED", `Copied outreach SMS for ${currentBrief?.organization_and_why?.name || "recipient"}.`);
     }
 
     function openModal(id) { document.getElementById(id).style.display = "flex"; }
@@ -1735,7 +2260,7 @@
         pickup_window_hours: parseFloat(lead), refrigerated_transport: van
       };
       closeModal("onboardModal");
-      addLogEntry("ONBOARDING (#10)", `Verified ground-truth profile for "${name}" (${cold} cold, ${dock}, ${lead}h lead, van=${van}).`);
+      addLogEntry("ONBOARDING (#10)", `Saved verified profile for "${name}" (${cold} cold, ${dock}, ${lead}h lead).`);
 
       const p = `We just onboarded a verified pantry "${name}" at ${addr} (${cold} cold storage, takes ${dock}, collects within ${lead}h, refrigerated_transport=${van}). Now we have 10 crates of fresh spinach that must move in 6 hours and stay cold—how does our match pipeline evaluate this offer?`;
       document.getElementById("promptInput").value = p;
