@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" role="img">
+  <title>Baby bottle</title>
+  <path d="M28 16 V12 a4 4 0 0 1 8 0 V16"/>
+  <rect x="22" y="16" width="20" height="7" rx="2"/>
+  <path d="M24 23 V54 a4 4 0 0 0 4 4 H36 a4 4 0 0 0 4 -4 V23"/>
+  <path d="M24 33 H30 M24 41 H30 M24 49 H30"/>
+</svg>

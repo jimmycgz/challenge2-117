@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" role="img">
+  <title>Grocery cart</title>
+  <path d="M4 10 H11 L18 40 H48 L54 18 H13"/>
+  <path d="M18 40 L19.6 46 H46"/>
+  <circle cx="22" cy="53" r="4"/>
+  <circle cx="44" cy="53" r="4"/>
+</svg>
