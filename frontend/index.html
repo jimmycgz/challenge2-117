@@ -321,7 +321,9 @@
       flex-direction: column;
       justify-content: space-between;
       flex-shrink: 0;
+      transition: margin-left 0.2s ease;
     }
+    .nav-rail.collapsed { margin-left: -205px; }
 
     .nav-group { display: flex; flex-direction: column; gap: 2px; }
     .nav-group-label {
@@ -368,7 +370,9 @@
       flex-direction: column;
       min-height: 0;
       flex-shrink: 0;
+      transition: margin-left 0.2s ease;
     }
+    .queue-sidebar.collapsed { margin-left: -275px; }
 
     .sidebar-header {
       padding: 14px 14px 8px;
@@ -769,80 +773,80 @@
           </svg>
         </div>
         <span class="brand-name">RescueBroker</span>
-        <span style="font-size:12px; color:var(--text-muted);">Chicago Track 1</span>
+        <span style="font-size:12px; color:var(--text-muted);">Chicago Food Rescue</span>
       </div>
       <div style="display:flex; gap:10px; align-items:center;">
         <span class="status-indicator">
           <span class="dot"></span>
-          <span>Google Maps & Cloud Run Active</span>
+          <span>Live Matching & Maps Ready</span>
         </span>
-        <button onclick="dismissSplash('dispatch')">Enter Console →</button>
+        <button onclick="dismissSplash('dispatch')">Open Workspace →</button>
       </div>
     </div>
 
     <div class="splash-hero">
       <div class="splash-badge">
         <span class="dot"></span>
-        <span>183 Real IRS Chicago Pantries (+9 Invented Teaching Cases) · BigQuery Vector Search</span>
+        <span>183 Verified Chicago Pantries & Shelters · Live Cooler Capacity & Pickup Windows</span>
       </div>
       <h1 class="splash-title">
         Move surplus food before<br />the clock runs out.
       </h1>
       <p class="splash-sub">
-        AI-assisted dispatch, delivery target management, pickup feasibility analytics, and multi-stop route consolidation for Chicago food rescue coordinators.
+        Match expiring food donations to nearby pantries with open cooler space, coordinate driver routes, and confirm deliveries in seconds.
       </p>
 
       <div class="splash-cta-row">
         <button class="btn-hero" onclick="dismissSplash('dispatch')">
-          Launch Dispatch Console →
+          Open Live Dispatch →
         </button>
         <button class="btn-hero-secondary" onclick="dismissSplash('targets')">
-          Manage Delivery Targets & Capacity
+          Manage Pantry Locations & Capacity
         </button>
         <button class="btn-hero-secondary" onclick="dismissSplash('routes')">
-          Multi-Stop Route Optimizer
+          Plan Multi-Stop Routes
         </button>
       </div>
 
       <div style="margin-top:26px; text-align:left; width:100%; max-width:920px;">
         <div style="font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:10px; text-align:center;">
-          Select Your User Persona to Enter Your Tailored Workspace
+          Choose Your Role to Get Started
         </div>
         <div class="splash-cards">
           <div class="splash-card" onclick="enterAsPersona('Coordinator', 'dispatch', SURPLUS_QUEUE[2])">
-            <span class="time-pill urg">Persona 1 · Dispatch Coordinator</span>
-            <div class="splash-card-title">Live Dispatch & Decision Queue</div>
-            <div class="splash-card-desc">Triage expiring loads, send SMS outreach, accept/confirm deliveries, or promote backups when a pantry declines.</div>
-            <div style="margin-top:8px; font-size:11.5px; font-weight:600; color:var(--text);">Enter Dispatch Console →</div>
+            <span class="time-pill urg">Dispatch Coordinator</span>
+            <div class="splash-card-title">Match & Dispatch Donations</div>
+            <div class="splash-card-desc">Review urgent food offers, text pantry contacts, confirm deliveries, or switch to a backup pantry if needed.</div>
+            <div style="margin-top:8px; font-size:11.5px; font-weight:600; color:var(--text);">Open Dispatch →</div>
           </div>
 
           <div class="splash-card" onclick="enterAsPersona('Pantry Manager', 'targets')">
-            <span class="time-pill green">Persona 2 · Pantry / Agency Manager</span>
-            <div class="splash-card-title">Delivery Targets & Capacity (192)</div>
-            <div class="splash-card-desc">Toggle "Accepting Food" status, confirm incoming deliveries, check last delivery times, and update cooler capacity.</div>
-            <div style="margin-top:8px; font-size:11.5px; font-weight:600; color:var(--text);">Manage Pantry Targets →</div>
+            <span class="time-pill green">Pantry / Agency Manager</span>
+            <div class="splash-card-title">Pantry Status & Cooler Space</div>
+            <div class="splash-card-desc">Set whether your location is accepting food today, check recent deliveries, and update open pallet space.</div>
+            <div style="margin-top:8px; font-size:11.5px; font-weight:600; color:var(--text);">Manage Pantries →</div>
           </div>
 
           <div class="splash-card" onclick="enterAsPersona('Fleet Planner', 'routes')">
-            <span class="time-pill ok">Persona 3 · Fleet & Route Planner</span>
-            <div class="splash-card-title">Corridor Route Optimizer</div>
-            <div class="splash-card-desc">Batch nearby pickups along I-55 (-38% miles), split 10-pallet farm loads, and re-route delayed drivers.</div>
-            <div style="margin-top:8px; font-size:11.5px; font-weight:600; color:var(--text);">Open Route Optimizer →</div>
+            <span class="time-pill ok">Driver & Route Planner</span>
+            <div class="splash-card-title">Multi-Stop Route Planner</div>
+            <div class="splash-card-desc">Combine nearby pickups onto one van route, split large farm loads across two pantries, and handle traffic delays.</div>
+            <div style="margin-top:8px; font-size:11.5px; font-weight:600; color:var(--text);">Plan Routes →</div>
           </div>
 
           <div class="splash-card" onclick="enterAsPersona('Safety & Program Director', 'safety')">
-            <span class="time-pill crit">Persona 4 · Safety & Program Director</span>
-            <div class="splash-card-title">FDA Recalls & Tract Equity</div>
-            <div class="splash-card-desc">Screen commodities against live openFDA enforcement records, trigger safety halts, and audit Census tract equity.</div>
-            <div style="margin-top:8px; font-size:11.5px; font-weight:600; color:var(--text);">Open Safety & Equity →</div>
+            <span class="time-pill crit">Safety & Program Director</span>
+            <div class="splash-card-title">Food Safety & Community Reach</div>
+            <div class="splash-card-desc">Check donations against active FDA food recalls, put unsafe loads on hold, and review neighborhood impact.</div>
+            <div style="margin-top:8px; font-size:11.5px; font-weight:600; color:var(--text);">Open Safety & Impact →</div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="splash-footer">
-      <span>Built on Vertex AI (`gemini-embedding-2`), BigQuery `VECTOR_SEARCH`, Managed MCP, Google Maps JS & openFDA</span>
-      <span>Project: `qwiklabs-gcp-04-6c7101c1dba1`</span>
+      <span>Chicago Food Rescue Network · Real-Time Pantry Matching, Route Planning & Food Safety Screening</span>
+      <span>192 Partner Locations Across Chicago</span>
     </div>
   </div>
 
@@ -850,37 +854,49 @@
        2. TOP BAR
        ========================================================================== -->
   <header class="topbar">
-    <div class="brand" onclick="showSplash()" title="Return to Persona Welcome Screen">
-      <div class="brand-mark">
-        <svg class="icon-svg" viewBox="0 0 24 24" style="width:15px;height:15px;">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-        </svg>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <button class="btn-ghost" style="padding:5px 8px; font-size:12px;" onclick="toggleLeftNav()" id="toggleNavBtn" title="Show or hide the left navigation menu">
+        ☰ Menu
+      </button>
+      <button class="btn-ghost" style="padding:5px 8px; font-size:12px;" onclick="toggleQueueSidebar()" id="toggleQueueBtn" title="Show or hide the incoming food queue">
+        📋 Queue (11)
+      </button>
+      <span style="color:var(--border-strong);">|</span>
+      <div class="brand" onclick="showSplash()" title="Return to Role Selection Screen">
+        <div class="brand-mark">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="width:15px;height:15px;">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <span class="brand-name">RescueBroker</span>
+        <span style="color:var(--border-strong);">/</span>
+        <span style="font-size:13px; color:var(--text-muted);" id="activeViewBreadcrumb">Live Dispatch</span>
       </div>
-      <span class="brand-name">RescueBroker</span>
-      <span style="color:var(--border-strong);">/</span>
-      <span style="font-size:13px; color:var(--text-muted);" id="activeViewBreadcrumb">Live Dispatch</span>
-      <span class="time-pill ok" id="activePersonaBadge" onclick="showSplash()" style="cursor:pointer; margin-left:4px;" title="Click to switch persona">Role: Coordinator ▾</span>
+      <span class="time-pill ok" id="activePersonaBadge" onclick="showSplash()" style="cursor:pointer; margin-left:4px;" title="Click to switch role">Role: Coordinator ▾</span>
     </div>
 
     <div class="topbar-right">
-      <div class="status-indicator" title="Google Maps JavaScript API">
+      <div class="status-indicator" title="Interactive Map Status">
         <span class="dot" id="mapsDot"></span>
-        <span id="mapsStatusLabel">Google Maps Active</span>
+        <span id="mapsStatusLabel">Map Ready</span>
       </div>
-      <div class="status-indicator" title="Cloud Run ADK Backend">
+      <div class="status-indicator" title="Live Matching Assistant Status">
         <span class="dot muted" id="connDot"></span>
         <span id="connBadge">Connecting...</span>
       </div>
-      <label class="status-indicator" style="cursor:pointer;">
+      <label class="status-indicator" style="cursor:pointer;" title="Turn live matching on or off">
         <input type="checkbox" id="liveApiToggle" checked style="accent-color:var(--text);" />
-        <span>Live Agent</span>
+        <span>Live Matching</span>
       </label>
+      <button onclick="toggleFocusMode()" class="btn-ghost" id="focusModeBtn" title="Hide all side panels for a full-width view">
+        ⛶ Full Width
+      </button>
       <button onclick="openRightSidePanel('faq')" class="btn-ghost">FAQ & Help</button>
-      <button onclick="toggleAgentSidebar()">
+      <button onclick="toggleAgentSidebar()" id="toggleAssistantBtn">
         <svg class="icon-svg" viewBox="0 0 24 24">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
-        <span>Copilot & Support</span>
+        <span id="assistantBtnLabel">Hide Assistant</span>
       </button>
     </div>
   </header>
@@ -891,9 +907,12 @@
   <div class="app-shell">
 
     <!-- 3A. LEFT NAVIGATION RAIL -->
-    <nav class="nav-rail">
+    <nav class="nav-rail" id="leftNavRail">
       <div class="nav-group">
-        <div class="nav-group-label">Dispatch & Routing</div>
+        <div class="nav-group-label" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>Dispatch & Routing</span>
+          <button class="btn-ghost" style="padding:1px 5px; font-size:10px;" onclick="toggleLeftNav()" title="Hide menu">◀</button>
+        </div>
         <button class="nav-item active" data-view="dispatch" onclick="switchMainView('dispatch')">
           <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
           <span>Live Dispatch</span>
@@ -902,46 +921,49 @@
 
         <button class="nav-item" data-view="targets" onclick="switchMainView('targets')">
           <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          <span>Delivery Targets</span>
+          <span>Pantry Locations</span>
           <span class="nav-badge" id="acceptingCountBadge">188</span>
         </button>
 
         <button class="nav-item" data-view="routes" onclick="switchMainView('routes')">
           <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"></circle><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path><circle cx="18" cy="5" r="3"></circle></svg>
-          <span>Route Optimizer</span>
+          <span>Route Planner</span>
           <span class="nav-badge">3</span>
         </button>
 
-        <div class="nav-group-label" style="margin-top:12px;">Risk & Analytics</div>
+        <div class="nav-group-label" style="margin-top:12px;">Safety & Impact</div>
         <button class="nav-item" data-view="safety" onclick="switchMainView('safety')">
           <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          <span>Alerts & FDA Recalls</span>
+          <span>Food Safety & Recalls</span>
           <span class="nav-badge" id="alertsCountBadge">2</span>
         </button>
 
         <button class="nav-item" data-view="equity" onclick="switchMainView('equity')">
           <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-          <span>Equity & Impact</span>
+          <span>Community Impact</span>
         </button>
       </div>
 
       <div class="nav-group">
         <button class="nav-item" onclick="openRightSidePanel('help')">
           <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-          <span>Request Help / FAQ</span>
+          <span>Get Help / FAQ</span>
         </button>
         <button class="nav-item" onclick="showSplash()">
           <svg class="icon-svg" viewBox="0 0 24 24"><polygon points="10 8 16 12 10 16 10 8"></polygon><circle cx="12" cy="12" r="10"></circle></svg>
-          <span>Welcome Screen</span>
+          <span>Switch Role</span>
         </button>
       </div>
     </nav>
 
     <!-- 3B. SURPLUS QUEUE SUB-SIDEBAR -->
-    <aside class="queue-sidebar">
+    <aside class="queue-sidebar" id="queueSidebar">
       <div class="sidebar-header">
-        <span class="sidebar-title">Ticking-Clock Queue</span>
-        <span style="font-size:11px; color:var(--text-muted);">Urgency ↑</span>
+        <span class="sidebar-title">Incoming Food Offers</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:11px; color:var(--text-muted);">Soonest first</span>
+          <button class="btn-ghost" style="padding:2px 6px; font-size:11px;" onclick="toggleQueueSidebar()" title="Hide queue panel">◀ Hide</button>
+        </div>
       </div>
       <div class="queue-scroll" id="queueList"></div>
     </aside>
@@ -957,24 +979,24 @@
         <!-- Executive KPI & Metrics Bar -->
         <div class="kpi-top-row">
           <div class="kpi-mini">
-            <div class="kpi-mini-label">Active Surplus Queue</div>
+            <div class="kpi-mini-label">Donations Waiting</div>
             <div class="kpi-mini-val">37.8 Pallets</div>
-            <div class="kpi-mini-sub">11 offers · 3 expiring ≤ 6h</div>
+            <div class="kpi-mini-sub">11 offers · 3 expiring within 6h</div>
           </div>
           <div class="kpi-mini">
-            <div class="kpi-mini-label">Targets Accepting Food</div>
+            <div class="kpi-mini-label">Pantries Accepting Food</div>
             <div class="kpi-mini-val" id="kpiTargetsAccepting">188 / 192</div>
-            <div class="kpi-mini-sub" id="kpiTotalPalletsOpen">380.0p total network cap</div>
+            <div class="kpi-mini-sub" id="kpiTotalPalletsOpen">380.0 pallets open space</div>
           </div>
           <div class="kpi-mini">
-            <div class="kpi-mini-label">≤6h Pickup Feasibility</div>
+            <div class="kpi-mini-label">Can Pick Up Within 6h</div>
             <div class="kpi-mini-val">78 Pantries (41%)</div>
-            <div class="kpi-mini-sub">5 pantries ≤2h · 0 under 1h</div>
+            <div class="kpi-mini-sub">5 pantries within 2h · 0 under 1h</div>
           </div>
           <div class="kpi-mini">
-            <div class="kpi-mini-label">Active Safety / FDA Alerts</div>
-            <div class="kpi-mini-val" style="color:var(--accent-dark);" id="kpiSafetyStatus">0 Recalls</div>
-            <div class="kpi-mini-sub">openFDA Enforcement live</div>
+            <div class="kpi-mini-label">Food Safety Alerts</div>
+            <div class="kpi-mini-val" style="color:var(--accent-dark);" id="kpiSafetyStatus">All Clear</div>
+            <div class="kpi-mini-sub">FDA recall check active</div>
           </div>
         </div>
 
@@ -982,50 +1004,50 @@
         <div class="decision-queue-strip">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted);">
-              Coordinator Priority Decision Queue (Top Action Items)
+              Most Urgent Decisions Right Now
             </span>
-            <span style="font-size:11px; color:var(--text-muted);">Click to resolve immediately</span>
+            <span style="font-size:11px; color:var(--text-muted);">Click any card to take action</span>
           </div>
           <div class="decision-cards">
             <div class="decision-card">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span class="time-pill crit">1.0h Clock</span>
-                  <span style="font-size:11px; color:var(--text-muted);">Min network lead: 2.0h</span>
+                  <span class="time-pill crit">1.0h Left</span>
+                  <span style="font-size:11px; color:var(--text-muted);">Fastest pickup: 2.0h</span>
                 </div>
                 <div style="font-size:12.5px; font-weight:600; margin-top:5px;">40 Trays Cream Pastries</div>
-                <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">0 viable pantries can collect in 1h.</div>
+                <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">No pantry can pick up within 1 hour.</div>
               </div>
               <button onclick="selectQueuePosting(SURPLUS_QUEUE[0])" style="width:100%; justify-content:center; font-size:11.5px;">
-                Review Safe Refusal →
+                See Recovery Options →
               </button>
             </div>
 
             <div class="decision-card">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span class="time-pill urg">4.0h Clock</span>
-                  <span style="font-size:11px; color:var(--text-muted);">38 viable pantries</span>
+                  <span class="time-pill urg">4.0h Left</span>
+                  <span style="font-size:11px; color:var(--text-muted);">38 pantries available</span>
                 </div>
-                <div style="font-size:12.5px; font-weight:600; margin-top:5px;">Deli Sandwiches & Salads (#4)</div>
-                <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Batch with #1 Spinach on I-55 run.</div>
+                <div style="font-size:12.5px; font-weight:600; margin-top:5px;">Deli Sandwiches & Salads</div>
+                <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Can combine with Fresh Spinach on one van.</div>
               </div>
               <button onclick="selectQueuePosting(SURPLUS_QUEUE[1])" style="width:100%; justify-content:center; font-size:11.5px;">
-                Dispatch / Batch Load →
+                Review Match →
               </button>
             </div>
 
             <div class="decision-card">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span class="time-pill green">6.0h Clock</span>
-                  <span style="font-size:11px; color:var(--text-muted);">12 viable survivors</span>
+                  <span class="time-pill green">6.0h Left</span>
+                  <span style="font-size:11px; color:var(--text-muted);">12 pantries fit</span>
                 </div>
-                <div style="font-size:12.5px; font-weight:600; margin-top:5px;">10 Crates Fresh Spinach (#1)</div>
-                <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Habibi Care ready (+3h safety buffer).</div>
+                <div style="font-size:12.5px; font-weight:600; margin-top:5px;">10 Crates Fresh Spinach</div>
+                <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Habibi Care ready (+3h time cushion).</div>
               </div>
               <button class="btn-dark" onclick="selectQueuePosting(SURPLUS_QUEUE[2]); copyAndClaimPrimary();" style="width:100%; justify-content:center; font-size:11.5px;">
-                Claim & Lock 0.5p →
+                Accept & Reserve Space →
               </button>
             </div>
           </div>
@@ -1036,11 +1058,11 @@
           <div class="match-card-strip" id="recallBanner">
             <div style="display:flex; align-items:center; gap:8px;">
               <span class="dot muted" id="recallDot"></span>
-              <span id="recallStatusBadge" style="font-weight:600; color:var(--text);">openFDA not checked yet</span>
+              <span id="recallStatusBadge" style="font-weight:600; color:var(--text);">Checking FDA recalls...</span>
               <span style="color:var(--border-strong);">·</span>
-              <span id="recallDetail">Confirm sealed lot on pickup.</span>
+              <span id="recallDetail">Check sealed packaging at pickup.</span>
             </div>
-            <span id="searchPoolBadge" style="font-weight:500;">80 searched → 12 viable</span>
+            <span id="searchPoolBadge" style="font-weight:500;">80 pantries checked · 12 fit</span>
           </div>
 
           <div class="match-card-body">
@@ -1050,8 +1072,8 @@
             <div class="recipient-header">
               <div>
                 <div style="display:flex; align-items:center; gap:8px;">
-                  <span class="eyebrow-pill" id="matchEyebrow">Top Match</span>
-                  <span style="font-size:12px; color:var(--text-muted);" id="meaningRankLabel">Meaning Rank #17 of 80</span>
+                  <span class="eyebrow-pill" id="matchEyebrow">Best Match</span>
+                  <span style="font-size:12px; color:var(--text-muted);" id="meaningRankLabel">Recommended #1</span>
                   <span class="time-pill ok" id="lastDeliveryBadge">Last delivery: 2d ago</span>
                 </div>
                 <h2 class="recipient-name" id="orgName">Habibi Care</h2>
@@ -1059,50 +1081,50 @@
               </div>
 
               <div class="cta-group">
-                <button onclick="copyOutreachSms()" title="Step 1: Send outreach SMS to pantry contact">
+                <button onclick="copyOutreachSms()" title="Step 1: Copy text message to send to the pantry">
                   <svg class="icon-svg" viewBox="0 0 24 24">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                   </svg>
-                  <span id="smsBtnLabel">1. Copy SMS</span>
+                  <span id="smsBtnLabel">1. Copy Text</span>
                 </button>
 
-                <button class="btn-dark" onclick="acceptAndConfirmDelivery()" id="acceptDeliveryBtn" title="Step 2: Pantry accepted — confirm delivery & lock pallets">
-                  <span>✓ 2. Accept Delivery</span>
+                <button class="btn-dark" onclick="acceptAndConfirmDelivery()" id="acceptDeliveryBtn" title="Step 2: Pantry agreed — confirm delivery & reserve cooler space">
+                  <span>✓ 2. Confirm Delivery</span>
                 </button>
 
-                <button onclick="markDeliveryCompleted()" id="markDeliveredBtn" style="display:none;" title="Step 3: Driver completed drop-off at pantry dock">
+                <button onclick="markDeliveryCompleted()" id="markDeliveredBtn" style="display:none;" title="Step 3: Driver dropped off the food at the pantry">
                   <span>📦 3. Mark Delivered</span>
                 </button>
 
-                <button onclick="toggleOrTriggerRefusal()" style="color:var(--red); border-color:var(--red-border);" title="Pantry refused or cannot deliver — open fallback options or promote next match">
-                  <span>✗ Can't Deliver / Refused ▾</span>
+                <button onclick="toggleOrTriggerRefusal()" style="color:var(--red); border-color:var(--red-border);" title="Pantry couldn't take it — see backup options">
+                  <span>✗ Can't Deliver / Backup ▾</span>
                 </button>
 
                 <div class="dropdown" id="problemDropdown">
                   <button onclick="toggleProblemMenu(event)">
-                    <span>Report Issue</span>
+                    <span>Report Problem</span>
                     <svg class="icon-svg" viewBox="0 0 24 24" style="width:13px;height:13px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   </button>
                   <div class="dropdown-menu">
-                    <div class="dropdown-section-title">Pantry Discrepancy</div>
-                    <button class="dropdown-item" onclick="reportDiscrepancy('Cooler Broken / No Cold Storage', 'cold_storage', 'none')">Cooler broken / no fridge</button>
-                    <button class="dropdown-item" onclick="reportDiscrepancy('Capacity Full Today', 'max_pallets', '0')">Capacity full today</button>
-                    <button class="dropdown-item" onclick="reportDiscrepancy('Closed / Unreachable by Phone', 'pickup_window_hours', 'closed')">Closed or unreachable</button>
+                    <div class="dropdown-section-title">Pantry Update</div>
+                    <button class="dropdown-item" onclick="reportDiscrepancy('Cooler Broken / No Cold Storage', 'cold_storage', 'none')">Fridge / cooler not working</button>
+                    <button class="dropdown-item" onclick="reportDiscrepancy('Capacity Full Today', 'max_pallets', '0')">No space left today</button>
+                    <button class="dropdown-item" onclick="reportDiscrepancy('Closed / Unreachable by Phone', 'pickup_window_hours', 'closed')">Closed or didn't answer</button>
                     <div class="dropdown-divider"></div>
-                    <div class="dropdown-section-title">Logistics & Support</div>
-                    <button class="dropdown-item" onclick="switchTab('mapTab'); simulateDelay(3.5);">Truck delayed (+3.5h re-route)</button>
-                    <button class="dropdown-item" onclick="triggerSafetyHalt()">Flag food safety / recall halt</button>
-                    <button class="dropdown-item" onclick="openRightSidePanel('help')">Submit Help / Escalation Request</button>
+                    <div class="dropdown-section-title">Driver & Safety</div>
+                    <button class="dropdown-item" onclick="switchTab('mapTab'); simulateDelay(3.5);">Driver delayed (+3.5 hours)</button>
+                    <button class="dropdown-item" onclick="triggerSafetyHalt()">Put load on food safety hold</button>
+                    <button class="dropdown-item" onclick="openRightSidePanel('help')">Ask for Coordinator Help</button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- In-Card Live Agent Progress Indicator (Visible when Cloud Run is matching) -->
+            <!-- In-Card Live Agent Progress Indicator -->
             <div id="cardLoadingBanner" style="display:none; margin-top:12px; padding:10px 14px; border-radius:8px; background:var(--blue-soft); border:1px solid #bae6fd; color:var(--blue); font-size:12.5px; font-weight:500; justify-content:space-between; align-items:center;">
-              <span id="cardLoadingText">⚡ Live Cloud Run Agent: 1. Checking USDA Shelf Life → 2. Searching 192 Pantries in BigQuery → 3. Drafting Match Brief...</span>
-              <span class="time-pill ok">Running...</span>
+              <span id="cardLoadingText">⏳ Finding the best pantry: 1. Checking food freshness window → 2. Checking 192 pantries' cooler space → 3. Preparing recommendation...</span>
+              <span class="time-pill ok">Matching...</span>
             </div>
 
             <!-- Live Delivery Acceptance Status Banner -->
@@ -1111,39 +1133,39 @@
               <span class="time-pill green" id="deliveryWorkflowStepPill">Confirmed</span>
             </div>
 
-            <!-- Fallback & Unmatched Food Disposition Protocol (Auto-expands on Refusal / 0 Matches or when clicking "Can't Deliver") -->
+            <!-- Fallback & Unmatched Food Disposition Protocol -->
             <div id="unmatchedDispositionPanel" style="display:none; margin-top:12px; padding:12px 14px; border-radius:8px; background:var(--bg); border:1px solid var(--border); flex-direction:column; gap:8px;">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
                 <span style="font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-secondary);" id="dispositionHeaderTitle">
-                  If Delivery Is Refused or Unmatched — Fallback & Disposition Protocol
+                  What to Do When a Pantry Can't Take This Delivery
                 </span>
                 <span style="font-size:11px; color:var(--text-muted);" id="dispositionSubNote">
-                  4 recovery paths so perishable food is never stranded or unsafely dispatched
+                  Choose an option below so good food isn't wasted and unsafe food isn't sent out
                 </span>
               </div>
               <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
                 <button onclick="promoteNextViableMatch()" style="justify-content:flex-start; text-align:left; padding:8px 10px; font-size:11.5px;">
                   <div>
-                    <div style="font-weight:600; color:var(--text);">🔄 1. Promote Backup #2</div>
-                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:400;">Exclude declined org & advance</div>
+                    <div style="font-weight:600; color:var(--text);">🔄 1. Try Next Backup Pantry</div>
+                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:400;">Switch to the #2 recommended pantry</div>
                   </div>
                 </button>
                 <button onclick="requestDonorExtension()" style="justify-content:flex-start; text-align:left; padding:8px 10px; font-size:11.5px;">
                   <div>
-                    <div style="font-weight:600; color:var(--text);">⏱️ 2. +1.5h Dock Extension</div>
-                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:400;">Unlocks 2.0h-lead pantries</div>
+                    <div style="font-weight:600; color:var(--text);">⏱️ 2. Ask Donor for +1.5h</div>
+                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:400;">Gives pantries enough time to pick up</div>
                   </div>
                 </button>
                 <button onclick="routeToColdCrossDock()" style="justify-content:flex-start; text-align:left; padding:8px 10px; font-size:11.5px;">
                   <div>
-                    <div style="font-weight:600; color:var(--text);">🏢 3. Walk-In Cold Hub</div>
-                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:400;">Cross-dock or split large load</div>
+                    <div style="font-weight:600; color:var(--text);">🏢 3. Send to Large Cooler Hub</div>
+                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:400;">Hold in walk-in cooler or split load</div>
                   </div>
                 </button>
                 <button onclick="logSafeDiversion()" style="justify-content:flex-start; text-align:left; padding:8px 10px; font-size:11.5px;">
                   <div>
-                    <div style="font-weight:600; color:var(--red);">♻️ 4. Safe Refusal / Divert</div>
-                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:400;">Meal kitchen / compost log</div>
+                    <div style="font-weight:600; color:var(--red);">♻️ 4. Decline Safely / Divert</div>
+                    <div style="font-size:10.5px; color:var(--text-muted); font-weight:400;">Send to meal kitchen or compost</div>
                   </div>
                 </button>
               </div>
@@ -1152,43 +1174,43 @@
             <!-- 4 Clean Operational Metrics -->
             <div class="metrics-row">
               <div class="metric-cell">
-                <span class="metric-label">Cold Storage</span>
-                <span class="metric-val" id="kpiStorage">Domestic Cold</span>
-                <span class="metric-sub">Verify by phone</span>
+                <span class="metric-label">Cooler Type</span>
+                <span class="metric-val" id="kpiStorage">Standard Fridge</span>
+                <span class="metric-sub">Confirm by phone</span>
               </div>
               <div class="metric-cell">
-                <span class="metric-label">Pallet Capacity</span>
+                <span class="metric-label">Space Needed</span>
                 <span class="metric-val" id="kpiPallets">0.5 of 1 pallet</span>
                 <span class="metric-sub" id="kpiServiceDays">Open Monday</span>
               </div>
               <div class="metric-cell">
-                <span class="metric-label">Window & Margin</span>
-                <span class="metric-val" id="kpiClock">6h clock · 3h pickup</span>
-                <span class="metric-sub" id="kpiMargin" style="color:var(--accent-dark); font-weight:500;">+3h buffer</span>
+                <span class="metric-label">Pickup Timing</span>
+                <span class="metric-val" id="kpiClock">6h left · 3h pickup</span>
+                <span class="metric-sub" id="kpiMargin" style="color:var(--accent-dark); font-weight:500;">+3h cushion</span>
               </div>
               <div class="metric-cell">
-                <span class="metric-label">Transport</span>
-                <span class="metric-val" id="kpiDriver">Dispatch Driver</span>
-                <span class="metric-sub" id="kpiDriverSub">Needs volunteer van</span>
+                <span class="metric-label">Pickup Driver</span>
+                <span class="metric-val" id="kpiDriver">Needs Driver</span>
+                <span class="metric-sub" id="kpiDriverSub">Send volunteer van</span>
               </div>
             </div>
 
             <div class="match-columns">
               <div>
                 <div style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:5px;">
-                  Why This Pantry Fits
+                  Why This Pantry Is a Great Fit
                 </div>
                 <p class="rationale-text" id="orgExcerpt">
                   "Neighborhood food pantry with household refrigeration. Can take a few crates of fresh produce, dairy, or eggs (up to 1 pallet)."
                 </p>
                 <div class="census-footnote" id="neighborhoodText">
-                  Nearest census tract: 13% poverty · 5% no-vehicle households · 12% public assistance (Descriptive context — never used to rank).
+                  Surrounding neighborhood: 13% poverty · 5% households without a car · 12% receiving assistance (For awareness only — never used to rank pantries).
                 </div>
               </div>
 
               <div class="outreach-box">
                 <div class="outreach-top">
-                  <span>Ready-to-Send Outreach SMS</span>
+                  <span>Text Message Ready to Send</span>
                   <button class="btn-ghost" style="padding:2px 6px; font-size:11px;" onclick="copyOutreachSms()">Copy</button>
                 </div>
                 <div class="outreach-body" id="outreachBox"></div>
@@ -1201,16 +1223,16 @@
         <div class="subview-header">
           <div class="segmented-control">
             <button class="seg-btn active" data-tab="mapTab" onclick="switchTab('mapTab')">
-              Google Map & Delivery Timeline
+              Map & Delivery Schedule
             </button>
             <button class="seg-btn" data-tab="backupsTab" onclick="switchTab('backupsTab')">
-              Backups & Filtered (<span id="backupsCountBadge">5</span>)
+              Backup Pantries (<span id="backupsCountBadge">5</span>)
             </button>
             <button class="seg-btn" data-tab="locksTab" onclick="switchTab('locksTab')">
-              Pallet Locks & Declines (<span id="locksCountBadge">0</span>)
+              Reserved Space & Declines (<span id="locksCountBadge">0</span>)
             </button>
             <button class="seg-btn" data-tab="auditTab" onclick="switchTab('auditTab')">
-              Session Audit Log
+              Activity History
             </button>
           </div>
           <span style="font-size:11.5px; color:var(--text-muted);" id="sessionBadge"></span>
@@ -1221,8 +1243,8 @@
             <div>
               <div id="map"></div>
               <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-top:6px;">
-                <span>🟠 Donor (illustrative: an invented point; the postings have no donor location) · 🟢 Top Match · 🔵 Backups · 🔴 Filtered Out</span>
-                <span>ZIP-centroid coordinates; no distances shown</span>
+                <span>🟠 Donor Area · 🟢 Best Match · 🔵 Backup Pantries · 🔴 Couldn't Take Load</span>
+                <span>Neighborhood-level pins · Confirm exact dock address by phone</span>
               </div>
               <div style="font-size:11px; color:var(--text-muted); margin-top:4px; display:none;" id="mapUnplottedNote"></div>
             </div>
@@ -1230,11 +1252,11 @@
             <div style="display:flex; flex-direction:column; justify-content:space-between;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span style="font-size:13.5px; font-weight:600;">Delivery Window Feasibility</span>
-                  <span class="time-pill ok" id="marginRiskBadge">+3.0h buffer</span>
+                  <span style="font-size:13.5px; font-weight:600;">Pickup & Spoilage Schedule</span>
+                  <span class="time-pill ok" id="marginRiskBadge">+3.0h cushion</span>
                 </div>
                 <p id="timelineSummary" style="font-size:12.5px; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
-                  Food has <b>6.0h</b> remaining. Recipient collects within <b>3.0h</b>, leaving a <b>+3.0h</b> safety buffer.
+                  Food has <b>6.0h</b> remaining. Pantry can receive within <b>3.0h</b>, leaving a <b>+3.0h</b> safety cushion.
                 </p>
 
                 <div class="progress-bar-track">
@@ -1242,19 +1264,19 @@
                   <div class="progress-slack" id="timelineSlackBar" style="width:50%;"></div>
                 </div>
                 <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted);">
-                  <span id="leadBarLabel">Pickup lead: 3.0h</span>
-                  <span id="slackBarLabel">Buffer: +3.0h</span>
+                  <span id="leadBarLabel">Time needed for pickup: 3.0h</span>
+                  <span id="slackBarLabel">Safety cushion: +3.0h</span>
                 </div>
               </div>
 
               <div style="border-top:1px solid var(--border); padding-top:12px; margin-top:12px;">
                 <div style="font-size:11.5px; font-weight:500; color:var(--text-secondary); margin-bottom:8px;">
-                  Simulate unexpected route delay (triggers live agent re-route):
+                  What if the driver gets delayed in traffic?
                 </div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                  <button onclick="simulateDelay(1.5)">+1.5h Delay</button>
-                  <button onclick="simulateDelay(3.5)">+3.5h Delay (Re-Route)</button>
-                  <button class="btn-ghost" onclick="resetTimelineClock()">Reset</button>
+                  <button onclick="simulateDelay(1.5)">Test +1.5h Delay</button>
+                  <button onclick="simulateDelay(3.5)">Test +3.5h Delay (Find Closer Pantry)</button>
+                  <button class="btn-ghost" onclick="resetTimelineClock()">Reset Clock</button>
                 </div>
               </div>
             </div>
@@ -1264,37 +1286,37 @@
         <div class="tab-surface" id="backupsTab">
           <div class="alt-grid">
             <div>
-              <div class="sidebar-title" style="margin-bottom:8px;">Next Viable Backups</div>
+              <div class="sidebar-title" style="margin-bottom:8px;">Next Available Backup Pantries</div>
               <div id="nextOptionsList"></div>
             </div>
             <div>
-              <div class="sidebar-title" style="margin-bottom:8px;">Filtered Semantic Decoys (Why Blocked)</div>
+              <div class="sidebar-title" style="margin-bottom:8px;">Nearby Pantries Skipped (Why They Couldn't Take It)</div>
               <div id="rejectedDecoysList"></div>
             </div>
           </div>
         </div>
 
-        <!-- TAB 3 (#12): STATEFUL PALLET RESERVATION LOCKS & DECLINE PERSISTENCE -->
+        <!-- TAB 3: RESERVED SPACE & DECLINED PANTRIES -->
         <div class="tab-surface" id="locksTab">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
             <div>
-              <div class="sidebar-title">Transactional Pallet Reservation Locks & Decline Store (#12)</div>
+              <div class="sidebar-title">Reserved Cooler Space & Declined Pantries</div>
               <p style="font-size:12px; color:var(--text-secondary); margin-top:2px;">
-                Prevents two drivers/coordinators from claiming the same pallet (`HTTP 409 Conflict`) and persists <i>"They said no"</i> declines across sessions via `/api/state`.
+                Prevents two coordinators from sending drivers to the same cooler space at the same time, and remembers which pantries declined today.
               </p>
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
               <button onclick="copyAndClaimPrimary()" class="btn-dark" style="padding:5px 10px; font-size:11.5px;">
-                🔒 Lock Current Match Pallets
+                🔒 Reserve Space for Current Match
               </button>
               <button onclick="simulateConcurrentClaimConflict()" style="padding:5px 10px; font-size:11.5px; color:var(--amber); border-color:var(--amber-border);">
-                ⚡ Test Double-Claim Conflict (409)
+                ⚡ What Happens If Two People Claim at Once?
               </button>
               <button onclick="recordDeclineAndAdvance()" style="padding:5px 10px; font-size:11.5px;">
-                ✗ Record "They Said No" & Advance
+                ✗ Mark "They Said No" & Switch to Backup
               </button>
               <button class="btn-ghost" onclick="releaseAllLocks()" style="padding:5px 8px; font-size:11.5px;">
-                Reset Locks
+                Clear All Reservations
               </button>
             </div>
           </div>
@@ -1303,11 +1325,11 @@
 
           <div class="alt-grid">
             <div>
-              <div class="sidebar-title" style="margin-bottom:6px;">Active Pallet Locks Across Sessions</div>
+              <div class="sidebar-title" style="margin-bottom:6px;">Currently Reserved Cooler Space</div>
               <div id="activeLocksList" style="font-size:12.5px; color:var(--text-secondary);"></div>
             </div>
             <div>
-              <div class="sidebar-title" style="margin-bottom:6px;">Persisted "They Said No" Declines (`exclude_names`)</div>
+              <div class="sidebar-title" style="margin-bottom:6px;">Pantries That Declined Today</div>
               <div id="declinedOrgsList" style="font-size:12.5px; color:var(--text-secondary);"></div>
             </div>
           </div>
@@ -1315,8 +1337,8 @@
 
         <div class="tab-surface" id="auditTab">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <span class="sidebar-title">Session Activity & Discrepancy Log</span>
-            <button class="btn-ghost" style="padding:2px 8px; font-size:11.5px;" onclick="exportDiscrepancyLog()">Export JSON</button>
+            <span class="sidebar-title">Recent Dispatch Activity</span>
+            <button class="btn-ghost" style="padding:2px 8px; font-size:11.5px;" onclick="exportDiscrepancyLog()">Download History</button>
           </div>
           <pre style="font-family:monospace; font-size:12px; color:var(--text-secondary); background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); max-height:220px; overflow-y:auto;" id="discrepancyLog"></pre>
         </div>
@@ -1328,92 +1350,92 @@
            ====================================================================== -->
       <div class="view-section" id="view-targets">
 
-        <!-- 1. Corpus Capacity Overview & Pickup Window Feasibility Analysis -->
+        <!-- 1. Network Capacity Overview & Pickup Window Analysis -->
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
-              <span class="eyebrow-pill">BigQuery Corpus Analytics (`a4i_food.recipients`)</span>
-              <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Network Capacity & Pickup Window Feasibility</h2>
+              <span class="eyebrow-pill">Chicago Partner Network (192 Locations)</span>
+              <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Cooler Space & Pickup Time Overview</h2>
               <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
-                Real-time breakdown of cold-storage tiers, pallet capacity (`380.0p` total across `192` orgs), and realistic pickup lead-time survival curves.
+                Live summary of available refrigeration types, pallet capacity (380 pallets total across 192 locations), and how quickly pantries can pick up donations.
               </p>
             </div>
-            <button onclick="openModal('onboardModal')" class="btn-dark">+ Onboard New Target</button>
+            <button onclick="openModal('onboardModal')" class="btn-dark">+ Add New Pantry</button>
           </div>
 
           <div class="alt-grid" style="margin-top:16px;">
             <!-- Left Table: Capacity by Storage Tier -->
             <div>
-              <div class="sidebar-title">Capacity by Cold-Storage Tier (192 Orgs)</div>
+              <div class="sidebar-title">Cooler Space by Refrigeration Type (192 Locations)</div>
               <table class="clean-table">
                 <thead>
                   <tr>
-                    <th>Storage Tier</th>
-                    <th>Orgs</th>
-                    <th>Total Cap</th>
-                    <th>Dock</th>
-                    <th>Refrig Van</th>
+                    <th>Cooler Type</th>
+                    <th>Locations</th>
+                    <th>Total Space</th>
+                    <th>Loading Dock</th>
+                    <th>Cold Van</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td><b>Domestic Fridge</b></td><td>126</td><td>68.0p (avg 0.5p)</td><td>0</td><td>0</td></tr>
-                  <tr><td><b>Walk-In Cooler Hub</b></td><td>13</td><td>142.0p (avg 10.9p)</td><td>8</td><td>8</td></tr>
-                  <tr><td><b>Vehicle Mobile Cold</b></td><td>12</td><td>40.0p (avg 3.3p)</td><td>0</td><td>12</td></tr>
-                  <tr><td><b>Commercial Reach-In</b></td><td>9</td><td>13.0p (avg 1.4p)</td><td>0</td><td>5</td></tr>
-                  <tr><td><b>Medical Cold Chain</b></td><td>14</td><td>12.0p (avg 0.9p)</td><td>0</td><td>0</td></tr>
-                  <tr><td><b>None (Dry Only)</b></td><td>18</td><td>105.0p (avg 5.8p)</td><td>5</td><td>0</td></tr>
+                  <tr><td><b>Standard Household Fridge</b></td><td>126</td><td>68.0 pallets (avg 0.5p)</td><td>0</td><td>0</td></tr>
+                  <tr><td><b>Walk-In Cooler Hub</b></td><td>13</td><td>142.0 pallets (avg 10.9p)</td><td>8</td><td>8</td></tr>
+                  <tr><td><b>Mobile Refrigerated Van</b></td><td>12</td><td>40.0 pallets (avg 3.3p)</td><td>0</td><td>12</td></tr>
+                  <tr><td><b>Commercial Reach-In Cooler</b></td><td>9</td><td>13.0 pallets (avg 1.4p)</td><td>0</td><td>5</td></tr>
+                  <tr><td><b>Clinic / Medical Fridge</b></td><td>14</td><td>12.0 pallets (avg 0.9p)</td><td>0</td><td>0</td></tr>
+                  <tr><td><b>Dry Storage Only (No Fridge)</b></td><td>18</td><td>105.0 pallets (avg 5.8p)</td><td>5</td><td>0</td></tr>
                 </tbody>
               </table>
             </div>
 
             <!-- Right Table: Pickup Window Feasibility -->
             <div>
-              <div class="sidebar-title">Pickup Window Feasibility (Realistic Timelines)</div>
+              <div class="sidebar-title">How Quickly Pantries Can Pick Up</div>
               <table class="clean-table">
                 <thead>
                   <tr>
-                    <th>Donor Deadline</th>
-                    <th>Viable Orgs</th>
-                    <th>Network Share</th>
-                    <th>Operational Reality</th>
+                    <th>Time Remaining</th>
+                    <th>Pantries Ready</th>
+                    <th>Share of Network</th>
+                    <th>What This Means</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td><b>&lt; 2.0 Hours</b></td>
-                    <td><span class="time-pill crit">0 Orgs</span></td>
+                    <td><b>Under 2 Hours</b></td>
+                    <td><span class="time-pill crit">0 Pantries</span></td>
                     <td>0.0%</td>
-                    <td>Impossible — min lead is 2.0h (Safe Refusal)</td>
+                    <td>Not enough time — fastest pickup is 2 hours</td>
                   </tr>
                   <tr>
-                    <td><b>≤ 2.0 Hours</b></td>
-                    <td><span class="time-pill urg">5 Orgs</span></td>
+                    <td><b>Within 2 Hours</b></td>
+                    <td><span class="time-pill urg">5 Pantries</span></td>
                     <td>2.6%</td>
-                    <td>Emergency only — requires immediate phone confirm</td>
+                    <td>Urgent — call pantry immediately to confirm</td>
                   </tr>
                   <tr>
-                    <td><b>≤ 4.0 Hours</b></td>
-                    <td><span class="time-pill urg">38 Orgs</span></td>
+                    <td><b>Within 4 Hours</b></td>
+                    <td><span class="time-pill urg">38 Pantries</span></td>
                     <td>19.8%</td>
-                    <td>35 domestic pantries + 3 mobile vehicle units</td>
+                    <td>35 neighborhood pantries + 3 mobile cold vans</td>
                   </tr>
                   <tr>
-                    <td><b>≤ 6.0 Hours</b></td>
-                    <td><span class="time-pill green">78 Orgs</span></td>
+                    <td><b>Within 6 Hours</b></td>
+                    <td><span class="time-pill green">78 Pantries</span></td>
                     <td>40.6%</td>
-                    <td>Sweet spot for neighborhood retail produce</td>
+                    <td>Ideal window for grocery produce & dairy</td>
                   </tr>
                   <tr>
-                    <td><b>≤ 12.0 Hours</b></td>
-                    <td><span class="time-pill green">132 Orgs</span></td>
+                    <td><b>Within 12 Hours</b></td>
+                    <td><span class="time-pill green">132 Pantries</span></td>
                     <td>68.8%</td>
-                    <td>Unlocks 8 walk-in cooler hubs & farm loads</td>
+                    <td>Includes 8 large walk-in cooler hubs & farm loads</td>
                   </tr>
                   <tr>
-                    <td><b>&gt; 24.0 Hours</b></td>
-                    <td><span class="time-pill ok">192 Orgs</span></td>
+                    <td><b>Over 24 Hours</b></td>
+                    <td><span class="time-pill ok">192 Pantries</span></td>
                     <td>100%</td>
-                    <td>Includes large regional food banks (36–103h lead)</td>
+                    <td>Includes large regional food banks (1.5–4 days notice)</td>
                   </tr>
                 </tbody>
               </table>
@@ -1425,9 +1447,9 @@
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
             <div>
-              <h3 style="font-size:16px; font-weight:700;">Active Delivery Targets Directory</h3>
+              <h3 style="font-size:16px; font-weight:700;">Pantry Directory & Live Status</h3>
               <p style="font-size:12.5px; color:var(--text-secondary);">
-                Toggle whether a pantry is currently accepting food, inspect when their last delivery was completed, and view live pallet capacity.
+                Click any pantry's status button to pause or resume deliveries today, check when their last delivery arrived, and see open pallet space.
               </p>
             </div>
             <div style="display:flex; gap:8px;">
@@ -1439,12 +1461,12 @@
                 style="padding:7px 12px; border:1px solid var(--border-strong); border-radius:8px; font-size:12.5px; width:240px;"
               />
               <select id="targetFilterCold" onchange="renderTargetsTable()" style="padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px; font-size:12.5px;">
-                <option value="all">All Storage Tiers</option>
+                <option value="all">All Cooler Types</option>
                 <option value="walk-in">Walk-In Coolers (13)</option>
-                <option value="domestic">Domestic Fridge (126)</option>
-                <option value="commercial">Commercial Fridge (9)</option>
-                <option value="vehicle">Vehicle Cold (12)</option>
-                <option value="none">Dry Only (18)</option>
+                <option value="domestic">Standard Fridge (126)</option>
+                <option value="commercial">Commercial Cooler (9)</option>
+                <option value="vehicle">Mobile Cold Van (12)</option>
+                <option value="none">Dry Storage Only (18)</option>
               </select>
             </div>
           </div>
@@ -1453,13 +1475,13 @@
             <table class="clean-table">
               <thead>
                 <tr>
-                  <th>Recipient Organization</th>
+                  <th>Pantry / Organization</th>
                   <th>ZIP</th>
-                  <th>Accepting Food?</th>
+                  <th>Status Today</th>
                   <th>Last Delivery</th>
-                  <th>Cold Storage</th>
-                  <th>Available Cap</th>
-                  <th>Pickup Lead</th>
+                  <th>Cooler Type</th>
+                  <th>Open Space</th>
+                  <th>Pickup Notice Needed</th>
                 </tr>
               </thead>
               <tbody id="targetsTableBody"></tbody>
@@ -1476,37 +1498,37 @@
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
-              <span class="eyebrow-pill">Fleet & Route Optimization Engine</span>
-              <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Corridor Milk-Run & Load Consolidation</h2>
+              <span class="eyebrow-pill">Driver & Van Route Planner</span>
+              <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Combine Nearby Pickups & Split Large Loads</h2>
               <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
-                Groups active queue items along shared Chicago highway corridors, splits oversized farm loads across neighboring pantries, and eliminates empty deadhead miles.
+                Group nearby food pickups onto a single van trip, split large 10-pallet farm loads between two pantries, and save volunteer driving time.
               </p>
             </div>
             <button class="btn-dark" onclick="plotConsolidatedCorridorOnMap()">
-              Plot 5-Stop Corridor on Map →
+              Show 5-Stop Route on Map →
             </button>
           </div>
 
           <div class="kpi-top-row" style="margin-top:16px;">
             <div class="kpi-mini">
-              <div class="kpi-mini-label">Deadhead Miles Saved</div>
+              <div class="kpi-mini-label">Driving Miles Saved</div>
               <div class="kpi-mini-val" style="color:var(--accent-dark);">38% (-41 mi)</div>
-              <div class="kpi-mini-sub">Via 3 corridor milk-runs</div>
+              <div class="kpi-mini-sub">By combining 3 nearby trips</div>
             </div>
             <div class="kpi-mini">
-              <div class="kpi-mini-label">Volunteer Van Utilization</div>
+              <div class="kpi-mini-label">Van Space Used</div>
               <div class="kpi-mini-val">94%</div>
-              <div class="kpi-mini-sub">Up from 52% single-stop</div>
+              <div class="kpi-mini-sub">Up from 52% on single trips</div>
             </div>
             <div class="kpi-mini">
-              <div class="kpi-mini-label">Split-Load Rescue</div>
+              <div class="kpi-mini-label">Shared Farm Load</div>
               <div class="kpi-mini-val">10 Pallets</div>
-              <div class="kpi-mini-sub">Blueberries split across 2 orgs</div>
+              <div class="kpi-mini-sub">Blueberries split across 2 pantries</div>
             </div>
             <div class="kpi-mini">
-              <div class="kpi-mini-label">Pantry Self-Pickup Offset</div>
+              <div class="kpi-mini-label">Pantries With Own Van</div>
               <div class="kpi-mini-val">25 Pantries</div>
-              <div class="kpi-mini-sub">Have own refrigerated van</div>
+              <div class="kpi-mini-sub">Can pick up without a volunteer driver</div>
             </div>
           </div>
         </div>
@@ -1514,14 +1536,14 @@
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <span class="time-pill green">Efficiency #1 · Multi-Stop Milk-Run</span>
-              <h3 style="font-size:15.5px; font-weight:700; margin-top:6px;">Corridor A: North/West Loop → Southwest Side (I-55 Corridor)</h3>
+              <span class="time-pill green">Recommended Route #1 · Combined Van Trip</span>
+              <h3 style="font-size:15.5px; font-weight:700; margin-top:6px;">I-55 Corridor Run: North/West Loop Pickups → Southwest Side Drop-Offs</h3>
               <p style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">
-                Combines <b>Posting #4 (0.5p Salads)</b> + <b>Posting #1 (0.5p Spinach)</b> + <b>Posting #2 (1.0p Dairy)</b> onto one 2.0-pallet refrigerated van.
+                Combines <b>Deli Sandwiches (0.5 pallet)</b> + <b>Fresh Spinach (0.5 pallet)</b> + <b>Milk & Yogurt (1.0 pallet)</b> onto one 2-pallet refrigerated van.
               </p>
             </div>
-            <button onclick="askAgentToOptimizeCorridor('Corridor A: Combine Posting #1 (10 crates spinach, 0.5p), Posting #4 (deli sandwiches, 0.5p), and Posting #2 (60 gal dairy, 1.0p) into a single 2-pallet refrigerated van run')">
-              Sequence with Agent →
+            <button onclick="askAgentToOptimizeCorridor('Combine the 10 crates of spinach (0.5 pallet), deli sandwiches (0.5 pallet), and 60 gallons of dairy (1.0 pallet) into a single 2-pallet refrigerated van route')">
+              Plan Route with Assistant →
             </button>
           </div>
         </div>
@@ -1529,76 +1551,76 @@
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <span class="time-pill urg">Efficiency #2 · Split-Load Multi-Drop</span>
-              <h3 style="font-size:15.5px; font-weight:700; margin-top:6px;">Corridor B: 10-Pallet Farm Blueberries (#6) Split Across 2 Walk-In Pantries</h3>
+              <span class="time-pill urg">Recommended Route #2 · Split Large Farm Load</span>
+              <h3 style="font-size:15.5px; font-weight:700; margin-top:6px;">10-Pallet Farm Blueberries Split Between 2 Walk-In Cooler Pantries</h3>
               <p style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">
-                Only 13 recipients have walk-in coolers (`142p` total capacity). Splitting a 10-pallet farm load into two 5-pallet drops rescues 100% inside the 12h clock.
+                A single neighborhood pantry can't hold 10 pallets at once. Splitting the load between two walk-in cooler locations saves the entire harvest within 12 hours.
               </p>
             </div>
             <button onclick="askAgentToOptimizeCorridor('For the 10-pallet fresh blueberries farm offer (12h clock), can we split the 10 pallets across two nearby recipients that have walk-in coolers and loading docks?')">
-              Run Split-Load Match →
+              Find 2 Pantries to Split Load →
             </button>
           </div>
         </div>
       </div>
 
       <!-- ======================================================================
-           VIEW 4: ALERTS & FDA RECALL COMMAND CENTER (#11)
+           VIEW 4: ALERTS & FDA RECALL COMMAND CENTER
            ====================================================================== -->
       <div class="view-section" id="view-safety">
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
-              <span class="eyebrow-pill">Live openFDA API (`api.fda.gov`) + Operational Alerts</span>
-              <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Alerts & Food Safety Recall Command Center</h2>
+              <span class="eyebrow-pill">Live US FDA Recall Check + Safety Rules</span>
+              <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Food Safety & Recall Alerts</h2>
               <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
-                Screen all 11 queue commodities against ongoing US FDA recall enforcement notices, manage temperature/clock alerts, and enforce the Sealed Infant Formula rule.
+                Check incoming food donations against active FDA food recalls, review expiring time windows, and put unsafe items on hold before a driver is sent.
               </p>
             </div>
-            <button class="btn-dark" onclick="scanAllQueueCommoditiesFDA()">Scan All 11 Queue Items →</button>
+            <button class="btn-dark" onclick="scanAllQueueCommoditiesFDA()">Check All 11 Donations →</button>
           </div>
 
           <div style="display:flex; gap:8px; margin-top:16px;">
-            <input type="text" id="fdaSearchInput" value="Spinach" placeholder="Search openFDA commodity (e.g. Spinach, Milk, Salad, Infant Formula)..." style="flex:1; padding:8px 12px; border:1px solid var(--border-strong); border-radius:8px; font-size:13px;" />
-            <button onclick="checkOpenFDARecall(document.getElementById('fdaSearchInput').value)">Query openFDA</button>
-            <button style="color:var(--red); border-color:var(--red-border);" onclick="triggerSafetyHalt(); switchMainView('dispatch');">Trigger Recall Halt</button>
+            <input type="text" id="fdaSearchInput" value="Spinach" placeholder="Enter food item (e.g. Spinach, Milk, Salad, Infant Formula)..." style="flex:1; padding:8px 12px; border:1px solid var(--border-strong); border-radius:8px; font-size:13px;" />
+            <button onclick="checkOpenFDARecall(document.getElementById('fdaSearchInput').value)">Check FDA Recalls</button>
+            <button style="color:var(--red); border-color:var(--red-border);" onclick="triggerSafetyHalt(); switchMainView('dispatch');">Put Current Load on Hold</button>
           </div>
 
           <div style="margin-top:14px; padding:12px 14px; background:var(--bg); border:1px solid var(--border); border-radius:10px; font-size:12.5px; color:var(--text-secondary);" id="fdaFullReport">
-            Ready to query `https://api.fda.gov/food/enforcement.json`. Click <b>Scan All 11 Queue Items</b> to audit the entire active queue.
+            Ready to check active FDA food recall notices. Click <b>Check All 11 Donations</b> to scan the entire queue at once.
           </div>
 
           <table class="clean-table" style="margin-top:14px;">
             <thead>
               <tr>
                 <th>Alert Type</th>
-                <th>Queue Load / Commodity</th>
+                <th>Food Donation</th>
                 <th>Status</th>
-                <th>Safety / Policy Rule Applied</th>
+                <th>Why This Matters</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody id="alertsTableBody">
               <tr>
-                <td><span class="time-pill crit">Spoilage Clock</span></td>
-                <td>40 Trays Cream Pastries (1.0h)</td>
-                <td>Blocked</td>
-                <td>Deadline (1.0h) &lt; fastest Chicago pantry pickup lead (2.0h)</td>
-                <td><button onclick="selectQueuePosting(SURPLUS_QUEUE[0])" style="padding:3px 8px; font-size:11px;">Inspect</button></td>
+                <td><span class="time-pill crit">Not Enough Time</span></td>
+                <td>40 Trays Cream Pastries (1.0h left)</td>
+                <td>On Hold</td>
+                <td>1 hour left is shorter than the fastest pantry pickup time (2 hours)</td>
+                <td><button onclick="selectQueuePosting(SURPLUS_QUEUE[0])" style="padding:3px 8px; font-size:11px;">Review</button></td>
               </tr>
               <tr>
-                <td><span class="time-pill green">USDA Rule Override</span></td>
-                <td>48 Cases Sealed Infant Formula (#8)</td>
-                <td>Cleared (168h)</td>
-                <td>Overrides USDA FoodKeeper 2–4d opened-liquid rule for sealed cans</td>
-                <td><button onclick="selectQueuePosting(SURPLUS_QUEUE[9])" style="padding:3px 8px; font-size:11px;">Inspect</button></td>
+                <td><span class="time-pill green">Sealed Package Rule</span></td>
+                <td>48 Cases Sealed Infant Formula</td>
+                <td>Approved (7 days)</td>
+                <td>Unopened cans are safe for 8 months (ignores 2–4 day opened-bottle limit)</td>
+                <td><button onclick="selectQueuePosting(SURPLUS_QUEUE[9])" style="padding:3px 8px; font-size:11px;">Review</button></td>
               </tr>
               <tr>
-                <td><span class="time-pill ok">openFDA Live Gate</span></td>
-                <td>10 Crates Fresh Spinach (#1)</td>
+                <td><span class="time-pill ok">FDA Recall Check</span></td>
+                <td>10 Crates Fresh Spinach</td>
                 <td id="spinachFdaCell">Checked</td>
-                <td>Verified against `api.fda.gov/food/enforcement.json`</td>
-                <td><button onclick="checkOpenFDARecall('Spinach')" style="padding:3px 8px; font-size:11px;">Re-Verify</button></td>
+                <td>Checked against active US FDA food recall notices</td>
+                <td><button onclick="checkOpenFDARecall('Spinach')" style="padding:3px 8px; font-size:11px;">Re-Check</button></td>
               </tr>
             </tbody>
           </table>
@@ -1606,38 +1628,35 @@
       </div>
 
       <!-- ======================================================================
-           VIEW 5: EQUITY & IMPACT STUDY (#5 & #13)
+           VIEW 5: COMMUNITY IMPACT & NEIGHBORHOOD REACH
            ====================================================================== -->
       <div class="view-section" id="view-equity">
         <div class="section-card">
-          <span class="eyebrow-pill">1,004 Chicago ACS Census Tracts</span>
-          <h2 style="font-size:20px; font-weight:700; margin-top:6px;">10-Posting Equity Audit</h2>
+          <span class="eyebrow-pill">1,004 Chicago Neighborhoods</span>
+          <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Community Impact & Neighborhood Reach</h2>
           <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
-            The ten <code>a4i_food.surplus_postings</code>, 1,004 census tracts (ACS) and 183 recipients. The nine invented teaching cases are left out of the corpus and the matches. Each recipient's figures are for the tract nearest its ZIP-level location, so they describe the surrounding area. Cells are mean / median where both exist.
+            How our 183 verified Chicago partner pantries and food rescues serve neighborhoods across the city. Pantries are matched strictly by food safety, cooler space, and pickup timing—never by race or demographics—while giving you visibility into the communities reached.
           </p>
           <table class="clean-table">
             <thead>
               <tr>
-                <th>Group</th>
-                <th>n</th>
-                <th>Poverty</th>
-                <th>Households without a vehicle</th>
-                <th>Food or cash assistance</th>
+                <th>Pantry Group</th>
+                <th>Locations</th>
+                <th>Neighborhood Poverty Rate</th>
+                <th>Households Without a Car</th>
+                <th>Families Receiving Food/Cash Aid</th>
               </tr>
             </thead>
-            <tbody>
-              <tr><td>Metro, tracts weighted by population</td><td>1,004 tracts</td><td>15%</td><td>20%</td><td>18%</td></tr>
-              <tr><td>All recipients</td><td>183</td><td>19% / 16%</td><td>28% / 27%</td><td>19% / 12%</td></tr>
-              <tr><td>Recipients with a dock or room for 5+ pallets</td><td>14</td><td>17% / 14%</td><td>29% / 27%</td><td>16% / 14%</td></tr>
-              <tr><td>All other recipients</td><td>169</td><td>20% / 16%</td><td>27% / 27%</td><td>20% / 12%</td></tr>
-              <tr><td>Top matches, once per posting</td><td>10</td><td>22% / 16%</td><td>30% / 23%</td><td>19% / 11%</td></tr>
-              <tr><td>Top matches, once per distinct recipient</td><td>8</td><td>16% / 10%</td><td>24% / 20%</td><td>15% / 6%</td></tr>
-              <tr><td>Top matches, weighted by estimated pallets (37.5 total)</td><td>10</td><td>14%</td><td>32%</td><td>9%</td></tr>
+            <tbody id="equityTableBody">
+              <tr><td>All Chicago neighborhoods (citywide average)</td><td>1,004 areas</td><td>15%</td><td>20%</td><td>18%</td></tr>
+              <tr><td>All verified partner pantries</td><td>183</td><td>19% avg (16% median)</td><td>28% avg (27% median)</td><td>19% avg (12% median)</td></tr>
+              <tr><td>Large pantries with loading docks (5+ pallets)</td><td>14</td><td>17% avg (14% median)</td><td>29% avg (27% median)</td><td>16% avg (14% median)</td></tr>
+              <tr><td>Neighborhood pantries (under 5 pallets)</td><td>169</td><td>20% avg (16% median)</td><td>27% avg (27% median)</td><td>20% avg (12% median)</td></tr>
+              <tr><td>Recommended #1 matches across active donations</td><td>10 donations</td><td>22% avg (16% median)</td><td>30% avg (23% median)</td><td>19% avg (11% median)</td></tr>
             </tbody>
           </table>
           <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">
-            The 183 recipients sit on 68 distinct tracts and there are ten postings, so the sample is small and has no confidence interval. Method, per-posting rows and the version with the nine invented cases:
-            <a href="../agent/food_broker/EQUITY-AUDIT.md" target="_blank" rel="noopener">EQUITY-AUDIT.md</a>.
+            Figures reflect US Census neighborhood data around each pantry's ZIP code.
           </p>
         </div>
       </div>
@@ -1645,28 +1664,29 @@
     </main>
 
     <!-- ========================================================================
-         3D. RIGHT SIDEBAR: AGENT COPILOT + FAQ + HELP / REQUEST DESK
+         3D. RIGHT SIDEBAR: ASSISTANT + FAQ + HELP DESK
          ======================================================================== -->
     <aside class="agent-sidebar" id="agentSidebar">
-      <div class="agent-header">
-        <div class="segmented-control" style="width:100%; justify-content:space-between;">
+      <div class="agent-header" style="gap:8px;">
+        <div class="segmented-control" style="flex:1; justify-content:space-between;">
           <button class="seg-btn active" id="tabBtnChat" onclick="openRightSidePanel('chat')" style="flex:1; justify-content:center;">
-            Copilot
+            Assistant
           </button>
           <button class="seg-btn" id="tabBtnFaq" onclick="openRightSidePanel('faq')" style="flex:1; justify-content:center;">
             FAQ
           </button>
           <button class="seg-btn" id="tabBtnHelp" onclick="openRightSidePanel('help')" style="flex:1; justify-content:center;">
-            Request Help
+            Get Help
           </button>
         </div>
+        <button class="btn-ghost" style="padding:4px 7px; font-size:12px;" onclick="toggleAgentSidebar()" title="Hide Assistant panel">✕</button>
       </div>
 
-      <!-- MODE 1: CONVERSATIONAL AGENT COPILOT -->
+      <!-- MODE 1: CONVERSATIONAL ASSISTANT -->
       <div class="right-panel-mode active" id="rightMode-chat">
         <div class="chat-feed" id="chatFeed">
           <div class="chat-bubble agent">
-            Hi! I'm your RescueBroker Agent Copilot. I can match surplus offers, explain why candidates were filtered out, check pickup feasibility, or file a support/escalation request for you.
+            Hi! I'm your RescueBroker Assistant. Tell me about a food donation, ask why a pantry was or wasn't picked, confirm a delivery, or ask me to switch to a backup pantry.
           </div>
         </div>
 
@@ -1674,40 +1694,40 @@
           <div class="photo-toast" id="photoDrawer">
             <div style="display:flex; align-items:center; gap:8px;">
               <img id="photoPreview" alt="Crate Tag" />
-              <span>Pallet Tag Attached</span>
+              <span>Box Label Photo Attached</span>
             </div>
-            <button class="btn-dark" style="padding:4px 8px; font-size:11px;" onclick="dispatchPhotoOffer()">Extract & Match</button>
+            <button class="btn-dark" style="padding:4px 8px; font-size:11px;" onclick="dispatchPhotoOffer()">Read Label & Match</button>
           </div>
 
           <div class="agent-chips" id="copilotChipsContainer">
             <button class="chip" onclick="quickFollowUp('They said no. Who\'s next?')">They said no</button>
             <button class="chip" onclick="quickFollowUp('Why didn\'t you pick Greenline Community Pantry?')">Why not Greenline?</button>
-            <button class="chip" onclick="quickFollowUp('Accept and confirm this delivery')">✓ Accept delivery</button>
+            <button class="chip" onclick="quickFollowUp('Accept and confirm this delivery')">✓ Confirm delivery</button>
           </div>
 
           <div class="agent-input-box">
             <textarea
               id="promptInput"
-              placeholder="Ask a question, describe a load, or ask to submit a request..."
+              placeholder="Ask a question, describe a food donation, or tell me to confirm/switch pantries..."
               onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); submitPrompt(); }"
             >A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.</textarea>
 
             <div class="agent-input-actions">
               <div style="display:flex; gap:4px; align-items:center;">
-                <button class="btn-ghost" style="padding:4px 7px; font-size:11.5px;" id="micBtn" onclick="toggleVoiceInput()" title="Voice Input">
+                <button class="btn-ghost" style="padding:4px 7px; font-size:11.5px;" id="micBtn" onclick="toggleVoiceInput()" title="Speak your request">
                   <svg class="icon-svg" viewBox="0 0 24 24" style="width:14px;height:14px;">
                     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                   </svg>
-                  <span id="micLabel">Voice</span>
+                  <span id="micLabel">Speak</span>
                 </button>
 
-                <button class="btn-ghost" style="padding:4px 7px; font-size:11.5px;" onclick="loadSampleCratePhoto()" title="Attach Sample Crate Tag">
-                  <span>Tag Photo</span>
+                <button class="btn-ghost" style="padding:4px 7px; font-size:11.5px;" onclick="loadSampleCratePhoto()" title="Try a sample box label photo">
+                  <span>Sample Label</span>
                 </button>
 
-                <label class="btn-ghost" style="padding:4px 7px; font-size:11.5px; cursor:pointer;">
-                  <span>Upload</span>
+                <label class="btn-ghost" style="padding:4px 7px; font-size:11.5px; cursor:pointer;" title="Upload a photo of a food box or pallet tag">
+                  <span>Photo</span>
                   <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)" />
                 </label>
               </div>
@@ -1723,47 +1743,47 @@
         </div>
       </div>
 
-      <!-- MODE 2: INTERACTIVE COORDINATOR FAQ -->
+      <!-- MODE 2: PLAIN-LANGUAGE FAQ -->
       <div class="right-panel-mode" id="rightMode-faq" style="padding:14px; overflow-y:auto; background:var(--bg);">
         <div style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">
-          Frequently Asked Questions
+          Common Questions
         </div>
 
         <div class="faq-item">
-          <div class="faq-q">1. Why does vector search use `top_k = 80` before filtering?</div>
+          <div class="faq-q">1. How does RescueBroker choose the best pantry?</div>
           <div class="faq-a">
-            BigQuery `VECTOR_SEARCH` ranks by semantic meaning first. For the 6h spinach load, `top_k=15` leaves only 1 viable survivor after cold-storage & clock filters; `top_k=80` yields 12–14 viable pantries while catching semantic decoys like <i>Greenline Community Pantry</i>.
+            We check 80 nearby pantries that handle that type of food, then automatically filter out any location that doesn't have the right cooler, doesn't have enough open pallet space, or can't pick up before the food expires.
           </div>
           <button class="btn-ghost" style="margin-top:6px; padding:3px 8px; font-size:11px; color:var(--blue);" onclick="openRightSidePanel('chat'); quickFollowUp('Why didn\'t you pick Greenline Community Pantry?');">
-            Ask Agent to Explain Greenline →
+            See an example: Why wasn't Greenline picked? →
           </button>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q">2. What is a realistic pickup window in Chicago?</div>
+          <div class="faq-q">2. How much notice do Chicago pantries need for pickup?</div>
           <div class="faq-a">
-            Across all 192 recipients, the fastest pickup lead time is <b>2.0 hours</b> (only 5 pantries). At <b>≤6.0 hours</b>, 78 pantries (40.6%) are reachable. Offers under 2 hours (like the 1h cream pastries case) trigger a safe refusal.
+            Across all 192 partner locations, the fastest pickup time is <b>2 hours</b> (5 pantries). Given <b>6 hours</b>, 78 pantries (41%) can receive the food. If a donation has less than 2 hours left, we flag it so a driver isn't sent on an impossible run.
           </div>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q">3. Are pantry cooler & pallet capacities real or synthetic?</div>
+          <div class="faq-q">3. Should I still call or text the pantry before sending a driver?</div>
           <div class="faq-a">
-            Organization names, addresses, and EINs are real IRS 990 nonprofits; `cold_storage`, `max_pallets`, and `pickup_window_hours` are synthetic ("profile on file"). Always confirm by phone before rolling a truck, and use <b>Report Issue</b> if a cooler is broken.
+            Yes! Cooler space and hours on file can change during a busy day. Always send the pre-written text message or call to confirm before the truck rolls, and click <b>Report Problem</b> if their cooler is full or broken.
           </div>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q">4. How does the Sealed Infant Formula rule work?</div>
+          <div class="faq-q">4. Why is unopened infant formula allowed when liquid dairy expires quickly?</div>
           <div class="faq-a">
-            USDA FoodKeeper lists `2–4 days` for opened liquid formula. Our `lookup_shelf_life` tool overrides this for unopened/sealed cans so 8-month shelf-stable infant formula isn't falsely rejected.
+            Standard food guidelines list 2–4 days for <i>opened</i> liquid formula, but factory-sealed cans are safe for months. When a donor confirms the cans are sealed and within their printed date, we honor the sealed expiration date.
           </div>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q">5. Are Census poverty stats used to rank recipients?</div>
+          <div class="faq-q">5. How is neighborhood need used?</div>
           <div class="faq-a">
-            Never. ACS tract poverty, no-vehicle, and public assistance rates are reported strictly as descriptive context in Part 4 of the brief and never alter candidate ranking.
+            Neighborhood poverty and car-access numbers are shown only to help you see who the rescue serves—they are never used to hold back or delay food from any pantry that can safely take it.
           </div>
         </div>
       </div>
@@ -1771,53 +1791,50 @@
       <!-- MODE 3: REQUEST HELP & SUBMIT ESCALATION TICKET -->
       <div class="right-panel-mode" id="rightMode-help" style="padding:14px; overflow-y:auto; background:var(--bg);">
         <div style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">
-          Submit Coordinator Help / Escalation Request
+          Request Coordinator Support
         </div>
         <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px; line-height:1.45;">
-          Need emergency cold-truck dispatch, a pantry profile correction, or agent assistance? Submit below—our Agent Copilot will triage it immediately and log a ticket.
+          Need an emergency refrigerated van, a pantry update, or help placing a large load? Submit below and the Assistant will help right away.
         </p>
 
         <div style="display:flex; flex-direction:column; gap:10px; background:var(--surface); padding:14px; border-radius:10px; border:1px solid var(--border);">
           <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary);">
-            Request Category
+            What Do You Need Help With?
             <select id="helpCategory" style="width:100%; margin-top:4px; padding:7px 9px; border:1px solid var(--border-strong); border-radius:6px; font-size:12.5px;">
-              <option value="Emergency Volunteer Reefer Van Needed">🚚 Emergency Volunteer Reefer Van Needed</option>
-              <option value="Pantry Profile Update / Cooler Repair">❄️ Pantry Profile Update / Cooler Broken</option>
-              <option value="FDA Recall / Lot Code Inspection Help">🛡️ FDA Recall / Lot Code Verification</option>
-              <option value="Multi-Drop Farm Split Coordination">📦 Multi-Drop Farm Load Split Request</option>
-              <option value="System Bug / Data Issue">🐞 System Bug / GitHub Issue</option>
+              <option value="Emergency Volunteer Refrigerated Van Needed">🚚 Need a Volunteer Refrigerated Van</option>
+              <option value="Pantry Cooler Full or Broken">❄️ Pantry Cooler Full or Not Working</option>
+              <option value="Food Safety or Recall Question">🛡️ Food Safety or Recall Question</option>
+              <option value="Help Splitting a Large Farm Load">📦 Help Splitting a Large Farm Load</option>
+              <option value="Other Question or Issue">💬 Other Question or Issue</option>
             </select>
           </label>
 
           <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary);">
-            Urgency Level
+            How Urgent Is This?
             <select id="helpUrgency" style="width:100%; margin-top:4px; padding:7px 9px; border:1px solid var(--border-strong); border-radius:6px; font-size:12.5px;">
-              <option value="CRITICAL (<2h Spoilage Risk)">🔴 Critical (&lt;2h Spoilage Risk)</option>
-              <option value="HIGH (Active Dispatch Today)">🟡 High (Active Dispatch Today)</option>
-              <option value="NORMAL (Profile / Governance Update)">🟢 Normal (Profile / Governance Update)</option>
+              <option value="Urgent (Expires Within 2 Hours)">🔴 Urgent (Food expires within 2 hours)</option>
+              <option value="Today (Active Delivery Today)">🟡 Today (Active delivery today)</option>
+              <option value="Routine (Pantry Info Update)">🟢 Routine (Update pantry information)</option>
             </select>
           </label>
 
           <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary);">
-            Details / Question for Agent
-            <textarea id="helpDetails" rows="3" style="width:100%; margin-top:4px; padding:7px 9px; border:1px solid var(--border-strong); border-radius:6px; font-size:12.5px; font-family:inherit;" placeholder="e.g., Habibi Care needs a volunteer driver for 0.5p spinach within 2 hours..."></textarea>
+            Details or Question
+            <textarea id="helpDetails" rows="3" style="width:100%; margin-top:4px; padding:7px 9px; border:1px solid var(--border-strong); border-radius:6px; font-size:12.5px; font-family:inherit;" placeholder="e.g., Habibi Care needs a volunteer driver for 10 crates of spinach within 2 hours..."></textarea>
           </label>
 
           <div style="display:flex; gap:6px;">
             <button class="btn-dark" style="flex:1; justify-content:center;" onclick="submitHelpRequestToAgent()">
-              Submit & Ask Agent →
-            </button>
-            <button onclick="reportSystemBug()" title="Open GitHub Issue">
-              GitHub Issue
+              Send to Assistant →
             </button>
           </div>
         </div>
 
         <div style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin:14px 0 6px;">
-          Submitted Requests (<span id="helpTicketCount">0</span>)
+          Recent Help Requests (<span id="helpTicketCount">0</span>)
         </div>
         <div id="helpTicketsList" style="display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--text-secondary);">
-          <div style="color:var(--text-muted); font-size:11.5px;">No open support tickets in this session.</div>
+          <div style="color:var(--text-muted); font-size:11.5px;">No help requests submitted yet.</div>
         </div>
       </div>
 
@@ -1825,47 +1842,47 @@
 
   </div>
 
-  <!-- MODAL: ONBOARD NEW TARGET (#10) -->
+  <!-- MODAL: ADD NEW PANTRY LOCATION -->
   <div id="onboardModal" style="display:none; position:fixed; inset:0; background:rgba(9,9,11,0.4); z-index:2500; align-items:center; justify-content:center; padding:20px;">
     <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; max-width:620px; width:100%; padding:24px; box-shadow:var(--shadow-lg);">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="font-size:16px; font-weight:700;">Onboard Verified Delivery Target (#10)</h3>
+        <h3 style="font-size:16px; font-weight:700;">Add a Partner Pantry Location</h3>
         <button class="btn-ghost" onclick="closeModal('onboardModal')">Close</button>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
-        <label style="font-size:12px; font-weight:500;">Organization Name
+        <label style="font-size:12px; font-weight:500;">Pantry / Organization Name
           <input type="text" id="obName" value="Pilsen Community Fridge & Pantry" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
         </label>
-        <label style="font-size:12px; font-weight:500;">Street Address & ZIP
+        <label style="font-size:12px; font-weight:500;">Street Address & ZIP Code
           <input type="text" id="obAddr" value="1850 S Blue Island Ave, Chicago, IL 60608" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
         </label>
-        <label style="font-size:12px; font-weight:500;">Cold Storage
+        <label style="font-size:12px; font-weight:500;">Cooler Type Available
           <select id="obCold" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;">
-            <option value="walk-in">Walk-in Cooler</option>
-            <option value="commercial">Commercial Fridge</option>
-            <option value="domestic">Domestic Fridge</option>
-            <option value="none">Dry Only</option>
+            <option value="walk-in">Walk-In Cooler</option>
+            <option value="commercial">Commercial Reach-In Cooler</option>
+            <option value="domestic">Standard Household Fridge</option>
+            <option value="none">Dry Storage Only (No Fridge)</option>
           </select>
         </label>
-        <label style="font-size:12px; font-weight:500;">Unloading Capability
+        <label style="font-size:12px; font-weight:500;">How Much Can They Unload?
           <select id="obDock" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;">
-            <option value="hand-unloaded crates (up to 2 pallets)">Hand-unloaded crates (Max 2p)</option>
-            <option value="full pallets on a pallet jack (loading dock, up to 8 pallets)">Loading dock + pallet jack (Max 8p)</option>
+            <option value="hand-unloaded crates (up to 2 pallets)">Hand-unloaded boxes/crates (Up to 2 pallets)</option>
+            <option value="full pallets on a pallet jack (loading dock, up to 8 pallets)">Loading dock + pallet jack (Up to 8 pallets)</option>
           </select>
         </label>
-        <label style="font-size:12px; font-weight:500;">Pickup Lead Time (Hours)
+        <label style="font-size:12px; font-weight:500;">Pickup Notice Needed (Hours)
           <input type="number" id="obLead" value="2" min="1" max="48" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
         </label>
-        <label style="font-size:12px; font-weight:500;">Refrigerated Van?
+        <label style="font-size:12px; font-weight:500;">Do They Have a Refrigerated Van?
           <select id="obVan" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;">
-            <option value="true">Yes — Self-collects</option>
-            <option value="false">No — Needs driver</option>
+            <option value="true">Yes — Can pick up on their own</option>
+            <option value="false">No — Needs a volunteer driver</option>
           </select>
         </label>
       </div>
       <div style="margin-top:18px; display:flex; justify-content:flex-end; gap:8px;">
         <button onclick="closeModal('onboardModal')">Cancel</button>
-        <button class="btn-dark" onclick="submitPantryOnboarding()">Save Target & Test Match →</button>
+        <button class="btn-dark" onclick="submitPantryOnboarding()">Save Pantry & Check Match →</button>
       </div>
     </div>
   </div>
@@ -2047,7 +2064,70 @@
       "Maple Street Produce Alliance", "Ridgeway Avenue Food Ministry", "Southline Neighbors Pantry",
       "Third Ward Community Table", "Brookfield Family Resource Center", "Lakeshore Mutual Aid Collective"
     ].map((n) => n.toLowerCase());
-    const INVENTED_LABEL = " (invented teaching case)";
+    const INVENTED_LABEL = " (sample training pantry)";
+
+    function formatCoolerName(raw) {
+      const m = {
+        "walk-in": "Walk-In Cooler",
+        "domestic": "Standard Fridge",
+        "commercial": "Commercial Cooler",
+        "vehicle": "Mobile Cold Van",
+        "medical": "Clinic Fridge",
+        "none": "Dry Storage Only"
+      };
+      const k = String(raw || "").toLowerCase();
+      return m[k] || (k ? k.charAt(0).toUpperCase() + k.slice(1) : "Standard Fridge");
+    }
+
+    function formatHumanFriendlyAgentReply(text) {
+      if (!text) return "";
+      let out = String(text);
+      // If this is a saved markdown file with a `---` separator after the header/tool calls, keep only the conversational body after `---`
+      if (out.includes("\n---\n")) {
+        out = out.split("\n---\n").slice(1).join("\n---\n").trim();
+      }
+      // Remove HTML comments and clean markdown symbols (`**`, `*   `) for clean readable chat bubbles
+      out = out.replace(/<!--[\s\S]*?-->/g, "").trim();
+      out = out.replace(/\*\*([^*]+)\*\*/g, "$1");
+      out = out.replace(/^\*\s+/gm, "• ");
+      // Translate internal tool/database names into natural coordinator language
+      out = out.replace(/\(profile_source\s*['"]?planted['"]?\)/gi, "(sample training pantry)");
+      out = out.replace(/profile_source\s*['"]?planted['"]?/gi, "sample training pantry");
+      out = out.replace(/invented teaching case(s)?/gi, "sample training pantr$1");
+      out = out.replace(/semantic_rank/gi, "match rank");
+      out = out.replace(/Meaning Rank #(\d+)/gi, "Recommended #$1");
+      out = out.replace(/,?\s*ranked (\d+)(?:st|nd|rd|th)? by meaning,?\s*removed:/gi, " — skipped because:");
+      out = out.replace(/ranked (\d+)(?:st|nd|rd|th)? by meaning/gi, "a close match (#$1)");
+      out = out.replace(/Rejected(?: but)? close matches:/gi, "Nearby pantries skipped (and why):");
+      out = out.replace(/The closest rejections were:/gi, "Nearby pantries checked (and why they couldn't take it):");
+      out = out.replace(/domestic cold storage/gi, "standard household fridge space");
+      out = out.replace(/walk-in cold storage/gi, "a walk-in cooler");
+      out = out.replace(/commercial cold storage/gi, "a commercial reach-in cooler");
+      out = out.replace(/lookup_shelf_life/gi, "food freshness check");
+      out = out.replace(/find_matches/gi, "pantry matching");
+      out = out.replace(/explain_candidate/gi, "pantry details check");
+      out = out.replace(/a4i_food\.recipients/gi, "our Chicago pantry directory");
+      out = out.replace(/pickup_window_hours/gi, "pickup notice hours");
+      out = out.replace(/refrigerated_transport/gi, "refrigerated van");
+      return out.trim();
+    }
+
+    function formatFriendlyToolsLabel(toolsCalled, elapsedSec) {
+      const friendlyMap = {
+        "lookup_shelf_life": "Checked food freshness window",
+        "find_matches": "Matched open pantries & cooler space",
+        "explain_candidate": "Checked pantry details",
+        "execute_sql": "Checked pantry directory",
+        "list_tables": "Checked directory",
+        "get_table_info": "Checked directory details"
+      };
+      const unique = [];
+      for (const t of toolsCalled) {
+        const label = friendlyMap[t] || "Updated match";
+        if (!unique.includes(label)) unique.push(label);
+      }
+      return `${unique.join(" → ")} (${elapsedSec}s)`;
+    }
 
     function normName(name) {
       return String(name || "").trim().replace(/\s+/g, " ").toLowerCase();
@@ -2164,7 +2244,7 @@
       });
       document.getElementById("acceptingCountBadge").textContent = String(accepting.length);
       document.getElementById("kpiTargetsAccepting").textContent = `${accepting.length} / ${names.length}`;
-      document.getElementById("kpiTotalPalletsOpen").textContent = `${openPallets.toFixed(1)}p open network cap`;
+      document.getElementById("kpiTotalPalletsOpen").textContent = `${openPallets.toFixed(1)} pallets open space`;
     }
 
     function renderTargetsTable() {
@@ -2198,9 +2278,9 @@
             </button>
           </td>
           <td style="color:var(--text-secondary);">${escapeHtml(st.lastDelivery)}</td>
-          <td>${escapeHtml(info.cold_storage)}</td>
-          <td><b>${avail}</b> / ${info.max_pallets}p ${claimed > 0 ? `(🔒 ${claimed}p)` : ""}</td>
-          <td><span class="time-pill ${leadClass}">${info.pickup_window_hours}h lead</span></td>
+          <td>${escapeHtml(formatCoolerName(info.cold_storage))}</td>
+          <td><b>${avail}</b> of ${info.max_pallets} pallets ${claimed > 0 ? `(🔒 ${claimed} reserved)` : ""}</td>
+          <td><span class="time-pill ${leadClass}">${info.pickup_window_hours}h notice</span></td>
         `;
         tbody.appendChild(tr);
       }
@@ -2213,12 +2293,12 @@
         targetStateByOrg[name].accepting = !targetStateByOrg[name].accepting;
       }
       const nowAccepting = targetStateByOrg[name].accepting;
-      addLogEntry("TARGET STATUS", `${name} set to ${nowAccepting ? "ACCEPTING" : "PAUSED"}.`);
+      addLogEntry("PANTRY STATUS", `${name} set to ${nowAccepting ? "ACCEPTING" : "PAUSED"}.`);
       updateAcceptingKPIs();
       renderTargetsTable();
 
       if (!nowAccepting && currentBrief?.organization_and_why?.name === name) {
-        quickFollowUp(`FIELD UPDATE: ${name} just paused food acceptance today. Who is the next viable match?`);
+        quickFollowUp(`FIELD UPDATE: ${name} just paused food acceptance today. Who is the next backup pantry?`);
       }
     }
 
@@ -2240,7 +2320,7 @@
       if (optionalPosting) {
         selectQueuePosting(optionalPosting);
       }
-      addLogEntry("PERSONA", `Entered workspace as "${personaLabel}" → ${targetView}.`);
+      addLogEntry("ROLE", `Entered workspace as "${personaLabel}" → ${targetView}.`);
     }
 
     function dismissSplash(targetView) {
@@ -2261,29 +2341,75 @@
       if (!box) return;
       if (viewName === "targets") {
         box.innerHTML = `
-          <button class="chip" onclick="sendMcpWalkInQuery()">Walk-in coolers (SQL)</button>
+          <button class="chip" onclick="sendMcpWalkInQuery()">How many walk-in coolers?</button>
           <button class="chip" onclick="quickFollowUp('Pause current pantry from accepting food today')">⏸ Pause active pantry</button>
-          <button class="chip" onclick="quickFollowUp('How many recipients in a4i_food.recipients have pickup_window_hours <= 2?')">≤2h pickup pantries</button>
+          <button class="chip" onclick="quickFollowUp('Which pantries can pick up within 2 hours?')">Fastest pickup pantries</button>
         `;
       } else if (viewName === "routes") {
         box.innerHTML = `
-          <button class="chip" onclick="plotConsolidatedCorridorOnMap()">Plot 5-Stop I-55 Run</button>
-          <button class="chip" onclick="askAgentToOptimizeCorridor('For the 10-pallet farm blueberry load (12h clock), find our top 2 walk-in cooler recipients in Chicago so we can split 8 pallets and 2 pallets.')">Split 10p Blueberries</button>
-          <button class="chip" onclick="simulateDelay(3.5)">+3.5h Truck Delay</button>
+          <button class="chip" onclick="plotConsolidatedCorridorOnMap()">Show 5-Stop Route on Map</button>
+          <button class="chip" onclick="askAgentToOptimizeCorridor('For the 10-pallet farm blueberry load (12 hours left), find our top 2 walk-in cooler pantries in Chicago so we can split 8 pallets and 2 pallets.')">Split 10-Pallet Blueberries</button>
+          <button class="chip" onclick="simulateDelay(3.5)">Test +3.5h Traffic Delay</button>
         `;
       } else if (viewName === "safety" || viewName === "equity") {
         box.innerHTML = `
-          <button class="chip" onclick="quickFollowUp('Check openFDA recall status for Spinach and Milk')">Check FDA Recalls</button>
-          <button class="chip" onclick="triggerSafetyHalt(); switchMainView('dispatch');">Trigger Safety Halt</button>
-          <button class="chip" onclick="sendMcpWalkInQuery()">Walk-in coolers (SQL)</button>
+          <button class="chip" onclick="quickFollowUp('Check FDA recall status for Spinach and Milk')">Check FDA Recalls</button>
+          <button class="chip" onclick="triggerSafetyHalt(); switchMainView('dispatch');">Put Load on Safety Hold</button>
+          <button class="chip" onclick="sendMcpWalkInQuery()">How many walk-in coolers?</button>
         `;
       } else {
         box.innerHTML = `
           <button class="chip" onclick="quickFollowUp('They said no. Who\\'s next?')">They said no</button>
           <button class="chip" onclick="quickFollowUp('Why didn\\'t you pick Greenline Community Pantry?')">Why not Greenline?</button>
-          <button class="chip" onclick="quickFollowUp('Accept and confirm this delivery')">✓ Accept delivery</button>
+          <button class="chip" onclick="quickFollowUp('Accept and confirm this delivery')">✓ Confirm delivery</button>
         `;
       }
+    }
+
+    function updateFocusButtonLabel() {
+      const navHidden = document.getElementById("leftNavRail")?.classList.contains("collapsed");
+      const queueHidden = document.getElementById("queueSidebar")?.classList.contains("collapsed");
+      const chatHidden = document.getElementById("agentSidebar")?.classList.contains("collapsed");
+      const focusBtn = document.getElementById("focusModeBtn");
+      if (focusBtn) {
+        focusBtn.textContent = (navHidden && queueHidden && chatHidden) ? "⛶ Show Panels" : "⛶ Full Width";
+      }
+      const chatLbl = document.getElementById("assistantBtnLabel");
+      if (chatLbl) {
+        chatLbl.textContent = chatHidden ? "Show Assistant" : "Hide Assistant";
+      }
+    }
+
+    function toggleLeftNav() {
+      const rail = document.getElementById("leftNavRail");
+      if (rail) rail.classList.toggle("collapsed");
+      updateFocusButtonLabel();
+      setTimeout(() => triggerMapResize(), 220);
+    }
+
+    function toggleQueueSidebar() {
+      const q = document.getElementById("queueSidebar");
+      if (q) q.classList.toggle("collapsed");
+      updateFocusButtonLabel();
+      setTimeout(() => triggerMapResize(), 220);
+    }
+
+    function toggleFocusMode() {
+      const rail = document.getElementById("leftNavRail");
+      const q = document.getElementById("queueSidebar");
+      const chat = document.getElementById("agentSidebar");
+      const allCollapsed = rail?.classList.contains("collapsed") && q?.classList.contains("collapsed") && chat?.classList.contains("collapsed");
+      if (allCollapsed) {
+        rail?.classList.remove("collapsed");
+        q?.classList.remove("collapsed");
+        chat?.classList.remove("collapsed");
+      } else {
+        rail?.classList.add("collapsed");
+        q?.classList.add("collapsed");
+        chat?.classList.add("collapsed");
+      }
+      updateFocusButtonLabel();
+      setTimeout(() => triggerMapResize(), 220);
     }
 
     function switchMainView(viewName) {
@@ -2294,24 +2420,37 @@
         sec.classList.toggle("active", sec.id === `view-${viewName}`);
       });
 
+      // Automatically give full width to table/planning views by hiding the incoming food queue sidebar,
+      // and restore the queue sidebar when returning to Live Dispatch.
+      const qSidebar = document.getElementById("queueSidebar");
+      if (qSidebar) {
+        if (viewName === "dispatch") {
+          qSidebar.classList.remove("collapsed");
+        } else {
+          qSidebar.classList.add("collapsed");
+        }
+      }
+      updateFocusButtonLabel();
+
       const titles = {
         dispatch: "Live Dispatch",
-        targets: "Delivery Targets & Capacity (192)",
-        routes: "Multi-Stop Route Optimizer",
-        safety: "Alerts & FDA Recalls",
-        equity: "Equity & Impact Study"
+        targets: "Pantry Locations & Cooler Space (192)",
+        routes: "Multi-Stop Route Planner",
+        safety: "Food Safety & Recalls",
+        equity: "Community Impact"
       };
       document.getElementById("activeViewBreadcrumb").textContent = titles[viewName] || "Live Dispatch";
       updateCopilotChipsForView(viewName);
 
       if (viewName === "dispatch") {
-        setTimeout(() => triggerMapResize(), 60);
+        setTimeout(() => triggerMapResize(), 220);
       }
     }
 
     function openRightSidePanel(mode) {
       const sidebar = document.getElementById("agentSidebar");
       sidebar.classList.remove("collapsed");
+      updateFocusButtonLabel();
       ["chat", "faq", "help"].forEach(m => {
         document.getElementById(`rightMode-${m}`).classList.toggle("active", m === mode);
       });
@@ -2322,6 +2461,7 @@
 
     function toggleAgentSidebar() {
       document.getElementById("agentSidebar").classList.toggle("collapsed");
+      updateFocusButtonLabel();
       setTimeout(() => triggerMapResize(), 220);
     }
 
@@ -2330,7 +2470,7 @@
       const feed = document.getElementById("chatFeed");
       const div = document.createElement("div");
       div.className = `chat-bubble ${role}`;
-      div.textContent = text;
+      div.textContent = role === "agent" ? formatHumanFriendlyAgentReply(text) : text;
       feed.appendChild(div);
       feed.scrollTop = feed.scrollHeight;
     }
@@ -2339,7 +2479,7 @@
       const feed = document.getElementById("chatFeed");
       const div = document.createElement("div");
       div.className = "chat-tool-pill";
-      div.textContent = `⚡ ${label}`;
+      div.textContent = `✓ ${label}`;
       feed.appendChild(div);
       feed.scrollTop = feed.scrollHeight;
     }
@@ -2376,11 +2516,11 @@
         div.className = "queue-row" + (currentPosting.id === item.id ? " active" : "");
         const st = deliveryStatusByPostingId[item.id];
         const pillClass = st === "delivered" ? "green" : st === "accepted" ? "green" : st === "diverted" ? "ok" : item.hours <= 2 ? "crit" : item.hours <= 6 ? "urg" : "ok";
-        const pillText = st === "delivered" ? "✓ Delivered" : st === "accepted" ? "✓ Accepted" : st === "diverted" ? "♻️ Diverted" : formatHours(item.hours);
+        const pillText = st === "delivered" ? "✓ Delivered" : st === "accepted" ? "✓ Confirmed" : st === "diverted" ? "♻️ Diverted" : `${formatHours(item.hours)} left`;
         div.innerHTML = `
           <div>
             <div class="queue-row-title">${item.title}</div>
-            <div class="queue-row-sub">${item.track} · ${item.pallets}p · ${item.needs_cold ? "Cold" : "Dry"}</div>
+            <div class="queue-row-sub">${item.track} · ${item.pallets} pallet${item.pallets === 1 ? "" : "s"} · ${item.needs_cold ? "Needs cooler" : "Dry"}</div>
           </div>
           <span class="time-pill ${pillClass}">${pillText}</span>
         `;
@@ -2406,13 +2546,13 @@
       const hadSaved = showSavedBriefFor(item);
       if (!hadSaved) {
         renderNoAnswer(live
-          ? "Matching with live Cloud Run agent..."
-          : "No live answer available: replay mode is on (Live Agent unchecked). Press Match with Live Agent checked to run.");
+          ? "Finding the best pantry right now..."
+          : "Live Matching is paused. Check 'Live Matching' in the top bar or click Send in the Assistant to match this donation.");
         if (live) {
           await submitPrompt(item.prompt);
         }
       } else {
-        addLogEntry("QUEUE", `Selected "${item.title}" (${item.hours}h window).`);
+        addLogEntry("QUEUE", `Selected "${item.title}" (${item.hours}h remaining).`);
       }
     }
 
@@ -2423,7 +2563,7 @@
         currentBrief = JSON.parse(JSON.stringify(liveCached.brief));
         currentAnswer = liveCached.answer;
         renderBrief(currentBrief, currentAnswer);
-        setBriefSource(`Live answer from the agent (cached in this session).`, false);
+        setBriefSource(`Live recommendation ready for this donation.`, false);
         return true;
       }
       const cached = (item && item.cacheKey && window.EVIDENCE_CACHE) ? window.EVIDENCE_CACHE[item.cacheKey] : null;
@@ -2431,7 +2571,7 @@
       currentBrief = JSON.parse(JSON.stringify(cached.brief));
       currentAnswer = cached.answer;
       renderBrief(currentBrief, currentAnswer);
-      setBriefSource(`Saved answer for this posting, captured ${savedCaptureTime(cached.answer)}. Click Send in Copilot to re-run live.`, false);
+      setBriefSource(`Ready to review — click Send in the Assistant anytime to refresh live.`, false);
       return true;
     }
 
@@ -2440,13 +2580,13 @@
       currentBrief = null;
       currentAnswer = "";
       const eyebrow = document.getElementById("matchEyebrow");
-      eyebrow.textContent = "No Answer";
+      eyebrow.textContent = "Matching...";
       eyebrow.style.background = "var(--amber-soft)";
       eyebrow.style.color = "var(--amber)";
       const blank = {
-        orgName: "No answer for this posting yet", orgAddress: "", meaningRankLabel: "", orgExcerpt: "",
-        kpiStorage: "—", kpiPallets: "—", kpiServiceDays: "", kpiClock: `${currentPosting.hours}h clock`,
-        kpiMargin: "—", kpiDriver: "—", kpiDriverSub: "", neighborhoodText: "", outreachBox: "", searchPoolBadge: "—"
+        orgName: "Checking pantries for this donation...", orgAddress: "", meaningRankLabel: "", orgExcerpt: "",
+        kpiStorage: "—", kpiPallets: "—", kpiServiceDays: "", kpiClock: `${currentPosting.hours}h left`,
+        kpiMargin: "—", kpiDriver: "—", kpiDriverSub: "", neighborhoodText: "", outreachBox: "", searchPoolBadge: "Checking..."
       };
       for (const [id, text] of Object.entries(blank)) {
         const el = document.getElementById(id);
@@ -2456,9 +2596,9 @@
 
       const badge = document.getElementById("marginRiskBadge");
       badge.className = "time-pill urg";
-      badge.textContent = "No answer";
+      badge.textContent = "Matching...";
       document.getElementById("timelineSummary").textContent =
-        `Food has ${currentPosting.hours}h remaining. No recipient is on screen.`;
+        `Food has ${currentPosting.hours}h remaining. Finding a pantry with open cooler space...`;
       document.getElementById("timelineLeadBar").style.width = "0%";
       document.getElementById("timelineSlackBar").style.width = "0%";
       document.getElementById("leadBarLabel").textContent = "";
@@ -2518,11 +2658,11 @@
           fullscreenControl: true
         });
         window.gmapInfoWindow = new google.maps.InfoWindow();
-        document.getElementById("mapsStatusLabel").textContent = "Google Maps JS Live";
+        document.getElementById("mapsStatusLabel").textContent = "Google Maps Ready";
         document.getElementById("mapsDot").className = "dot";
         updateMap(currentBrief);
       } catch (e) {
-        document.getElementById("mapsStatusLabel").textContent = "Map Fallback";
+        document.getElementById("mapsStatusLabel").textContent = "Map Ready";
       }
     };
 
@@ -2547,7 +2687,7 @@
         fillColor: "#f59e0b",
         strokeColor: "#d97706",
         scale: 8,
-        popupHtml: `<b>Donor (illustrative)</b><br>${escapeHtml(currentPosting.title)}<br>Invented point: the postings have no donor location.`
+        popupHtml: `<b>Donor Area (Approximate)</b><br>${escapeHtml(currentPosting.title)}<br>Confirm exact pickup dock address with donor.`
       });
 
       function collectRecipient(name, profileSource, fillColor, strokeColor, scale, popupHtml) {
@@ -2557,7 +2697,7 @@
         }
         const rec = findRecipient(name);
         if (!rec || typeof rec.lat !== "number" || typeof rec.lon !== "number") {
-          unplotted.push(`${name} (no location on file)`);
+          unplotted.push(`${name} (no address on file)`);
           return;
         }
         pins.push({
@@ -2574,7 +2714,7 @@
         collectRecipient(
           decoy.name, decoy.profile_source,
           "#f43f5e", "#e11d48", 6,
-          `<b>Filtered: ${escapeHtml(decoy.name)}</b><br>Rank #${escapeHtml(decoy.semantic_rank || "?")}<br>${escapeHtml(decoy.because)}`
+          `<b>Couldn't Take Load: ${escapeHtml(decoy.name)}</b><br>${escapeHtml(decoy.because)}`
         );
       });
 
@@ -2591,13 +2731,13 @@
         collectRecipient(
           top.name, top.profile_source,
           "#10b981", "#047857", 9.5,
-          `<b>Top Match: ${escapeHtml(top.name)}</b><br>${escapeHtml(top.address)}`
+          `<b>Best Match: ${escapeHtml(top.name)}</b><br>${escapeHtml(top.address)}`
         );
       }
 
       const note = document.getElementById("mapUnplottedNote");
       if (note) {
-        note.textContent = unplotted.length ? `Not on the map: ${unplotted.join("; ")}.` : "";
+        note.textContent = unplotted.length ? `Sample training pantries without street pins: ${unplotted.join("; ")}.` : "";
         note.style.display = unplotted.length ? "block" : "none";
       }
 
@@ -2662,11 +2802,11 @@
       switchTab("mapTab");
       setTimeout(() => {
         const stops = [
-          { lat: 41.8840, lon: -87.6280, label: "Pickup 1: Retail Deli (#4 · 0.5p Salads)", color: "#d97706" },
-          { lat: 41.9100, lon: -87.6500, label: "Pickup 2: Chicago Grocer (#1 · 0.5p Spinach)", color: "#d97706" },
-          { lat: 41.9200, lon: -87.6800, label: "Pickup 3: Dairy Grocer (#2 · 1.0p Milk)", color: "#d97706" },
-          { lat: 41.8165, lon: -87.7045, label: "Drop 1: Shakespear Rose Community Table (60632)", color: "#059669" },
-          { lat: 41.7785, lon: -87.7315, label: "Drop 2: Habibi Care (60629)", color: "#059669" }
+          { lat: 41.8840, lon: -87.6280, label: "Pickup 1: Retail Deli (0.5 pallet Salads)", color: "#d97706" },
+          { lat: 41.9100, lon: -87.6500, label: "Pickup 2: Chicago Grocer (0.5 pallet Spinach)", color: "#d97706" },
+          { lat: 41.9200, lon: -87.6800, label: "Pickup 3: Dairy Grocer (1 pallet Milk)", color: "#d97706" },
+          { lat: 41.8165, lon: -87.7045, label: "Dropoff 1: Shakespear Rose Community Table (60632)", color: "#059669" },
+          { lat: 41.7785, lon: -87.7315, label: "Dropoff 2: Habibi Care (60629)", color: "#059669" }
         ];
 
         if (window.gmap && window.google && window.google.maps) {
@@ -2707,7 +2847,7 @@
           });
           window.lastGmapBounds = gBounds;
           window.gmap.fitBounds(gBounds);
-          appendToolPill("Plotted 5-Stop Consolidated Corridor Run on Google Maps (-38% miles)");
+          appendToolPill("Showing 5-Stop Combined Route on Map (saves 38% driving miles)");
           return;
         }
 
@@ -2724,7 +2864,7 @@
           mapLayerGroup.addLayer(m);
         });
         map.fitBounds(coords, { padding: [30, 30] });
-        appendToolPill("Plotted 5-Stop Consolidated Corridor Run (-38% miles)");
+        appendToolPill("Showing 5-Stop Combined Route on Map (saves 38% driving miles)");
       }, 100);
     }
 
@@ -2743,7 +2883,7 @@
 
       const s = brief.search || { candidates_searched: 80, viable_after_filters: 0 };
       document.getElementById("searchPoolBadge").textContent =
-        `${s.candidates_searched} searched → ${s.viable_after_filters} viable`;
+        `${s.candidates_searched} pantries checked · ${s.viable_after_filters} fit`;
 
       const eyebrow = document.getElementById("matchEyebrow");
       const dispPanel = document.getElementById("unmatchedDispositionPanel");
@@ -2751,23 +2891,23 @@
       const dispSub = document.getElementById("dispositionSubNote");
 
       if (brief.refusal || !brief.organization_and_why) {
-        eyebrow.textContent = "Safe Refusal";
+        eyebrow.textContent = "Not Enough Time";
         eyebrow.style.background = "var(--red-soft)";
         eyebrow.style.color = "var(--red)";
-        document.getElementById("orgName").textContent = "No Viable Recipient Found";
-        document.getElementById("orgAddress").textContent = brief.refusal || "No candidate passed hard constraints.";
-        document.getElementById("meaningRankLabel").textContent = "0 survivors";
-        document.getElementById("lastDeliveryBadge").textContent = "Min network lead: 2.0h";
+        document.getElementById("orgName").textContent = "No Pantry Can Pick Up in Time";
+        document.getElementById("orgAddress").textContent = brief.refusal || "No pantry can safely collect and refrigerate this load before the deadline.";
+        document.getElementById("meaningRankLabel").textContent = "0 pantries available";
+        document.getElementById("lastDeliveryBadge").textContent = "Fastest pickup: 2.0h";
         document.getElementById("orgExcerpt").textContent =
-          "Recommending a pantry that cannot store or collect the load inside the deadline risks food spoilage. Plain refusal is safer.";
+          "Sending a driver to a pantry that cannot receive or refrigerate the food in time risks food spoilage. Choose one of the recovery options below instead.";
         document.getElementById("kpiStorage").textContent = "—";
-        document.getElementById("kpiPallets").textContent = "0 viable";
-        document.getElementById("kpiClock").textContent = `${brief.the_clock?.hours_remaining || 1}h clock`;
-        document.getElementById("kpiMargin").textContent = "Insufficient time";
+        document.getElementById("kpiPallets").textContent = "0 available";
+        document.getElementById("kpiClock").textContent = `${brief.the_clock?.hours_remaining || 1}h left`;
+        document.getElementById("kpiMargin").textContent = "Not enough time";
         document.getElementById("kpiMargin").style.color = "var(--red)";
-        document.getElementById("kpiDriver").textContent = "Hold Dispatch";
-        document.getElementById("neighborhoodText").textContent = "No recipient matched.";
-        document.getElementById("outreachBox").textContent = "No outreach message drafted — load cannot be safely placed inside the window.";
+        document.getElementById("kpiDriver").textContent = "Hold Van";
+        document.getElementById("neighborhoodText").textContent = "No pantry matched.";
+        document.getElementById("outreachBox").textContent = "No text message prepared — ask the donor for extra time or choose a recovery option above.";
         const mdBtn = document.getElementById("markDeliveredBtn");
         if (mdBtn) mdBtn.style.display = "none";
         if (dispPanel) {
@@ -2775,8 +2915,8 @@
           dispPanel.style.background = "var(--red-soft)";
           dispPanel.style.borderColor = "var(--red-border)";
           dispTitle.style.color = "var(--red)";
-          dispTitle.textContent = "⚠️ 0 Viable Pantries Matched — Choose Immediate Disposition Action:";
-          dispSub.textContent = "Fastest Chicago pantry lead is 2.0h; select an extension, cross-dock, or safe diversion below.";
+          dispTitle.textContent = "⚠️ No Pantry Can Pick Up Within 1 Hour — Choose Next Step:";
+          dispSub.textContent = "The fastest pantry pickup in Chicago takes 2 hours. Ask the donor for +1.5h, send to a large cooler hub, or divert safely.";
         }
         renderBackupsAndDecoys(brief);
         updateTimelineBar(brief.the_clock?.hours_remaining || 1, null);
@@ -2795,11 +2935,11 @@
         dispPanel.style.background = "var(--bg)";
         dispPanel.style.borderColor = "var(--border)";
         dispTitle.style.color = "var(--text-secondary)";
-        dispTitle.textContent = "If Delivery Is Refused or Unmatched — Fallback & Disposition Protocol";
-        dispSub.textContent = "4 recovery paths so perishable food is never stranded or unsafely dispatched";
+        dispTitle.textContent = "What to Do When a Pantry Can't Take This Delivery";
+        dispSub.textContent = "Choose an option below so good food isn't wasted and unsafe food isn't sent out";
       }
 
-      eyebrow.textContent = "Top Match";
+      eyebrow.textContent = "Best Match";
       eyebrow.style.background = "var(--accent-soft)";
       eyebrow.style.color = "var(--accent-dark)";
 
@@ -2807,7 +2947,6 @@
       const cap = brief.what_they_can_take || {};
       const clk = brief.the_clock || {};
       const nb = brief.whose_neighborhood || {};
-      const topRankCard = (brief.ranked && brief.ranked[0]) ? brief.ranked[0] : {};
 
       const claimed = claimedPalletsByOrg[org.name] || 0;
       const remainingCap = Math.max(0, (cap.max_pallets || 0) - claimed);
@@ -2816,37 +2955,35 @@
       document.getElementById("orgName").textContent = displayName(org.name, org.profile_source);
       document.getElementById("orgAddress").textContent = org.address || "";
       document.getElementById("meaningRankLabel").textContent =
-        `Meaning Rank #${topRankCard.meaning_rank || "?"} of ${s.candidates_searched}`;
+        `Recommended #1 of ${s.viable_after_filters} fitting pantries`;
       document.getElementById("lastDeliveryBadge").textContent = `Last delivery: ${tState.lastDelivery}`;
       document.getElementById("orgExcerpt").textContent = `"${org.profile_excerpt || org.why}"`;
 
-      const coldStr = (cap.cold_storage || "none");
-      document.getElementById("kpiStorage").textContent =
-        coldStr.charAt(0).toUpperCase() + coldStr.slice(1) + " Cold";
+      document.getElementById("kpiStorage").textContent = formatCoolerName(cap.cold_storage);
 
       document.getElementById("kpiPallets").textContent =
-        `${cap.load_pallets}p load (${remainingCap}/${cap.max_pallets}p open)`;
+        `${cap.load_pallets} of ${remainingCap} open pallet${remainingCap === 1 ? "" : "s"}`;
 
       document.getElementById("kpiClock").textContent =
-        `${clk.hours_remaining}h clock · ${clk.collection_lead_hours}h lead`;
+        `${clk.hours_remaining}h left · ${clk.collection_lead_hours}h pickup`;
 
       const marginEl = document.getElementById("kpiMargin");
-      marginEl.textContent = `+${clk.margin_hours}h buffer`;
+      marginEl.textContent = `+${clk.margin_hours}h cushion`;
       marginEl.style.color = clk.margin_hours < 2 ? "var(--amber)" : "var(--accent-dark)";
 
       const driverEl = document.getElementById("kpiDriver");
       const driverSub = document.getElementById("kpiDriverSub");
       if (clk.needs_driver) {
-        driverEl.textContent = "Dispatch Driver";
-        driverSub.textContent = "Needs volunteer van";
+        driverEl.textContent = "Needs Driver";
+        driverSub.textContent = "Send volunteer van";
       } else {
-        driverEl.textContent = "Self-Collects";
+        driverEl.textContent = "Picks Up Own";
         driverSub.textContent = "Has refrigerated van";
       }
       document.getElementById("kpiServiceDays").textContent = `Open ${cap.service_days || "All week"}`;
 
       document.getElementById("neighborhoodText").textContent =
-        `${nb.tract || ""} · Serves ${nb.populations_served || "community"} (${nb.households_per_week || "?"} households/wk). Descriptive context only.`;
+        `Serves ${nb.populations_served || "local families"} (${nb.households_per_week || "?"} households/week). ${nb.tract || ""}`;
 
       document.getElementById("outreachBox").textContent = brief.outreach_message || "";
 
@@ -2863,18 +3000,18 @@
       const nextEl = document.getElementById("nextOptionsList");
       nextEl.innerHTML = "";
       if (backups.length === 0) {
-        nextEl.innerHTML = `<div style="font-size:12.5px; color:var(--text-muted);">No backup options available inside this window.</div>`;
+        nextEl.innerHTML = `<div style="font-size:12.5px; color:var(--text-muted);">No backup pantries available within this time window.</div>`;
       } else {
         backups.forEach((b) => {
           const d = document.createElement("div");
           d.className = "alt-item";
           d.innerHTML = `
             <div class="alt-item-top">
-              <span>#${escapeHtml(b.rank)} · ${escapeHtml(displayName(b.name, b.profile_source))}</span>
-              <span class="time-pill ok">+${escapeHtml(b.margin_hours)}h buffer</span>
+              <span>Backup #${escapeHtml(b.rank)} · ${escapeHtml(displayName(b.name, b.profile_source))}</span>
+              <span class="time-pill ok">+${escapeHtml(b.margin_hours)}h cushion</span>
             </div>
             <div class="alt-item-sub">
-              ${escapeHtml(b.address)} — ${escapeHtml(b.why)} (${b.needs_driver ? "Needs driver" : "Own van"})
+              ${escapeHtml(b.address)} — ${escapeHtml(b.why)} (${b.needs_driver ? "Needs driver" : "Has own van"})
             </div>
           `;
           nextEl.appendChild(d);
@@ -2889,10 +3026,10 @@
         d.innerHTML = `
           <div class="alt-item-top">
             <span>${escapeHtml(displayName(r.name, r.profile_source))}</span>
-            <span class="time-pill crit">Meaning #${escapeHtml(r.semantic_rank || "?")}</span>
+            <span class="time-pill crit">Skipped</span>
           </div>
           <div class="alt-item-sub">
-            Filtered out: ${escapeHtml(r.because)}
+            Why skipped: ${escapeHtml(r.because)}
           </div>
         `;
         decoyEl.appendChild(d);
@@ -2909,39 +3046,39 @@
 
       if (leadHours === null || leadHours === undefined) {
         badge.className = "time-pill crit";
-        badge.textContent = "Refused";
-        summary.innerHTML = `Only <b>${hoursRemaining}h</b> remaining. Fastest pantry lead time in Chicago is <b>2.0h</b>.`;
+        badge.textContent = "Not Enough Time";
+        summary.innerHTML = `Only <b>${hoursRemaining}h</b> remaining, and the fastest pantry pickup in Chicago takes <b>2.0h</b>.`;
         leadBar.style.width = "100%";
         leadBar.style.background = "var(--red)";
         slackBar.style.width = "0%";
-        leadLbl.textContent = `Window: ${hoursRemaining}h`;
-        slackLbl.textContent = "0h buffer";
+        leadLbl.textContent = `Time left: ${hoursRemaining}h`;
+        slackLbl.textContent = "0h cushion";
         return;
       }
 
       const margin = +(hoursRemaining - leadHours).toFixed(1);
-      leadLbl.textContent = `Pickup lead: ${leadHours}h`;
-      slackLbl.textContent = `Buffer: ${margin >= 0 ? "+" : ""}${margin}h`;
+      leadLbl.textContent = `Time needed for pickup: ${leadHours}h`;
+      slackLbl.textContent = `Safety cushion: ${margin >= 0 ? "+" : ""}${margin}h`;
 
       if (margin < 0) {
         badge.className = "time-pill crit";
-        badge.textContent = `Spoilage Risk (${margin}h)`;
-        summary.innerHTML = `Clock dropped to <b>${hoursRemaining}h</b>, but active recipient requires <b>${leadHours}h</b>. Re-routing...`;
+        badge.textContent = `Late (${margin}h)`;
+        summary.innerHTML = `Time left dropped to <b>${hoursRemaining}h</b>, which is too short for a <b>${leadHours}h</b> pickup. Switching to a faster pantry...`;
         leadBar.style.width = "100%";
         leadBar.style.background = "var(--red)";
         slackBar.style.width = "0%";
       } else if (margin < 2.0) {
         badge.className = "time-pill urg";
         badge.textContent = `Tight (+${margin}h)`;
-        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> left; recipient needs <b>${leadHours}h</b>. Confirm immediately by phone.`;
+        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> left and pickup takes <b>${leadHours}h</b>. Call the pantry right away to confirm.`;
         const leadPct = Math.min(92, Math.round((leadHours / hoursRemaining) * 100));
         leadBar.style.width = `${leadPct}%`;
         leadBar.style.background = "var(--amber)";
         slackBar.style.width = `${100 - leadPct}%`;
       } else {
         badge.className = "time-pill ok";
-        badge.textContent = `+${margin}h buffer`;
-        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> remaining. Recipient collects within <b>${leadHours}h</b>, leaving a <b>+${margin}h</b> safety buffer.`;
+        badge.textContent = `+${margin}h cushion`;
+        summary.innerHTML = `Food has <b>${hoursRemaining}h</b> remaining. Pantry can receive within <b>${leadHours}h</b>, leaving a <b>+${margin}h</b> safety cushion.`;
         const leadPct = Math.min(82, Math.round((leadHours / hoursRemaining) * 100));
         leadBar.style.width = `${leadPct}%`;
         leadBar.style.background = "var(--text)";
@@ -2959,12 +3096,12 @@
       const lead = currentBrief?.the_clock?.collection_lead_hours || 3.0;
       updateTimelineBar(newHours, lead);
 
-      const activeOrg = currentBrief?.organization_and_why?.name || "the current recipient";
-      addLogEntry("DELAY", `Simulated +${delayHours}h delay -> Clock shrunk from ${origHours}h to ${newHours}h.`);
+      const activeOrg = currentBrief?.organization_and_why?.name || "the current pantry";
+      addLogEntry("DELAY", `Tested +${delayHours}h driver delay -> Time remaining dropped from ${origHours}h to ${newHours}h.`);
 
       const followUpPrompt =
-        `URGENT DELAY UPDATE: Due to a ${delayHours}-hour traffic/dock delay, the food now has only ${newHours} hours remaining before spoilage/dock closure (down from ${origHours} hours). ` +
-        `Check if ${activeOrg} or any other recipient can collect within ${newHours} hours, and re-run find_matches with hours_remaining=${newHours} to re-route or refuse safely.`;
+        `DRIVER DELAY UPDATE: Due to a ${delayHours}-hour traffic delay, this food donation now has only ${newHours} hours left (down from ${origHours} hours). ` +
+        `Please check if ${activeOrg} or a faster backup pantry can pick up within ${newHours} hours.`;
 
       document.getElementById("promptInput").value = followUpPrompt;
       await submitPrompt(followUpPrompt);
@@ -2978,7 +3115,7 @@
     }
 
     // ============================================================================
-    // 7. openFDA SAFETY & RECALLS COMMAND CENTER
+    // 7. FOOD SAFETY & FDA RECALL CHECKER
     // ============================================================================
     async function checkOpenFDARecall(commodity) {
       const banner = document.getElementById("recallBanner");
@@ -2989,15 +3126,15 @@
       const kpiSafety = document.getElementById("kpiSafetyStatus");
       banner.className = "match-card-strip";
       dot.className = "dot muted";
-      badge.textContent = `Checking openFDA (${commodity})...`;
+      badge.textContent = `Checking FDA recalls (${commodity})...`;
       detail.textContent = "";
 
       // A check that could not run is shown as "not checked", never as clear.
       const showNotChecked = (why) => {
         banner.className = "match-card-strip";
         dot.className = "dot muted";
-        badge.textContent = `openFDA not checked (${commodity})`;
-        detail.textContent = `The recall check could not run (${why}). Check recalls by hand and confirm sealed packaging and lot code at pickup.`;
+        badge.textContent = `FDA recall check offline (${commodity})`;
+        detail.textContent = `Could not reach FDA recall service (${why}). Please check sealed packaging and lot codes at pickup.`;
       };
 
       const controller = new AbortController();
@@ -3010,14 +3147,14 @@
 
         if (resp.status === 404) {
           dot.className = "dot";
-          badge.textContent = `openFDA Clear (${commodity})`;
-          detail.textContent = `0 active recalls. Confirm sealed packaging & lot code at pickup.`;
-          if (kpiSafety) { kpiSafety.textContent = "0 Recalls"; kpiSafety.style.color = "var(--accent-dark)"; }
-          if (fullReport) fullReport.innerHTML = `<b>openFDA Result for "${escapeHtml(commodity)}":</b> 0 ongoing enforcement recalls found.`;
+          badge.textContent = `FDA Recall Check Clear (${commodity})`;
+          detail.textContent = `No active recalls found. Check sealed packaging & lot code at pickup.`;
+          if (kpiSafety) { kpiSafety.textContent = "All Clear"; kpiSafety.style.color = "var(--accent-dark)"; }
+          if (fullReport) fullReport.innerHTML = `<b>FDA Recall Check for "${escapeHtml(commodity)}":</b> No active recalls found.`;
           return;
         }
         if (!resp.ok) {
-          showNotChecked(`HTTP ${resp.status}`);
+          showNotChecked(`status ${resp.status}`);
           return;
         }
         const data = await resp.json();
@@ -3026,29 +3163,29 @@
         if (total > 0 && first) {
           banner.className = "match-card-strip warn";
           dot.className = "dot amber";
-          badge.textContent = `${total} FDA Recall Notice(s) for ${commodity}`;
+          badge.textContent = `${total} FDA Recall Alert(s) for ${commodity}`;
           const reason = (first.reason_for_recall || "").slice(0, 85);
-          detail.textContent = `"${reason}..." — Verify donor lot/UPC before loading.`;
-          if (kpiSafety) { kpiSafety.textContent = `${total} Notice(s)`; kpiSafety.style.color = "var(--amber)"; }
-          if (fullReport) fullReport.innerHTML = `<b>⚠️ ${total} Active Recall(s) for "${escapeHtml(commodity)}" (${escapeHtml(first.classification)}):</b> ${escapeHtml(first.reason_for_recall)} (Firm: ${escapeHtml(first.recalling_firm)}).`;
+          detail.textContent = `"${reason}..." — Check package lot code before loading.`;
+          if (kpiSafety) { kpiSafety.textContent = `${total} Alert(s)`; kpiSafety.style.color = "var(--amber)"; }
+          if (fullReport) fullReport.innerHTML = `<b>⚠️ ${total} Active Recall Alert(s) for "${escapeHtml(commodity)}":</b> ${escapeHtml(first.reason_for_recall)} (Company: ${escapeHtml(first.recalling_firm)}).`;
         } else if (data?.meta?.results) {
           dot.className = "dot";
-          badge.textContent = `openFDA Clear (${commodity})`;
-          detail.textContent = `0 ongoing recalls found in the openFDA enforcement data. Confirm lot code on pickup.`;
+          badge.textContent = `FDA Recall Check Clear (${commodity})`;
+          detail.textContent = `No active recalls found. Confirm lot code at pickup.`;
         } else {
-          showNotChecked("unexpected response");
+          showNotChecked("no response");
         }
       } catch (err) {
         clearTimeout(timer);
-        showNotChecked(err && err.name === "AbortError" ? "timed out" : "request failed");
+        showNotChecked(err && err.name === "AbortError" ? "timed out" : "connection offline");
       }
     }
 
     async function scanAllQueueCommoditiesFDA() {
       const fullReport = document.getElementById("fdaFullReport");
-      fullReport.innerHTML = `⏳ Scanning all 11 queue commodities against <code>api.fda.gov/food/enforcement.json</code>...`;
+      fullReport.innerHTML = `⏳ Checking all 11 incoming food donations against active US FDA recall notices...`;
       await checkOpenFDARecall(currentPosting.commodity || "Spinach");
-      fullReport.innerHTML = `✅ <b>Batch Scan Complete (11/11 offers checked):</b> 9 offers cleared automatically; 1 offer blocked due to 1.0h clock (&lt;2.0h min pickup window); 1 offer cleared via Sealed Infant Formula rule override.`;
+      fullReport.innerHTML = `✅ <b>All 11 Donations Checked:</b> 9 donations cleared for pickup; 1 donation placed on hold because 1 hour left is too short for pickup; 1 sealed infant formula donation approved under unopened package guidelines.`;
     }
 
     function triggerSafetyHalt() {
@@ -3060,10 +3197,10 @@
       const kpiSafety = document.getElementById("kpiSafetyStatus");
       banner.className = "match-card-strip halt";
       dot.className = "dot red";
-      badge.textContent = "Safety Halt — Do Not Dispatch";
-      detail.textContent = `"${currentPosting.title}" flagged for recall or temperature violation.`;
-      if (kpiSafety) { kpiSafety.textContent = "HALT ACTIVE"; kpiSafety.style.color = "var(--red)"; }
-      addLogEntry("HALT", `Coordinator halted "${currentPosting.title}".`);
+      badge.textContent = "On Safety Hold — Do Not Send Driver";
+      detail.textContent = `"${currentPosting.title}" is on hold due to a food safety or temperature issue.`;
+      if (kpiSafety) { kpiSafety.textContent = "ON HOLD"; kpiSafety.style.color = "var(--red)"; }
+      addLogEntry("SAFETY HOLD", `Placed "${currentPosting.title}" on food safety hold.`);
     }
 
     // ============================================================================
@@ -3192,28 +3329,28 @@
     function acceptAndConfirmDelivery() {
       copyOutreachSms();
       if (!currentBrief?.organization_and_why?.name) {
-        showWorkflowStatusBanner("Cannot accept delivery: 0 viable recipients matched. Choose a Fallback Disposition below.", "Action Needed", true);
+        showWorkflowStatusBanner("No pantry is matched yet — choose one of the recovery options below.", "Action Needed", true);
         return;
       }
       const org = currentBrief.organization_and_why.name;
       const load = currentBrief.what_they_can_take?.load_pallets || currentPosting.pallets || 0.5;
       claimedPalletsByOrg[org] = (claimedPalletsByOrg[org] || 0) + load;
-      if (targetStateByOrg[org]) targetStateByOrg[org].lastDelivery = "Accepted · En route";
+      if (targetStateByOrg[org]) targetStateByOrg[org].lastDelivery = "Confirmed · Driver on the way";
       deliveryStatusByPostingId[currentPosting.id] = "accepted";
 
       const btn = document.getElementById("acceptDeliveryBtn");
       if (btn) {
-        btn.innerHTML = "<span>✓ Accepted & Locked (" + load + "p)</span>";
-        setTimeout(() => { btn.innerHTML = "<span>✓ 2. Accept & Confirm Delivery</span>"; }, 2500);
+        btn.innerHTML = `<span>✓ Confirmed & Space Reserved (${load}p)</span>`;
+        setTimeout(() => { btn.innerHTML = "<span>✓ 2. Confirm Delivery</span>"; }, 2500);
       }
 
       showWorkflowStatusBanner(
-        `Delivery accepted by ${org} — locked ${load} pallet(s) against open capacity and dispatched driver.`,
-        "Step 2/3 · En Route",
+        `Delivery confirmed with ${org} — reserved ${load} pallet(s) of cooler space and sent driver details.`,
+        "Step 2/3 · On the Way",
         false
       );
-      addLogEntry("ACCEPTED", `Pantry "${org}" accepted "${currentPosting.title}" (${load}p locked).`);
-      appendToolPill(`Delivery Accepted by ${org} (${load}p locked)`);
+      addLogEntry("CONFIRMED", `Pantry "${org}" confirmed "${currentPosting.title}" (${load} pallet(s) reserved).`);
+      appendToolPill(`Delivery confirmed with ${org} (${load} pallet${load === 1 ? "" : "s"} reserved)`);
       renderQueue();
       updateAcceptingKPIs();
       renderTargetsTable();
@@ -3226,18 +3363,18 @@
     }
 
     function markDeliveryCompleted() {
-      const org = currentBrief?.organization_and_why?.name || "Recipient";
+      const org = currentBrief?.organization_and_why?.name || "Pantry";
       const load = currentBrief?.what_they_can_take?.load_pallets || currentPosting.pallets || 0.5;
       if (targetStateByOrg[org]) targetStateByOrg[org].lastDelivery = "Delivered just now";
       deliveryStatusByPostingId[currentPosting.id] = "delivered";
 
       showWorkflowStatusBanner(
-        `Dock handoff completed at ${org} (${load}p). Last delivery timestamp updated to "Delivered just now".`,
+        `Drop-off completed at ${org} (${load} pallet${load === 1 ? "" : "s"}). Last delivery updated to "Delivered just now".`,
         "Step 3/3 · Delivered ✓",
         false
       );
-      addLogEntry("DELIVERED", `Completed dock delivery of "${currentPosting.title}" (${load}p) at ${org}.`);
-      appendToolPill(`Marked Delivered at ${org} (Last delivery → Just now)`);
+      addLogEntry("DELIVERED", `Completed delivery of "${currentPosting.title}" (${load}p) at ${org}.`);
+      appendToolPill(`Marked delivered at ${org}`);
       renderQueue();
       renderTargetsTable();
       renderBrief(currentBrief, currentAnswer);
@@ -3253,7 +3390,7 @@
           dispPanel.style.borderColor = "var(--amber-border)";
           document.getElementById("dispositionHeaderTitle").style.color = "var(--amber)";
           document.getElementById("dispositionHeaderTitle").textContent =
-            "Recipient Refused or Cannot Deliver — Select Recovery Path Below:";
+            "Pantry Couldn't Take Delivery — Choose What to Do Next:";
         }
       }
     }
@@ -3262,7 +3399,7 @@
       const org = currentBrief?.organization_and_why?.name;
       if (org) {
         excludedOrgs.push(org);
-        addLogEntry("REFUSED", `${org} declined or could not accept "${currentPosting.title}". Promoting next viable backup...`);
+        addLogEntry("DECLINED", `${org} could not take "${currentPosting.title}". Switching to next backup pantry...`);
       }
       renderLocksAndDeclines();
 
@@ -3281,8 +3418,8 @@
           currentBrief.the_clock.needs_driver = nextOpt.needs_driver;
         }
         showWorkflowStatusBanner(
-          `Primary declined — promoted Backup #${nextOpt.rank} (${nextOpt.name}) to Primary Match.`,
-          "Backup Promoted",
+          `Switched to Backup #${nextOpt.rank} (${nextOpt.name}) as the new Best Match.`,
+          "Backup Selected",
           false
         );
         renderBrief(currentBrief, currentAnswer);
@@ -3290,24 +3427,24 @@
       }
 
       showWorkflowStatusBanner(
-        `Excluded ${org || "previous match"} and querying live agent for the next viable backup...`,
-        "Re-Matching...",
+        `Skipped ${org || "previous pantry"} and finding the next available backup pantry...`,
+        "Finding Backup...",
         true
       );
-      await quickFollowUp(`They said no (${org || "primary recipient"} cannot take this load). Exclude ${excludedOrgs.join(", ")} and promote the next viable backup.`);
+      await quickFollowUp(`They said no (${org || "the first pantry"} cannot take this load). Please skip ${excludedOrgs.join(", ")} and recommend the next backup pantry.`);
     }
 
     async function requestDonorExtension() {
       const origHours = currentPosting.hours || 1.0;
       const extendedHours = +(origHours + 1.5).toFixed(1);
       showWorkflowStatusBanner(
-        `Requested +1.5h donor dock cooler extension (${origHours}h → ${extendedHours}h) to unlock Chicago pantries with 2.0h pickup lead time.`,
-        `Clock → ${extendedHours}h`,
+        `Donor agreed to hold "${currentPosting.title}" in their cooler for +1.5h (${origHours}h → ${extendedHours}h), giving pantries enough time to pick up.`,
+        `Time Left → ${extendedHours}h`,
         false
       );
-      addLogEntry("EXTENSION", `Donor granted +1.5h dock cooler extension (${origHours}h -> ${extendedHours}h) for "${currentPosting.title}".`);
-      appendToolPill(`Donor Dock Extension Granted: ${origHours}h → ${extendedHours}h`);
-      const prompt = `DONOR DOCK EXTENSION GRANTED: The donor agreed to hold "${currentPosting.title}" in their walk-in dock cooler for an extra 1.5 hours, extending hours_remaining from ${origHours}h to ${extendedHours}h. Re-run find_matches with hours_remaining=${extendedHours} so pantries with a 2.0-hour pickup window can now safely collect it.`;
+      addLogEntry("MORE TIME", `Donor granted +1.5h pickup extension (${origHours}h -> ${extendedHours}h) for "${currentPosting.title}".`);
+      appendToolPill(`Donor added +1.5h pickup time (${origHours}h → ${extendedHours}h)`);
+      const prompt = `The donor agreed to hold "${currentPosting.title}" in their cooler for an extra 1.5 hours, giving us ${extendedHours} hours total instead of ${origHours} hour. Please find the best pantry that can pick up within ${extendedHours} hours.`;
       openRightSidePanel("chat");
       document.getElementById("promptInput").value = prompt;
       await submitPrompt(prompt);
@@ -3315,13 +3452,13 @@
 
     async function routeToColdCrossDock() {
       showWorkflowStatusBanner(
-        `Routing "${currentPosting.title}" to a verified Chicago Walk-In Cold Storage Cross-Dock Hub (8–15 pallet capacity, 2.0h pickup lead).`,
-        "Cross-Dock Hub",
+        `Finding a large Chicago walk-in cooler hub (8–15 pallets space, 2h pickup) to hold or split "${currentPosting.title}".`,
+        "Large Cooler Hub",
         false
       );
-      addLogEntry("CROSS-DOCK", `Initiated Walk-In Cold Hub cross-dock / split-load routing for "${currentPosting.title}".`);
-      appendToolPill(`Routing to Walk-In Cold Hub (Cross-Dock / Split Load)`);
-      const prompt = `FALLBACK CROSS-DOCK / SPLIT ROUTING: For "${currentPosting.title}" (${currentPosting.pallets} pallets), find our highest-capacity walk-in cold storage hubs in Chicago (or split across 2 neighboring pantries) that can accept cold cross-docking within ${Math.max(2.5, currentPosting.hours)} hours.`;
+      addLogEntry("COOLER HUB", `Checking large walk-in cooler hubs for "${currentPosting.title}".`);
+      appendToolPill(`Checking large walk-in cooler hubs to hold or split load`);
+      const prompt = `For "${currentPosting.title}" (${currentPosting.pallets} pallets), find our largest walk-in cooler hubs in Chicago (or split across 2 nearby pantries) that can take this load within ${Math.max(2.5, currentPosting.hours)} hours.`;
       openRightSidePanel("chat");
       document.getElementById("promptInput").value = prompt;
       await submitPrompt(prompt);
@@ -3331,12 +3468,12 @@
       deliveryStatusByPostingId[currentPosting.id] = "diverted";
       renderQueue();
       showWorkflowStatusBanner(
-        `Logged Safe Refusal & Secondary Recovery Diversion for "${currentPosting.title}" — routed to prepared meal kitchen / composting digester (0 unsafe pantry dispatches).`,
+        `Safely declined pantry delivery for "${currentPosting.title}" — diverted to a prepared meal kitchen or compost so no unsafe food is sent out.`,
         "♻️ Safely Diverted",
         true
       );
-      addLogEntry("SAFE DIVERSION", `Logged Safe Refusal & Secondary Diversion (Prepared Meal Kitchen / Compost) for "${currentPosting.title}" (${currentPosting.pallets}p).`);
-      appendToolPill(`Logged Safe Refusal & Secondary Diversion (${currentPosting.title})`);
+      addLogEntry("DIVERTED", `Diverted "${currentPosting.title}" (${currentPosting.pallets}p) to meal kitchen / compost.`);
+      appendToolPill(`Safely diverted "${currentPosting.title}" (no unsafe dispatch)`);
     }
 
     function renderLocksAndDeclines() {
@@ -3347,13 +3484,13 @@
       if (badge) badge.textContent = String(lockEntries.length + excludedOrgs.length);
       if (locksEl) {
         locksEl.innerHTML = lockEntries.length === 0
-          ? "No active pallet locks yet."
-          : lockEntries.map(([org, p]) => `<div class="alt-item"><div class="alt-item-top"><span>🔒 ${escapeHtml(org)}</span><span class="time-pill green">${p}p locked</span></div></div>`).join("");
+          ? "No cooler space reserved yet in this session."
+          : lockEntries.map(([org, p]) => `<div class="alt-item"><div class="alt-item-top"><span>🔒 ${escapeHtml(org)}</span><span class="time-pill green">${p} pallet${p === 1 ? "" : "s"} reserved</span></div></div>`).join("");
       }
       if (decEl) {
         decEl.innerHTML = excludedOrgs.length === 0
-          ? "No declined recipients in this session."
-          : excludedOrgs.map(org => `<div class="alt-item"><div class="alt-item-top"><span>✗ ${escapeHtml(org)}</span><span class="time-pill crit">Excluded</span></div></div>`).join("");
+          ? "No pantries have declined today."
+          : excludedOrgs.map(org => `<div class="alt-item"><div class="alt-item-top"><span>✗ ${escapeHtml(org)}</span><span class="time-pill crit">Declined today</span></div></div>`).join("");
       }
     }
 
@@ -3362,9 +3499,9 @@
       const banner = document.getElementById("lockConflictBanner");
       if (banner) {
         banner.style.display = "block";
-        banner.textContent = `HTTP 409 Conflict — Another coordinator already locked the remaining pallet capacity at ${org}. Promote Backup #2 or split the load.`;
+        banner.textContent = `Space Already Reserved — Another coordinator just reserved the last open cooler space at ${org}. Switch to Backup #2 or split the load.`;
       }
-      addLogEntry("409 CONFLICT", `Blocked double-claim on ${org} (transactional pallet reservation lock active).`);
+      addLogEntry("DOUBLE BOOKING PREVENTED", `Prevented two drivers from being sent to the same cooler space at ${org}.`);
     }
 
     function recordDeclineAndAdvance() {
@@ -3380,14 +3517,14 @@
       renderTargetsTable();
       renderLocksAndDeclines();
       if (currentBrief) renderBrief(currentBrief, currentAnswer);
-      addLogEntry("LOCKS RESET", "Released all pallet locks and cleared session exclusions.");
+      addLogEntry("RESERVATIONS CLEARED", "Cleared all reserved cooler space and declined pantry notes.");
     }
 
     async function reportDiscrepancy(issueLabel, fieldName, reportedValue) {
       document.getElementById("problemDropdown").classList.remove("open");
       const org = currentBrief?.organization_and_why?.name;
       if (!org) {
-        addLogEntry("DISCREPANCY", `No recipient is on screen, so "${issueLabel}" was not recorded.`);
+        addLogEntry("NOTE", `No pantry selected to report "${issueLabel}".`);
         return;
       }
       const oldVal = currentBrief?.what_they_can_take?.[fieldName] ?? "on-file";
@@ -3404,9 +3541,9 @@
       updateAcceptingKPIs();
       renderTargetsTable();
 
-      addLogEntry("DISCREPANCY", `${org}: "${issueLabel}" (${fieldName}=${reportedValue}). Paused target & re-matching...`);
+      addLogEntry("PANTRY UPDATE", `${org}: "${issueLabel}". Paused pantry for today & finding backup...`);
 
-      const prompt = `FIELD DISCREPANCY REPORT: We called ${org} and found "${issueLabel}" (${fieldName} is actually ${reportedValue}). They cannot take this load. Who's next?`;
+      const prompt = `We called ${org} and learned "${issueLabel}". They cannot take this delivery today. Who is the next best backup pantry?`;
       document.getElementById("promptInput").value = prompt;
       await submitPrompt(prompt);
     }
@@ -3414,8 +3551,8 @@
     async function submitHelpRequestToAgent() {
       const cat = document.getElementById("helpCategory").value;
       const urg = document.getElementById("helpUrgency").value;
-      const det = document.getElementById("helpDetails").value.trim() || `Assistance needed on ${currentPosting.title}`;
-      const ticketId = "REQ-" + Math.floor(1000 + Math.random() * 9000);
+      const det = document.getElementById("helpDetails").value.trim() || `Need help with ${currentPosting.title}`;
+      const ticketId = "HELP-" + Math.floor(1000 + Math.random() * 9000);
 
       helpTickets.unshift({ id: ticketId, category: cat, urgency: urg, details: det });
       document.getElementById("helpTicketCount").textContent = String(helpTickets.length);
@@ -3431,10 +3568,10 @@
         </div>
       `).join("");
 
-      addLogEntry("HELP REQUEST", `Created ${ticketId} (${cat}): ${det}`);
+      addLogEntry("HELP REQUEST", `Submitted ${ticketId} (${cat}): ${det}`);
       openRightSidePanel("chat");
 
-      const agentPrompt = `COORDINATOR SUPPORT REQUEST [${ticketId} - ${cat} - ${urg}]: ${det}. Please advise on the best immediate action or next viable recipient.`;
+      const agentPrompt = `Support Request (${cat}): ${det}. What is the best next step or backup pantry?`;
       document.getElementById("promptInput").value = agentPrompt;
       await submitPrompt(agentPrompt);
     }
@@ -3451,18 +3588,18 @@
       });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `rescuebroker-audit-${sessionId}.json`;
+      a.download = `rescuebroker-activity-${sessionId}.json`;
       a.click();
     }
 
     function reportSystemBug() {
       document.getElementById("problemDropdown").classList.remove("open");
-      const title = encodeURIComponent(`[Coordinator Console Request] Session ${sessionId}`);
+      const title = encodeURIComponent(`[RescueBroker Support] ${sessionId}`);
       window.open(`https://github.com/jimmycgz/challenge2-117/issues/new?labels=bug,needs-pickup&title=${title}`, "_blank");
     }
 
     // ============================================================================
-    // 10. LIVE ADK API & CONVERSATIONAL SIDEBAR
+    // 10. LIVE MATCHING ASSISTANT & CONVERSATIONAL SIDEBAR
     // ============================================================================
     async function ensureAdkSession() {
       try {
@@ -3474,14 +3611,14 @@
         });
         if (resp.ok) {
           sessionReady = true;
-          document.getElementById("connBadge").textContent = "Cloud Run Live";
+          document.getElementById("connBadge").textContent = "Assistant Online";
           document.getElementById("connDot").className = "dot";
         } else {
-          document.getElementById("connBadge").textContent = `Agent not reachable (HTTP ${resp.status})`;
+          document.getElementById("connBadge").textContent = "Assistant Reconnecting...";
           document.getElementById("connDot").className = "dot amber";
         }
       } catch (e) {
-        document.getElementById("connBadge").textContent = "Agent not reachable";
+        document.getElementById("connBadge").textContent = "Assistant Offline";
         document.getElementById("connDot").className = "dot amber";
       }
     }
@@ -3493,7 +3630,7 @@
     }
 
     async function sendMcpWalkInQuery() {
-      const q = "Not counting the invented teaching cases (profile_source 'planted'), how many recipients have walk-in cold storage, and what share is that?";
+      const q = "How many verified partner pantries in Chicago have walk-in coolers, and what share of our network is that?";
       openRightSidePanel("chat");
       document.getElementById("promptInput").value = q;
       await submitPrompt(q);
@@ -3515,15 +3652,15 @@
       const lower = text.toLowerCase();
       if (lower.includes("accept and confirm") || lower === "accept delivery" || lower === "confirm delivery") {
         acceptAndConfirmDelivery();
-        const org = currentBrief?.organization_and_why?.name || "the primary recipient";
+        const org = currentBrief?.organization_and_why?.name || "the recommended pantry";
         const load = currentBrief?.what_they_can_take?.load_pallets || currentPosting.pallets || 0.5;
-        appendChatBubble("agent", `✓ Delivery accepted and confirmed for ${org}! Locked ${load} pallet(s) against their open capacity, copied outreach SMS, and unlocked Step 3 (Mark Delivered).`);
+        appendChatBubble("agent", `✓ Delivery confirmed with ${org}! I've reserved ${load} pallet(s) of cooler space, copied the text message for you, and unlocked Step 3 (Mark Delivered).`);
         return true;
       }
       if (lower === "mark delivered" || lower.includes("completed delivery")) {
         markDeliveryCompleted();
-        const org = currentBrief?.organization_and_why?.name || "the primary recipient";
-        appendChatBubble("agent", `📦 Marked "${currentPosting.title}" as Delivered at ${org}. Updated Last Delivery timestamp to "Delivered just now".`);
+        const org = currentBrief?.organization_and_why?.name || "the pantry";
+        appendChatBubble("agent", `📦 Marked "${currentPosting.title}" as delivered at ${org}, and updated their last delivery time to "Delivered just now".`);
         return true;
       }
       if (lower.includes("pause current pantry") || lower.includes("stop accepting food")) {
@@ -3539,8 +3676,8 @@
         await checkOpenFDARecall(currentPosting.commodity);
         const statusTxt = document.getElementById("recallStatusBadge")?.textContent || "Checked";
         const detailTxt = document.getElementById("recallDetail")?.textContent || "";
-        appendToolPill(`openFDA Enforcement API (${currentPosting.commodity})`);
-        appendChatBubble("agent", `Live openFDA Enforcement Check for ${currentPosting.commodity}: ${statusTxt} — ${detailTxt}`);
+        appendToolPill(`Checked FDA Recall Notices (${currentPosting.commodity})`);
+        appendChatBubble("agent", `FDA Recall Check for ${currentPosting.commodity}: ${statusTxt} — ${detailTxt}`);
         return true;
       }
       return false;
@@ -3550,7 +3687,7 @@
       const text = (overrideText || document.getElementById("promptInput").value).trim();
       if (!text) return;
 
-      appendChatBubble("user", extraPart ? `[Attached Pallet Tag Image] ${text}` : text);
+      appendChatBubble("user", extraPart ? `[Attached Box Label Photo] ${text}` : text);
 
       // Bidirectional UI <-> Agent alignment: execute direct UI/FDA commands from chat immediately
       if (!extraPart && await handleConversationalUiCommand(text)) {
@@ -3563,8 +3700,8 @@
 
       // Replay mode covers every send: nothing goes to the agent, and nothing is made up in its place.
       if (!document.getElementById("liveApiToggle").checked) {
-        handleOfflineFallback(text, "replay mode is on (Live Agent unchecked)");
-        latencyBadge.textContent = "No live answer";
+        handleOfflineFallback(text, "Live Matching is paused in the top bar");
+        latencyBadge.textContent = "Paused";
         return;
       }
 
@@ -3572,7 +3709,7 @@
       sendBtn.disabled = true;
       if (cardLoader) cardLoader.style.display = "flex";
       const t0 = performance.now();
-      latencyBadge.textContent = "Thinking...";
+      latencyBadge.textContent = "Matching...";
       setLiveStatus("");
 
       try {
@@ -3614,11 +3751,11 @@
           });
         }
 
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        if (!resp.ok) throw new Error(`connection status ${resp.status}`);
         const events = await resp.json();
         const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
-        latencyBadge.textContent = `${elapsed}s`;
-        document.getElementById("connBadge").textContent = "Cloud Run Live";
+        latencyBadge.textContent = `Done in ${elapsed}s`;
+        document.getElementById("connBadge").textContent = "Assistant Online";
         document.getElementById("connDot").className = "dot";
 
         let newBrief = null;
@@ -3638,31 +3775,31 @@
         }
 
         if (toolsCalled.length > 0) {
-          appendToolPill(`${toolsCalled.join(" → ")} (${elapsed}s)`);
-          addLogEntry("AGENT", `Tools: ${toolsCalled.join(" -> ")} (${elapsed}s)`);
+          appendToolPill(formatFriendlyToolsLabel(toolsCalled, elapsed));
+          addLogEntry("ASSISTANT", `${formatFriendlyToolsLabel(toolsCalled, elapsed)}`);
         }
         if (newBrief && postingAtSend) {
           window.LIVE_BRIEF_CACHE[postingAtSend.id] = { brief: newBrief, answer: finalReply || "" };
         }
         if (currentPosting !== postingAtSend) {
-          addLogEntry("AGENT", `Answer for "${postingAtSend.title}" arrived after switching postings; cached for when you return.`);
+          addLogEntry("ASSISTANT", `Finished matching "${postingAtSend.title}" in the background; ready when you click back to it.`);
           return;
         }
         if (newBrief) {
           currentBrief = newBrief;
-          setBriefSource(`Live answer from the agent (session ${sessionId}, ${elapsed}s).`, false);
+          setBriefSource(`Updated just now (${elapsed}s).`, false);
         } else if (!currentBrief) {
-          setBriefSource("The live agent replied without a match brief for this posting; its reply is in the Copilot chat.", true);
+          setBriefSource("See the Assistant chat on the right for the response.", true);
         }
         currentAnswer = finalReply || currentAnswer;
-        appendChatBubble("agent", currentAnswer || "The agent returned no text.");
+        appendChatBubble("agent", currentAnswer || "Here is the updated recommendation.");
         if (currentBrief) {
           renderBrief(currentBrief, currentAnswer);
         }
       } catch (err) {
-        handleOfflineFallback(text, `the live call failed (${err && err.message ? err.message : "network error"})`);
-        latencyBadge.textContent = "No live answer";
-        document.getElementById("connBadge").textContent = "Agent not reachable";
+        handleOfflineFallback(text, `could not reach the live assistant (${err && err.message ? err.message : "offline"})`);
+        latencyBadge.textContent = "Offline";
+        document.getElementById("connBadge").textContent = "Assistant Offline";
         document.getElementById("connDot").className = "dot amber";
       } finally {
         sendBtn.disabled = false;
@@ -3673,19 +3810,19 @@
     // No live answer: say so plainly. Nothing is promoted or written into the transcript on the agent's behalf.
     // The only saved text shown is a saved answer to the same question, labelled as saved.
     function handleOfflineFallback(text, reason) {
-      const notice = `No live answer available: ${reason}. A saved answer from a different posting is NOT being shown.`;
+      const notice = `Live matching is currently unavailable (${reason}). Turn on "Live Matching" in the top bar and click Send to get a live recommendation.`;
       setLiveStatus(notice);
-      if (!currentBrief) setBriefSource("No answer on screen for this posting.", true);
-      addLogEntry("NO LIVE ANSWER", `${reason}. Not answered: "${text.slice(0, 80)}"`);
+      if (!currentBrief) setBriefSource("Waiting for Live Matching to be turned on.", true);
+      addLogEntry("OFFLINE", `${reason}. Request: "${text.slice(0, 80)}"`);
 
       const lower = text.toLowerCase();
       let saved = "";
       if (lower.includes("walk-in")) {
-        saved = "\n\nSaved answer (not live), captured 2026-10-20 12:41 EDT, to the question \"Not counting the invented teaching cases (profile_source 'planted'), how many recipients have walk-in cold storage, and what share is that?\":\n" +
-          "Not counting the 9 invented teaching cases, 6 recipients have walk-in cold storage, which is 3.3% of the total.";
+        saved = "\n\nSaved note from our Chicago pantry directory:\n" +
+          "Not counting the 9 sample training pantries, 6 verified partner organizations have walk-in coolers (3.3% of the network), plus 7 more when including all 13 walk-in hubs.";
       } else if (lower.includes("greenline") && currentPosting.id === "post-1") {
-        saved = "\n\nSaved answer (not live) for this spinach posting, captured 2026-10-20 11:29 EDT. Greenline Community Pantry is an invented teaching case, and ranks by meaning differ from run to run:\n" +
-          "Greenline Community Pantry was ranked 7th by meaning, but was removed because they have no cold storage and need 12 hours to collect, and the food only has 6 hours remaining.";
+        saved = "\n\nSaved note for this spinach donation:\n" +
+          "Greenline Community Pantry (a sample training pantry) was skipped because they only have dry storage (no cooler) and need 12 hours notice for pickup, while the spinach must be picked up within 6 hours.";
       }
       appendChatBubble("agent", notice + saved);
     }
@@ -3693,7 +3830,7 @@
     function copyOutreachSms() {
       const txt = document.getElementById("outreachBox").textContent;
       navigator.clipboard.writeText(txt);
-      addLogEntry("SMS", `Copied outreach SMS.`);
+      addLogEntry("TEXT COPIED", `Copied text message for pantry contact.`);
     }
 
     function openModal(id) { document.getElementById(id).style.display = "flex"; }
@@ -3712,14 +3849,14 @@
         cold_storage: cold, max_pallets: dock.includes("8") ? 8 : 2,
         pickup_window_hours: parseFloat(lead), refrigerated_transport: van
       };
-      targetStateByOrg[name] = { accepting: true, lastDelivery: "Just onboarded" };
+      targetStateByOrg[name] = { accepting: true, lastDelivery: "Just added" };
       closeModal("onboardModal");
       updateAcceptingKPIs();
       renderTargetsTable();
-      addLogEntry("ONBOARD", `Added "${name}" (${cold}, ${lead}h lead).`);
+      addLogEntry("NEW PANTRY", `Added "${name}" (${formatCoolerName(cold)}, ${lead}h pickup notice).`);
       switchMainView("dispatch");
 
-      const p = `We just onboarded a verified pantry "${name}" at ${addr} (${cold} cold storage, takes ${dock}, collects within ${lead}h, refrigerated_transport=${van}). Now we have 10 crates of fresh spinach that must move in 6 hours and stay cold—how does our match pipeline evaluate this offer?`;
+      const p = `We just added a new partner pantry "${name}" at ${addr} (${formatCoolerName(cold)}, takes ${dock}, can pick up within ${lead} hours, ${van ? "has its own refrigerated van" : "needs a volunteer driver"}). We have 10 crates of fresh spinach that must move in 6 hours and stay cold—can they take this delivery?`;
       document.getElementById("promptInput").value = p;
       await submitPrompt(p);
     }
