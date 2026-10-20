@@ -128,7 +128,9 @@ def _tools() -> list:
 
         tools.append(McpToolset(
             connection_params=StreamableHTTPConnectionParams(url=BIGQUERY_MCP_URL),
-            tool_filter=["execute_sql", "get_table_info", "list_table_ids"],
+            # execute_sql_readonly, never execute_sql: the server itself refuses anything but SELECT on the former, while
+            # execute_sql runs INSERT, UPDATE, DELETE and DDL as the service's account (the service is public).
+            tool_filter=["execute_sql_readonly", "get_table_info", "list_table_ids"],
             header_provider=_mcp_headers,
         ))
     return tools
@@ -141,7 +143,7 @@ def _identity_gate(callback_context):
 
 
 MCP_INSTRUCTION = """
-You also have Google's BigQuery tools (execute_sql, get_table_info, list_table_ids) for free-form questions about
+You also have Google's BigQuery tools (execute_sql_readonly, get_table_info, list_table_ids) for free-form questions about
 the data that a coordinator may ask outside a posting, such as how many recipients have a walk-in cooler, or which
 tracts have the lowest vehicle access. Use them only for such questions, only to read, and only on the tables in the
 dataset """ + os.environ.get("A4I_DATASET", "a4i_food") + """. Never use them to find a match for a posting:

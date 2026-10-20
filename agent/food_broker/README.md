@@ -35,7 +35,7 @@ or where it ranked among the viable ones. Questions about a match already given 
 neighborhood) are answered from the earlier brief with no new search.
 
 For questions that are not a posting, such as how many recipients have a walk-in cooler, the agent also uses
-Google's managed BigQuery MCP server (`execute_sql`, `get_table_info`, `list_table_ids`), read-only and told which
+Google's managed BigQuery MCP server (`execute_sql_readonly`, `get_table_info`, `list_table_ids`), read-only (the server refuses anything but SELECT) and told which
 dataset to stay in. It is on in the deployed service. Matching a posting always goes through `find_matches`, never
 through free-form SQL, so the filters cannot be skipped.
 
@@ -113,10 +113,14 @@ Known limits:
   agent presents them as the profile on file and suggests confirming by phone.
 - Shelf life is USDA consumer guidance, not a cold-chain guarantee.
 - Locations are ZIP-level, so the tract figures describe the surrounding area.
-- The deployed service is open and the agent has Google's BigQuery tool, which runs read-only SQL as the service's
-  account. Anyone with the address can ask it questions about the project's data, including the project id and table
-  names, which the agent is given. The instructions confine it to the one dataset, but that is an instruction, not a
-  permission. The project is a temporary lab project and holds only this data.
+- The deployed service is open, and anyone with the address can ask the agent questions about the project's data,
+  including the project id and table names, which the agent is given. The agent's free-form SQL tool is
+  `execute_sql_readonly`, which the BigQuery MCP server restricts to SELECT. Until the afternoon of 2026-10-20 the agent
+  loaded `execute_sql` instead, which the server documents as able to run INSERT, UPDATE, DELETE and DDL as the service's
+  account; that was found in review and switched. The service still runs as the project's default compute account, which
+  holds the Editor role, so a dedicated read-only runtime account is a next step. The instructions also confine the agent
+  to the one dataset, but that part is an instruction, not a permission. The project is a temporary lab project and a
+  snapshot of the tables is in the dataset `a4i_food_backup`.
 - The generated profile text and the numeric fields were produced separately and can disagree: one wholesale-style
   recipient's profile says it can be there "within a couple of hours" while its collection-time number is 19 hours.
   The filters use the numbers, and the agent is told not to repeat what a profile says about timing.
