@@ -123,8 +123,7 @@ find_matches({"hours_remaining": 6, "pallets": 0.5, "needs_cold": true, "donor_d
 ## 🚀 5. Final Pre-Submission Freeze Commands (Run Before Submitting)
 
 ```bash
-# 1. Ensure main is up to date
-cd /home/krishanr/challenge2-117
+# 1. From the repository root, ensure main is up to date
 git checkout main && git pull origin main
 
 # 2. Run the offline self-check (must pass in <2 seconds)
