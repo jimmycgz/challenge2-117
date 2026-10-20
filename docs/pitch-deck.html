@@ -9,40 +9,45 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #fafafa;
+      --bg: #f8fafc;
       --surface: #ffffff;
       --surface-subtle: #f8fafc;
-      --surface-hover: #f4f4f5;
-      --border: #e4e4e7;
-      --border-strong: #d4d4d8;
-      --text: #09090b;
-      --text-secondary: #3f3f46;
-      --text-muted: #71717a;
+      --surface-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+
+      --primary: #0f766e;
+      --primary-hover: #115e59;
+      --primary-soft: #f0fdfa;
+      --primary-border: #99f6e4;
 
       --accent: #10b981;
-      --accent-dark: #059669;
-      --accent-soft: #ecfdf5;
-      --accent-border: #a7f3d0;
+      --accent-dark: #0f766e;
+      --accent-soft: #f0fdfa;
+      --accent-border: #99f6e4;
 
       --blue: #0284c7;
-      --blue-soft: #e0f2fe;
+      --blue-soft: #f0f9ff;
       --blue-border: #bae6fd;
 
-      --amber: #d97706;
+      --amber: #b45309;
       --amber-soft: #fffbeb;
       --amber-border: #fde68a;
 
-      --red: #e11d48;
+      --red: #be123c;
       --red-soft: #fff1f2;
       --red-border: #fecdd3;
 
       --radius-sm: 8px;
       --radius-md: 12px;
-      --radius-lg: 16px;
-      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08);
+      --radius-lg: 14px;
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.03);
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.05);
+      --shadow-lg: 0 10px 24px rgba(15, 23, 42, 0.07);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -81,7 +86,7 @@
       width: 28px;
       height: 28px;
       border-radius: 7px;
-      background: var(--text);
+      background: var(--primary);
       color: #fff;
       display: flex;
       align-items: center;
@@ -145,9 +150,9 @@
     }
 
     .btn-print {
-      background: var(--text);
+      background: var(--primary);
       color: #fff;
-      border: 1px solid var(--text);
+      border: 1px solid var(--primary);
       padding: 7px 14px;
       border-radius: 8px;
       font-weight: 600;
@@ -271,9 +276,9 @@
     }
 
     .card.dark {
-      background: #09090b;
-      color: #ffffff;
-      border-color: #27272a;
+      background: #f0fdfa;
+      color: var(--text);
+      border-color: var(--primary-border);
     }
 
     /* TIME & STATUS PILLS (FROM FRONTEND/INDEX.HTML) */
@@ -291,11 +296,11 @@
     .pill.amber { background: var(--amber-soft); color: var(--amber); border: 1px solid var(--amber-border); }
     .pill.red { background: var(--red-soft); color: var(--red); border: 1px solid var(--red-border); }
     .pill.blue { background: var(--blue-soft); color: var(--blue); border: 1px solid var(--blue-border); }
-    .pill.dark { background: #18181b; color: #fff; }
+    .pill.dark { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
 
     /* KPI STATS */
     .stat-big {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 800;
       letter-spacing: -0.03em;
       color: var(--text);
@@ -311,26 +316,29 @@
 
     /* OPENING SCENARIO BANNER */
     .scenario-bar {
-      background: #09090b;
-      color: #f8fafc;
+      background: linear-gradient(90deg, #f0fdfa 0%, #f8fafc 100%);
+      color: var(--text);
+      border: 1px solid var(--primary-border);
+      border-left: 4px solid var(--primary);
       border-radius: var(--radius-md);
-      padding: 13px 18px;
-      margin-bottom: 14px;
+      padding: 11px 16px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--shadow-xs);
     }
 
     .scenario-quote {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 500;
-      line-height: 1.42;
+      line-height: 1.4;
+      color: var(--text);
     }
 
     .scenario-quote span {
-      color: #34d399;
+      color: var(--primary);
       font-weight: 700;
     }
 
@@ -370,8 +378,9 @@
     }
 
     .ui-window-bar {
-      background: #18181b;
-      color: #fff;
+      background: #f1f5f9;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
       padding: 8px 14px;
       display: flex;
       justify-content: space-between;
@@ -640,27 +649,33 @@
       </div>
 
       <!-- DATA PROVENANCE & WHY CHICAGO VISUAL ROW -->
-      <div class="grid-4">
-        <div class="card">
-          <span class="pill green" style="margin-bottom:6px;">REAL DATA (50%)</span>
+      <div class="grid-4" style="margin-bottom: 10px;">
+        <div class="card" style="padding:12px 14px;">
+          <span class="pill green" style="margin-bottom:4px;">REAL DATA (50%)</span>
           <div class="stat-big">183 Orgs</div>
           <div class="stat-label"><strong>IRS EOBMF</strong> names, addresses, NTEE &amp; income · <strong>USDA</strong> 661 items · <strong>ACS</strong> 1,004 tracts</div>
         </div>
-        <div class="card warn">
-          <span class="pill amber" style="margin-bottom:6px;">GENERATED + PLANTED</span>
+        <div class="card warn" style="padding:12px 14px;">
+          <span class="pill amber" style="margin-bottom:4px;">GENERATED + PLANTED</span>
           <div class="stat-big">Ops + 9 Decoys</div>
           <div class="stat-label">Cooler, pallets &amp; pickup hours are <strong>generated</strong> (+<strong>9 planted teaching cases</strong> at city center)</div>
         </div>
-        <div class="card">
-          <span class="pill blue" style="margin-bottom:6px;">WHY CHICAGO?</span>
+        <div class="card" style="padding:12px 14px;">
+          <span class="pill blue" style="margin-bottom:4px;">WHY CHICAGO?</span>
           <div class="stat-big">20% No-Car</div>
           <div class="stat-label">1 of only 3 high-spread metros (&ge;20% no-vehicle) where transit access separates neighborhoods</div>
         </div>
-        <div class="card">
-          <span class="pill dark" style="margin-bottom:6px;">SAFETY BENCHMARK</span>
+        <div class="card" style="padding:12px 14px;">
+          <span class="pill dark" style="margin-bottom:4px;">SAFETY BENCHMARK</span>
           <div class="stat-big">41 / 42</div>
           <div class="stat-label">Automated checks passed on <code>gemini-3-flash-preview</code> · ~20s live dispatch speed</div>
         </div>
+      </div>
+
+      <!-- FRONT-LOADED SUMMARY STRIP (IN CASE CUT OFF EARLY) -->
+      <div class="card" style="padding:9px 14px; background:#f8fafc; display:flex; justify-content:space-between; align-items:center; gap:12px; font-size:11.5px; color:var(--text-secondary);">
+        <div><strong>What We Found:</strong> Top 3 semantic matches for 6h spinach were all wrong (#3 <em>Greenline</em> decoy has no cooler); <code>top_k=80</code> yields 12 viable options vs 1 at <code>top_k=15</code>; volume equity skews 9% vs 19% because only 14/183 orgs fit 5+ pallets.</div>
+        <div style="flex-shrink:0;"><strong>Honest Limits &amp; Next:</strong> Ops profiles generated, USDA is home guidance, ZIP centroids &rarr; <strong>Next:</strong> Intake Agent, Load Splitting &amp; Rotation.</div>
       </div>
     </div>
 
@@ -732,19 +747,19 @@
 
           <div class="brief-grid">
             <div class="brief-cell">
-              <div class="brief-num">1 · Organization &amp; Address</div>
+              <div class="brief-num">1 &amp; 2 · Organization, Address &amp; Why Them</div>
               <div class="brief-val">Habibi Care <span style="font-weight:500; font-size:11px; color:var(--text-muted);">(Tied #1 w/ Shakespear Rose)</span></div>
-              <div class="brief-sub">📍 4845 N Washtenaw Ave, Chicago 60625 (Real IRS)</div>
+              <div class="brief-sub">📍 4845 N Washtenaw Ave, Chicago 60625 (Real IRS) · <em>Why them:</em> Weekly produce pantry for 165 families w/ kids; cold storage &amp; 3h pickup.</div>
             </div>
 
             <div class="brief-cell">
-              <div class="brief-num">2 · Storage &amp; Capacity Fit</div>
+              <div class="brief-num">3 · What They Can Actually Take</div>
               <div class="brief-val">Domestic Cooler · 1.0 Pallet Room</div>
-              <div class="brief-sub">Offer is 0.5 pallets · <em>Confirm by phone first</em></div>
+              <div class="brief-sub">Offer is 0.5 pallets (10 crates) · <em>Confirm by phone first</em></div>
             </div>
 
             <div class="brief-cell">
-              <div class="brief-num">3 · The Clock &amp; Driver Action</div>
+              <div class="brief-num">4 · The Clock &amp; Driver Margin</div>
               <div class="brief-val" style="color:var(--accent-dark);">6h Left vs 3h Pickup = +3h Buffer</div>
               <div class="clock-bar-wrap">
                 <div class="clock-bar-collect" title="3h Pickup"></div>
@@ -754,13 +769,13 @@
             </div>
 
             <div class="brief-cell">
-              <div class="brief-num">4 · Who It Helps (ACS Tract)</div>
+              <div class="brief-num">5 · Who It Helps (ACS Tract Need)</div>
               <div class="brief-val">165 Households/wk · Families w/ Kids</div>
               <div class="brief-sub">Tract: <strong>13%</strong> poverty · <strong>5%</strong> no-car · <strong>12%</strong> assist</div>
             </div>
 
             <div class="brief-cell">
-              <div class="brief-num">6 · Next Two Backups Ready</div>
+              <div class="brief-num">7 · Next Two Options (If #1 Says No)</div>
               <div class="brief-val">#2 Love Of Angels · #3 Good Food Pantry</div>
               <div class="brief-sub">4h pickup (+2h buffer) · 3h pickup (+3h buffer)</div>
             </div>
@@ -774,9 +789,9 @@
 
           <div class="sms-bubble">
             <div>
-              <strong>5 · Ready-to-Send SMS:</strong> “Hello Habibi Care team, A grocer in Chicago has 10 crates of spinach (0.5 pallets, 6h clock)... leaves you ~3h of slack. We can arrange a volunteer driver. Can you take it?”
+              <strong>6 · Drafted Outreach Message (Ready to Send):</strong> “Hello Habibi Care team, A grocer in Chicago has 10 crates of spinach (0.5 pallets, 6h clock)... leaves you ~3h of slack. We can arrange a volunteer driver. Can you take it?”
             </div>
-            <span class="pill dark" style="flex-shrink:0;">Copy SMS</span>
+            <span class="pill green" style="flex-shrink:0;">Copy SMS</span>
           </div>
         </div>
       </div>
@@ -850,28 +865,28 @@
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="pill green">⚡ Why It Responds in About 20 Seconds</span>
-            <span style="font-size:12.5px; font-weight:700; color:#e4e4e7;">Chosen for Correctness (41/42), Not Raw Speed</span>
+            <span style="font-size:12.5px; font-weight:700; color:var(--text);">Chosen for Correctness (41/42), Not Raw Speed</span>
           </div>
-          <span style="font-size:11.5px; color:#a1a1aa;"><code>docs/evidence/model-call-timings.txt</code></span>
+          <span style="font-size:11.5px; color:var(--text-muted);"><code>docs/evidence/model-call-timings.txt</code></span>
         </div>
 
         <div class="grid-3" style="gap:12px;">
-          <div style="background:#18181b; border:1px solid #27272a; border-radius:8px; padding:9px 12px;">
-            <div style="font-size:11px; color:#f43f5e; font-weight:700;">❌ Multi-LLM Agent Chain Prototype</div>
-            <div style="font-size:18px; font-weight:800; color:#fff; margin:2px 0;">76 – 86 sec / turn</div>
-            <div style="font-size:11px; color:#a1a1aa;">Passing 80 rows between sub-agents timed out while a grocer waited on hold.</div>
+          <div style="background:#ffffff; border:1px solid var(--red-border); border-radius:8px; padding:9px 12px;">
+            <div style="font-size:11px; color:var(--red); font-weight:700;">❌ Multi-LLM Agent Chain Prototype</div>
+            <div style="font-size:18px; font-weight:800; color:var(--text); margin:2px 0;">76 – 86 sec / turn</div>
+            <div style="font-size:11px; color:var(--text-secondary);">Passing 80 rows between sub-agents timed out while a grocer waited on hold.</div>
           </div>
 
-          <div style="background:#18181b; border:1px solid #27272a; border-radius:8px; padding:9px 12px;">
-            <div style="font-size:11px; color:#f59e0b; font-weight:700;">⚠️ gemini-2.5-flash (Faster, Less Safe)</div>
-            <div style="font-size:18px; font-weight:800; color:#fff; margin:2px 0;">~13 sec · 38 / 42 checks</div>
-            <div style="font-size:11px; color:#a1a1aa;">Quicker on Cloud Run, but ran SQL it should have refused in 1 of 3 injection runs.</div>
+          <div style="background:#ffffff; border:1px solid var(--amber-border); border-radius:8px; padding:9px 12px;">
+            <div style="font-size:11px; color:var(--amber); font-weight:700;">⚠️ gemini-2.5-flash (Faster, Less Safe)</div>
+            <div style="font-size:18px; font-weight:800; color:var(--text); margin:2px 0;">~13 sec · 38 / 42 checks</div>
+            <div style="font-size:11px; color:var(--text-secondary);">Quicker on Cloud Run, but ran SQL it should have refused in 1 of 3 injection runs.</div>
           </div>
 
-          <div style="background:#064e3b; border:1px solid #059669; border-radius:8px; padding:9px 12px;">
-            <div style="font-size:11px; color:#6ee7b7; font-weight:700;">✅ gemini-3-flash-preview (Low Thinking)</div>
-            <div style="font-size:18px; font-weight:800; color:#fff; margin:2px 0;">~20 sec · 41 / 42 checks</div>
-            <div style="font-size:11px; color:#d1fae5;">Live Cloud Run: <strong>19.9s</strong> spinach, <strong>22.5s</strong> follow-up, <strong>20.3s</strong> farm · 0 injection leaks.</div>
+          <div style="background:#ffffff; border:1px solid var(--primary-border); border-radius:8px; padding:9px 12px;">
+            <div style="font-size:11px; color:var(--primary); font-weight:700;">✅ gemini-3-flash-preview (Low Thinking)</div>
+            <div style="font-size:18px; font-weight:800; color:var(--text); margin:2px 0;">~20 sec · 41 / 42 checks</div>
+            <div style="font-size:11px; color:var(--text-secondary);">Live Cloud Run: <strong>19.9s</strong> spinach, <strong>22.5s</strong> follow-up, <strong>20.3s</strong> farm · 0 injection leaks.</div>
           </div>
         </div>
       </div>
