@@ -28,39 +28,44 @@
 
   <style>
     :root {
-      --bg: #fafafa;
+      --bg: #f8fafc;
       --surface: #ffffff;
-      --surface-hover: #f4f4f5;
+      --surface-hover: #f1f5f9;
       --surface-subtle: #f8fafc;
-      --border: #e4e4e7;
-      --border-strong: #d4d4d8;
-      --text: #09090b;
-      --text-secondary: #52525b;
-      --text-muted: #71717a;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+
+      --primary: #0f766e;
+      --primary-hover: #115e59;
+      --primary-soft: #f0fdfa;
+      --primary-border: #99f6e4;
 
       --accent: #10b981;
-      --accent-dark: #059669;
-      --accent-soft: #ecfdf5;
-      --accent-border: #a7f3d0;
+      --accent-dark: #0f766e;
+      --accent-soft: #f0fdfa;
+      --accent-border: #ccfbf1;
 
       --blue: #0284c7;
-      --blue-soft: #e0f2fe;
+      --blue-soft: #f0f9ff;
 
-      --amber: #d97706;
+      --amber: #b45309;
       --amber-soft: #fffbeb;
       --amber-border: #fde68a;
 
-      --red: #e11d48;
+      --red: #be123c;
       --red-soft: #fff1f2;
       --red-border: #fecdd3;
 
       --radius-sm: 8px;
       --radius-md: 12px;
-      --radius-lg: 16px;
-      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08);
+      --radius-lg: 14px;
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.03);
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.05);
+      --shadow-lg: 0 10px 24px rgba(15, 23, 42, 0.07);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -81,7 +86,7 @@
     .splash-screen {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 0%, #ecfdf5 0%, #fafafa 55%, #ffffff 100%);
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
       z-index: 3000;
       display: flex;
       flex-direction: column;
@@ -159,11 +164,12 @@
       font-size: 14px;
       font-weight: 600;
       border-radius: 10px;
-      background: var(--text);
+      background: var(--primary);
       color: #fff;
-      border: 1px solid var(--text);
-      box-shadow: var(--shadow-md);
+      border: 1px solid var(--primary);
+      box-shadow: var(--shadow-sm);
     }
+    .btn-hero:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
 
     .btn-hero-secondary {
       padding: 12px 18px;
@@ -195,7 +201,7 @@
     }
 
     .splash-card:hover {
-      border-color: var(--text);
+      border-color: var(--primary-border);
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
     }
@@ -230,11 +236,12 @@
 
     .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .brand-mark {
-      width: 26px;
-      height: 26px;
-      border-radius: 7px;
-      background: var(--text);
-      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--primary-soft);
+      border: 1px solid var(--primary-border);
+      color: var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -287,8 +294,8 @@
 
     button:hover { background: var(--surface-hover); border-color: var(--border-strong); }
     button:disabled { opacity: 0.55; cursor: not-allowed; }
-    .btn-dark { background: var(--text); border-color: var(--text); color: #ffffff; }
-    .btn-dark:hover { background: #27272a; border-color: #27272a; }
+    .btn-dark { background: var(--primary); border-color: var(--primary); color: #ffffff; }
+    .btn-dark:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
     .btn-ghost { background: transparent; border-color: transparent; box-shadow: none; color: var(--text-secondary); }
     .btn-ghost:hover { background: var(--surface-hover); color: var(--text); }
 
@@ -338,7 +345,7 @@
     .nav-item {
       width: 100%;
       justify-content: flex-start;
-      border: none;
+      border: 1px solid transparent;
       box-shadow: none;
       background: transparent;
       padding: 8px 10px;
@@ -350,7 +357,12 @@
     }
 
     .nav-item:hover { background: var(--surface-hover); color: var(--text); }
-    .nav-item.active { background: var(--text); color: #ffffff; font-weight: 600; }
+    .nav-item.active {
+      background: var(--primary-soft);
+      border-color: var(--primary-border);
+      color: var(--primary);
+      font-weight: 600;
+    }
 
     .nav-badge {
       margin-left: auto;
@@ -578,7 +590,7 @@
 
     /* SEGMENTED TABS */
     .subview-header { display: flex; align-items: center; justify-content: space-between; }
-    .segmented-control { display: inline-flex; background: #ededf0; padding: 3px; border-radius: 10px; gap: 2px; }
+    .segmented-control { display: inline-flex; background: var(--surface-hover); padding: 3px; border-radius: 10px; gap: 2px; border: 1px solid var(--border); }
     .seg-btn {
       border: none;
       background: transparent;
@@ -589,7 +601,7 @@
       font-weight: 500;
       color: var(--text-secondary);
     }
-    .seg-btn.active { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: var(--shadow-xs); }
+    .seg-btn.active { background: var(--surface); color: var(--primary); font-weight: 600; box-shadow: var(--shadow-xs); }
 
     .tab-surface {
       display: none;
@@ -612,7 +624,7 @@
       display: flex;
       margin: 10px 0 6px;
     }
-    .progress-lead { background: var(--text); height: 100%; transition: width 0.3s ease; }
+    .progress-lead { background: #64748b; height: 100%; transition: width 0.3s ease; }
     .progress-slack { background: var(--accent); height: 100%; transition: width 0.3s ease; }
 
     /* RIGHT SIDEBAR (3 MODES: Copilot Chat | FAQ | Request Help) */
@@ -663,7 +675,7 @@
       white-space: normal;
       word-break: break-word;
     }
-    .chat-bubble.user { align-self: flex-end; background: var(--text); color: #fff; border-bottom-right-radius: 3px; white-space: pre-wrap; }
+    .chat-bubble.user { align-self: flex-end; background: var(--primary-soft); color: var(--text); border: 1px solid var(--primary-border); border-bottom-right-radius: 3px; white-space: pre-wrap; }
     .chat-bubble.agent { align-self: flex-start; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 3px; box-shadow: var(--shadow-xs); }
     .chat-bubble.agent p { margin: 0 0 8px 0; }
     .chat-bubble.agent p:last-child { margin-bottom: 0; }
@@ -1520,102 +1532,183 @@
       </div>
 
       <!-- ======================================================================
-           VIEW 3: MULTI-STOP ROUTE OPTIMIZER
+           VIEW 3: MULTI-RECIPIENT LOAD SPLITTING (#6) & CORRIDOR BATCHING
            ====================================================================== -->
       <div class="view-section" id="view-routes">
+        <!-- STRETCH GOAL #6: Interactive Multi-Recipient Load Splitter -->
         <div class="section-card">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
             <div>
-              <span class="eyebrow-pill">Driver & Van Route Planner</span>
-              <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Combine Nearby Pickups & Split Large Loads</h2>
+              <span class="eyebrow-pill">Stretch Goal #6 · Multi-Recipient Load Splitting</span>
+              <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Split Large Farm Loads Across Multiple Pantries</h2>
               <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
-                Group nearby food pickups onto a single van trip, split large 10-pallet farm loads between two pantries, and save volunteer driving time.
+                When a farm or wholesale offer (5–15 pallets) is too big for a single neighborhood pantry, split the load across 2–4 nearby verified pantries whose combined open space covers the full harvest before the pickup clock runs out.
               </p>
             </div>
-            <button class="btn-dark" onclick="plotConsolidatedCorridorOnMap()">
-              Show 5-Stop Route on Map →
-            </button>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button onclick="loadSplitPreset('blueberries')" style="font-size:11.5px; padding:6px 10px;">
+                🫐 Preset: 10p Blueberries (12h, Cold)
+              </button>
+              <button onclick="loadSplitPreset('squash')" style="font-size:11.5px; padding:6px 10px;">
+                🎃 Preset: 15p Squash (120h, Dry)
+              </button>
+              <button onclick="loadSplitPreset('potatoes')" style="font-size:11.5px; padding:6px 10px;">
+                🥔 Preset: 5p Potatoes (72h, Dry)
+              </button>
+            </div>
           </div>
 
-          <div class="kpi-top-row" style="margin-top:16px;">
+          <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; margin-top:14px; background:var(--bg); padding:12px; border-radius:10px; border:1px solid var(--border);">
+            <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary);">
+              Food Item / Donation
+              <input type="text" id="splitCommodity" value="10 Pallets Fresh Blueberries (Posting #6)" oninput="computeLoadSplit()" style="width:100%; margin-top:4px; padding:6px 8px; border:1px solid var(--border-strong); border-radius:6px; font-size:12px;" />
+            </label>
+            <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary);">
+              Total Pallets to Split
+              <input type="number" id="splitPallets" value="10" min="1" max="30" step="0.5" oninput="computeLoadSplit()" style="width:100%; margin-top:4px; padding:6px 8px; border:1px solid var(--border-strong); border-radius:6px; font-size:12px;" />
+            </label>
+            <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary);">
+              Pickup Window (Hours)
+              <input type="number" id="splitHours" value="12" min="2" max="168" step="1" oninput="computeLoadSplit()" style="width:100%; margin-top:4px; padding:6px 8px; border:1px solid var(--border-strong); border-radius:6px; font-size:12px;" />
+            </label>
+            <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary);">
+              Cooler Required?
+              <select id="splitCold" onchange="computeLoadSplit()" style="width:100%; margin-top:4px; padding:6px 8px; border:1px solid var(--border-strong); border-radius:6px; font-size:12px;">
+                <option value="walk-in" selected>Walk-In / Commercial Cooler</option>
+                <option value="any-cold">Any Refrigeration</option>
+                <option value="dry">Dry Storage OK (Hardy Produce)</option>
+              </select>
+            </label>
+            <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary);">
+              Max Pantries in Split
+              <select id="splitMaxStops" onchange="computeLoadSplit()" style="width:100%; margin-top:4px; padding:6px 8px; border:1px solid var(--border-strong); border-radius:6px; font-size:12px;">
+                <option value="2" selected>Split across 2 Pantries</option>
+                <option value="3">Split across 3 Pantries</option>
+                <option value="4">Split across 4 Pantries</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="kpi-top-row" style="margin-top:12px;">
             <div class="kpi-mini">
-              <div class="kpi-mini-label">Driving Miles Saved</div>
-              <div class="kpi-mini-val" style="color:var(--accent-dark);">38% (-41 mi)</div>
-              <div class="kpi-mini-sub">By combining 3 nearby trips</div>
+              <div class="kpi-mini-label">Total Load vs Allocated</div>
+              <div class="kpi-mini-val" id="splitKpiAllocated" style="color:var(--accent-dark);">10.0 / 10.0p</div>
+              <div class="kpi-mini-sub" id="splitKpiStatus">100% placed across 2 stops</div>
             </div>
             <div class="kpi-mini">
-              <div class="kpi-mini-label">Van Space Used</div>
-              <div class="kpi-mini-val">94%</div>
-              <div class="kpi-mini-sub">Up from 52% on single trips</div>
+              <div class="kpi-mini-label">Viable Pool (183 Verified)</div>
+              <div class="kpi-mini-val" id="splitKpiPool">—</div>
+              <div class="kpi-mini-sub">Excludes 9 sample cases & paused</div>
             </div>
             <div class="kpi-mini">
-              <div class="kpi-mini-label">Shared Farm Load</div>
-              <div class="kpi-mini-val">10 Pallets</div>
-              <div class="kpi-mini-sub">Blueberries split across 2 pantries</div>
+              <div class="kpi-mini-label">Slowest Stop Pickup Notice</div>
+              <div class="kpi-mini-val" id="splitKpiLead">—</div>
+              <div class="kpi-mini-sub" id="splitKpiSlack">Slack vs deadline</div>
             </div>
             <div class="kpi-mini">
               <div class="kpi-mini-label">Pantries With Own Van</div>
-              <div class="kpi-mini-val">25 Pantries</div>
-              <div class="kpi-mini-sub">Can pick up without a volunteer driver</div>
+              <div class="kpi-mini-val" id="splitKpiVans">—</div>
+              <div class="kpi-mini-sub">Can pick up without volunteer driver</div>
             </div>
           </div>
+
+          <div id="splitResultsContainer" style="margin-top:12px;"></div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-top:12px; padding-top:12px; border-top:1px solid var(--border);">
+            <div style="font-size:12px; color:var(--text-secondary);" id="splitSummaryFootnote">
+              Each pantry receives its own tailored text message and pallet reservation lock (#12).
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button onclick="pinSplitOnMap()">
+                📍 Pin Split Stops on Map
+              </button>
+              <button onclick="lockAllSplitAllocations()" class="btn-dark">
+                🔒 Reserve Space for All Split Stops
+              </button>
+              <button onclick="askAgentToVerifySplit()">
+                Ask Assistant to Verify Split →
+              </button>
+            </div>
+          </div>
+
+          <div id="splitSmsPreview" style="display:none; margin-top:12px; padding:12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; font-family:monospace; font-size:11.5px; white-space:pre-wrap; color:var(--text-secondary);"></div>
         </div>
 
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <span class="time-pill green">Recommended Route #1 · Combined Van Trip</span>
-              <h3 style="font-size:15.5px; font-weight:700; margin-top:6px;">I-55 Corridor Run: North/West Loop Pickups → Southwest Side Drop-Offs</h3>
+              <span class="time-pill green">Combined Van Trip · Shared Corridor</span>
+              <h3 style="font-size:15.5px; font-weight:700; margin-top:6px;">Combine Small Pickups Along One Refrigerated Van Run</h3>
               <p style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">
                 Combines <b>Deli Sandwiches (0.5 pallet)</b> + <b>Fresh Spinach (0.5 pallet)</b> + <b>Milk & Yogurt (1.0 pallet)</b> onto one 2-pallet refrigerated van.
               </p>
             </div>
-            <button onclick="askAgentToOptimizeCorridor('Combine the 10 crates of spinach (0.5 pallet), deli sandwiches (0.5 pallet), and 60 gallons of dairy (1.0 pallet) into a single 2-pallet refrigerated van route')">
-              Plan Route with Assistant →
-            </button>
-          </div>
-        </div>
-
-        <div class="section-card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <span class="time-pill urg">Recommended Route #2 · Split Large Farm Load</span>
-              <h3 style="font-size:15.5px; font-weight:700; margin-top:6px;">10-Pallet Farm Blueberries Split Between 2 Walk-In Cooler Pantries</h3>
-              <p style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">
-                A single neighborhood pantry can't hold 10 pallets at once. Splitting the load between two walk-in cooler locations saves the entire harvest within 12 hours.
-              </p>
+            <div style="display:flex; gap:6px;">
+              <button onclick="plotConsolidatedCorridorOnMap()">
+                Pin Stops on Map
+              </button>
+              <button onclick="askAgentToOptimizeCorridor('Combine the 10 crates of spinach (0.5 pallet), deli sandwiches (0.5 pallet), and 60 gallons of dairy (1.0 pallet) into a single 2-pallet refrigerated van route')">
+                Plan Route with Assistant →
+              </button>
             </div>
-            <button onclick="askAgentToOptimizeCorridor('For the 10-pallet fresh blueberries farm offer (12h clock), can we split the 10 pallets across two nearby recipients that have walk-in coolers and loading docks?')">
-              Find 2 Pantries to Split Load →
-            </button>
           </div>
         </div>
       </div>
 
       <!-- ======================================================================
-           VIEW 4: ALERTS & FDA RECALL COMMAND CENTER
+           VIEW 4: ALERTS & FDA RECALL COMMAND CENTER (#11)
            ====================================================================== -->
       <div class="view-section" id="view-safety">
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
-              <span class="eyebrow-pill">Live US FDA Recall Check + Safety Rules</span>
+              <span class="eyebrow-pill">Stretch Goal #11 · Live US FDA Recall Check + Dock Checklist</span>
               <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Food Safety & Recall Alerts</h2>
               <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
-                Check incoming food donations against active FDA food recalls, review expiring time windows, and put unsafe items on hold before a driver is sent.
+                Check incoming food donations against active US FDA food recalls (`api.fda.gov/food/enforcement.json`), complete the 3-point dock safety check, and put unsafe items on hold before a driver is sent. If the FDA service is unreachable, the status always says "not checked", never "clear".
               </p>
             </div>
             <button class="btn-dark" onclick="scanAllQueueCommoditiesFDA()">Check All 11 Donations →</button>
           </div>
 
-          <div style="display:flex; gap:8px; margin-top:16px;">
-            <input type="text" id="fdaSearchInput" value="Spinach" placeholder="Enter food item (e.g. Spinach, Milk, Salad, Infant Formula)..." style="flex:1; padding:8px 12px; border:1px solid var(--border-strong); border-radius:8px; font-size:13px;" />
+          <div style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;">
+            <input type="text" id="fdaSearchInput" value="Spinach" placeholder="Enter food item (e.g. Spinach, Milk, Salad, Infant Formula)..." style="flex:1; min-width:220px; padding:8px 12px; border:1px solid var(--border-strong); border-radius:8px; font-size:13px;" />
             <button onclick="checkOpenFDARecall(document.getElementById('fdaSearchInput').value)">Check FDA Recalls</button>
+            <button onclick="askAgentAboutRecall(document.getElementById('fdaSearchInput').value)">Ask Assistant About Safety Rules →</button>
             <button style="color:var(--red); border-color:var(--red-border);" onclick="triggerSafetyHalt(); switchMainView('dispatch');">Put Current Load on Hold</button>
           </div>
 
           <div style="margin-top:14px; padding:12px 14px; background:var(--bg); border:1px solid var(--border); border-radius:10px; font-size:12.5px; color:var(--text-secondary);" id="fdaFullReport">
             Ready to check active FDA food recall notices. Click <b>Check All 11 Donations</b> to scan the entire queue at once.
+          </div>
+
+          <!-- Coordinator 3-Point Dock Safety Checklist (#11) -->
+          <div style="margin-top:14px; padding:14px; background:var(--surface); border:1px solid var(--border); border-radius:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div>
+                <div class="sidebar-title">Coordinator 3-Point Dock Safety Checklist (Before Truck Rolls)</div>
+                <p style="font-size:12px; color:var(--text-secondary); margin-top:2px;">
+                  Confirm these three checks with the donor dock before dispatching a volunteer driver.
+                </p>
+              </div>
+              <button class="btn-dark" style="padding:5px 10px; font-size:11.5px;" onclick="signOffSafetyChecklist()">
+                ✓ Sign Off Dock Safety Check
+              </button>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:10px; font-size:12px;">
+              <label style="display:flex; align-items:flex-start; gap:8px; padding:8px 10px; background:var(--bg); border-radius:8px; border:1px solid var(--border); cursor:pointer;">
+                <input type="checkbox" id="chkFdaLot" checked style="margin-top:2px;" />
+                <span><b>1. FDA Lot / UPC Checked:</b> Donor lot/brand verified against active openFDA recall notices.</span>
+              </label>
+              <label style="display:flex; align-items:flex-start; gap:8px; padding:8px 10px; background:var(--bg); border-radius:8px; border:1px solid var(--border); cursor:pointer;">
+                <input type="checkbox" id="chkSealIntact" checked style="margin-top:2px;" />
+                <span><b>2. Package Seal & Date:</b> Unopened commercial packaging confirmed (required for infant formula & dairy).</span>
+              </label>
+              <label style="display:flex; align-items:flex-start; gap:8px; padding:8px 10px; background:var(--bg); border-radius:8px; border:1px solid var(--border); cursor:pointer;">
+                <input type="checkbox" id="chkDockTemp" checked style="margin-top:2px;" />
+                <span><b>3. Cooler Temp Verified:</b> Chilled items held at ≤ 40°F on donor dock prior to pickup.</span>
+              </label>
+            </div>
           </div>
 
           <table class="clean-table" style="margin-top:14px;">
@@ -1634,21 +1727,21 @@
                 <td>40 Trays Cream Pastries (1.0h left)</td>
                 <td>On Hold</td>
                 <td>1 hour left is shorter than the fastest pantry pickup time (2 hours)</td>
-                <td><button onclick="selectQueuePosting(SURPLUS_QUEUE[0])" style="padding:3px 8px; font-size:11px;">Review</button></td>
+                <td><button onclick="selectQueuePosting(SURPLUS_QUEUE[0]); switchMainView('dispatch');" style="padding:3px 8px; font-size:11px;">Review</button></td>
               </tr>
               <tr>
                 <td><span class="time-pill green">Sealed Package Rule</span></td>
                 <td>48 Cases Sealed Infant Formula</td>
                 <td>Approved (7 days)</td>
                 <td>Unopened cans are safe for 8 months (ignores 2–4 day opened-bottle limit)</td>
-                <td><button onclick="selectQueuePosting(SURPLUS_QUEUE[9])" style="padding:3px 8px; font-size:11px;">Review</button></td>
+                <td><button onclick="selectQueuePosting(SURPLUS_QUEUE[9]); switchMainView('dispatch');" style="padding:3px 8px; font-size:11px;">Review</button></td>
               </tr>
               <tr>
                 <td><span class="time-pill ok">FDA Recall Check</span></td>
                 <td>10 Crates Fresh Spinach</td>
-                <td id="spinachFdaCell">Checked</td>
-                <td>Checked against active US FDA food recall notices</td>
-                <td><button onclick="checkOpenFDARecall('Spinach')" style="padding:3px 8px; font-size:11px;">Re-Check</button></td>
+                <td id="spinachFdaCell">Not Checked Yet</td>
+                <td>Checked live against US FDA food recall notices (`api.fda.gov`)</td>
+                <td><button onclick="checkOpenFDARecall('Spinach')" style="padding:3px 8px; font-size:11px;">Check Live</button></td>
               </tr>
             </tbody>
           </table>
@@ -1656,19 +1749,55 @@
       </div>
 
       <!-- ======================================================================
-           VIEW 5: COMMUNITY IMPACT & NEIGHBORHOOD REACH
+           VIEW 5: COMMUNITY IMPACT & 10-POSTING EQUITY STUDY (#13)
            ====================================================================== -->
       <div class="view-section" id="view-equity">
         <div class="section-card">
-          <span class="eyebrow-pill">1,004 Chicago Neighborhoods</span>
-          <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Community Impact & Neighborhood Reach</h2>
-          <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
-            How our 183 verified Chicago partner pantries and food rescues serve neighborhoods across the city. Pantries are matched strictly by food safety, cooler space, and pickup timing—never by race or demographics—while giving you visibility into the communities reached.
-          </p>
-          <table class="clean-table">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+            <div>
+              <span class="eyebrow-pill">Stretch Goal #13 · 1,004 Chicago Census Tracts · 10-Posting Study</span>
+              <h2 style="font-size:20px; font-weight:700; margin-top:6px;">Community Impact & Neighborhood Reach</h2>
+              <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
+                How our 183 verified Chicago partner pantries and food rescues serve neighborhoods across the city. Pantries are matched strictly by food safety, cooler space, and pickup timing—never by race or demographics—while giving you full visibility into the communities reached.
+              </p>
+            </div>
+            <div class="segmented-control">
+              <button class="seg-btn active" id="eqModeRealBtn" onclick="setEquityMode('real183')">
+                183 Verified Orgs (Default)
+              </button>
+              <button class="seg-btn" id="eqModeAllBtn" onclick="setEquityMode('all192')">
+                With 9 Sample Cases (192)
+              </button>
+            </div>
+          </div>
+
+          <div class="kpi-top-row" style="margin-top:14px;">
+            <div class="kpi-mini">
+              <div class="kpi-mini-label">Top-1 Match Poverty vs City</div>
+              <div class="kpi-mini-val" id="eqKpiTopPov" style="color:var(--accent-dark);">21.9% vs 15.3%</div>
+              <div class="kpi-mini-sub" id="eqKpiTopPovSub">+6.6 pts above Chicago tract mean</div>
+            </div>
+            <div class="kpi-mini">
+              <div class="kpi-mini-label">Top-1 No-Car Households</div>
+              <div class="kpi-mini-val" id="eqKpiTopNoCar">29.7% vs 19.7%</div>
+              <div class="kpi-mini-sub" id="eqKpiTopNoCarSub">+10.0 pts above citywide mean</div>
+            </div>
+            <div class="kpi-mini">
+              <div class="kpi-mini-label">Unique Top-1 Winners (10 Postings)</div>
+              <div class="kpi-mini-val" id="eqKpiUnique">8 Distinct Orgs</div>
+              <div class="kpi-mini-sub" id="eqKpiUniqueSub">Across 7 ZIPs (no single pantry monopolizes)</div>
+            </div>
+            <div class="kpi-mini">
+              <div class="kpi-mini-label">Why 5–15p Farm Loads Concentrate</div>
+              <div class="kpi-mini-val">14 Dock Orgs</div>
+              <div class="kpi-mini-sub">Use Load Splitter (#6) to reach 169 smaller pantries</div>
+            </div>
+          </div>
+
+          <table class="clean-table" style="margin-top:12px;">
             <thead>
               <tr>
-                <th>Pantry Group</th>
+                <th>Pantry Group (ZIP-Weighted Census ACS)</th>
                 <th>Locations</th>
                 <th>Neighborhood Poverty Rate</th>
                 <th>Households Without a Car</th>
@@ -1676,16 +1805,57 @@
               </tr>
             </thead>
             <tbody id="equityTableBody">
-              <tr><td>All Chicago neighborhoods (citywide average)</td><td>1,004 areas</td><td>15%</td><td>20%</td><td>18%</td></tr>
-              <tr><td>All verified partner pantries</td><td>183</td><td>19% avg (16% median)</td><td>28% avg (27% median)</td><td>19% avg (12% median)</td></tr>
-              <tr><td>Large pantries with loading docks (5+ pallets)</td><td>14</td><td>17% avg (14% median)</td><td>29% avg (27% median)</td><td>16% avg (14% median)</td></tr>
-              <tr><td>Neighborhood pantries (under 5 pallets)</td><td>169</td><td>20% avg (16% median)</td><td>27% avg (27% median)</td><td>20% avg (12% median)</td></tr>
-              <tr><td>Recommended #1 matches across active donations</td><td>10 donations</td><td>22% avg (16% median)</td><td>30% avg (23% median)</td><td>19% avg (11% median)</td></tr>
+              <tr><td>All Chicago neighborhoods (citywide average)</td><td>1,004 tracts</td><td>15.3%</td><td>19.7%</td><td>17.8%</td></tr>
+              <tr><td>All verified partner pantries (excluding 9 sample cases)</td><td>183 orgs</td><td>19.5% avg (16.4% median)</td><td>27.5% avg (27.4% median)</td><td>19.3% avg (12.1% median)</td></tr>
+              <tr><td>Large pantries with loading docks (5+ pallets)</td><td>14 orgs</td><td>17.1% avg (14.4% median)</td><td>28.8% avg (27.4% median)</td><td>15.8% avg (13.6% median)</td></tr>
+              <tr><td>Neighborhood pantries (under 5 pallets)</td><td>169 orgs</td><td>19.7% avg (16.4% median)</td><td>27.4% avg (27.4% median)</td><td>19.6% avg (12.1% median)</td></tr>
+              <tr id="eqSummaryTopRow" style="background:var(--accent-soft); font-weight:600;">
+                <td>Top-1 recommended matches (183 verified pool)</td>
+                <td>10 postings (8 unique)</td>
+                <td>21.9% avg (16.1% median)</td>
+                <td>29.7% avg (23.2% median)</td>
+                <td>19.2% avg (10.7% median)</td>
+              </tr>
             </tbody>
           </table>
-          <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">
-            Figures reflect US Census neighborhood data around each pantry's ZIP code.
-          </p>
+        </div>
+
+        <!-- Per-Posting 10-Donation Breakdown Explorer -->
+        <div class="section-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div>
+              <h3 style="font-size:16px; font-weight:700;">10-Posting Geographic & Tract Breakdown</h3>
+              <p style="font-size:12.5px; color:var(--text-secondary);">
+                Compare which pantry wins each of the 10 official postings across Retail, Farm, Essentials, and Repeat tracks. Toggle between the 183 verified pantries and the 192-row counterfactual above.
+              </p>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="chip" onclick="filterEquityTrack('all')">All 10 Postings</button>
+              <button class="chip" onclick="filterEquityTrack('Retail')">Retail (4)</button>
+              <button class="chip" onclick="filterEquityTrack('Farm')">Farm (3)</button>
+              <button class="chip" onclick="filterEquityTrack('Essentials')">Essentials (2)</button>
+              <button class="chip" onclick="filterEquityTrack('Repeat')">Repeat (1)</button>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto; margin-top:10px;">
+            <table class="clean-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Track</th>
+                  <th>Donation Offer</th>
+                  <th>Viable (of 80)</th>
+                  <th>#1 Recommended Pantry</th>
+                  <th>ZIP</th>
+                  <th>Tract Poverty</th>
+                  <th>No-Car HH</th>
+                  <th>Public Assist</th>
+                </tr>
+              </thead>
+              <tbody id="equityPostingsTableBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -1870,47 +2040,62 @@
 
   </div>
 
-  <!-- MODAL: ADD NEW PANTRY LOCATION -->
+  <!-- MODAL: ADD NEW PANTRY LOCATION (#10) -->
   <div id="onboardModal" style="display:none; position:fixed; inset:0; background:rgba(9,9,11,0.4); z-index:2500; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; max-width:620px; width:100%; padding:24px; box-shadow:var(--shadow-lg);">
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; max-width:680px; width:100%; padding:24px; box-shadow:var(--shadow-lg);">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="font-size:16px; font-weight:700;">Add a Partner Pantry Location</h3>
+        <div>
+          <span class="eyebrow-pill">Stretch Goal #10 · Conversational Pantry Intake</span>
+          <h3 style="font-size:16px; font-weight:700; margin-top:4px;">Add & Verify a Partner Pantry Location</h3>
+        </div>
         <button class="btn-ghost" onclick="closeModal('onboardModal')">Close</button>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
         <label style="font-size:12px; font-weight:500;">Pantry / Organization Name
-          <input type="text" id="obName" value="Pilsen Community Fridge & Pantry" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
+          <input type="text" id="obName" value="Pilsen Community Fridge & Pantry" oninput="updateOnboardPreview()" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
         </label>
         <label style="font-size:12px; font-weight:500;">Street Address & ZIP Code
-          <input type="text" id="obAddr" value="1850 S Blue Island Ave, Chicago, IL 60608" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
+          <input type="text" id="obAddr" value="1850 S Blue Island Ave, Chicago, IL 60608" oninput="updateOnboardPreview()" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
         </label>
         <label style="font-size:12px; font-weight:500;">Cooler Type Available
-          <select id="obCold" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;">
+          <select id="obCold" onchange="updateOnboardPreview()" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;">
             <option value="walk-in">Walk-In Cooler</option>
             <option value="commercial">Commercial Reach-In Cooler</option>
             <option value="domestic">Standard Household Fridge</option>
             <option value="none">Dry Storage Only (No Fridge)</option>
           </select>
         </label>
-        <label style="font-size:12px; font-weight:500;">How Much Can They Unload?
-          <select id="obDock" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;">
-            <option value="hand-unloaded crates (up to 2 pallets)">Hand-unloaded boxes/crates (Up to 2 pallets)</option>
-            <option value="full pallets on a pallet jack (loading dock, up to 8 pallets)">Loading dock + pallet jack (Up to 8 pallets)</option>
+        <label style="font-size:12px; font-weight:500;">Can They Take a Full Pallet on a Jack, or By Hand? (Track 1/2)
+          <select id="obDock" onchange="updateOnboardPreview()" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;">
+            <option value="hand-unloaded crates (up to 2 pallets)">By Hand / Crates Only (Track 1 Retail · Up to 2 pallets)</option>
+            <option value="full pallets on a pallet jack (loading dock, up to 8 pallets)">Full Pallet on a Jack + Dock (Track 2 Farm · Up to 8 pallets)</option>
           </select>
         </label>
         <label style="font-size:12px; font-weight:500;">Pickup Notice Needed (Hours)
-          <input type="number" id="obLead" value="2" min="1" max="48" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
+          <input type="number" id="obLead" value="2" min="1" max="48" oninput="updateOnboardPreview()" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
         </label>
         <label style="font-size:12px; font-weight:500;">Do They Have a Refrigerated Van?
-          <select id="obVan" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;">
+          <select id="obVan" onchange="updateOnboardPreview()" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;">
             <option value="true">Yes — Can pick up on their own</option>
             <option value="false">No — Needs a volunteer driver</option>
           </select>
         </label>
+        <label style="font-size:12px; font-weight:500;">Service Days & Hours
+          <input type="text" id="obDays" value="Mon–Sat 8am–5pm" oninput="updateOnboardPreview()" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
+        </label>
+        <label style="font-size:12px; font-weight:500;">Foods Needed Most
+          <input type="text" id="obFoods" value="Fresh produce, leafy greens, dairy, infant formula" oninput="updateOnboardPreview()" style="width:100%; margin-top:4px; padding:7px 10px; border:1px solid var(--border-strong); border-radius:8px;" />
+        </label>
       </div>
-      <div style="margin-top:18px; display:flex; justify-content:flex-end; gap:8px;">
+      <div style="margin-top:12px; padding:10px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px;">
+        <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:4px;">
+          Synthesized Pantry Profile Preview (`profile_text` for `AI.EMBED`)
+        </div>
+        <div id="obProfilePreview" style="font-size:12px; color:var(--text-secondary); line-height:1.45;"></div>
+      </div>
+      <div style="margin-top:16px; display:flex; justify-content:flex-end; gap:8px;">
         <button onclick="closeModal('onboardModal')">Cancel</button>
-        <button class="btn-dark" onclick="submitPantryOnboarding()">Save Pantry & Check Match →</button>
+        <button class="btn-dark" onclick="submitPantryOnboarding()">Save Verified Pantry & Check Match →</button>
       </div>
     </div>
   </div>
@@ -2345,6 +2530,10 @@
       loadGoogleMapsSdk();
       renderQueue();
       renderTargetsTable();
+      computeLoadSplit();
+      renderEquityPostingsTable();
+      updateOnboardPreview();
+      syncServerState();
       if (!showSavedBriefFor(currentPosting)) {
         renderNoAnswer("No answer yet for this posting. Press Match to ask the live agent.");
       } else {
@@ -3230,7 +3419,7 @@
         summary.innerHTML = `Food has <b>${hoursRemaining}h</b> remaining. Pantry can receive within <b>${leadHours}h</b>, leaving a <b>+${margin}h</b> safety cushion.`;
         const leadPct = Math.min(82, Math.round((leadHours / hoursRemaining) * 100));
         leadBar.style.width = `${leadPct}%`;
-        leadBar.style.background = "var(--text)";
+        leadBar.style.background = "#64748b";
         slackBar.style.width = `${100 - leadPct}%`;
       }
     }
