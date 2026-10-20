@@ -1,18 +1,18 @@
 {
   "organization_and_why": {
-    "name": "Shakespear Rose Community Table Incorporated",
-    "address": "6200 S VERNON AVE APT 1B, CHICAGO, IL 60637",
+    "name": "Feed My Fam Nfp",
+    "address": "2948 N MEADE AVE, CHICAGO, IL 60634",
     "why": "vehicle cold storage, takes up to 3 pallets, collects within 4h",
-    "profile_excerpt": "We do not have a building - we have a route and 9 regular stops. Cold hold is the van's, sized for one route, not for stock. Collection suits us better than delivery; we are rarely at base."
+    "profile_excerpt": "Mobile distribution serving neighborhoods without a fixed pantry. Reefer van with pallet capacity, but no static warehouse. Route flexibility is our strength - a same-day diversion is usually possible."
   },
   "what_they_can_take": {
-    "load_pallets": 1,
+    "load_pallets": 0.25,
     "max_pallets": 3,
     "cold_storage": "vehicle",
     "frozen_storage": false,
     "loading_dock": false,
     "refrigerated_transport": true,
-    "service_days": "Monday"
+    "service_days": "Saturday"
   },
   "the_clock": {
     "hours_remaining": 6,
@@ -21,72 +21,75 @@
     "needs_driver": false
   },
   "whose_neighborhood": {
-    "households_per_week": 413,
-    "populations_served": "Anyone who walks in",
-    "tract": "Nearest census tract: 45% of residents below the poverty line, 52% of households without a vehicle, 38% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
+    "households_per_week": 345,
+    "populations_served": "Unhoused individuals and families",
+    "tract": "Nearest census tract: 11% of residents below the poverty line, 3% of households without a vehicle, 8% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
   },
-  "outreach_message": "Hello Shakespear Rose Community Table Incorporated team,\n\nA grocer in Chicago has ten crates of spinach. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 6 hours from now, which leaves you roughly 2 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "outreach_message": "Hello Feed My Fam Nfp team,\n\nA grocer in Chicago has ten crates of spinach. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 6 hours from now, which leaves you roughly 2 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
   "next_two_options": [
     {
       "rank": 2,
-      "name": "Habibi Care",
-      "address": "4845 N WASHTENAW AVE, CHICAGO, IL 60625",
-      "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
-      "margin_hours": 3,
+      "name": "Love Of Angels",
+      "address": "4966 N KOLMAR AVE, CHICAGO, IL 60630",
+      "why": "domestic cold storage, takes up to 1 pallet, collects within 4h",
+      "margin_hours": 2,
       "needs_driver": true
     },
     {
       "rank": 3,
-      "name": "Word Faith Believers Ministries",
-      "address": "8736 S WINCHESTER AVE, CHICAGO, IL 60620",
-      "why": "vehicle cold storage, takes up to 3 pallets, collects within 5h",
-      "margin_hours": 1,
-      "needs_driver": false
+      "name": "Good Food Pantry",
+      "address": "808 SEELEY AVE, PARK RIDGE, IL 60068",
+      "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
+      "margin_hours": 3,
+      "needs_driver": true
     }
   ],
   "ranked": [
     {
       "rank": 1,
-      "name": "Shakespear Rose Community Table Incorporated",
-      "address": "6200 S VERNON AVE APT 1B, CHICAGO, IL 60637",
+      "name": "Feed My Fam Nfp",
+      "address": "2948 N MEADE AVE, CHICAGO, IL 60634",
       "why": "vehicle cold storage, takes up to 3 pallets, collects within 4h",
       "margin_hours": 2,
       "needs_driver": false
     },
     {
       "rank": 2,
-      "name": "Habibi Care",
-      "address": "4845 N WASHTENAW AVE, CHICAGO, IL 60625",
-      "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
-      "margin_hours": 3,
+      "name": "Love Of Angels",
+      "address": "4966 N KOLMAR AVE, CHICAGO, IL 60630",
+      "why": "domestic cold storage, takes up to 1 pallet, collects within 4h",
+      "margin_hours": 2,
       "needs_driver": true
     },
     {
       "rank": 3,
-      "name": "Word Faith Believers Ministries",
-      "address": "8736 S WINCHESTER AVE, CHICAGO, IL 60620",
-      "why": "vehicle cold storage, takes up to 3 pallets, collects within 5h",
-      "margin_hours": 1,
-      "needs_driver": false
+      "name": "Good Food Pantry",
+      "address": "808 SEELEY AVE, PARK RIDGE, IL 60068",
+      "why": "domestic cold storage, takes up to 1 pallet, collects within 3h",
+      "margin_hours": 3,
+      "needs_driver": true
     }
   ],
   "rejected_but_close": [
     {
-      "name": "Chicago Food Rescue",
-      "because": "needs 8h to collect, food has 6h"
+      "name": "Cedar Street Produce Alliance",
+      "because": "needs 12h to collect, food has 6h",
+      "semantic_rank": 1
     },
     {
-      "name": "Anso Child Development",
-      "because": "needs 19h to collect, food has 6h"
+      "name": "Go Forth International",
+      "because": "needs 21h to collect, food has 6h",
+      "semantic_rank": 2
     },
     {
-      "name": "Maple Street Produce Alliance",
-      "because": "needs 12h to collect, food has 6h"
+      "name": "Lakeshore Mutual Aid Collective",
+      "because": "no cold storage; needs 12h to collect, food has 6h",
+      "semantic_rank": 4
     }
   ],
   "refusal": null,
   "search": {
     "candidates_searched": 80,
-    "viable_after_filters": 9
+    "viable_after_filters": 16
   }
 }

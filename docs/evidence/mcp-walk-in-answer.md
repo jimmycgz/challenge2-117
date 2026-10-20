@@ -3,14 +3,14 @@
 
 # Answer to: How many recipients in the corpus have walk-in cold storage, and what share of all recipients is that?
 
-Captured 2026-10-20 10:53 EDT. The recipient names and addresses are real (IRS data). Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
+Captured 2026-10-20 11:00 EDT. The recipient names and addresses are real (IRS data). Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
 
 Tool calls, in order:
 
 ```text
-execute_sql({"query": "SELECT COUNTIF(cold_storage = 'walk-in') AS walk_in_coolers, COUNT(*) AS total_recipients FROM `<lab-project-id>.a4i_food.recipients`", "projectId": "<lab-project-id>"})
+execute_sql({"query": "SELECT COUNT(*) as total_recipients, SUM(CASE WHEN cold_storage = 'walk-in' THEN 1 ELSE 0 END) as walk_in_cold_storage_recipients FROM `<lab-project-id>.a4i_food.recipients`", "projectId": "<lab-project-id>"})
 ```
 
 ---
 
-There are 13 recipients with walk-in cold storage, which is about 6.77% of all recipients.
+There are 13 recipients with walk-in cold storage, which is 6.77% of all recipients (192).

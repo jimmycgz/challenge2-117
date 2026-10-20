@@ -97,9 +97,9 @@ def main():
     corpus = _corpus()
     corpus_tract_ids = {r["geo_id"] for r in corpus}
 
-    print("| # | Track | Table clock (h) | Clock used (h) | Pallets (est.) | Viable | Top match | Cold | Pallets of room "
+    print("| # | Track | Posting | Table clock (h) | Clock used (h) | Pallets (est.) | Viable | Top match | Cold | Pallets of room "
           "| Collects in (h) | Tract poverty | No vehicle | Assistance |")
-    print("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+    print("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     chosen, chosen_ids, pallets_used = [], [], []
     refused = []
     for p in _postings():
@@ -112,14 +112,14 @@ def main():
         viable = len(out["viable"])
         if not viable:
             refused.append(pid)
-            print(f"| {pid} | {p['track']} | {table_clock} | {hours} | {pallets} | 0 | nobody viable | | | | | | |")
+            print(f"| {pid} | {p['track']} | {p['posting_text'][:46]} | {table_clock} | {hours} | {pallets} | 0 | nobody viable | | | | | | |")
             continue
         top = out["viable"][0]
         tract = lookup_neighborhood(top["latitude"], top["longitude"])
         chosen.append(tract)
         chosen_ids.append(top["recipient_id"])
         pallets_used.append(pallets)
-        print(f"| {pid} | {p['track']} | {table_clock} | {hours} | {pallets:g} | {viable} | {top['name'][:28]} | "
+        print(f"| {pid} | {p['track']} | {p['posting_text'][:46]} | {table_clock} | {hours} | {pallets:g} | {viable} | {top['name'][:28]} | "
               f"{top['cold_storage']} | {top['max_pallets']} | {top['pickup_window_hours']} | "
               f"{_pct(tract.get('poverty_rate'))} | {_pct(tract.get('no_vehicle_rate'))} | "
               f"{_pct(tract.get('assistance_rate'))} |")

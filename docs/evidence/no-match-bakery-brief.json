@@ -11,16 +11,19 @@
   "ranked": [],
   "rejected_but_close": [
     {
-      "name": "Open Door Outreach Center",
-      "because": "needs 8h to collect, food has 1h"
-    },
-    {
       "name": "Chicago Food Rescue",
-      "because": "needs 8h to collect, food has 1h"
+      "because": "needs 8h to collect, food has 1h",
+      "semantic_rank": 1
     },
     {
-      "name": "Willis House Of Refuge Nfp",
-      "because": "needs 8h to collect, food has 1h"
+      "name": "Open Door Outreach Center",
+      "because": "needs 8h to collect, food has 1h",
+      "semantic_rank": 2
+    },
+    {
+      "name": "Lakeshore Mutual Aid Collective",
+      "because": "no cold storage; needs 12h to collect, food has 1h",
+      "semantic_rank": 8
     }
   ],
   "refusal": "No candidate can take this load in time. The closest rejections are listed with the reason each was eliminated.",

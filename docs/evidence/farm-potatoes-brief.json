@@ -1,92 +1,95 @@
 {
   "organization_and_why": {
-    "name": "Feeding America",
-    "address": "161 N CLARK ST STE 700, CHICAGO, IL 60601",
-    "why": "walk-in cold storage, takes up to 24 pallets, collects within 28h",
-    "profile_excerpt": "County-wide food bank operating a 40,000 square foot warehouse. Racked warehouse with temperature-controlled bays and a monitored freezer. Dock-height receiving, and we can send a reefer for anything that needs the cold chain."
+    "name": "Anso Child Development",
+    "address": "9101 S WESTERN AVE STE 9, CHICAGO, IL 60643",
+    "why": "walk-in cold storage, takes up to 7 pallets, collects within 19h",
+    "profile_excerpt": "Wholesale-style operation moving fruit and vegetables to 13 partners. Walk-in cold rooms sized for crates and pallets of fresh product. Reefer available daily. We can be there within a couple of hours."
   },
   "what_they_can_take": {
     "load_pallets": 5,
-    "max_pallets": 24,
+    "max_pallets": 7,
     "cold_storage": "walk-in",
-    "frozen_storage": true,
+    "frozen_storage": false,
     "loading_dock": true,
     "refrigerated_transport": true,
-    "service_days": "Tuesday, Thursday"
+    "service_days": "Thursday"
   },
   "the_clock": {
     "hours_remaining": 72,
-    "collection_lead_hours": 28,
-    "margin_hours": 44,
+    "collection_lead_hours": 19,
+    "margin_hours": 53,
     "needs_driver": false
   },
   "whose_neighborhood": {
-    "households_per_week": 3563,
+    "households_per_week": 668,
     "populations_served": "Families with children",
-    "tract": "Nearest census tract: 13% of residents below the poverty line, 54% of households without a vehicle, 0% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
+    "tract": "Nearest census tract: 6% of residents below the poverty line, 7% of households without a vehicle, 6% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
   },
-  "outreach_message": "Hello Feeding America team,\n\nA farm south of Chicago has 5 tons of potatoes. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 72 hours from now, which leaves you roughly 44 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "outreach_message": "Hello Anso Child Development team,\n\nA farm south of Chicago has five tons of potatoes. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 72 hours from now, which leaves you roughly 53 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
   "next_two_options": [
     {
       "rank": 2,
-      "name": "Greater Chicago Food Depository",
-      "address": "4100 W ANN LURIE PL, CHICAGO, IL 60632",
-      "why": "walk-in cold storage, takes up to 23 pallets, collects within 36h",
-      "margin_hours": 36,
+      "name": "Maple Street Produce Alliance",
+      "address": "Chicago, IL",
+      "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
+      "margin_hours": 60,
       "needs_driver": false
     },
     {
       "rank": 3,
-      "name": "Beyond Hunger",
-      "address": "848 LAKE ST, OAK PARK, IL 60301",
-      "why": "walk-in cold storage, takes up to 22 pallets, collects within 45h",
-      "margin_hours": 27,
+      "name": "Cedar Street Produce Alliance",
+      "address": "Chicago, IL",
+      "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
+      "margin_hours": 60,
       "needs_driver": false
     }
   ],
   "ranked": [
     {
       "rank": 1,
-      "name": "Feeding America",
-      "address": "161 N CLARK ST STE 700, CHICAGO, IL 60601",
-      "why": "walk-in cold storage, takes up to 24 pallets, collects within 28h",
-      "margin_hours": 44,
+      "name": "Anso Child Development",
+      "address": "9101 S WESTERN AVE STE 9, CHICAGO, IL 60643",
+      "why": "walk-in cold storage, takes up to 7 pallets, collects within 19h",
+      "margin_hours": 53,
       "needs_driver": false
     },
     {
       "rank": 2,
-      "name": "Greater Chicago Food Depository",
-      "address": "4100 W ANN LURIE PL, CHICAGO, IL 60632",
-      "why": "walk-in cold storage, takes up to 23 pallets, collects within 36h",
-      "margin_hours": 36,
+      "name": "Maple Street Produce Alliance",
+      "address": "Chicago, IL",
+      "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
+      "margin_hours": 60,
       "needs_driver": false
     },
     {
       "rank": 3,
-      "name": "Beyond Hunger",
-      "address": "848 LAKE ST, OAK PARK, IL 60301",
-      "why": "walk-in cold storage, takes up to 22 pallets, collects within 45h",
-      "margin_hours": 27,
+      "name": "Cedar Street Produce Alliance",
+      "address": "Chicago, IL",
+      "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
+      "margin_hours": 60,
       "needs_driver": false
     }
   ],
   "rejected_but_close": [
     {
-      "name": "Chicago Health Initiative",
-      "because": "capacity 0 pallets, load is 5"
+      "name": "Greenline Community Pantry",
+      "because": "capacity 1 pallet, load is 5",
+      "semantic_rank": 1
     },
     {
-      "name": "Lolas Community Kitchen",
-      "because": "capacity 0 pallets, load is 5"
+      "name": "Love Of Angels",
+      "because": "capacity 1 pallet, load is 5",
+      "semantic_rank": 2
     },
     {
-      "name": "Love Lifted Me Community Shelter",
-      "because": "capacity 0 pallets, load is 5"
+      "name": "Go Forth International",
+      "because": "capacity 1 pallet, load is 5",
+      "semantic_rank": 3
     }
   ],
   "refusal": null,
   "search": {
     "candidates_searched": 80,
-    "viable_after_filters": 9
+    "viable_after_filters": 7
   }
 }

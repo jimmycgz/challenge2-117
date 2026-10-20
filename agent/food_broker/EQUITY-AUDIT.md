@@ -31,20 +31,21 @@ Inputs that are estimates, all visible in the output below:
 
 ## Results
 
-Per posting. "Viable" is how many of the 80 semantic matches passed the filters; the rest of the row is the top match.
+Per posting. "Posting" is the start of the offer's text, so the products can be checked without the lab tables. "Viable" is
+how many of the 80 semantic matches passed the filters; the rest of the row is the top match.
 
-| # | Track | Table clock (h) | Clock used (h) | Pallets (est.) | Viable | Top match | Cold | Pallets of room | Collects in (h) | Tract poverty | No vehicle | Assistance |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | RETAIL | 6.0 | 6.0 | 0.5 | 12 | Shakespear Rose Community Ta | vehicle | 3 | 4 | 45% | 52% | 38% |
-| 2 | RETAIL | 8.0 | 8.0 | 1 | 23 | Shakespear Rose Community Ta | vehicle | 3 | 4 | 45% | 52% | 38% |
-| 3 | RETAIL | 24.0 | 24.0 | 2 | 16 | Cedar Street Produce Allianc | walk-in | 10 | 12 | 14% | 16% | 16% |
-| 4 | RETAIL | 4.0 | 4.0 | 0.5 | 6 | Shakespear Rose Community Ta | vehicle | 3 | 4 | 45% | 52% | 38% |
-| 5 | FARM | 72.0 | 72.0 | 5 | 13 | Anso Child Development | walk-in | 7 | 19 | 6% | 7% | 6% |
-| 6 | FARM | 12.0 | 12.0 | 10 | 3 | Dion S Chicago Dream Inc Nfp | walk-in | 11 | 9 | 19% | 18% | 16% |
-| 7 | FARM | 120.0 | 120.0 | 15 | 5 | Feeding America | walk-in | 24 | 28 | 13% | 54% | 0% |
-| 8 | ESSENTIALS | 1.0 | 168 | 2 | 26 | Chicago Food Rescue | vehicle | 2 | 8 | 7% | 12% | 5% |
-| 9 | ESSENTIALS | 720.0 | 720.0 | 1 | 50 | Beyond Hunger | walk-in | 22 | 45 | 4% | 23% | 1% |
-| 10 | ESSENTIALS | 8.0 | 8.0 | 0.5 | 16 | Word Faith Believers Ministr | vehicle | 3 | 5 | 27% | 24% | 46% |
+| # | Track | Posting | Table clock (h) | Clock used (h) | Pallets (est.) | Viable | Top match | Cold | Pallets of room | Collects in (h) | Tract poverty | No vehicle | Assistance |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | RETAIL | 10 crates of spinach, harvested yesterday, nee | 6.0 | 6.0 | 0.5 | 12 | Shakespear Rose Community Ta | vehicle | 3 | 4 | 45% | 52% | 38% |
+| 2 | RETAIL | mixed dairy - about 60 gallons of milk and som | 8.0 | 8.0 | 1 | 23 | Shakespear Rose Community Ta | vehicle | 3 | 4 | 45% | 52% | 38% |
+| 3 | RETAIL | roughly 200 loaves of day-old bread and pastri | 24.0 | 24.0 | 2 | 16 | Cedar Street Produce Allianc | walk-in | 10 | 12 | 14% | 16% | 16% |
+| 4 | RETAIL | prepared sandwiches and salads from the deli c | 4.0 | 4.0 | 0.5 | 6 | Shakespear Rose Community Ta | vehicle | 3 | 4 | 45% | 52% | 38% |
+| 5 | FARM | 5 tons of potatoes still in the field, we can  | 72.0 | 72.0 | 5 | 13 | Anso Child Development | walk-in | 7 | 19 | 6% | 7% | 6% |
+| 6 | FARM | half a truckload of blueberries, picked this m | 12.0 | 12.0 | 10 | 3 | Dion S Chicago Dream Inc Nfp | walk-in | 11 | 9 | 19% | 18% | 16% |
+| 7 | FARM | surplus winter squash, about 30 bins, no refri | 120.0 | 120.0 | 15 | 5 | Feeding America | walk-in | 24 | 28 | 13% | 54% | 0% |
+| 8 | ESSENTIALS | 48 cases of sealed infant formula, 8 months to | 1.0 | 168 | 2 | 26 | Chicago Food Rescue | vehicle | 2 | 8 | 7% | 12% | 5% |
+| 9 | ESSENTIALS | pallet of diapers and wipes, sizes 1 through 4 | 720.0 | 720.0 | 1 | 50 | Beyond Hunger | walk-in | 22 | 45 | 4% | 23% | 1% |
+| 10 | ESSENTIALS | temperature-sensitive nutritional supplements  | 8.0 | 8.0 | 0.5 | 16 | Word Faith Believers Ministr | vehicle | 3 | 5 | 27% | 24% | 46% |
 
 Metro: 1004 tracts in the loaded area. Corpus: 192 recipients on 76 distinct tracts.
 
@@ -63,6 +64,8 @@ Metro: 1004 tracts in the loaded area. Corpus: 192 recipients on 76 distinct tra
 | Top matches, once per distinct recipient, median | 8 | 14% | 20% | 11% |
 | Top matches, weighted by estimated pallets (37.5 total) | 10 | 15% | 32% | 9% |
 
+Weighted figures are compared with the corpus as means; the medians are in the rows above.
+
 ## What the numbers say
 
 - **Counting per posting, the matches sit above the corpus; counting per recipient, they sit below it.** Per
@@ -72,7 +75,7 @@ Metro: 1004 tracts in the loaded area. Corpus: 192 recipients on 76 distinct tra
   measures. The per-posting gap comes from that one recipient.
 - **Weighted by volume, the matches sit in tracts with much less assistance.** The three farm postings are 30 of the
   37.5 estimated pallets. Weighted by pallets, the matches are at 15% poverty, 32% on vehicle access and 9% on
-  assistance, against 20% on assistance for the corpus and 18% for the metro.
+  assistance, against a mean of 20% on assistance for the corpus and 18% for the metro (the corpus median is 12%).
 - **The loading-dock question has a partial answer.** Only 17 of the 192 recipients have a dock or room for 5 or more
   pallets, and a large load can only go to them. They sit in tracts with somewhat less poverty (mean 16% against 20%
   for the rest) and less assistance (17% against 20%), with the same vehicle access (27%). That is consistent with the
