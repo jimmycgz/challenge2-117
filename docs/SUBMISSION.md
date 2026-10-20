@@ -1,7 +1,6 @@
 # Submission checklist
 
-Navigation: [3-minute video script](VIDEO-SCRIPT-3MIN.md) · [long demo script](DEMO-SCRIPT.md) · [deck outline](DECK-OUTLINE.md) · [captured evidence](evidence/README.md) ·
-[agent README](../agent/food_broker/README.md).
+Navigation: **[Complete Submission Package](SUBMISSION-PACKAGE.md)** · [Step-by-Step Click Walkthrough](DEMO-SCRIPT.md) · [3-minute video script](VIDEO-SCRIPT-3MIN.md) · [Visual Slide Deck (HTML/PDF)](pitch-deck.html) · [deck outline](DECK-OUTLINE.md) · [captured evidence](evidence/README.md) · [agent README](../agent/food_broker/README.md).
 
 Submit at <http://goo.gle/A4I-Submission> by 16:59 EDT. The organizers' notice names four items: the Pitch Deck, the
 Environment Link, the Pitch Video (under 3 minutes) and the GitHub Link. Edits are allowed before the deadline through
