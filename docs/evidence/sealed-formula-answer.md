@@ -3,46 +3,54 @@
 
 # Answer to: 48 cases of sealed infant formula with 8 months to expiry from a distributor in Chicago, 2 pallets, can sit at room temperature.
 
-Captured 2026-10-20 11:29 EDT. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
+Captured 13:52 EDT on 2026-10-20. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
 
 Tool calls, in order:
 
 ```text
-lookup_shelf_life({"product_name": "infant formula", "storage_state": "pantry"})
-find_matches({"donor_description": "a distributor in Chicago", "load_description": "48 cases of infant formula", "needs_cold": false, "hours_remaining": 5760, "pallets": 2})
+lookup_shelf_life({"storage_state": "pantry", "product_name": "Infant formula"})
+lookup_shelf_life({"storage_state": "pantry", "product_name": "Baby food"})
+find_matches({"pallets": 2, "donor_description": "A distributor in Chicago", "load_description": "48 cases of sealed infant formula (2 pallets)", "hours_remaining": 5760, "needs_cold": false})
 ```
 
 ---
 
-2 pallets of sealed infant formula from a distributor in Chicago.
+Sealed infant formula can sit at room temperature, so it does not need cold storage; 48 cases across 2 pallets is 24 cases per pallet; donor specifies 8 months to expiry (roughly 5,760 hours), which sets the clock over FoodKeeper guidance.
 
-1.  **Who, and why**
-    Feeding America, 161 N CLARK ST STE 700, CHICAGO, IL 60601. Their profile says: "County-wide food bank operating a 40,000 square foot warehouse. Racked warehouse with temperature-controlled bays and a monitored freezer. Dock-height receiving, and we can send a reefer for anything that needs the cold chain." They have walk-in cold storage, can take up to 24 pallets, and collect within 28 hours.
+### 1. Who, and why
+**Beyond Hunger**  
+848 Lake St, Oak Park, IL 60301  
+Fit: *"Central warehouse and redistribution point for 21 member agencies. Racked warehouse with temperature-controlled bays and a monitored freezer. Forklifts, pallet jacks, and a crew who can turn a truck in under an hour. Anything at scale."*
 
-2.  **What they can actually take**
-    Their profile indicates they have walk-in cold storage and can take up to 24 pallets. They have a loading dock and refrigerated transport. This is sufficient for your 2-pallet load.
+### 2. What they can actually take
+- **Capacity:** Takes up to 22 pallets on file (this load is 2 pallets).
+- **Storage & Facilities:** Walk-in cold storage, frozen storage, and a loading dock on file. (Operational details are generated; confirm by phone before dispatch).
 
-3.  **The clock**
-    The food has 5760 hours remaining. Feeding America's collection lead time is 28 hours, leaving a margin of 5732 hours. They are set up to collect it themselves, so no driver is needed.
+### 3. The clock
+- **Hours food has:** 5,760 hours (8 months donor expiry).
+- **Lead time:** 45 hours collection lead time on file.
+- **Margin:** 5,715 hours of margin.
+- **Driver needed:** No driver needed; recipient has transport on file.
 
-4.  **Whose neighborhood it helps**
-    They serve 3563 households per week, primarily Families with children. The nearest census tract shows 13% of residents below the poverty line, 54% of households without a vehicle, and 0% on food or cash assistance.
+### 4. Whose neighborhood it helps
+- **Populations served:** Serves approximately 3,205 households per week; focuses on residents of the surrounding school district.
+- **Tract demographics:** Nearest census tract has 4% of residents below the poverty line, 23% of households without a vehicle, and 1% receiving food or cash assistance (ACS ZIP-level data).
 
-5.  **The outreach message**
-    Hello Feeding America team,
+### 5. The outreach message
+Hello Beyond Hunger team,
 
-    a distributor in Chicago has 48 cases of infant formula. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 5760 hours from now, which leaves you roughly 5732 hours of slack to collect. You are set up to collect it yourselves.
+A distributor in Chicago has 48 cases of sealed infant formula (2 pallets) with 8 months until expiration. It can sit at room temperature. From what we have on file, you have the capacity and equipment to receive this scale. 
 
-    Can you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.
+Can you take this load? If so, please let us know what pickup window works for your team and provide a primary phone number for pickup coordination. If not, a quick pass helps us redirect to the next agency immediately.
 
-    Thank you,
-    [Coordinator name]
+Thank you,  
+[Coordinator name]
 
-6.  **The next two options**
-    *   Faces Of Change, 310 BUSSE HWY, PARK RIDGE, IL 60068 (commercial cold storage, takes up to 3 pallets, collects within 22h)
-    *   Top Box Foods, 222 MERCHANDISE MART PLZ, CHICAGO, IL 60654 (walk-in cold storage, takes up to 17 pallets, collects within 14h)
+### 6. The next two options
+- **Option 2:** Feeding America — 161 N Clark St Ste 700, Chicago, IL 60601 (Takes up to 24 pallets, collects within 28h).
+- **Option 3:** Faces Of Change — 310 Busse Hwy, Park Ridge, IL 60068 (Takes up to 3 pallets, collects within 22h).
 
-    **Rejected but close matches:**
-    *   Second Faith Temple Community Outreach, ranked 1st by meaning, removed: capacity 1 pallet, load is 2
-    *   Mano A Mano Unidos Ltd, ranked 4th by meaning, removed: capacity 1 pallet, load is 2
-    *   Khaan Foundation, ranked 5th by meaning, removed: capacity 1 pallet, load is 2
+**Close matches removed by filters:**
+- Ranked 1st by meaning, removed: capacity 1 pallet, load is 2 (Second Faith Temple Community Outreach)
+- Ranked 2nd by meaning, removed: capacity 1 pallet, load is 2 (Jm Foundation)
+- Ranked 5th by meaning, removed: capacity 1 pallet, load is 2 (Khaan Foundation)

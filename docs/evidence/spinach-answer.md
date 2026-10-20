@@ -3,47 +3,46 @@
 
 # Answer to: A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.
 
-Captured 2026-10-20 11:29 EDT. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Greenline Community Pantry, below, is one of them. Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
+Captured 13:52 EDT on 2026-10-20. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
 
 Tool calls, in order:
 
 ```text
-lookup_shelf_life({"product_name": "Spinach", "storage_state": "refrigerated"})
-find_matches({"hours_remaining": 6, "pallets": 0.5, "needs_cold": true, "donor_description": "A grocer in Chicago", "load_description": "ten crates of spinach"})
+lookup_shelf_life({"product_name": "spinach", "storage_state": "refrigerated"})
+find_matches({"load_description": "ten crates of spinach", "donor_description": "A grocer in Chicago", "hours_remaining": 6, "needs_cold": true, "pallets": 0.25})
 ```
 
 ---
 
-Here is the Match Brief for the ten crates of spinach:
+Spinach is a leafy green, so it must stay cold; ten crates is roughly 0.25 pallets (about a quarter of a pallet). FoodKeeper entry "Lettuce (leaf, spinach)" gives 168 hours refrigerated, so the donor's 6-hour deadline sets the clock.
 
-**1. Who, and why**
-Habibi Care, 4845 N WASHTENAW AVE, CHICAGO, IL 60625. They have domestic cold storage, can take up to 1 pallet, and collect within 3 hours.
+1. Who, and why
+Pearls Of Wellness Alternative Health Care Ministry (433 W 95TH ST, CHICAGO, IL 60628; profile on file is generated). The profile excerpt that made it the fit: "Storefront pantry open two afternoons a week, serving about 92 households. One household refrigerator. No freezer, no dock, no pallet handling."
 
-**2. What they can actually take**
-Their profile indicates they have domestic cold storage and can take up to 1 pallet. They do not have a loading dock or refrigerated transport. This is based on their profile on file; please confirm by phone.
+2. What they can actually take
+The profile on file indicates domestic cold storage, capacity for up to 1 pallet (this load is 0.25 pallets / 10 crates), no loading dock, and no refrigerated transport. Suggest confirming details by phone before dispatching.
 
-**3. The clock**
-The food has 6 hours remaining. Habibi Care's collection lead time is 3 hours, leaving a margin of 3 hours. A driver is needed as the food must stay cold and Habibi Care does not have refrigerated transport.
+3. The clock
+The food has 6 hours remaining. The recipient's profile lists a 3-hour collection lead time, leaving a 3-hour margin. Because the recipient lacks refrigerated transport, a refrigerated driver is needed.
 
-**4. Whose neighborhood it helps**
-Habibi Care serves 165 households per week, primarily Families with children. The nearest census tract indicates 13% of residents are below the poverty line, 5% of households are without a vehicle, and 12% are on food or cash assistance.
+4. Whose neighborhood it helps
+Serving roughly 92 households per week (residents of the surrounding school district). In the nearest census tract, 35% of residents live below the poverty line, 40% of households lack a vehicle, and 45% receive food or cash assistance (ACS tract-level data).
 
-**5. The outreach message**
+5. The outreach message
+Hello Pearls Of Wellness Alternative Health Care Ministry team,
 
-Hello Habibi Care team,
+A grocer in Chicago has ten crates of fresh spinach harvested yesterday. It is in good condition but must move quickly and stay cold. From what we have on file, you have the refrigerator space for a crate-sized load. The food needs to leave the donor's dock within 6 hours, which gives roughly 3 hours of lead time to arrange pickup. We can coordinate a refrigerated driver to deliver it to you.
 
-A grocer in Chicago has ten crates of spinach. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 6 hours from now, which leaves you roughly 3 hours of slack to collect. We can arrange a driver, since it has to stay cold on the way.
-
-Can you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.
+Can you take this load? If yes, please let us know the best contact number and receiving window. If not, a quick no helps us contact the next pantry immediately.
 
 Thank you,
 [Coordinator name]
 
-**6. The next two options**
-*   **Love Of Angels** (4966 N KOLMAR AVE, CHICAGO, IL 60630): domestic cold storage, takes up to 1 pallet, collects within 4h.
-*   **Good Food Pantry** (808 SEELEY AVE, PARK RIDGE, IL 60068): domestic cold storage, takes up to 1 pallet, collects within 3h.
+6. The next two options
+- Option 2: Love Of Angels (4966 N KOLMAR AVE, CHICAGO, IL 60630) – domestic cold storage, takes up to 1 pallet, collects within 4 hours (2 hours margin).
+- Option 3: Good Food Pantry (808 SEELEY AVE, PARK RIDGE, IL 60068) – domestic cold storage, takes up to 1 pallet, collects within 3 hours (3 hours margin).
 
-**Rejected but close matches:**
-*   Greenline Community Pantry, ranked 1st by meaning, removed: no cold storage; needs 12h to collect, food has 6h
-*   Tca Health Inc Nfp, ranked 2nd by meaning, removed: needs 18h to collect, food has 6h
-*   Go Forth International, ranked 3rd by meaning, removed: needs 21h to collect, food has 6h
+Close semantic matches that were rejected:
+- Greenline Community Pantry (an invented teaching case): ranked 1st by meaning, removed: no cold storage; needs 12h to collect, food has 6h.
+- Tca Health Inc Nfp: ranked 2nd by meaning, removed: needs 18h to collect, food has 6h.
+- Cedar Street Produce Alliance (an invented teaching case): ranked 3rd by meaning, removed: needs 12h to collect, food has 6h.

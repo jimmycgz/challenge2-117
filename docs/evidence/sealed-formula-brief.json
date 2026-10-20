@@ -1,77 +1,83 @@
 {
   "organization_and_why": {
-    "name": "Feeding America",
-    "address": "161 N CLARK ST STE 700, CHICAGO, IL 60601",
-    "why": "walk-in cold storage, takes up to 24 pallets, collects within 28h",
-    "profile_excerpt": "County-wide food bank operating a 40,000 square foot warehouse. Racked warehouse with temperature-controlled bays and a monitored freezer. Dock-height receiving, and we can send a reefer for anything that needs the cold chain."
+    "name": "Beyond Hunger",
+    "address": "848 LAKE ST, OAK PARK, IL 60301",
+    "profile_source": "generated",
+    "why": "walk-in cold storage, takes up to 22 pallets, collects within 45h",
+    "profile_excerpt": "Central warehouse and redistribution point for 21 member agencies. Racked warehouse with temperature-controlled bays and a monitored freezer. Forklifts, pallet jacks, and a crew who can turn a truck in under an hour. Anything at scale."
   },
   "what_they_can_take": {
     "load_pallets": 2,
-    "max_pallets": 24,
+    "max_pallets": 22,
     "cold_storage": "walk-in",
     "frozen_storage": true,
     "loading_dock": true,
     "refrigerated_transport": true,
-    "service_days": "Tuesday, Thursday"
+    "service_days": "Second and fourth Wednesday of the month"
   },
   "the_clock": {
     "hours_remaining": 5760,
-    "collection_lead_hours": 28,
-    "margin_hours": 5732,
+    "collection_lead_hours": 45,
+    "margin_hours": 5715,
     "needs_driver": false
   },
   "whose_neighborhood": {
-    "households_per_week": 3563,
-    "populations_served": "Families with children",
-    "tract": "Nearest census tract: 13% of residents below the poverty line, 54% of households without a vehicle, 0% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
+    "households_per_week": 3205,
+    "populations_served": "Residents of the surrounding school district",
+    "tract": "Nearest census tract: 4% of residents below the poverty line, 23% of households without a vehicle, 1% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
   },
-  "outreach_message": "Hello Feeding America team,\n\na distributor in Chicago has 48 cases of infant formula. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 5760 hours from now, which leaves you roughly 5732 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "outreach_message": "Hello Beyond Hunger team,\n\nA distributor in Chicago has 48 cases of sealed infant formula (2 pallets). It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 5760 hours from now, which leaves you roughly 5715 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
   "next_two_options": [
     {
       "rank": 2,
-      "meaning_rank": 21,
-      "name": "Faces Of Change",
-      "address": "310 BUSSE HWY, PARK RIDGE, IL 60068",
-      "why": "commercial cold storage, takes up to 3 pallets, collects within 22h",
-      "margin_hours": 5738,
+      "meaning_rank": 19,
+      "name": "Feeding America",
+      "address": "161 N CLARK ST STE 700, CHICAGO, IL 60601",
+      "profile_source": "generated",
+      "why": "walk-in cold storage, takes up to 24 pallets, collects within 28h",
+      "margin_hours": 5732,
       "needs_driver": false
     },
     {
       "rank": 3,
-      "meaning_rank": 45,
-      "name": "Top Box Foods",
-      "address": "222 MERCHANDISE MART PLZ, CHICAGO, IL 60654",
-      "why": "walk-in cold storage, takes up to 17 pallets, collects within 14h",
-      "margin_hours": 5746,
+      "meaning_rank": 25,
+      "name": "Faces Of Change",
+      "address": "310 BUSSE HWY, PARK RIDGE, IL 60068",
+      "profile_source": "generated",
+      "why": "commercial cold storage, takes up to 3 pallets, collects within 22h",
+      "margin_hours": 5738,
       "needs_driver": false
     }
   ],
   "ranked": [
     {
       "rank": 1,
-      "meaning_rank": 15,
+      "meaning_rank": 18,
+      "name": "Beyond Hunger",
+      "address": "848 LAKE ST, OAK PARK, IL 60301",
+      "profile_source": "generated",
+      "why": "walk-in cold storage, takes up to 22 pallets, collects within 45h",
+      "margin_hours": 5715,
+      "needs_driver": false
+    },
+    {
+      "rank": 2,
+      "meaning_rank": 19,
       "name": "Feeding America",
       "address": "161 N CLARK ST STE 700, CHICAGO, IL 60601",
+      "profile_source": "generated",
       "why": "walk-in cold storage, takes up to 24 pallets, collects within 28h",
       "margin_hours": 5732,
       "needs_driver": false
     },
     {
-      "rank": 2,
-      "meaning_rank": 21,
+      "rank": 3,
+      "meaning_rank": 25,
       "name": "Faces Of Change",
       "address": "310 BUSSE HWY, PARK RIDGE, IL 60068",
+      "profile_source": "generated",
       "why": "commercial cold storage, takes up to 3 pallets, collects within 22h",
       "margin_hours": 5738,
-      "needs_driver": false
-    },
-    {
-      "rank": 3,
-      "meaning_rank": 45,
-      "name": "Top Box Foods",
-      "address": "222 MERCHANDISE MART PLZ, CHICAGO, IL 60654",
-      "why": "walk-in cold storage, takes up to 17 pallets, collects within 14h",
-      "margin_hours": 5746,
       "needs_driver": false
     }
   ],
@@ -79,22 +85,25 @@
     {
       "name": "Second Faith Temple Community Outreach",
       "because": "capacity 1 pallet, load is 2",
-      "semantic_rank": 1
+      "semantic_rank": 1,
+      "profile_source": "generated"
     },
     {
-      "name": "Mano A Mano Unidos Ltd",
+      "name": "Jm Foundation",
       "because": "capacity 1 pallet, load is 2",
-      "semantic_rank": 4
+      "semantic_rank": 2,
+      "profile_source": "generated"
     },
     {
       "name": "Khaan Foundation",
       "because": "capacity 1 pallet, load is 2",
-      "semantic_rank": 5
+      "semantic_rank": 5,
+      "profile_source": "generated"
     }
   ],
   "refusal": null,
   "search": {
     "candidates_searched": 80,
-    "viable_after_filters": 17
+    "viable_after_filters": 21
   }
 }
