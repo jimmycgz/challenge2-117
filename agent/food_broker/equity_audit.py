@@ -24,7 +24,7 @@ from .tools import DATASET, _client, apply_constraints, lookup_neighborhood, vec
 # change them and see the audit move. Keyed by posting_id (the notebook's order).
 PALLETS = {1: 0.5, 2: 1, 3: 2, 4: 0.5, 5: 5, 6: 10, 7: 15, 8: 2, 9: 1, 10: 0.5}
 # The table's clock for posting 8 (sealed infant formula, 8 months to expiry) was a shelf-life figure of 1 hour:
-# the loader took FoodKeeper's opened-container figure. The audit uses the donor's own 168 hours instead and
+# the loader took FoodKeeper's prepared-formula figure. The audit uses the donor's own 168 hours instead and
 # prints both, so the override is visible in the output.
 CLOCK_OVERRIDE = {8: 168}
 DEFAULT_HOURS = 24  # used only if the table has no clock for a posting; printed if it ever applies

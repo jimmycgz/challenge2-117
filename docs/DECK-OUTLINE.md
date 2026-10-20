@@ -28,7 +28,7 @@ on Cloud Run.
 
 ## 4. Why meaning is not enough
 
-For the spinach offer, the three closest recipients by meaning were all wrong. Two could not collect in time. One,
+For the spinach offer, the three closest recipients by meaning were all wrong. All three needed longer to collect than the food had. One,
 ranked third and an invented teaching case in the challenge data, wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The nearest
 one that passes is 11th by meaning; the three our ranking puts first sit at 50th, 54th and 63rd, because it prefers
 sturdier cold storage and a comfortable margin over closeness (the nearest passing recipient has a household fridge and one
@@ -45,15 +45,15 @@ the same filters, with no rulebook per track. Show the three blocks of [demo-tra
 ## 6. What the agent decides for itself
 
 It says when nobody can take the load and shows why. It caught that the shelf-life table gave sealed formula one hour (an
-opened-container figure) and now trusts the donor's expiry. The BigQuery tools are read-only and never used to match a
+prepared-formula figure) and now trusts the donor's expiry. The BigQuery tools are read-only and never used to match a
 posting. A guard refuses to run under any account but the lab's.
 
 ## 7. The equity audit
 
 Did the food go where the need is, or where the loading docks are? Counted per posting, the matches are close to the corpus
 with no consistent direction. Counted per recipient, they sit lower on all three measures, because one pantry won three postings. Weighted by volume,
-assistance is 9% against a corpus mean of 19%, because the big farm loads can only go to the 14 recipients with room (their
-tracts show lower need on the means, not on the medians; weighted figures are compared with the corpus as means). The audit searches with the raw
+assistance is 9% against a corpus mean of 19%, because the big farm loads can go to only a few recipients (10 have room for ten or more pallets; their tracts show
+lower mean poverty and assistance and a similar share without a vehicle, with medians about level; weighted figures are compared with the corpus as means). The audit searches with the raw
 posting text; the live agent searches with a rewrite Gemini writes. Ten postings cannot separate a real skew from noise. We found this by having the first version
 reviewed cold: it counted one recipient three times and reversed our own headline. Table: [equity audit](../agent/food_broker/EQUITY-AUDIT.md).
 

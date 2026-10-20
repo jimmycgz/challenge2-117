@@ -32,7 +32,7 @@ Inputs that are estimates, all visible in the output below:
   centre, not a neighborhood. The last section shows both versions.
 - The table has no load size, so pallets per posting are guesses (`PALLETS` in `equity_audit.py`).
 - Posting 8 (sealed infant formula, 8 months to expiry) has a clock of 1 hour in the table, because the loader took
-  FoodKeeper's opened-container figure. The audit uses the posting's own pickup deadline from the table (168 hours, the
+  FoodKeeper's prepared-formula figure. The audit uses the posting's own pickup deadline from the table (168 hours, the
   `hours_available` field), which is shorter than the product's 8-month expiry, and prints both. The live agent, given a
   typed posting that states only the expiry, used the 8 months.
 - The audit searches with the raw posting text. The deployed agent searches with a rewrite the language model writes,
@@ -89,7 +89,7 @@ Weighted figures are compared with the corpus as means; the medians are in the r
   37.5 estimated pallets. Weighted by pallets, the matches are at 14% poverty, 32% of households without a vehicle and 9% on
   assistance, against a corpus mean of 19% on assistance (corpus median 12%, metro 18%).
 - **The loading-dock question has at most a hint of an answer.** Only 14 of the 183 recipients have a dock or room for 5
-  or more pallets, and a large load can only go to them. Their tracts have a lower mean poverty (17% against 20% for
+  or more pallets, and the largest loads can go to only some of them (10 have room for ten or more pallets). Their tracts have a lower mean poverty (17% against 20% for
   the rest) and assistance (16% against 20%), with a similar share of households without a vehicle (29% against 27%). The medians are about
   level (poverty 14% against 16%, assistance 14% against 12%, no vehicle 27% against 27%). With 14 recipients,
   that is not evidence about the matcher.
