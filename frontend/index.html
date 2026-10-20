@@ -2352,6 +2352,8 @@
       });
     }
 
+    window.LIVE_BRIEF_CACHE = {};
+
     async function selectQueuePosting(item) {
       switchMainView("dispatch");
       currentPosting = item;
@@ -2364,28 +2366,35 @@
       if (wfBanner) wfBanner.style.display = "none";
 
       const live = document.getElementById("liveApiToggle").checked;
-      if (!showSavedBriefFor(item)) {
+      const hadSaved = showSavedBriefFor(item);
+      if (!hadSaved) {
         renderNoAnswer(live
-          ? "Waiting for the live agent. There is no saved answer for this posting, and a saved answer from a different posting is not shown."
-          : "No live answer available: replay mode is on (Live Agent unchecked). There is no saved answer for this posting, and a saved answer from a different posting is NOT being shown.");
-      }
-
-      if (live) {
-        await submitPrompt(item.prompt);
+          ? "Matching with live Cloud Run agent..."
+          : "No live answer available: replay mode is on (Live Agent unchecked). Press Match with Live Agent checked to run.");
+        if (live) {
+          await submitPrompt(item.prompt);
+        }
       } else {
         addLogEntry("QUEUE", `Selected "${item.title}" (${item.hours}h window).`);
       }
     }
 
-    // Shows a saved brief only for the posting it was captured for (spinach, potatoes, infant formula, bakery).
-    // Returns false when this posting has no saved brief of its own.
+    // Shows a saved or previously fetched live brief for this posting.
     function showSavedBriefFor(item) {
+      if (item && window.LIVE_BRIEF_CACHE && window.LIVE_BRIEF_CACHE[item.id]) {
+        const liveCached = window.LIVE_BRIEF_CACHE[item.id];
+        currentBrief = JSON.parse(JSON.stringify(liveCached.brief));
+        currentAnswer = liveCached.answer;
+        renderBrief(currentBrief, currentAnswer);
+        setBriefSource(`Live answer from the agent (cached in this session).`, false);
+        return true;
+      }
       const cached = (item && item.cacheKey && window.EVIDENCE_CACHE) ? window.EVIDENCE_CACHE[item.cacheKey] : null;
       if (!cached) return false;
       currentBrief = JSON.parse(JSON.stringify(cached.brief));
       currentAnswer = cached.answer;
       renderBrief(currentBrief, currentAnswer);
-      setBriefSource(`Saved answer for this posting, captured ${savedCaptureTime(cached.answer)}. Not a live run.`, false);
+      setBriefSource(`Saved answer for this posting, captured ${savedCaptureTime(cached.answer)}. Click Send in Copilot to re-run live.`, false);
       return true;
     }
 
@@ -3452,27 +3461,42 @@
 
       try {
         const base = getApiBase();
-        if (!sessionReady) await ensureAdkSession();
+        await ensureAdkSession();
 
         const parts = [];
         if (extraPart) parts.push(extraPart);
         parts.push({ text });
 
-        const resp = await fetch(`${base}/run`, {
+        const runPayload = JSON.stringify({
+          appName: "food_broker",
+          userId: "coordinator",
+          sessionId: sessionId,
+          newMessage: { role: "user", parts }
+        });
+
+        let resp = await fetch(`${base}/run`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            appName: "food_broker",
-            userId: "coordinator",
-            sessionId: sessionId,
-            newMessage: { role: "user", parts }
-          })
+          body: runPayload
         });
+
+        // If Cloud Run scaled or routed to an instance without this in-memory session (404), recreate session and retry once
+        if (resp.status === 404) {
+          sessionReady = false;
+          await ensureAdkSession();
+          resp = await fetch(`${base}/run`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: runPayload
+          });
+        }
 
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const events = await resp.json();
         const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
         latencyBadge.textContent = `${elapsed}s`;
+        document.getElementById("connBadge").textContent = "Cloud Run Live";
+        document.getElementById("connDot").className = "dot";
 
         let newBrief = null;
         let finalReply = "";
@@ -3494,8 +3518,11 @@
           appendToolPill(`${toolsCalled.join(" → ")} (${elapsed}s)`);
           addLogEntry("AGENT", `Tools: ${toolsCalled.join(" -> ")} (${elapsed}s)`);
         }
+        if (newBrief && postingAtSend) {
+          window.LIVE_BRIEF_CACHE[postingAtSend.id] = { brief: newBrief, answer: finalReply || "" };
+        }
         if (currentPosting !== postingAtSend) {
-          addLogEntry("AGENT", `Answer for "${postingAtSend.title}" arrived after switching postings; not shown on the card.`);
+          addLogEntry("AGENT", `Answer for "${postingAtSend.title}" arrived after switching postings; cached for when you return.`);
           return;
         }
         if (newBrief) {
