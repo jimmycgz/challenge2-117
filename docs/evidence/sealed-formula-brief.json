@@ -1,0 +1,92 @@
+{
+  "organization_and_why": {
+    "name": "Feeding America",
+    "address": "161 N CLARK ST STE 700, CHICAGO, IL 60601",
+    "why": "walk-in cold storage, takes up to 24 pallets, collects within 28h",
+    "profile_excerpt": "County-wide food bank operating a 40,000 square foot warehouse. Racked warehouse with temperature-controlled bays and a monitored freezer. Dock-height receiving, and we can send a reefer for anything that needs the cold chain."
+  },
+  "what_they_can_take": {
+    "load_pallets": 2,
+    "max_pallets": 24,
+    "cold_storage": "walk-in",
+    "frozen_storage": true,
+    "loading_dock": true,
+    "refrigerated_transport": true,
+    "service_days": "Tuesday, Thursday"
+  },
+  "the_clock": {
+    "hours_remaining": 5760,
+    "collection_lead_hours": 28,
+    "margin_hours": 5732,
+    "needs_driver": false
+  },
+  "whose_neighborhood": {
+    "households_per_week": 3563,
+    "populations_served": "Families with children",
+    "tract": "Nearest census tract: 13% of residents below the poverty line, 54% of households without a vehicle, 0% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
+  },
+  "outreach_message": "Hello Feeding America team,\n\nA distributor in Chicago has 48 cases of sealed infant formula. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 5760 hours from now, which leaves you roughly 5732 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "next_two_options": [
+    {
+      "rank": 2,
+      "name": "Beyond Hunger",
+      "address": "848 LAKE ST, OAK PARK, IL 60301",
+      "why": "walk-in cold storage, takes up to 22 pallets, collects within 45h",
+      "margin_hours": 5715,
+      "needs_driver": false
+    },
+    {
+      "rank": 3,
+      "name": "Greater Chicago Food Depository",
+      "address": "4100 W ANN LURIE PL, CHICAGO, IL 60632",
+      "why": "walk-in cold storage, takes up to 23 pallets, collects within 36h",
+      "margin_hours": 5724,
+      "needs_driver": false
+    }
+  ],
+  "ranked": [
+    {
+      "rank": 1,
+      "name": "Feeding America",
+      "address": "161 N CLARK ST STE 700, CHICAGO, IL 60601",
+      "why": "walk-in cold storage, takes up to 24 pallets, collects within 28h",
+      "margin_hours": 5732,
+      "needs_driver": false
+    },
+    {
+      "rank": 2,
+      "name": "Beyond Hunger",
+      "address": "848 LAKE ST, OAK PARK, IL 60301",
+      "why": "walk-in cold storage, takes up to 22 pallets, collects within 45h",
+      "margin_hours": 5715,
+      "needs_driver": false
+    },
+    {
+      "rank": 3,
+      "name": "Greater Chicago Food Depository",
+      "address": "4100 W ANN LURIE PL, CHICAGO, IL 60632",
+      "why": "walk-in cold storage, takes up to 23 pallets, collects within 36h",
+      "margin_hours": 5724,
+      "needs_driver": false
+    }
+  ],
+  "rejected_but_close": [
+    {
+      "name": "Second Faith Temple Community Outreach",
+      "because": "capacity 1 pallets, load is 2"
+    },
+    {
+      "name": "Mano A Mano Unidos Ltd",
+      "because": "capacity 1 pallets, load is 2"
+    },
+    {
+      "name": "Jm Foundation",
+      "because": "capacity 1 pallets, load is 2"
+    }
+  ],
+  "refusal": null,
+  "search": {
+    "candidates_searched": 80,
+    "viable_after_filters": 25
+  }
+}

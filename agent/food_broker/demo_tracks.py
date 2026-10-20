@@ -8,7 +8,7 @@ Needs the lab tables and the identity settings (see README.md). Run from the age
     python -m food_broker.demo_tracks
 """
 
-from .tools import apply_constraints, vector_candidates
+from .tools import _pallets, apply_constraints, vector_candidates
 
 # (track, posting, needs_cold, pallets, hours_remaining). Postings are the notebook's own.
 POSTINGS = [
@@ -26,7 +26,7 @@ def main():
         print(f"\n[{track}] {text}")
         print(f"  semantic candidates: {len(cands)}   viable after constraints: {len(out['viable'])}")
         for v in out["viable"][:3]:
-            print(f"  + {v['name']} ({v['cold_storage']}, {v['max_pallets']} pallets, "
+            print(f"  + {v['name']} ({v['cold_storage']}, room for {_pallets(v['max_pallets'])}, "
                   f"margin {v['margin_hours']}h)")
         for e in out["eliminated"][:2]:
             print(f"  - {e['name']}: {e['eliminated_because']}")

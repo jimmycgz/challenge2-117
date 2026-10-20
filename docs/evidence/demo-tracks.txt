@@ -1,0 +1,26 @@
+Three tracks through one corpus and one search. Captured 2026-10-20 10:43 EDT. Recipient names and addresses are real; their storage, capacity and pickup times are generated.
+
+
+[retail] 10 crates of spinach, harvested yesterday, needs cold storage
+  semantic candidates: 80   viable after constraints: 12
+  + Shakespear Rose Community Table Incorporated (vehicle, room for 3 pallets, margin 2h)
+  + Love Of Angels (domestic, room for 1 pallet, margin 2h)
+  + Habibi Care (domestic, room for 1 pallet, margin 3h)
+  - Anso Child Development: needs 19h to collect, food has 6h
+  - Maple Street Produce Alliance: needs 12h to collect, food has 6h
+
+[farm] 5 tons of potatoes still in the field, we can load pallets if someone collects
+  semantic candidates: 80   viable after constraints: 13
+  + Anso Child Development (walk-in, room for 7 pallets, margin 53h)
+  + Maple Street Produce Alliance (walk-in, room for 10 pallets, margin 60h)
+  + Shepherds Hope Ltd (vehicle, room for 5 pallets, margin 60h)
+  - Chicago Food Rescue: capacity 2 pallets, load is 5
+  - Seeds Center Soup Kitchen Food Pantry Of Maple Park - Not For Pro: capacity 1 pallets, load is 5
+
+[essentials] 48 cases of sealed infant formula, 8 months to expiry
+  semantic candidates: 80   viable after constraints: 26
+  + Chicago Food Rescue (vehicle, room for 2 pallets, margin 160h)
+  + Feeding America (walk-in, room for 24 pallets, margin 140h)
+  + Maple Street Produce Alliance (walk-in, room for 10 pallets, margin 156h)
+  - Second Faith Temple Community Outreach: capacity 1 pallets, load is 2
+  - Mano A Mano Unidos Ltd: capacity 1 pallets, load is 2

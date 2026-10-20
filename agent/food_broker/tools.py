@@ -160,7 +160,7 @@ def apply_constraints(
                     f"only a household fridge, load is {pallets:g} pallets"
                 )
         if (c.get("max_pallets") or 0) < pallets:
-            reasons.append(f"capacity {c.get('max_pallets')} pallets, load is {pallets:g}")
+            reasons.append(f"capacity {_pallets(c.get('max_pallets'))}, load is {pallets:g}")
         lead = c.get("pickup_window_hours")
         margin = None if lead is None else hours_remaining - lead
         if margin is not None and margin < 0:

@@ -110,6 +110,34 @@ a 120-second timeout); `OPEN=0` puts it behind authentication instead. ADK's cha
 root (`NO_UI=1` turns it off). A browser page on another origin needs `A4I_ALLOW_ORIGINS` set at deploy time. How to
 call the server and what comes back: [API.md](API.md).
 
+## Reproduce it in your own project
+
+The live demo ran in a temporary lab project that will be deleted, so here is how to rebuild it. Captured output from
+the live service is in [docs/evidence](../../docs/evidence/README.md).
+
+1. **A Google Cloud project** with the BigQuery, Vertex AI, Cloud Run, Cloud Build and Artifact Registry APIs enabled,
+   and `gcloud` signed in to it. Use Python 3.12 (`pip install -r agent/requirements.txt`).
+2. **Load the data.** Run the challenge notebook, or `bash scripts/load.sh chicago` from the repository root. Either
+   creates the `a4i_food` dataset in the `US` location with `recipients`, `surplus_postings`, `shelf_life` and
+   `tract_demographics`.
+3. **Embed the recipients** once, in BigQuery:
+
+   ```sql
+   CREATE OR REPLACE TABLE `a4i_food.recipient_embeddings` AS
+   SELECT * EXCEPT (embedded), embedded.result AS embedding
+   FROM (SELECT r.*, AI.EMBED(r.profile_text, endpoint => 'gemini-embedding-2') AS embedded
+         FROM `a4i_food.recipients` r)
+   WHERE embedded.status = '';
+   ```
+
+4. **Set the two guard settings** to your project id and the ending of your account's address
+   (`A4I_EXPECTED_PROJECT`, `A4I_EXPECTED_PRINCIPAL_SUFFIX`), then run `bash agent/deploy.sh`. Without them the script
+   refuses, by design.
+
+Two things to know about the deployed service. ADK's chat page lists sessions, so anyone with the address can see
+other people's test conversations: type nothing personal into it. And if a page on another origin will call the
+service, set `A4I_ALLOW_ORIGINS` to that origin by name, not `*`.
+
 ## Settings
 
 | Variable | What it does | Default in code |
