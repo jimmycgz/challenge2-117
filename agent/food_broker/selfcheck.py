@@ -220,6 +220,17 @@ def main():
     finally:
         T2.vector_candidates = keep
 
+    # _excerpt strips timing claims from generated profiles so profile_excerpt never contradicts pickup_window_hours.
+    from food_broker.tools import _excerpt
+    raw_profile = (
+        "Wholesale-style operation moving fruit and vegetables to 13 partners. "
+        "Walk-in cold rooms sized for crates and pallets of fresh product. "
+        "Reefer available daily. We can be there within a couple of hours."
+    )
+    cleaned_excerpt = _excerpt(raw_profile)
+    assert "within a couple of hours" not in cleaned_excerpt, cleaned_excerpt
+    assert "Walk-in cold rooms" in cleaned_excerpt, cleaned_excerpt
+
     print("selfcheck passed:", len(CANDIDATES), "candidates,", len(viable), "viable for spinach")
 
 

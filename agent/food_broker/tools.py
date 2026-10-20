@@ -9,6 +9,7 @@ locally: GOOGLE_CLOUD_PROJECT, A4I_DATASET, A4I_EMBED_ENDPOINT.
 """
 
 import os
+import re
 from typing import Optional
 
 DATASET = os.environ.get("A4I_DATASET", "a4i_food")
@@ -294,11 +295,28 @@ def _outreach(name: str, load_description: str, donor_description: str,
             "pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]")
 
 
+_TIMING_SENTENCE_RE = re.compile(
+    r"\b(?:"
+    r"within\s+(?:a\s+couple(?:\s+of)?|a\s+few|\d+|one|two|three|four|six|twelve|twenty-four)\s+hours?"
+    r"|hours?\s+(?:notice|lead\s+time|to\s+collect|to\s+pick\s+up|in\s+advance)"
+    r"|(?:be\s+there|collect|pick\s*up)\s+within\b"
+    r"|same-day\s+(?:pickup|collection)"
+    r"|on\s+short\s+notice"
+    r"|advance\s+notice"
+    r"|day's\s+notice"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
 def _excerpt(text: str, limit: int = 240) -> str:
-    """First part of a profile, cut at a sentence or word boundary so it never ends mid-word."""
-    if len(text) <= limit:
-        return text
-    cut = text[:limit]
+    """First part of a profile, stripped of timing claims and cut at a sentence or word boundary."""
+    sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text.strip()) if s.strip()]
+    kept = [s for s in sentences if not _TIMING_SENTENCE_RE.search(s)]
+    cleaned = " ".join(kept) if kept else text.strip()
+    if len(cleaned) <= limit:
+        return cleaned
+    cut = cleaned[:limit]
     end = max(cut.rfind(". "), cut.rfind("! "), cut.rfind("? "))
     if end > limit // 2:
         return cut[: end + 1]
