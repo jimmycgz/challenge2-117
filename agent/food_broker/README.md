@@ -107,6 +107,13 @@ Known limits:
   agent presents them as the profile on file and suggests confirming by phone.
 - Shelf life is USDA consumer guidance, not a cold-chain guarantee.
 - Locations are ZIP-level, so the tract figures describe the surrounding area.
+- The deployed service is open and the agent has Google's BigQuery tool, which runs read-only SQL as the service's
+  account. Anyone with the address can ask it questions about the project's data, including the project id and table
+  names, which the agent is given. The instructions confine it to the one dataset, but that is an instruction, not a
+  permission. The project is a temporary lab project and holds only this data.
+- The generated profile text and the numeric fields were produced separately and can disagree: one wholesale-style
+  recipient's profile says it can be there "within a couple of hours" while its collection-time number is 19 hours.
+  The filters use the numbers, and the agent is told not to repeat what a profile says about timing.
 - `pickup_window_hours` is read as the lead time a recipient needs to collect. The data fits that reading (small
   pantries 2 to 6 hours, regional food banks 14 to 45), but the generator does not define it.
 - The shelf-life table gave sealed infant formula a 1-hour shelf life, an opened-container figure. The shelf-life

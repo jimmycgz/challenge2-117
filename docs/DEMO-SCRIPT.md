@@ -70,6 +70,24 @@ Point at: the clock in part 3 is the donor's eight months, not an hour. Say: the
 one hour, which is FoodKeeper's figure for an opened container. We found it while auditing, and the agent now warns on
 very short figures and trusts the donor's expiry.
 
+## "They said no" (30 seconds)
+
+Stay in the same session as posting 1 and type:
+
+```text
+They said no. Who's next?
+```
+
+Point at: it skips the recipient who declined and briefs the next one, with a new message ready to send. Then type:
+
+```text
+Why them and not the big food bank downtown?
+```
+
+Point at: it finds the Greater Chicago Food Depository, says where it ranked by meaning and why it was removed (it needs
+36 hours to collect and the food has 6). Names and ranks can differ run to run; read what is on screen. Saved version:
+[follow-ups transcript](evidence/follow-ups-transcript.md).
+
 ## When nobody can take it (20 seconds)
 
 Type:

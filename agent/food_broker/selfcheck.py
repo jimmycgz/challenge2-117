@@ -140,6 +140,7 @@ def main():
         assert "error" not in fm, fm
         assert [k for k in SIX if not fm.get(k)] == [], "find_matches brief is missing parts"
         assert [r["rank"] for r in fm["ranked"]] == [1, 2, 3]
+        assert all("meaning_rank" in r for r in fm["ranked"] + fm["next_two_options"]), "cards need a meaning_rank field"
         assert fm["search"] == {"candidates_searched": 5, "viable_after_filters": 3}, fm["search"]
         assert "31%" in fm["whose_neighborhood"]["tract"]
 

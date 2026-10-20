@@ -333,7 +333,7 @@ def build_match_brief(
                 f'{v.get("zip_code", "")}').strip(", ")
 
     def card(rank: int, v: dict) -> dict:
-        return {"rank": rank, "name": v["name"], "address": address(v),
+        return {"rank": rank, "meaning_rank": v.get("semantic_rank"), "name": v["name"], "address": address(v),
                 "why": v["why_viable"], "margin_hours": v["margin_hours"],
                 "needs_driver": v["needs_driver"]}
 
