@@ -2459,9 +2459,10 @@
 
   <script>
     // ============================================================================
-    // 1. GOOGLE MAPS API KEY & SURPLUS QUEUE
+    // 1. GOOGLE MAPS API KEY (FETCHED AT RUNTIME FROM SECRET MANAGER) & SURPLUS QUEUE
     // ============================================================================
-    const DEFAULT_GCP_MAPS_KEY = "AIzaSyDzSUDDoQIhUeYH8s0UwUP8oAZfUE_A4yA";
+    // No API keys are stored in the repository; /api/config injects the restricted key from Google Cloud Secret Manager.
+    let RUNTIME_GCP_MAPS_KEY = "";
 
     const SURPLUS_QUEUE = [
       {
@@ -3446,8 +3447,22 @@
       mapLayerGroup = L.layerGroup().addTo(map);
     }
 
-    function loadGoogleMapsSdk() {
-      const apiKey = localStorage.getItem("RESCUE_MAPS_KEY") || DEFAULT_GCP_MAPS_KEY;
+    async function loadGoogleMapsSdk() {
+      let apiKey = localStorage.getItem("RESCUE_MAPS_KEY") || RUNTIME_GCP_MAPS_KEY;
+      if (!apiKey) {
+        try {
+          const resp = await fetch("/api/config", { method: "GET" });
+          if (resp.ok) {
+            const cfg = await resp.json();
+            if (cfg && cfg.maps_api_key) {
+              RUNTIME_GCP_MAPS_KEY = cfg.maps_api_key;
+              apiKey = cfg.maps_api_key;
+            }
+          }
+        } catch (err) {
+          // Fallback to CARTO/Leaflet if offline
+        }
+      }
       if (!apiKey) return;
       const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=onGoogleMapsLoaded`;

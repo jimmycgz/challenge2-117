@@ -22,6 +22,71 @@ PORT = int(os.environ.get("PORT", "8090"))
 BACKEND_URL = os.environ.get(
     "A4I_BACKEND_URL", "https://food-broker-817377390808.us-east1.run.app"
 ).rstrip("/")
+GCP_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "qwiklabs-gcp-04-6c7101c1dba1")
+MAPS_SECRET_NAME = os.environ.get("RESCUE_MAPS_SECRET_NAME", "rescue-maps-api-key")
+_CACHED_MAPS_KEY: str | None = None
+
+
+def _resolve_maps_api_key() -> str:
+    """Resolve the Google Maps JS API key from env (Cloud Run Secret Manager mount) or Secret Manager."""
+    global _CACHED_MAPS_KEY
+    if _CACHED_MAPS_KEY is not None:
+        return _CACHED_MAPS_KEY
+    env_key = os.environ.get("RESCUE_MAPS_API_KEY", "").strip()
+    if env_key:
+        _CACHED_MAPS_KEY = env_key
+        return _CACHED_MAPS_KEY
+    # Fallback 1: Cloud Run compute metadata server token + Secret Manager REST API (stdlib only)
+    try:
+        meta_req = urllib.request.Request(
+            "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token",
+            headers={"Metadata-Flavor": "Google"},
+        )
+        with urllib.request.urlopen(meta_req, timeout=2) as mresp:
+            token = json.loads(mresp.read().decode("utf-8")).get("access_token", "")
+        if token:
+            import base64
+
+            sm_url = (
+                f"https://secretmanager.googleapis.com/v1/projects/{GCP_PROJECT}"
+                f"/secrets/{MAPS_SECRET_NAME}/versions/latest:access"
+            )
+            req = urllib.request.Request(
+                sm_url, headers={"Authorization": f"Bearer {token}"}
+            )
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+                b64_data = payload.get("payload", {}).get("data", "")
+                if b64_data:
+                    _CACHED_MAPS_KEY = base64.b64decode(b64_data).decode("utf-8").strip()
+                    return _CACHED_MAPS_KEY
+    except Exception:
+        pass
+    # Fallback 2: Local developer workstation via `gcloud secrets versions access`
+    try:
+        import subprocess
+
+        out = subprocess.check_output(
+            [
+                "gcloud",
+                "secrets",
+                "versions",
+                "access",
+                "latest",
+                f"--secret={MAPS_SECRET_NAME}",
+                f"--project={GCP_PROJECT}",
+            ],
+            stderr=subprocess.DEVNULL,
+            timeout=5,
+        )
+        val = out.decode("utf-8").strip()
+        if val:
+            _CACHED_MAPS_KEY = val
+            return _CACHED_MAPS_KEY
+    except Exception:
+        pass
+    _CACHED_MAPS_KEY = ""
+    return _CACHED_MAPS_KEY
 FRONTEND_DIR = pathlib.Path(__file__).resolve().parent
 STATE_FILE = FRONTEND_DIR / ".broker_state.json"
 STATE_LOCK = threading.Lock()
@@ -91,6 +156,15 @@ class ConsoleHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         path = self.path.split("?", 1)[0]
+        if path == "/api/config":
+            self._send_json(
+                200,
+                {
+                    "maps_api_key": _resolve_maps_api_key(),
+                    "secret_source": "google-cloud-secret-manager",
+                },
+            )
+            return
         if path == "/api/state":
             with STATE_LOCK:
                 self._send_json(200, _load_state())
