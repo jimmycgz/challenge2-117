@@ -706,11 +706,15 @@
     .progress-lead { background: #64748b; height: 100%; transition: width 0.3s ease; }
     .progress-slack { background: var(--accent); height: 100%; transition: width 0.3s ease; }
 
-    /* RIGHT SIDEBAR (3 MODES: Copilot Chat | FAQ | Request Help) */
+    /* RIGHT SIDEBAR (3 MODES: Copilot Chat | FAQ | Request Help) — STAR OF THE SHOW & RESIZABLE */
     .agent-sidebar {
-      width: 355px;
+      width: 440px;
+      min-width: 320px;
+      max-width: 75vw;
+      position: relative;
       background: var(--surface);
-      border-left: 1px solid var(--border);
+      border-left: 2px solid var(--primary-border);
+      box-shadow: -6px 0 22px rgba(15, 23, 42, 0.06);
       display: flex;
       flex-direction: column;
       min-height: 0;
@@ -718,12 +722,51 @@
     }
     .agent-sidebar.collapsed { display: none !important; }
 
+    .agent-resize-handle {
+      position: absolute;
+      left: -6px;
+      top: 0;
+      bottom: 0;
+      width: 12px;
+      cursor: col-resize;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .agent-resize-handle::after {
+      content: "⋮";
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-soft);
+      border: 1px solid var(--primary-border);
+      border-radius: 6px;
+      padding: 6px 2px;
+      line-height: 1;
+      box-shadow: var(--shadow-xs);
+      transition: all 0.15s ease;
+    }
+    .agent-resize-handle:hover::after,
+    .agent-resize-handle.dragging::after {
+      background: var(--primary);
+      color: #ffffff;
+      transform: scale(1.08);
+    }
+
     .agent-header {
       padding: 10px 14px;
-      border-bottom: 1px solid var(--border);
+      background: var(--primary-soft);
+      border-bottom: 1px solid var(--primary-border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .agent-header-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
     }
 
     .right-panel-mode {
@@ -1098,6 +1141,12 @@
           <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
           <span>Live Dispatch</span>
           <span class="nav-badge">11</span>
+        </button>
+
+        <button class="nav-item" onclick="expandAndFocusAssistant()" style="background:var(--primary-soft); border-color:var(--primary-border); color:var(--primary); font-weight:600; margin:2px 0;">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <span>AI Broker Chat</span>
+          <span class="nav-badge" style="background:var(--primary); color:#fff;">Live</span>
         </button>
 
         <button class="nav-item" data-view="targets" onclick="switchMainView('targets')">
@@ -1814,7 +1863,7 @@
 
           <div style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;">
             <input type="text" id="fdaSearchInput" value="Spinach" placeholder="Enter food item (e.g. Spinach, Milk, Salad, Infant Formula)..." style="flex:1; min-width:220px; padding:8px 12px; border:1px solid var(--border-strong); border-radius:8px; font-size:13px;" />
-            <button onclick="checkOpenFDARecall(document.getElementById('fdaSearchInput').value)">Check FDA Recalls</button>
+            <button class="btn-primary" onclick="checkOpenFDARecall(document.getElementById('fdaSearchInput').value, true)">Check FDA Recalls Live</button>
             <button onclick="askAgentAboutRecall(document.getElementById('fdaSearchInput').value)">Ask Assistant About Safety Rules →</button>
             <button style="color:var(--red); border-color:var(--red-border);" onclick="triggerSafetyHalt(); switchMainView('dispatch');">Put Current Load on Hold</button>
           </div>
@@ -1882,7 +1931,7 @@
                 <td>10 Crates Fresh Spinach</td>
                 <td id="spinachFdaCell">Not Checked Yet</td>
                 <td>Checked live against US FDA food recall notices (`api.fda.gov`)</td>
-                <td><button onclick="checkOpenFDARecall('Spinach')" style="padding:3px 8px; font-size:11px;">Check Live</button></td>
+                <td><button id="checkLiveSpinachBtn" class="btn-primary" onclick="checkOpenFDARecall('Spinach', true)" style="padding:4px 10px; font-size:11.5px;">Check Live</button></td>
               </tr>
             </tbody>
           </table>
@@ -2003,22 +2052,36 @@
     </main>
 
     <!-- ========================================================================
-         3D. RIGHT SIDEBAR: ASSISTANT + FAQ + HELP DESK
+         3D. RIGHT SIDEBAR: ASSISTANT + FAQ + HELP DESK (RESIZABLE & PROMINENT)
          ======================================================================== -->
     <aside class="agent-sidebar" id="agentSidebar">
-      <div class="agent-header" style="gap:8px;">
-        <div class="segmented-control" style="flex:1; justify-content:space-between;">
-          <button class="seg-btn active" id="tabBtnChat" onclick="openRightSidePanel('chat')" style="flex:1; justify-content:center;">
-            Assistant
-          </button>
-          <button class="seg-btn" id="tabBtnFaq" onclick="openRightSidePanel('faq')" style="flex:1; justify-content:center;">
-            FAQ
-          </button>
-          <button class="seg-btn" id="tabBtnHelp" onclick="openRightSidePanel('help')" style="flex:1; justify-content:center;">
-            Get Help
-          </button>
+      <div class="agent-resize-handle" id="agentResizeHandle" title="Drag left or right to resize the AI Assistant panel"></div>
+      <div class="agent-header">
+        <div class="agent-header-top">
+          <div style="display:flex; align-items:center; gap:7px;">
+            <span class="dot"></span>
+            <span style="font-size:13px; font-weight:700; color:var(--primary);">✨ Live AI Rescue Broker</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:4px;">
+            <button class="btn-sm" style="padding:3px 7px; font-size:10.5px;" onclick="setAgentSidebarWidth(420)" title="Standard width">Standard</button>
+            <button class="btn-sm" style="padding:3px 7px; font-size:10.5px;" onclick="setAgentSidebarWidth(580)" title="Wide Assistant view">Wide</button>
+            <button class="btn-sm" style="padding:3px 7px; font-size:10.5px; border-color:var(--primary-border); color:var(--primary); font-weight:600;" onclick="setAgentSidebarWidth(Math.round(window.innerWidth * 0.5))" title="Expand Assistant to 50% split screen">⇔ 50/50 Split</button>
+            <button class="btn-ghost" style="padding:3px 7px; font-size:12px;" onclick="toggleAgentSidebar()" title="Hide Assistant panel">✕</button>
+          </div>
         </div>
-        <button class="btn-ghost" style="padding:4px 7px; font-size:12px;" onclick="toggleAgentSidebar()" title="Hide Assistant panel">✕</button>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <div class="segmented-control" style="flex:1; justify-content:space-between; background:var(--surface);">
+            <button class="seg-btn active" id="tabBtnChat" onclick="openRightSidePanel('chat')" style="flex:1; justify-content:center;">
+              💬 Live Broker Chat
+            </button>
+            <button class="seg-btn" id="tabBtnFaq" onclick="openRightSidePanel('faq')" style="flex:1; justify-content:center;">
+              FAQ
+            </button>
+            <button class="seg-btn" id="tabBtnHelp" onclick="openRightSidePanel('help')" style="flex:1; justify-content:center;">
+              Get Help
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- MODE 1: CONVERSATIONAL ASSISTANT -->
@@ -2935,8 +2998,59 @@
     function toggleAgentSidebar() {
       document.getElementById("agentSidebar").classList.toggle("collapsed");
       updateFocusButtonLabel();
-      setTimeout(() => triggerMapResize(), 220);
+      setTimeout(() => triggerMapResize(), 120);
     }
+
+    function setAgentSidebarWidth(px) {
+      const sidebar = document.getElementById("agentSidebar");
+      if (!sidebar) return;
+      sidebar.classList.remove("collapsed");
+      const clamped = Math.max(320, Math.min(Math.round(window.innerWidth * 0.75), px));
+      sidebar.style.width = `${clamped}px`;
+      updateFocusButtonLabel();
+      setTimeout(() => triggerMapResize(), 80);
+    }
+
+    function expandAndFocusAssistant() {
+      openRightSidePanel("chat");
+      setAgentSidebarWidth(Math.max(540, Math.round(window.innerWidth * 0.44)));
+      const input = document.getElementById("promptInput");
+      if (input) {
+        input.focus();
+      }
+    }
+
+    // Initialize drag-to-resize for the Conversational Assistant sidebar
+    window.addEventListener("DOMContentLoaded", () => {
+      const handle = document.getElementById("agentResizeHandle");
+      const sidebar = document.getElementById("agentSidebar");
+      if (!handle || !sidebar) return;
+      let isResizing = false;
+
+      handle.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        isResizing = true;
+        handle.classList.add("dragging");
+        document.body.style.cursor = "col-resize";
+        document.body.style.userSelect = "none";
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isResizing) return;
+        const newWidth = window.innerWidth - e.clientX;
+        const clamped = Math.max(320, Math.min(Math.round(window.innerWidth * 0.75), newWidth));
+        sidebar.style.width = `${clamped}px`;
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (!isResizing) return;
+        isResizing = false;
+        handle.classList.remove("dragging");
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+        triggerMapResize();
+      });
+    });
 
     function appendChatBubble(role, text) {
       if (!text) return;
@@ -3615,40 +3729,82 @@
     // ============================================================================
     // 7. FOOD SAFETY & FDA RECALL CHECKER
     // ============================================================================
-    async function checkOpenFDARecall(commodity) {
+    async function checkOpenFDARecall(commodity, userTriggered = false) {
+      const cleanItem = (commodity || "Spinach").trim() || "Spinach";
       const banner = document.getElementById("recallBanner");
       const dot = document.getElementById("recallDot");
       const badge = document.getElementById("recallStatusBadge");
       const detail = document.getElementById("recallDetail");
       const fullReport = document.getElementById("fdaFullReport");
       const kpiSafety = document.getElementById("kpiSafetyStatus");
+      const spinachCell = document.getElementById("spinachFdaCell");
+      const checkBtn = document.getElementById("checkLiveSpinachBtn");
+      const searchInput = document.getElementById("fdaSearchInput");
+      if (userTriggered && searchInput) searchInput.value = cleanItem;
+
       banner.className = "match-card-strip";
       dot.className = "dot muted";
-      badge.textContent = `Checking FDA recalls (${commodity})...`;
+      badge.textContent = `Checking FDA recalls (${cleanItem})...`;
       detail.textContent = "";
+      if (spinachCell) {
+        spinachCell.innerHTML = `<span class="time-pill urg">⏳ Checking FDA Live...</span>`;
+      }
+      if (checkBtn && userTriggered) {
+        checkBtn.textContent = "Checking...";
+        checkBtn.disabled = true;
+      }
+      if (fullReport && userTriggered) {
+        fullReport.innerHTML = `⏳ Querying live US FDA Food Enforcement database (<code>api.fda.gov</code>) for <b>"${escapeHtml(cleanItem)}"</b>...`;
+      }
+
+      const checkedAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      const q = encodeURIComponent(`reason_for_recall:"${cleanItem}" AND status:"Ongoing"`);
+      const url = `https://api.fda.gov/food/enforcement.json?search=${q}&limit=2`;
 
       // A check that could not run is shown as "not checked", never as clear.
       const showNotChecked = (why) => {
         banner.className = "match-card-strip";
         dot.className = "dot muted";
-        badge.textContent = `FDA recall check offline (${commodity})`;
+        badge.textContent = `FDA recall check offline (${cleanItem})`;
         detail.textContent = `Could not reach FDA recall service (${why}). Please check sealed packaging and lot codes at pickup.`;
+        if (spinachCell) {
+          spinachCell.innerHTML = `<span class="time-pill urg">Offline (${escapeHtml(why)})</span>`;
+        }
+        if (fullReport) {
+          fullReport.innerHTML = `⚠️ <b>FDA Recall Check (${checkedAt}):</b> Could not reach live <code>api.fda.gov</code> (${escapeHtml(why)}). Verify sealed packaging and lot code on the dock. <a href="${url}" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; margin-left:6px;">Open FDA API Link ↗</a>`;
+        }
+        if (checkBtn) {
+          checkBtn.textContent = "Check Live";
+          checkBtn.disabled = false;
+        }
       };
 
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 3500);
+      const timer = setTimeout(() => controller.abort(), 4500);
       try {
-        const q = encodeURIComponent(`reason_for_recall:"${commodity}" AND status:"Ongoing"`);
-        const url = `https://api.fda.gov/food/enforcement.json?search=${q}&limit=2`;
         const resp = await fetch(url, { signal: controller.signal });
         clearTimeout(timer);
 
+        if (checkBtn) {
+          checkBtn.textContent = "✓ Checked Live";
+          checkBtn.disabled = false;
+        }
+
         if (resp.status === 404) {
           dot.className = "dot";
-          badge.textContent = `FDA Recall Check Clear (${commodity})`;
+          badge.textContent = `FDA Recall Check Clear (${cleanItem})`;
           detail.textContent = `No active recalls found. Check sealed packaging & lot code at pickup.`;
           if (kpiSafety) { kpiSafety.textContent = "All Clear"; kpiSafety.style.color = "var(--accent-dark)"; }
-          if (fullReport) fullReport.innerHTML = `<b>FDA Recall Check for "${escapeHtml(commodity)}":</b> No active recalls found.`;
+          if (spinachCell) {
+            spinachCell.innerHTML = `<span class="time-pill green">✓ Live FDA Clear (${checkedAt})</span>`;
+          }
+          if (fullReport) {
+            fullReport.innerHTML = `✅ <b>Live US FDA Recall Check for "${escapeHtml(cleanItem)}" (${checkedAt}):</b> 0 active ongoing recalls found in the US FDA Food Enforcement database. Safe to dispatch after standard dock temperature & package seal inspection. <a href="${url}" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; margin-left:6px;">View Official FDA API Query ↗</a>`;
+          }
+          if (userTriggered) {
+            appendToolPill(`Live FDA Recall Check (${cleanItem}): 0 active recalls`);
+            appendChatBubble("agent", `**Live FDA Recall Check (${cleanItem}):** I just checked the US FDA Food Enforcement database (\`api.fda.gov\`) at ${checkedAt} — **0 active ongoing recalls** were found for ${cleanItem}. Make sure to verify sealed packaging and cooler temperature (≤ 40°F) at pickup.`);
+          }
           return;
         }
         if (!resp.ok) {
@@ -3661,15 +3817,34 @@
         if (total > 0 && first) {
           banner.className = "match-card-strip warn";
           dot.className = "dot amber";
-          badge.textContent = `${total} FDA Recall Alert(s) for ${commodity}`;
+          badge.textContent = `${total} FDA Recall Alert(s) for ${cleanItem}`;
           const reason = (first.reason_for_recall || "").slice(0, 85);
           detail.textContent = `"${reason}..." — Check package lot code before loading.`;
           if (kpiSafety) { kpiSafety.textContent = `${total} Alert(s)`; kpiSafety.style.color = "var(--amber)"; }
-          if (fullReport) fullReport.innerHTML = `<b>⚠️ ${total} Active Recall Alert(s) for "${escapeHtml(commodity)}":</b> ${escapeHtml(first.reason_for_recall)} (Company: ${escapeHtml(first.recalling_firm)}).`;
+          if (spinachCell) {
+            spinachCell.innerHTML = `<span class="time-pill urg">⚠️ ${total} Active Recall Alert(s) (${checkedAt})</span>`;
+          }
+          if (fullReport) {
+            fullReport.innerHTML = `⚠️ <b>Live US FDA Recall Check (${checkedAt}) — ${total} Active Recall Notice(s) for "${escapeHtml(cleanItem)}":</b> "${escapeHtml(first.reason_for_recall)}" (Recalling Firm: <b>${escapeHtml(first.recalling_firm || "Listed in notice")}</b>). Check donor lot/UPC code before loading onto the van! <a href="${url}" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; margin-left:6px;">View Official FDA Notice JSON ↗</a>`;
+          }
+          if (userTriggered) {
+            appendToolPill(`Live FDA Recall Check (${cleanItem}): ${total} active notice(s) found`);
+            appendChatBubble("agent", `**Live FDA Recall Alert (${cleanItem}):** The US FDA Food Enforcement database returned **${total} active ongoing recall notice(s)** matching "${cleanItem}" (checked at ${checkedAt}).\n- **Reason:** ${first.reason_for_recall}\n- **Firm:** ${first.recalling_firm || "See notice"}\n- **Action:** Verify the donor's lot/UPC code on the box before loading, or click **Put Current Load on Hold** if the lot matches.`);
+          }
         } else if (data?.meta?.results) {
           dot.className = "dot";
-          badge.textContent = `FDA Recall Check Clear (${commodity})`;
+          badge.textContent = `FDA Recall Check Clear (${cleanItem})`;
           detail.textContent = `No active recalls found. Confirm lot code at pickup.`;
+          if (spinachCell) {
+            spinachCell.innerHTML = `<span class="time-pill green">✓ Live FDA Clear (${checkedAt})</span>`;
+          }
+          if (fullReport) {
+            fullReport.innerHTML = `✅ <b>Live US FDA Recall Check for "${escapeHtml(cleanItem)}" (${checkedAt}):</b> 0 active ongoing recalls found. <a href="${url}" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; margin-left:6px;">View Official FDA API Query ↗</a>`;
+          }
+          if (userTriggered) {
+            appendToolPill(`Live FDA Recall Check (${cleanItem}): Clear`);
+            appendChatBubble("agent", `**Live FDA Recall Check (${cleanItem}):** Checked live at ${checkedAt} — 0 active recalls found.`);
+          }
         } else {
           showNotChecked("no response");
         }
