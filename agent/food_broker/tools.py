@@ -245,6 +245,17 @@ def _outreach(name: str, load_description: str, donor_description: str,
             "pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]")
 
 
+def _excerpt(text: str, limit: int = 240) -> str:
+    """First part of a profile, cut at a sentence or word boundary so it never ends mid-word."""
+    if len(text) <= limit:
+        return text
+    cut = text[:limit]
+    end = max(cut.rfind(". "), cut.rfind("! "), cut.rfind("? "))
+    if end > limit // 2:
+        return cut[: end + 1]
+    return cut[: cut.rfind(" ")].rstrip(",;:") + "..."
+
+
 def build_match_brief(
     posting_text: str,
     hours_remaining: float,
@@ -301,7 +312,7 @@ def build_match_brief(
         "organization_and_why": {
             "name": top["name"], "address": address(top),
             "why": top["why_viable"],
-            "profile_excerpt": (top.get("profile_text") or "")[:240],
+            "profile_excerpt": _excerpt(top.get("profile_text") or ""),
         },
         "what_they_can_take": {
             "load_pallets": pallets, "max_pallets": top.get("max_pallets"),

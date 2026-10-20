@@ -19,6 +19,22 @@ Vector search proposes candidates by meaning; the constraint filter decides who 
 | `build_match_brief` | Top match, next two options, close-but-rejected, the clock; refuses when nobody is viable |
 | BigQuery MCP (optional) | Google's managed MCP server, for free-form questions over the tables. Off until `A4I_MCP=1` |
 
+## Why a top-k search alone is not enough
+
+The order is: retrieve wide on meaning, apply the hard filters (storage, capacity, the clock), then rank.
+Meaning finds who might fit; it cannot tell who can physically take the food in time. On the Chicago corpus
+(192 recipients) a 6-hour spinach offer gave this many viable recipients after filtering:
+
+| Semantic pool (`top_k`) | Viable after the filter |
+|---|---|
+| 15 | 1 |
+| 40 | 3 |
+| 80 | 12 |
+
+A narrow pool can leave nobody, or one choice with no fallback, even when good recipients exist a little further
+down the list. So the pool defaults to 80 and the filter does the narrowing. The same one corpus handled a
+retail, a farm and an essentials posting (`python -m food_broker.demo_tracks`).
+
 ## Settings
 
 Set these in the shell before running. None has a default that grants access: a missing guard value
