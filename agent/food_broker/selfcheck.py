@@ -143,6 +143,29 @@ def main():
         assert fm["search"] == {"candidates_searched": 5, "viable_after_filters": 3}, fm["search"]
         assert "31%" in fm["whose_neighborhood"]["tract"]
 
+        # "They said no": the declined recipient is skipped and the next one is briefed, and the remaining
+        # recipients keep their original rank by meaning. Explaining "why not X" reports rank and reason.
+        T.vector_candidates = lambda text, top_k=80: [dict(c, semantic_rank=i) for i, c in enumerate(CANDIDATES, 1)]
+        first = T.find_matches("cold produce, small load", 6, True, 0.5)
+        top = first["organization_and_why"]["name"]
+        again = T.find_matches("cold produce, small load", 6, True, 0.5, exclude_names=[top])
+        assert "error" not in again, again
+        assert again["organization_and_why"]["name"] != top, "declined recipient was briefed again"
+        assert top not in [r["name"] for r in again["ranked"]], "declined recipient still ranked"
+        assert again["ranked"][0]["name"] == first["next_two_options"][0]["name"], "next recipient is not rank 2"
+        cedar = [r for r in again["rejected_but_close"] if r["name"] == "Cedar Street Produce Alliance"]
+        assert not cedar or cedar[0]["semantic_rank"] == 4, "excluding a recipient changed other ranks by meaning"
+        everyone = T.find_matches("x", 6, True, 0.5, exclude_names=[c["name"] for c in CANDIDATES])
+        assert everyone["refusal"], "with everyone declined the brief must refuse, not invent a match"
+
+        why = T.explain_candidate("greenline", "cold produce, small load", 6, True, 0.5)["matches"]
+        assert why and why[0]["outcome"] == "removed" and why[0]["semantic_rank"] == 1, why
+        assert "no cold storage" in why[0]["detail"], why
+        ok_one = T.explain_candidate("maple street", "x", 6, True, 0.5)["matches"]
+        assert ok_one and ok_one[0]["outcome"] == "viable", ok_one
+        gone = T.explain_candidate("no such organization", "x", 6, True, 0.5)
+        assert gone["matches"] == [] and "note" in gone, gone
+
         def boom(text, top_k=80):
             raise RuntimeError("bigquery unavailable")
         T.vector_candidates = boom

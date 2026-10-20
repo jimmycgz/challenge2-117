@@ -73,7 +73,10 @@ def vector_candidates(posting_text: str, top_k: int = 80) -> list[dict]:
             ]
         ),
     )
-    return [dict(row) for row in job.result()]
+    rows = [dict(row) for row in job.result()]
+    for position, row in enumerate(rows, 1):
+        row["semantic_rank"] = position
+    return rows
 
 
 def _shelf_caution(hours) -> Optional[str]:
@@ -148,7 +151,8 @@ def apply_constraints(
         carry `eliminated_because`. Viable is ordered by margin first, then semantic distance.
     """
     viable, eliminated = [], []
-    for semantic_rank, c in enumerate(candidates, 1):
+    for position, c in enumerate(candidates, 1):
+        semantic_rank = c.get("semantic_rank", position)
         cold = c.get("cold_storage", "none")
         reasons = []
 
@@ -369,6 +373,55 @@ def build_match_brief(
     }
 
 
+def explain_candidate(
+    name_fragment: str,
+    search_text: str,
+    hours_remaining: float,
+    needs_cold: bool,
+    pallets: float = 1.0,
+    top_k: int = 80,
+) -> dict:
+    """Why a named organization was or was not chosen for a posting.
+
+    Re-runs the same search and filters and reports where organizations whose name contains the fragment came out:
+    their rank by meaning, and either why they were removed or where they ranked among the viable ones.
+
+    Args:
+        name_fragment: Part of the organization's name, e.g. "food depository" or "greenline".
+        search_text, hours_remaining, needs_cold, pallets, top_k: The same values used for find_matches.
+
+    Returns:
+        {"matches": [...]} with up to five organizations, each {"name", "semantic_rank", "outcome", "detail"},
+        or {"matches": [], "note": ...} when none is in the semantic pool, or {"error": {...}} on failure.
+    """
+    from .identity_guard import WrongIdentity
+
+    try:
+        candidates = vector_candidates(search_text, top_k=top_k)
+        result = apply_constraints(candidates, hours_remaining, needs_cold, pallets)
+        fragment = name_fragment.strip().lower()
+        found = []
+        for e in result["eliminated"]:
+            if fragment in e["name"].lower():
+                found.append({"name": e["name"], "semantic_rank": e["semantic_rank"], "outcome": "removed",
+                              "detail": e["eliminated_because"]})
+        for place, v in enumerate(result["viable"], 1):
+            if fragment in v["name"].lower():
+                found.append({"name": v["name"], "semantic_rank": v["semantic_rank"], "outcome": "viable",
+                              "detail": f"passed every filter and ranked {place} of {len(result['viable'])} "
+                                        f"viable; {v['why_viable']}"})
+        found.sort(key=lambda f: f["semantic_rank"])
+        if not found:
+            return {"matches": [], "note": f"No organization with '{name_fragment}' in its name is among the "
+                                           f"{len(candidates)} closest by meaning. It may not be in the corpus, or "
+                                           "it is a poor semantic fit for this offer."}
+        return {"matches": found[:5]}
+    except WrongIdentity as exc:
+        return {"error": {"code": "identity_refused", "message": str(exc)}}
+    except Exception as exc:  # noqa: BLE001
+        return {"error": {"code": "search_failed", "message": f"{type(exc).__name__}: {exc}"}}
+
+
 def find_matches(
     search_text: str,
     hours_remaining: float,
@@ -377,6 +430,7 @@ def find_matches(
     load_description: str = "surplus food",
     donor_description: str = "A local donor",
     top_k: int = 80,
+    exclude_names: Optional[list[str]] = None,
 ) -> dict:
     """Find recipients for a posting and return the finished Match Brief, in one step.
 
@@ -393,6 +447,8 @@ def find_matches(
         load_description: The load in a few words, e.g. "ten crates of spinach".
         donor_description: Who is giving it, e.g. "A grocer on the north side".
         top_k: Size of the semantic pool before filtering. Keep it wide.
+        exclude_names: Recipients that have already said no (or are closed). They are skipped, so the brief is
+            for the next best recipient. Use the exact names from the earlier brief.
 
     Returns:
         The brief from build_match_brief, plus `search` with the pool size and how many survived the
@@ -403,6 +459,9 @@ def find_matches(
 
     try:
         candidates = vector_candidates(search_text, top_k=top_k)
+        if exclude_names:
+            skip = {n.strip().lower() for n in exclude_names}
+            candidates = [c for c in candidates if c["name"].strip().lower() not in skip]
         result = apply_constraints(candidates, hours_remaining, needs_cold, pallets)
         neighborhood = None
         if result["viable"]:

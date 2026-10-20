@@ -9,7 +9,7 @@ import os
 from google.adk.agents import Agent
 
 from .identity_guard import assert_lab_identity
-from .tools import find_matches, lookup_shelf_life
+from .tools import explain_candidate, find_matches, lookup_shelf_life
 
 # Model is configuration, not code: set A4I_MODEL to whatever the lab project has enabled.
 MODEL = os.environ.get("A4I_MODEL", "gemini-2.5-flash")
@@ -46,8 +46,22 @@ Work in this order for every posting:
    5. The outreach message - ready to send. Start from the draft in the brief and fix anything
       that is not true of this posting.
    6. The next two options - because the first will sometimes say no. Add the close semantic
-      matches that were rejected and why, one line each.
+      matches that were rejected, one line each, with the reason and its rank by meaning (semantic_rank,
+      1 is the closest), for example "ranked 3rd by meaning, removed: no cold storage".
    Nothing before part 1 except a one-line summary. Nothing after part 6 except open questions.
+
+Follow-up questions in the same conversation:
+- "They said no", closed, or cannot take it: call find_matches again with the same arguments and exclude_names listing
+  every recipient that has declined so far (use the names from your earlier brief). Give the new top match as a short
+  brief (who and why, the clock, the outreach message) and name who is next after that. Never answer from the
+  rejected list: those recipients were removed by the filters, they are not fallbacks. Only say nobody is left if
+  find_matches returns no viable recipient.
+- "Why them and not X" or "why not X": call explain_candidate with a fragment of X's name and the same search
+  arguments you used for the posting. Say its rank by meaning and why it was removed, or where it ranked among the
+  viable ones. If the coordinator does not name an organization ("the big food bank downtown"), ask which one, or try
+  a fragment such as "food bank" and say what you found.
+- Questions about a match you already gave (can they collect it themselves, whose neighborhood, how long does it
+  last): answer from the brief earlier in this conversation. No new search.
 
 Rules that matter more than being helpful:
 - If nobody is viable, say so plainly and show the closest rejections with their reasons. Never
@@ -81,7 +95,7 @@ def _mcp_headers(_context=None) -> dict:
 
 
 def _tools() -> list:
-    tools = [lookup_shelf_life, find_matches]
+    tools = [lookup_shelf_life, find_matches, explain_candidate]
     # The managed MCP server is the coordinator's free-form door into the tables (tract
     # demographics, "how many pantries have a walk-in"). It is switched on by A4I_MCP=1 because
     # it has not been run against the lab project yet; flip it on once it has.

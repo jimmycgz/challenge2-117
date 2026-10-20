@@ -27,6 +27,13 @@ deadline. Then it calls one tool, `find_matches`, which does the rest in code:
 4. **Describe the neighborhood.** The top match's nearest census tract goes into the brief. Tract figures are
    never used to rank.
 
+Follow-ups in the same conversation use two more behaviours. When a recipient says no, the agent calls
+`find_matches` again with the names of everyone who declined (`exclude_names`), so the next brief is for the next
+viable recipient and each one keeps its original rank by meaning. When someone asks why a named organization was not
+chosen, `explain_candidate` re-runs the search and reports that organization's rank by meaning and why it was removed,
+or where it ranked among the viable ones. Questions about a match already given (can they collect it themselves, whose
+neighborhood) are answered from the earlier brief with no new search.
+
 For questions that are not a posting, such as how many recipients have a walk-in cooler, the agent also uses
 Google's managed BigQuery MCP server (`execute_sql`, `get_table_info`, `list_table_ids`), read-only and told which
 dataset to stay in. It is on in the deployed service. Matching a posting always goes through `find_matches`, never
@@ -118,8 +125,9 @@ python -m food_broker.demo_tracks        # one posting per track through search 
 To deploy, run `bash agent/deploy.sh` from the repository root. It checks the gcloud account and project and runs
 the identity guard, then Cloud Build builds the [Dockerfile](../Dockerfile) in the cloud and deploys it to Cloud Run.
 The service is open to unauthenticated requests, by the team's decision, so that anyone can try it. ADK's API server
-has no authentication of its own, so spend is bounded by the deploy flags (at most 2 instances, 4 concurrent requests,
-a 120-second timeout); `OPEN=0` puts it behind authentication instead. ADK's chat page is served at the service
+has no authentication of its own, so spend is bounded by the deploy flags (one instance, 8 concurrent requests,
+a 120-second timeout); `OPEN=0` puts it behind authentication instead. It is one instance on purpose: ADK keeps chat
+sessions in the instance's memory, so a second instance would lose a follow-up question. ADK's chat page is served at the service
 root (`NO_UI=1` turns it off). A browser page on another origin needs `A4I_ALLOW_ORIGINS` set at deploy time. How to
 call the server and what comes back: [API.md](API.md).
 
