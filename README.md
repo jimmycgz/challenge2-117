@@ -1,3 +1,17 @@
+# Table 117 submission: a food-rescue broker
+
+Start here: [the agent README](agent/food_broker/README.md). It covers what we built, why a plain search is not
+enough, the results and the limits.
+
+- [Demo script](docs/DEMO-SCRIPT.md) and [captured output from the live service](docs/evidence/README.md)
+- [Equity audit](agent/food_broker/EQUITY-AUDIT.md)
+- [How to call the agent and what comes back](agent/food_broker/API.md)
+- [Submission checklist](docs/SUBMISSION.md)
+
+The organizers' challenge brief follows, unchanged.
+
+---
+
 # Challenge 2—Resilient Food Equity & Surplus Broker
 
 **Agents for Impact 2026**

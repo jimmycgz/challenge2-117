@@ -20,3 +20,6 @@ Thumbs.db
 data/*.csv
 data/*.parquet
 !data/profile_components.json
+
+# ADK local session store (created by adk api_server and adk web)
+.adk/
