@@ -1,6 +1,6 @@
 # Live service transcript
 
-Captured 2026-10-20 10:42 EDT from the deployed Cloud Run service. The recipient names and addresses are real (IRS data). Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
+Captured 2026-10-20 10:49 EDT from the deployed Cloud Run service. The recipient names and addresses are real (IRS data). Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
 
 ## Health, with no credentials
 
@@ -20,10 +20,21 @@ Tool calls, in order:
 
 ```text
 lookup_shelf_life({"storage_state": "refrigerated", "product_name": "Spinach"})
-find_matches({"donor_description": "A grocer in Chicago", "hours_remaining": 6, "needs_cold": true, "load_description": "ten crates of spinach", "pallets": 0.5})
+find_matches({"needs_cold": true, "donor_description": "A grocer in Chicago", "pallets": 1, "hours_remaining": 6, "load_description": "ten crates of spinach"})
 ```
 
 The structured brief is in [spinach-brief.json](spinach-brief.json) and the written answer in [spinach-answer.md](spinach-answer.md).
+
+## Question: How many recipients in the corpus have walk-in cold storage, and what share of all recipients is that?
+
+Tool calls, in order:
+
+```text
+execute_sql({"query": "SELECT COUNT(*) FROM `<lab-project-id>.a4i_food.recipients` WHERE cold_storage = 'walk-in'", "projectId": "<lab-project-id>"})
+execute_sql({"query": "SELECT COUNT(*) FROM `<lab-project-id>.a4i_food.recipients`", "projectId": "<lab-project-id>"})
+```
+
+The written answer is in [mcp-walk-in-answer.md](mcp-walk-in-answer.md).
 
 ## Question: 48 cases of sealed infant formula with 8 months to expiry from a distributor in Chicago, 2 pallets, can sit at room temperature.
 
@@ -31,7 +42,7 @@ Tool calls, in order:
 
 ```text
 lookup_shelf_life({"storage_state": "pantry", "product_name": "Infant formula"})
-find_matches({"hours_remaining": 5760, "needs_cold": false, "load_description": "48 cases of sealed infant formula", "pallets": 2, "donor_description": "A distributor in Chicago"})
+find_matches({"donor_description": "a distributor in Chicago", "pallets": 2, "load_description": "two pallets of infant formula", "hours_remaining": 5760, "needs_cold": false})
 ```
 
 The structured brief is in [sealed-formula-brief.json](sealed-formula-brief.json) and the written answer in [sealed-formula-answer.md](sealed-formula-answer.md).

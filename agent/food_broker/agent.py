@@ -104,11 +104,38 @@ def _identity_gate(callback_context):
     return None
 
 
+MCP_INSTRUCTION = """
+You also have Google's BigQuery tools (execute_sql, get_table_info, list_table_ids) for free-form questions about
+the data that a coordinator may ask outside a posting, such as how many recipients have a walk-in cooler, or which
+tracts have the lowest vehicle access. Use them only for such questions, only to read, and only on the tables in the
+dataset """ + os.environ.get("A4I_DATASET", "a4i_food") + """. Never use them to find a match for a posting:
+find_matches does that, with the filters.
+
+How to call them: the BigQuery project id is """ + os.environ.get("GOOGLE_CLOUD_PROJECT", "") + """ (pass it as
+projectId and write tables as `project.dataset.table`). Do not guess other project ids or column names. The tables:
+- recipients: recipient_id, name, street, city, state, zip_code, ntee_code, archetype, cold_storage ('none',
+  'domestic', 'walk-in', 'commercial', 'medical' or 'vehicle'), frozen_storage, loading_dock,
+  refrigerated_transport, max_pallets, pickup_window_hours, weekly_households, reported_income,
+  populations_served, service_days, profile_text, profile_source, latitude, longitude
+- tract_demographics: geo_id, tract_lat, tract_lon, total_pop, median_income, poverty_rate, no_vehicle_rate,
+  assistance_rate
+- surplus_postings: posting_id, track, posting_text, foodkeeper_product, storage_state, hours_available,
+  shelf_life_hours, hours_remaining
+- shelf_life: product_name, category, refrigerated_hours, pantry_hours
+If a query fails, read the error, call get_table_info if a column is in doubt, and try once more. State the query
+you ran. Recipient cold storage, capacity and pickup figures are generated, so say so when you quote them.
+"""
+
+
+def _instruction() -> str:
+    return INSTRUCTION + (MCP_INSTRUCTION if os.environ.get("A4I_MCP") == "1" else "")
+
+
 root_agent = Agent(
     name="food_broker",
     model=MODEL,
     description="Matches surplus food postings to recipient organizations under a clock.",
-    instruction=INSTRUCTION,
+    instruction=_instruction(),
     tools=_tools(),
     before_agent_callback=_identity_gate,
 )

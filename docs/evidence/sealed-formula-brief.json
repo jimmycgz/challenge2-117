@@ -25,14 +25,14 @@
     "populations_served": "Families with children",
     "tract": "Nearest census tract: 13% of residents below the poverty line, 54% of households without a vehicle, 0% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
   },
-  "outreach_message": "Hello Feeding America team,\n\nA distributor in Chicago has 48 cases of sealed infant formula. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 5760 hours from now, which leaves you roughly 5732 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "outreach_message": "Hello Feeding America team,\n\na distributor in Chicago has two pallets of infant formula. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 5760 hours from now, which leaves you roughly 5732 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
   "next_two_options": [
     {
       "rank": 2,
-      "name": "Beyond Hunger",
-      "address": "848 LAKE ST, OAK PARK, IL 60301",
-      "why": "walk-in cold storage, takes up to 22 pallets, collects within 45h",
-      "margin_hours": 5715,
+      "name": "Faces Of Change",
+      "address": "310 BUSSE HWY, PARK RIDGE, IL 60068",
+      "why": "commercial cold storage, takes up to 3 pallets, collects within 22h",
+      "margin_hours": 5738,
       "needs_driver": false
     },
     {
@@ -55,10 +55,10 @@
     },
     {
       "rank": 2,
-      "name": "Beyond Hunger",
-      "address": "848 LAKE ST, OAK PARK, IL 60301",
-      "why": "walk-in cold storage, takes up to 22 pallets, collects within 45h",
-      "margin_hours": 5715,
+      "name": "Faces Of Change",
+      "address": "310 BUSSE HWY, PARK RIDGE, IL 60068",
+      "why": "commercial cold storage, takes up to 3 pallets, collects within 22h",
+      "margin_hours": 5738,
       "needs_driver": false
     },
     {
@@ -73,20 +73,20 @@
   "rejected_but_close": [
     {
       "name": "Second Faith Temple Community Outreach",
-      "because": "capacity 1 pallets, load is 2"
+      "because": "capacity 1 pallet, load is 2"
     },
     {
-      "name": "Mano A Mano Unidos Ltd",
-      "because": "capacity 1 pallets, load is 2"
+      "name": "Khaan Foundation",
+      "because": "capacity 1 pallet, load is 2"
     },
     {
       "name": "Jm Foundation",
-      "because": "capacity 1 pallets, load is 2"
+      "because": "capacity 1 pallet, load is 2"
     }
   ],
   "refusal": null,
   "search": {
     "candidates_searched": 80,
-    "viable_after_filters": 25
+    "viable_after_filters": 17
   }
 }

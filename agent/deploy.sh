@@ -13,7 +13,8 @@
 #   PYTHON (interpreter with the agent's requirements, default python3), A4I_MODEL, NO_UI=1 for the API only
 #   (the chat page is on by default), OPEN=0 to require
 #   authentication (open by default, by the team's decision: ADK's API server has no authentication of its
-#   own, so spend is bounded by --max-instances, --concurrency and --timeout below), A4I_ALLOW_ORIGINS for CORS.
+#   own, so spend is bounded by --max-instances, --concurrency and --timeout below), A4I_ALLOW_ORIGINS for CORS,
+#   NO_MCP=1 to leave out the BigQuery MCP toolset.
 
 set -euo pipefail
 
@@ -54,6 +55,8 @@ ENV_VARS+=",GOOGLE_GENAI_USE_VERTEXAI=1,GOOGLE_CLOUD_LOCATION=${VERTEX_LOCATION}
 [[ -n "${A4I_MODEL:-}" ]] && ENV_VARS+=",A4I_MODEL=${A4I_MODEL}"
 # ADK's chat page is served by default; NO_UI=1 serves the API only.
 [[ "${NO_UI:-0}" != "1" ]] && ENV_VARS+=",A4I_UI_FLAG=--with_ui"
+# Google's managed BigQuery MCP server, for free-form questions about the data; NO_MCP=1 leaves it out.
+[[ "${NO_MCP:-0}" != "1" ]] && ENV_VARS+=",A4I_MCP=1"
 [[ -n "${A4I_ALLOW_ORIGINS:-}" ]] && ENV_VARS+=",A4I_ALLOW_ORIGINS=${A4I_ALLOW_ORIGINS}"
 
 echo "deploying ${SERVICE} to ${REGION} (${AUTH_FLAG})"

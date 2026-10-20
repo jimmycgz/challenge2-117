@@ -27,6 +27,11 @@ deadline. Then it calls one tool, `find_matches`, which does the rest in code:
 4. **Describe the neighborhood.** The top match's nearest census tract goes into the brief. Tract figures are
    never used to rank.
 
+For questions that are not a posting, such as how many recipients have a walk-in cooler, the agent also uses
+Google's managed BigQuery MCP server (`execute_sql`, `get_table_info`, `list_table_ids`), read-only and told which
+dataset to stay in. It is on in the deployed service. Matching a posting always goes through `find_matches`, never
+through free-form SQL, so the filters cannot be skipped.
+
 ### Why a plain top-k search is not enough
 
 Semantic search finds organizations whose profiles read like a good fit. It cannot see whether they have a walk-in
@@ -150,7 +155,7 @@ service, set `A4I_ALLOW_ORIGINS` to that origin by name, not `*`.
 | `A4I_EMBED_ENDPOINT` | Embedding model for the search; must match the one that built `recipient_embeddings` | `gemini-embedding-2` |
 | `A4I_MODEL` | Gemini model for the agent; use one the project has enabled | `gemini-2.5-flash` |
 | `A4I_METRO` | City named in the agent's instructions | `Chicago` |
-| `A4I_MCP` | `1` adds the BigQuery MCP toolset | Off |
+| `A4I_MCP` | `1` adds the BigQuery MCP toolset; `deploy.sh` sets it unless `NO_MCP=1` | Off |
 | `GOOGLE_CLOUD_PROJECT` | Project for the BigQuery client, `<lab-project-id>`; `deploy.sh` sets it | None |
 | `GOOGLE_GENAI_USE_VERTEXAI` | `1` sends Gemini calls to Vertex AI; `deploy.sh` sets it | Not set by this code |
 | `GOOGLE_CLOUD_LOCATION` | Vertex AI region, `<region>`; `deploy.sh` sets it from `VERTEX_LOCATION` | Not set by this code |
@@ -163,6 +168,6 @@ service, set `A4I_ALLOW_ORIGINS` to that origin by name, not `*`.
 | The agent end to end with Gemini on Vertex AI | Verified: ran |
 | Cloud Run service, open to the public | Verified: deployed, answered full questions with no credentials, chat page loads |
 | Offline selfcheck | Verified: passes |
-| BigQuery MCP toolset (off unless `A4I_MCP=1`) | Not verified: has not made a real call |
+| BigQuery MCP toolset | Verified: locally and on Cloud Run, a free-form question made two `execute_sql` calls and the agent's count (13 of 192) matched a direct query |
 | A browser front end | Not verified: none has been run against the agent |
 | Equity audit | Limited: one metro, ten postings |
