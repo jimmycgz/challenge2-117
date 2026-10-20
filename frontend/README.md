@@ -14,7 +14,7 @@ python3 frontend/serve.py
 
 Then open **`http://127.0.0.1:8090`** in your browser.
 
-* `serve.py` listens on `127.0.0.1` only, serves `frontend/index.html` and `frontend/recipients_data.js`, and proxies `/apps/*`, `/run`, `/run_sse`, `/list-apps`, and `/health` to the deployed Cloud Run service (`https://food-broker-817377390808.us-east1.run.app`).
+* `serve.py` listens on `127.0.0.1` only, serves `frontend/index.html` and `frontend/recipients_data.js`, provides transactional state endpoints (`/api/state`, `/api/state/claim`, `/api/state/decline`, `/api/state/release`, `/api/state/onboard`), and proxies `/apps/*`, `/run`, `/run_sse`, `/list-apps`, and `/health` to the deployed Cloud Run service (`https://food-broker-817377390808.us-east1.run.app`).
 * If you uncheck **Live Agent** in the header, nothing is sent to the agent. Four postings (spinach, potatoes, infant formula and the bakery case) have a saved Cloud Run answer in `frontend/recipients_data.js`, shown only for its own posting and labelled as saved. For any other posting, or when a live call fails, the page says that no live answer is available and does not show a saved answer from a different posting.
 
 ---
@@ -27,18 +27,15 @@ Then open **`http://127.0.0.1:8090`** in your browser.
    * Supports uploading/dropping produce crate or pallet label photos (`inlineData` base64 image sent to ADK's `POST /run`) + includes a 1-click **`[ 🥬 Load Sample Crate Tag ]`** generator for reproducible live demos.
 3. **🎙️ Push-to-Talk Voice Dictation:**
    * Built-in `SpeechRecognition` / `webkitSpeechRecognition` microphone button (`🎙️ Speak`) for hands-free coordinator intake and follow-up commands.
-4. **🛡️ Live openFDA Food Recall & Safety Gate ([Issue #11](https://github.com/jimmycgz/challenge2-117/issues/11)):**
-   * Automatically queries the public-domain (CC0) US Government `api.fda.gov/food/enforcement.json` endpoint for ongoing recalls matching the active food commodity, with a 1-click **`[ 🛑 Halt Load: Flag Recall / Spoilage ]`** safety lock. If the request fails or times out, the strip says "not checked", never "clear".
-5. **🗺️ Interactive Chicago Dispatch Map (Leaflet.js; 183 real organizations plus nine invented teaching cases, all ZIP-level):**
+4. **🛡️ Live openFDA Food Recall & Safety Gate + 3-Point Dock Checklist ([Issue #11](https://github.com/jimmycgz/challenge2-117/issues/11)):**
+   * Automatically queries the public-domain (CC0) US Government `api.fda.gov/food/enforcement.json` endpoint for ongoing recalls matching the active food commodity, with a 1-click **`[ 🛑 Halt Load: Flag Recall / Spoilage ]`** safety lock and 3-point Coordinator Dock Safety Checklist sign-off. If the request fails or times out, the strip says "not checked", never "clear".
+5. **🗺️ Interactive Chicago Dispatch Map (Leaflet.js + Google Maps JS SDK; 183 real organizations plus nine invented teaching cases, all ZIP-level):**
    * Plots the Primary Match (green), Next Two Backups (blue), and Rejected Semantic Decoys (red, with `semantic_rank` and the reason each was removed).
    * The donor pin is illustrative: an invented point, because the postings have no donor location. There are no route lines and no distances.
    * Invented teaching cases (`profile_source` is `"planted"`, or the ZIP is empty) are labelled "(invented teaching case)" and are not plotted; names not found in the location lookup are listed under the map without a pin.
-6. **⚡ Delivery & Expiry Timeline + Unexpected Delay Re-Router:**
-   * Visualizes `Now (0h)` → `Collection Lead Time` → `Spoilage / Dock Deadline` with slack margin coloring.
-   * Clicking **`[ 🚨 +3.5h Delay (At Risk → Auto Re-Route) ]`** shrinks the remaining clock, flags when the active recipient's lead time exceeds the remaining hours, and dispatches an automatic re-route turn to the agent.
-7. **🔒 Pallet Reservation Lock ([Issue #12](https://github.com/jimmycgz/challenge2-117/issues/12)), Pantry Onboarding ([Issue #10](https://github.com/jimmycgz/challenge2-117/issues/10)) & 3-Tier Problem Reporting:**
-   * **`[ 🔒 Claim & Lock Pallets ]`** tracks daily claimed pallet capacity per recipient.
-   * **`[ ⚠️ Cooler Broken ]` / `[ ⚠️ Capacity Full ]` / `[ ⚠️ Closed Today ]`** logs ground-truth profile corrections in the **Live Discrepancy, Lock & Safety Log** (exportable as JSON) and triggers an automatic re-match (`exclude_names`).
-   * **`[ 🐛 Report System Bug ]`** opens a pre-populated GitHub Issue on `jimmycgz/challenge2-117` with session context attached.
-8. **Next match:** **They said no — who's next?** and **Next Match** send "They said no. Who's next?" to the same agent session through `/run` and show the agent's own answer.
-9. **Equity Study:** a summary of the current figures (183 recipients, the nine invented cases left out) with a link to [`agent/food_broker/EQUITY-AUDIT.md`](../agent/food_broker/EQUITY-AUDIT.md).
+6. **📦 Multi-Recipient Load Splitter ([Issue #6](https://github.com/jimmycgz/challenge2-117/issues/6)):**
+   * Splits large 5–15 pallet farm offers (e.g., 10p Blueberries, 15p Squash, 5p Potatoes) across 2–4 verified Chicago recipients whose combined open pallet capacity covers the full load before the pickup clock expires, with individualized Split Outreach SMS drafts and 1-click pallet reservation locking.
+7. **🔒 Stateful Pallet Reservation Lock, `HTTP 409` Concurrency Guard ([Issue #12](https://github.com/jimmycgz/challenge2-117/issues/12)) & Conversational Pantry Onboarding ([Issue #10](https://github.com/jimmycgz/challenge2-117/issues/10)):**
+   * Transactional local state engine (`/api/state/*`) tracks daily claimed pallet capacity per recipient, returns `HTTP 409 LOCK_CONFLICT` on competing coordinator/driver claims, persists `"They Said No"` declines (`exclude_names`), and stores verified pantries with Track 1/2 unloading disambiguation.
+8. **⚖️ Interactive 10-Posting Equity Study & Counterfactual Explorer ([Issue #13](https://github.com/jimmycgz/challenge2-117/issues/13)):**
+   * Compares the 183 real Chicago organizations against the 192-row counterfactual (with the 9 planted teaching cases) across all 10 official postings and track filters (`Retail`, `Farm`, `Essentials`, `Repeat`), matching [`agent/food_broker/EQUITY-AUDIT.md`](../agent/food_broker/EQUITY-AUDIT.md).

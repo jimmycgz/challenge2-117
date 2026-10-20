@@ -23,6 +23,7 @@ data/*.parquet
 
 # ADK local session store (created by adk api_server and adk web)
 .adk/
+frontend/.broker_state.json
 
 # Local agent worktrees
 .claude/
