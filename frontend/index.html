@@ -3475,6 +3475,17 @@
       document.head.appendChild(script);
     }
 
+    window.gm_authFailure = function() {
+      window.gmap = null;
+      window.gmapOverlays = [];
+      const mapEl = document.getElementById("map");
+      if (mapEl) mapEl.innerHTML = "";
+      initMap();
+      updateMap(currentBrief);
+      const lbl = document.getElementById("mapsStatusLabel");
+      if (lbl) lbl.textContent = "Map Ready (CARTO)";
+    };
+
     window.onGoogleMapsLoaded = function() {
       try {
         if (!window.google || !window.google.maps) return;
