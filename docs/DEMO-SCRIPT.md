@@ -14,7 +14,7 @@ cannot ask questions, so every point below has to be said out loud or shown on s
 - The page lists everyone's test sessions. Type nothing personal.
 - Answers vary a little from run to run: the Gemini model rewrites the search and estimates the load, so the top
   recipient's name and the pallet estimate can change. Point at the structure, not at a name you expect.
-- Each answer takes about 13 seconds on Cloud Run and about 22 locally on gemini-2.5-flash (one measurement each; re-time on 3.8 after the deploy). Say something while it works, or cut the wait when you edit.
+- Each answer takes about 20 seconds on Cloud Run on gemini-3.8-flash at low thinking (19.9, 22.5 and 20.3 s, one sample each; the earlier 13 s was gemini-2.5-flash). Say something while it works, or cut the wait when you edit.
 - Keep a second window open on [the evidence folder](evidence/README.md). If the live page is slow or gone, show the
   same answers from there (see the fallback at the end).
 

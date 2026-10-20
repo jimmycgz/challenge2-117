@@ -93,7 +93,7 @@ the credentials before each agent run, the first BigQuery client and the MCP too
 
 When the 80 candidate rows passed through the language model, each model call took 76 to 86 seconds and a full answer
 ran past 3 minutes. `find_matches` runs the search, the filters and the brief inside the code, so the rows never
-reach the model. On gemini-2.5-flash a full answer took about 22 seconds locally and about 13 on Cloud Run (one measurement each). On gemini-3.8-flash at low thinking, spinach took 15.6 to 17.2 s locally, run alone, earlier in the day, and 22.5 to 28.5 s in four runs on the final branch (13:29 to 13:31 EDT, no other job of ours running, the BigQuery MCP toolset on); the Cloud Run figure for 3.8 is measured after the deploy.
+reach the model. On gemini-2.5-flash a full answer took about 22 seconds locally and about 13 on Cloud Run (one measurement each). On gemini-3.8-flash at low thinking, spinach took 15.6 to 17.2 s locally, run alone, earlier in the day, and 22.5 to 28.5 s in four runs on the final branch (13:29 to 13:31 EDT, no other job of ours running, the BigQuery MCP toolset on); on Cloud Run (revision `food-broker-00009-52v`, one sample each, 13:38 to 13:40 EDT) it took 19.9 s for spinach, 22.5 s for the "they said no" follow-up and 20.3 s for the farm posting.
 
 ## Results and limits
 

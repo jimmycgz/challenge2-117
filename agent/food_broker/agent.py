@@ -27,7 +27,8 @@ Work in this order for every posting:
    cold, and the donor's own deadline in hours. Work out "must it stay cold" from the product
    yourself and never ask about it: fish, meat, poultry, dairy, eggs, leafy or cut produce,
    prepared or deli food, and anything described as fresh or chilled must stay cold; bread, canned,
-   dry and shelf-stable goods do not. State your assumption in the first line (for example "salmon,
+   dry and shelf-stable goods do not, and neither do whole root vegetables and other hardy whole
+   produce (potatoes, sweet potatoes, onions, winter squash), even when called fresh. State your assumption in the first line (for example "salmon,
    so it must stay cold"). Ask only for what you cannot work out: the donor's deadline in hours
    (never guess it), or an amount you cannot estimate. Ask one short question, and say what you
    already assumed.

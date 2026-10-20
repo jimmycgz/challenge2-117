@@ -13,8 +13,9 @@ Presenter: ______ (write the name here, and use it in the opening line).
 
 - Open the chat page: the service address, then `/dev-ui/`. Pick the `food_broker` agent and start a new session.
 - The page lists everyone's test sessions. Type nothing personal.
-- An answer took about 13 seconds on Cloud Run and about 22 locally on gemini-2.5-flash (re-time on 3.8 after the deploy). The table says which waits you talk over and
-  which the editor cuts.
+- An answer on Cloud Run with gemini-3.8-flash at low thinking took 19.9 s (spinach), 22.5 s ("they said no") and 20.3 s
+  (farm), one sample each, measured 13:38 to 13:40 EDT on 2026-10-20, revision `food-broker-00009-52v`. The earlier
+  13 s figure was gemini-2.5-flash. Both live waits are cut in the edit, so the runtime does not depend on the model's speed.
 - Answers vary from run to run: Gemini rewrites the search, so the recipient names and ranks on screen can change.
   Read names off the screen. The only recipient this script names is from a saved run, and it says so.
 - Keep a second window open on the evidence folder with [demo-tracks.txt](evidence/demo-tracks.txt),
@@ -29,22 +30,24 @@ Segment 7, the data question, is not in the plan: it is an optional extra, under
 
 | # | Segment | Seconds | What is on screen | Words to say | Spoken words | Live wait included |
 |---|---|---|---|---|---|---|
-| 1 | The problem | 15 | Presenter on camera | "I'm [your name]. Our track is retail and grocer rescue, in Chicago. A grocer has ten crates of spinach that must leave in six hours and stay cold. Who can store it, and get there in time?" | 37 | None |
-| 2 | Paste the spinach offer | 22 | Chat page. Paste posting 1 (below), press enter, tool calls appear | "The agent pulls the eighty closest Chicago recipients by meaning with BigQuery vector search, then drops anyone who can't keep it cold, take the load or collect in time. Names and addresses are real, from IRS records, except nine invented teaching cases; storage, capacity and pickup times are generated." | 49 | Yes, about 13 s on Cloud Run, talked over. Locally about 22 s: the editor cuts what the talk doesn't cover |
+| 1 | The problem | 15 | Presenter on camera | "I'm [your name]. Our track is retail and grocer rescue, in metro Chicago. A grocer has ten crates of spinach that must leave in six hours and stay cold. Who can store it, and get there in time?" | 38 | None |
+| 2 | Paste the spinach offer | 22 | Chat page. Paste posting 1 (below), press enter, tool calls appear | "The agent pulls the eighty closest Chicago recipients by meaning with BigQuery vector search, then drops anyone who can't keep it cold, take the load or collect in time. Names and addresses are real, from IRS records, except nine invented teaching cases; storage, capacity and pickup times are generated." | 49 | Yes, about 20 s on Cloud Run (measured). Cut in the edit: record the wait, then cut it so the spoken words sit over the tool calls and the answer appearing |
 | 3 | The Match Brief | 9 | The answer, scrolled slowly from the summary to part 5 | "Six parts: who and why, what they can take, the clock and margin, and a message ready to send." If you name the recipient, read it off the screen | 19 | None |
 | 4 | The decoy | 40 | Part 6 of the live answer ("rejected but close"), then [demo-tracks.txt](evidence/demo-tracks.txt) (retail block), then [pool-study.txt](evidence/pool-study.txt) | In your own words. Facts in the section below | about 90 (estimate) | None |
-| 5 | "They said no" | 14 | Same session. Paste posting 2 (below); the new brief appears | "Say they turn it down. It searches again, skips whoever said no, and briefs the next one." Read the new name off the screen if you say it | 17 | Yes, about 13 s. Talk over the first 7 s; the editor cuts the rest (about 6 s, or 15 s locally). Uncut, this segment is 20 s |
+| 5 | "They said no" | 14 | Same session. Paste posting 2 (below); the new brief appears | "Say they turn it down. It searches again, skips whoever said no, and briefs the next one." Read the new name off the screen if you say it | 17 | Yes, about 22 s on Cloud Run (measured). Cut in the edit. The 17 words cover only about 8 s, so about 15 s of the wait has to come out at the measured 22.5 s. Plan the cut against 28 s (the slowest 3.8 run today), which is about 20 s out. Uncut at 28 s, this segment is about 34 s |
 | 6 | Other tracks | 9 | [demo-tracks.txt](evidence/demo-tracks.txt), farm and essentials blocks | "The same corpus and search also handled five tons of farm potatoes and sealed infant formula, with no rules per track." | 21 | None |
 | 8 | The audit | 26 | The group table in the [equity audit](../agent/food_broker/EQUITY-AUDIT.md) | "Did the food go where the need is? Counted per posting, our matches are close to the corpus, with no consistent direction. Counted per recipient they sit lower, because one pantry won three of the four retail offers. Weighted by estimated volume, assistance is nine percent against a corpus mean of nineteen. Ten postings can't separate a real skew from noise." | 61 | None |
 | 9 | The close | 18 | Presenter on camera, or the repository's front page | In your own words. Facts in the section below | about 45 (estimate) | None |
-| | **Total** | **153** | | | **about 339** | Two live answers, 26 s of waiting: 20 s talked over, 6 s cut |
+| | **Total** | **153** | | | **about 340** | Two live answers, both waits cut in the edit |
 
-153 seconds is 2:33, which leaves 7 seconds for a slow answer or a stumble before the 2:40 target. If the editor does
-not cut the wait in segment 5, the total is 159. Recorded against the local server with no cuts at all, it is at least
-about 168, so cut the waits.
+153 seconds is 2:33, which leaves 7 seconds for a stumble before the 2:40 target. With both waits cut, the total is 153
+whatever the model's speed. If neither is cut, segment 2's 49 words (about 22 s) just cover its 20 s wait, and segment 5's
+17 words (about 8 s) leave about 15 s of dead air at the measured 22.5 s, so the total is about 168 (2:48). Earlier today
+the same model took up to 28.5 s, and at 28 s the uncut total is about 173 (2:53), seven seconds from the organizers'
+limit. Cut both, and cut segment 5's wait down to the 8 s the narration covers.
 
-About 339 words in 153 seconds is about 133 words a minute, in the planned range once the waiting is paid for. Six
-segments are scripted and counted exactly (204 words). The two own-words counts (about 90 for segment 4, about 45 for
+About 340 words in 153 seconds is about 133 words a minute, in the planned range once the waiting is paid for. Six
+segments are scripted and counted exactly (205 words). The two own-words counts (about 90 for segment 4, about 45 for
 segment 9) are estimates: the facts below said plainly and briefly. Said more loosely, segment 4 runs to about 115
 words, which does not fit in 40 seconds, so keep it tight or it eats the 7-second margin.
 
@@ -109,8 +112,8 @@ the limits in the close.
 The other way round: if a take comes in short, at 2:31 or under, you may add segment 7, the data question, after
 segment 6. It takes about 9 seconds and 22 words, so the take still ends by 2:40. Show the saved answer,
 [mcp-walk-in-answer.md](evidence/mcp-walk-in-answer.md), and say: "Data questions go through Google's managed BigQuery
-MCP server, read-only: of the hundred and eighty-three real recipients, six have a walk-in cooler." Typing it live adds about 13 s more, so
-do that only if the take is at 2:18 or under. The question to type, in the same session:
+MCP server, read-only: of the hundred and eighty-three real recipients, six have a walk-in cooler." Typing it live adds about 16 s more (15.6 s
+measured on Cloud Run, one sample), so do that only if the take is at 2:15 or under. The question to type, in the same session:
 
 ```text
 Not counting the invented teaching cases (profile_source 'planted'), how many recipients have walk-in cold storage, and what share is that?
@@ -141,4 +144,4 @@ The saved spinach answer ranks its rejections differently from demo-tracks.txt. 
 | 7 (optional) | 6 of 183 real recipients (the table has 13 of 192; seven of those walk-ins are invented cases). The saved file was recaptured at 12:41 EDT on 2026-10-20 from the agent running locally and shows the query filtering on `profile_source`; it is recaptured again from the live service after the next deploy | [mcp-walk-in-answer.md](evidence/mcp-walk-in-answer.md) |
 | 8 | Per posting, per recipient, three of four retail offers, 9% against a mean of 19%, ten postings | [equity audit](../agent/food_broker/EQUITY-AUDIT.md), group table and "What the numbers say" |
 | 9 | Shelf life is consumer guidance; locations are ZIP-level | [agent README](../agent/food_broker/README.md), "Results and limits" |
-| Before you record | About 13 s on Cloud Run, about 22 s locally (gemini-2.5-flash; re-time on 3.8) | [agent README](../agent/food_broker/README.md), "Speed" |
+| Before you record | 19.9 s, 22.5 s and 20.3 s on Cloud Run, gemini-3.8-flash low thinking, one sample each | [model-call-timings.txt](evidence/model-call-timings.txt), "Cloud Run on 3.8" |
