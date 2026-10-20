@@ -76,6 +76,14 @@ def vector_candidates(posting_text: str, top_k: int = 80) -> list[dict]:
     return [dict(row) for row in job.result()]
 
 
+def _shelf_caution(hours) -> Optional[str]:
+    """Warn when a shelf life is short enough to be an opened-container figure, not a sealed product's."""
+    if hours is not None and hours <= 2:
+        return ("Under 2 hours is probably FoodKeeper's figure for an opened container. If the posting "
+                "says the product is sealed or gives its own expiry, use the donor's figure instead.")
+    return None
+
+
 def lookup_shelf_life(product_name: str, storage_state: str = "refrigerated") -> dict:
     """USDA FoodKeeper shelf life for a product, in hours (consumer guidance, not cold-chain science).
 
@@ -85,6 +93,7 @@ def lookup_shelf_life(product_name: str, storage_state: str = "refrigerated") ->
 
     Returns:
         {"product", "storage_state", "hours", "note"}; hours is None when FoodKeeper has no figure.
+        A "caution" key is added when the figure is under 2 hours (likely an opened-container figure).
     """
     from google.cloud import bigquery
 
@@ -107,8 +116,12 @@ def lookup_shelf_life(product_name: str, storage_state: str = "refrigerated") ->
         return {"product": product_name, "storage_state": storage_state, "hours": None,
                 "note": "product not in FoodKeeper under that name"}
     r = rows[0]
-    return {"product": r.product_name, "storage_state": storage_state, "hours": r.hours,
-            "note": r.note}
+    result = {"product": r.product_name, "storage_state": storage_state, "hours": r.hours,
+              "note": r.note}
+    caution = _shelf_caution(r.hours)
+    if caution:
+        result["caution"] = caution
+    return result
 
 
 def _pallets(n) -> str:

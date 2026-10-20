@@ -141,6 +141,10 @@ def main():
     finally:
         T.vector_candidates, T.lookup_neighborhood = real_search, real_nb
 
+    from food_broker.tools import _shelf_caution
+    assert _shelf_caution(1.0) and _shelf_caution(2.0), "a 1 or 2 hour shelf life must carry a caution"
+    assert _shelf_caution(168.0) is None and _shelf_caution(None) is None
+
     print("selfcheck passed:", len(CANDIDATES), "candidates,", len(viable), "viable for spinach")
 
 

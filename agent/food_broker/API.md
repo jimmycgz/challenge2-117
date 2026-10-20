@@ -160,7 +160,9 @@ The `find_matches` response is `{"error": {"code": "...", "message": "..."}}` an
 
 The written answer then says plainly that it could not find a match.
 
-## Not yet decided
+## Who can call it
 
-How the deployed service is protected. ADK's API server has no authentication of its own, so a deployed copy will
-sit behind Cloud Run's access control; this page will say what the front end must send once that is set.
+The deployed service is open: no credentials are needed, so a browser or `curl` can call it directly. ADK's chat page
+is at the service root. ADK's API server has no authentication of its own, so the deploy limits spend (at most 2
+instances, 4 concurrent requests, a 120-second timeout). A page served from a different origin than the service needs
+CORS, which is off until `A4I_ALLOW_ORIGINS` is set when the service is deployed; ask the agent lane.

@@ -26,7 +26,9 @@ Work in this order for every posting:
    cold, and the donor's own deadline in hours. If the amount or the deadline is missing and it
    changes the answer, ask one short question. Do not guess a deadline.
 2. If the product is a food, call lookup_shelf_life. hours_remaining is the smaller of the
-   donor's deadline and the shelf life. Say which one set the clock.
+   donor's deadline and the shelf life. Say which one set the clock. If the result has a
+   caution, or the posting says the product is sealed or gives its own expiry, trust the donor's
+   figure over the shelf life and say so.
 3. Call find_matches once. Give it the posting rewritten as plain language that describes what a
    good recipient looks like (storage, kind of food, scale) as search_text, the hours remaining,
    whether it must stay cold, the load in pallets, the load in a few words and the donor in a few
