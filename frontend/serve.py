@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Local static server + CORS proxy for the Chicago Food Rescue Coordinator Dispatch Console.
 
-Serves `frontend/index.html` at http://localhost:8090 and proxies `/apps/*`, `/run`, `/run_sse`,
+Serves `frontend/index.html` at http://127.0.0.1:8090 (loopback only) and proxies `/apps/*`, `/run`, `/run_sse`,
 `/list-apps`, and `/health` to the deployed Cloud Run service (`A4I_BACKEND_URL`) so browser requests
 succeed even when `A4I_ALLOW_ORIGINS` is not set on Cloud Run.
 
@@ -83,7 +83,8 @@ class ConsoleHandler(http.server.SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    server = http.server.ThreadingHTTPServer(("0.0.0.0", PORT), ConsoleHandler)
-    print(f"Coordinator Dispatch Console running at http://localhost:{PORT}")
+    # Loopback only, so other machines on the network cannot use this as an open relay.
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", PORT), ConsoleHandler)
+    print(f"Coordinator Dispatch Console running at http://127.0.0.1:{PORT}")
     print(f"Proxying ADK API calls to {BACKEND_URL}")
     server.serve_forever()
