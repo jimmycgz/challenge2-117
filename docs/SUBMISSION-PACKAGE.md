@@ -12,7 +12,7 @@ This document bundles **everything required for the Challenge 2 (Food Rescue & R
 | :--- | :--- | :--- | :--- |
 | **1** | **GitHub Repository Link** | `https://github.com/jimmycgz/challenge2-117` *(Tagged `submission` on `main`)* | ✅ Public / Judge-Accessible |
 | **2** | **Environment / Live Application Link** | - **Live Coordinator Dispatch Console (Cloud Run):** `https://food-broker-ui-817377390808.us-east1.run.app`<br/>- **Live Cloud Run ADK Dev UI:** `https://food-broker-817377390808.us-east1.run.app/dev-ui/`<br/>- **Qwiklabs Lab Environment Link:** *(Paste the active Qwiklabs student lab URL from the Skills console)* | ✅ Both Deployed (`food-broker-ui-00006-xbm` & `food-broker-00012-jhq`) |
-| **3** | **Pitch Deck (PDF / Link)** | - **Visual Slide Deck:** [`docs/pitch-deck.html`](pitch-deck.html) *(Open in Chrome → `Ctrl+P` → **Save as PDF** → Upload PDF)*<br/>- **Markdown Deck Outline:** [`docs/DECK-OUTLINE.md`](DECK-OUTLINE.md) | ✅ Answers all 4 Mandatory Judge Checks |
+| **3** | **Pitch Deck (PDF / Link)** | - **Ready-to-Upload 14-Slide PDF Deck (Table 17):** [`docs/RescueBroker-Pitch-Deck.pdf`](RescueBroker-Pitch-Deck.pdf) *(GitHub link: `https://github.com/jimmycgz/challenge2-117/blob/main/docs/RescueBroker-Pitch-Deck.pdf`)*<br/>- **Alternative HTML Deck / Outline:** [`docs/pitch-deck.html`](pitch-deck.html) · [`docs/DECK-OUTLINE.md`](DECK-OUTLINE.md) | ✅ Complete 14-Slide PDF Ready to Upload |
 | **4** | **Pitch / Demo Video (≤ 3 Minutes)** | - **Click-by-Click Walkthrough Script:** [`docs/DEMO-SCRIPT.md`](DEMO-SCRIPT.md)<br/>- **Timed 2:33 Video Script:** [`docs/VIDEO-SCRIPT-3MIN.md`](VIDEO-SCRIPT-3MIN.md)<br/>- **Video Link:** *(Upload MP4 / YouTube Unlisted / Loom / Drive link before 16:59 EDT)* | ⏳ Record & Paste Link |
 
 ### Copy-Paste Project Summary (For Portal Description / Notes Field)
@@ -81,27 +81,26 @@ find_matches({"hours_remaining": 6, "pallets": 0.5, "needs_cold": true, "donor_d
 
 ---
 
-## 🖥️ 3. Slide Deck Package (`docs/pitch-deck.html` & `docs/DECK-OUTLINE.md`)
+## 🖥️ 3. Slide Deck Package ([`docs/RescueBroker-Pitch-Deck.pdf`](RescueBroker-Pitch-Deck.pdf) & [`docs/pitch-deck.html`](pitch-deck.html))
 
-### How to Export the PDF Pitch Deck in 10 Seconds
-1. Open [`docs/pitch-deck.html`](pitch-deck.html) in Google Chrome.
-2. Press **`Ctrl+P`** (or **`Cmd+P`** on macOS).
-3. Set **Destination** to **Save as PDF**, **Layout** to **Landscape**, **Margins** to **None**, and check **Background graphics**.
-4. Save as `Chicago-Food-Rescue-Broker-Pitch-Deck.pdf` and upload to the AngelHack portal.
+### Primary Ready-to-Upload PDF Deck (`docs/RescueBroker-Pitch-Deck.pdf` — 14 Slides, Table 17)
+The official Google Cloud *Agents for Impact · Build with Gemini* 14-slide PDF deck is saved at [`docs/RescueBroker-Pitch-Deck.pdf`](RescueBroker-Pitch-Deck.pdf) and maps to every judging question:
 
-### How the 12 Slides Answer Every Judge Rubric & Mandatory Check
-- **Slide 1:** Title, Track 1 (Retail & Grocer Rescue), & Live Cloud Run / Repo Links.
-- **Slide 2:** The 2 PM Thursday Grocer Problem & Verbatim 6-Part Spinach Match Brief.
-- **Slide 3:** 6-Turn Coordinator Workflow (*"They said no"*, *"Why not Greenline?"*, *"Why not the Food Depository?"*).
-- **Slide 4 (Mandatory Check #1 — Semantic Decoy):** Why `Greenline Community Pantry` (#1/#3 by meaning, no cooler, 12h pickup) is rejected and why `top_k=80` is required (`k=15 → 1`, `k=40 → 3`, `k=80 → 12`).
-- **Slide 5 (Mandatory Check #2 — Time-to-Expiry & Transport):** Effective clock formula (`min(donor_hours, shelf_life_if_>=2h)`), the `< 2.0h` USDA opened-formula trap guard, and volunteer driver vs. recipient refrigerated van flags.
-- **Slide 6 (Mandatory Check #3 — Cross-Track Generalization):** Zero per-track code changes across Retail Spinach (`0.5p`), Farm Potatoes (`5p`), Sealed Infant Formula (`168h`), and 1-Hour Bakery Safe Refusal.
-- **Slide 7:** Single-Agent Architecture (`gemini-3.8-flash` low thinking + deterministic Python constraint filter + managed BigQuery MCP toolset + identity guard).
-- **Slide 8 (Mandatory Check #4 — 10-Posting Equity Audit):** 3-way analysis across 1,004 Chicago census tracts and 183 real recipients (per-posting `21.9%` poverty, per-unique-recipient `17.6%`, and pallet-weighted `9.0% vs 19.3%` public assistance due to the 14 loading-dock bottleneck).
-- **Slide 9:** Coordinator Dispatch Console UI (`frontend/index.html`) — Ticking Queue, Chicago Map, Crate Tag Vision, Voice Dictation, and Delay Re-Router.
-- **Slide 10:** Stretch Goals Built (#6 Multi-Recipient Farm Load Splitter, #10 Pantry Intake Wizard, #11 Live openFDA Recall Gate + 3-Point Dock Checklist, #12 Stateful Pallet Locking & `HTTP 409` Conflict Guard, #13 Interactive Equity Counterfactual Explorer).
-- **Slide 11:** Model & Speed Benchmarks (`gemini-3.8-flash` low thinking `41/42` behavior score vs `gemini-2.5-flash` `38/42`, `~20s` measured on Cloud Run).
-- **Slide 12:** Honest Limits (183 real IRS names/addresses + 9 labeled teaching cases, generated storage/lead times, consumer shelf-life guidance, ZIP-level coordinates) & Next Steps.
+- **Slide 1:** Title (`RescueBroker — Surplus food to the right pantry, under a clock · Table 17 · Challenge 2 · Track 1, retail and grocer rescue, Chicago`).
+- **Slide 2:** *A matching problem under a clock* (10 crates of spinach, 6 hours left: What just became available, Who could use it, What can they store, How long does it have).
+- **Slide 3:** *From a text message to a call-ready brief* (`Food clock → Search by meaning (80 closest) → Hard filters (Cold · room · time) → Rank (Safe margin first) → Match Brief (Message ready to send)`).
+- **Slide 4:** *How the pieces fit* (Cloud Run `food_broker` ADK agent, Identity guard, `lookup_shelf_life`, `find_matches`, `explain_candidate`, Google-managed BigQuery MCP, and BigQuery `a4i_food` with `192 (9 invented)` recipients).
+- **Slide 5 (Mandatory Check — Semantic Decoy & Pool Study):** *Meaning alone picks the wrong pantry* (3 closest by meaning eliminated including the no-fridge decoy; `Top 15 → 1 viable | Top 40 → 3 viable | Top 80 → 12 viable`).
+- **Slide 6:** *From 80 candidates to one call* (`80 Closest by meaning → 12 Pass hard filters → 3 Ranked options → 1 Message ready to send`).
+- **Slide 7:** *When a pantry says no, the next call is ready* (`Brief sent → They say no → Search again (Skips everyone who declined) → Next brief`).
+- **Slide 8 (Mandatory Check — Cross-Track Generalization):** *One pipeline for every kind of surplus* (`Grocer produce: 10 crates spinach`, `Farm surplus: 5 tons potatoes`, `Family essentials: 48 cases sealed formula`, `No match: 40 trays cream pastries in 1 hour`).
+- **Slide 9:** *Ten offers, how many pantries can take each?* (Bar chart across all 10 offers: `1 to 46 pantries can take an offer — blueberries: 1, diapers: 46`).
+- **Slide 10 (Mandatory Check — Edge Cases & Read-Only MCP):** *What the agent decides for itself* (`Nobody can take it? It says so`, `Sealed formula is not a 1-hour item`, `A kitchen fridge is not a cooler (≤ 1 pallet)`, `Data questions use a read-only tool (SELECT only)`).
+- **Slide 11 (Mandatory Check — 10-Posting Equity Audit):** *Per offer, close to the corpus; big loads, less assistance* (`All 183 recipients` vs `Per offer (10)` vs `Per recipient (8)` vs `Weighted by pallets: 9% assistance against 19%`).
+- **Slide 12 (Mandatory Check — Honest Limits & Next Steps):** *Limits today, and what is next* (Real names except 9 invented test cases, generated storage/pickup times, ZIP-level locations, consumer shelf-life guidance, `23/25` notebook validation checks, and Next: *Remember who got food* & *Split a big load*).
+- **Slide 13 & Slide 14:** *Thank you* + *Backup: the full diagram* (including `Inside find_matches` sub-pipeline).
+
+*(Note: [`docs/pitch-deck.html`](pitch-deck.html) is also included in `docs/` as an interactive HTML companion that embeds the verbatim 6-part Spinach Match Brief text and UI screenshots.)*
 
 ---
 
