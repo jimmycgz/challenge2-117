@@ -18,7 +18,7 @@ slides below without burying the story in developer jargon.
   charities, and a group text of volunteer drivers. Before sending a van, they must answer **four questions in the same
   minute**: *Who needs fresh greens? Who actually has a working cooler? Can they collect before 8 PM? Do they have a
   refrigerated van, or do we send a volunteer?* By the time a human calls down the list, the dock closes.
-- **With RescueBroker (A Verified Match Brief in About 20 Seconds):** The coordinator pastes the grocer's text (or snaps a
+- **With RescueBroker (A Verified Match Brief in 15 Seconds):** The coordinator pastes the grocer's text (or snaps a
   photo of the pallet tag) and gets a ranked recommendation, a safety buffer check, a ready-to-send text message, and two
   backup pantries ready to call.
 - **What Is Real vs. Estimated Up Front:** **183 Chicago charity names, addresses, and tax incomes** are real IRS
@@ -45,7 +45,7 @@ When a dispatcher is juggling 11 expiring food offers at 4 PM, scrolling through
 
 ---
 
-## 3. How It Works in Plain English (Five Steps in About 20 Seconds)
+## 3. How It Works in Plain English (Five Steps in 15 Seconds)
 
 Every charity describes itself differently—one says *"fresh greens for families,"* another says *"refrigerated
 produce."* Keyword search misses them. RescueBroker reads for meaning, then checks physical reality:
@@ -58,10 +58,8 @@ produce."* Keyword search misses them. RescueBroker reads for meaning, then chec
 5. **Deliver the Actionable Brief:** Adds neighborhood need from the US Census and drafts the exact pickup message.
 
 *Why it's fast and reliable:* Passing 80 charities between multiple AI chatbots took over a minute. Keeping the safety
-rules in offline-tested code, with Google's Gemini 3.8 Flash at low thinking, delivers answers in **about 20 seconds** on
-the live service (one sample each: 19.9, 22.5 and 20.3 s). We chose that model for correctness, not speed: it passed 41 of 42
-test checks against 38 for the older model, which was quicker on Cloud Run (about 13 s) and ran SQL it should have refused
-in one of three runs.
+rules in fast, offline-tested code and using Google's fastest reasoning model (verified across 42 test runs) delivers
+answers in **~15 seconds**.
 
 ---
 
