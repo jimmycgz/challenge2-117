@@ -2,14 +2,39 @@
 
 Track 1, retail and grocer rescue, metro Chicago. Live agent: https://food-broker-817377390808.us-east1.run.app/dev-ui/ (pick `food_broker`). Gemini 3.8 Flash on Vertex AI, BigQuery vector search, Google's managed BigQuery MCP server, Cloud Run.
 
-Start here: [the agent README](agent/food_broker/README.md). It covers what we built, why a plain search is not
-enough, the results and the limits.
+## Index
 
-- [Demo script](docs/DEMO-SCRIPT.md) and [captured output from the live service](docs/evidence/README.md)
-- [Equity audit](agent/food_broker/EQUITY-AUDIT.md)
-- [How to call the agent and what comes back](agent/food_broker/API.md)
-- [Design as built](docs/DESIGN.md) and [test cases](docs/TEST-CASES.md)
-- [Submission checklist](docs/SUBMISSION.md)
+**Read first**
+
+- [The agent README](agent/food_broker/README.md): what we built, why a plain search is not enough, results, limits, what is verified.
+- [Design as built](docs/DESIGN.md) and [diagrams](docs/diagrams/README.md) (architecture and icons, SVG and PNG).
+- [Pitch deck, PDF](docs/RescueBroker-Pitch-Deck.pdf) (the extended deck) and [deck outline](docs/DECK-OUTLINE.md).
+
+**Evidence, from the live service**
+
+- [Captured output index](docs/evidence/README.md): answers for spinach, farm, formula and bakery; the six-turn conversation; the decoy and frozen-food cases.
+- [Notebook validation results](docs/evidence/validation.txt) (23 of 25 checks pass, both failures explained).
+- [Read-only SQL probe](docs/evidence/readonly-mcp-write-probe.md), [timings](docs/evidence/model-call-timings.txt), [pool study](docs/evidence/pool-study.txt), [invariant check](docs/evidence/invariants.txt).
+- [Equity audit](agent/food_broker/EQUITY-AUDIT.md) and [test cases](docs/TEST-CASES.md).
+
+**Run it**
+
+- [Teammate setup](agent/README.md): shared settings, setup order, eight read-only checks.
+- [How to call the agent and what comes back](agent/food_broker/API.md).
+- [Deploy script](agent/deploy.sh) and [shared settings](agent/lab.env).
+- [Dispatch console](frontend/README.md) (the coordinator's browser front end).
+
+**Demo and submission**
+
+- [Demo script](docs/DEMO-SCRIPT.md), [three-minute video script](docs/VIDEO-SCRIPT-3MIN.md), [submission package](docs/SUBMISSION-PACKAGE.md) and [checklist](docs/SUBMISSION.md).
+
+**Data and notebook**
+
+- [Data notes](data/README.md), [load script](scripts/README.md), and the organizers' [notebook](notebooks/c2_01_load_explore.ipynb).
+
+**Code**
+
+- [agent.py](agent/food_broker/agent.py) (the agent and its instructions), [tools.py](agent/food_broker/tools.py) (the search, filters, ranking and brief), [identity_guard.py](agent/food_broker/identity_guard.py), [selfcheck.py](agent/food_broker/selfcheck.py).
 
 The organizers' challenge brief follows, unchanged.
 

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" role="img">
+  <title>Delivery van</title>
+  <path d="M13 46 H6 V16 H40 V46"/>
+  <path d="M23 46 H41"/>
+  <path d="M40 24 H50 L58 34 V46 H51"/>
+  <path d="M44 24 V34 H58"/>
+  <circle cx="18" cy="46" r="5"/>
+  <circle cx="46" cy="46" r="5"/>
+</svg>
