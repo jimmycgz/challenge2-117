@@ -220,6 +220,19 @@ def main():
     finally:
         T2.vector_candidates = keep
 
+    # A person whose credentials come from the metadata server (Cloud Shell, Workbench) is reported with their own email as
+    # the "service account email". They must be judged as a user, by the account suffix, not by the service-account rules.
+    from food_broker.identity_guard import _principal_of
+
+    class MetadataCreds:  # what google-auth returns in Cloud Shell
+        service_account_email = "student-00-abc@labs.example"
+
+    class ServiceAccountCreds:
+        service_account_email = "svc@some-project.iam.gserviceaccount.com"
+
+    assert _principal_of(MetadataCreds()) == ("student-00-abc@labs.example", False, False), _principal_of(MetadataCreds())
+    assert _principal_of(ServiceAccountCreds())[1] is True, "a real service account must still be judged as one"
+
     print("selfcheck passed:", len(CANDIDATES), "candidates,", len(viable), "viable for spinach")
 
 

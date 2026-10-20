@@ -42,6 +42,6 @@ Teammates pick up open issues (`needs-pickup` or `optional-pickup`) themselves. 
    * **Top Matches Per Distinct Recipient (n=8):** Mean `16%` poverty, `24%` households without a vehicle, `15%` assistance.
    * **Top Matches Weighted by Pallets (37.5 pallets):** `14%` poverty, `32%` households without a vehicle, `9%` assistance (only 14 of 183 recipients have a dock or room for 5+ pallets).
 4. **Honest Limitations & Caught Data Bug:**
-   * USDA FoodKeeper gave sealed infant formula `1 hour` (an opened-container figure); `_shelf_caution` warns on `<= 2h` figures and uses the donor's 8-month expiry.
+   * USDA FoodKeeper gave sealed infant formula `1 hour` (a prepared-formula figure); `_shelf_caution` warns on `<= 2h` figures and uses the donor's 8-month expiry.
    * Recipient coordinates are ZIP-level; `ST_DISTANCE` is used only to find the nearest census tract internal point. There is no donor location and no donor-to-recipient distance.
    * No delivery history store (fastest collector wins repeated short-clock offers) and no multi-recipient load splitting built yet.

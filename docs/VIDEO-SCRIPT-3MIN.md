@@ -13,7 +13,7 @@ Presenter: ______ (write the name here, and use it in the opening line).
 
 - Open the chat page: the service address, then `/dev-ui/`. Pick the `food_broker` agent and start a new session.
 - The page lists everyone's test sessions. Type nothing personal.
-- An answer takes about 13 seconds on Cloud Run and about 22 locally. The table says which waits you talk over and
+- An answer took about 13 seconds on Cloud Run and about 22 locally on gemini-2.5-flash (re-time on 3.8 after the deploy). The table says which waits you talk over and
   which the editor cuts.
 - Answers vary from run to run: Gemini rewrites the search, so the recipient names and ranks on screen can change.
   Read names off the screen. The only recipient this script names is from a saved run, and it says so.
@@ -141,4 +141,4 @@ The saved spinach answer ranks its rejections differently from demo-tracks.txt. 
 | 7 (optional) | 6 of 183 real recipients (the table has 13 of 192; seven of those walk-ins are invented cases). The saved file was recaptured at 12:41 EDT on 2026-10-20 from the agent running locally and shows the query filtering on `profile_source`; it is recaptured again from the live service after the next deploy | [mcp-walk-in-answer.md](evidence/mcp-walk-in-answer.md) |
 | 8 | Per posting, per recipient, three of four retail offers, 9% against a mean of 19%, ten postings | [equity audit](../agent/food_broker/EQUITY-AUDIT.md), group table and "What the numbers say" |
 | 9 | Shelf life is consumer guidance; locations are ZIP-level | [agent README](../agent/food_broker/README.md), "Results and limits" |
-| Before you record | About 13 s on Cloud Run, about 22 s locally | [agent README](../agent/food_broker/README.md), "Speed" |
+| Before you record | About 13 s on Cloud Run, about 22 s locally (gemini-2.5-flash; re-time on 3.8) | [agent README](../agent/food_broker/README.md), "Speed" |
