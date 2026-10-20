@@ -1,0 +1,31 @@
+{
+  "organization_and_why": null,
+  "what_they_can_take": null,
+  "the_clock": {
+    "hours_remaining": 1,
+    "margin_hours": null
+  },
+  "whose_neighborhood": null,
+  "outreach_message": null,
+  "next_two_options": [],
+  "ranked": [],
+  "rejected_but_close": [
+    {
+      "name": "Open Door Outreach Center",
+      "because": "needs 8h to collect, food has 1h"
+    },
+    {
+      "name": "Chicago Food Rescue",
+      "because": "needs 8h to collect, food has 1h"
+    },
+    {
+      "name": "Willis House Of Refuge Nfp",
+      "because": "needs 8h to collect, food has 1h"
+    }
+  ],
+  "refusal": "No candidate can take this load in time. The closest rejections are listed with the reason each was eliminated.",
+  "search": {
+    "candidates_searched": 80,
+    "viable_after_filters": 0
+  }
+}

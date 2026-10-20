@@ -140,7 +140,7 @@ This example is illustrative: the organizations are invented.
 | `outreach_message` | A draft ready to send, ending in `[Coordinator name]` |
 | `next_two_options` | Ranks 2 and 3, because the first will sometimes say no |
 | `ranked` | Ranks 1 to 3 with the same card fields. Fewer than three if fewer survived the filters |
-| `rejected_but_close` | Semantic matches the filters removed, each with the reason |
+| `rejected_but_close` | Up to three semantic matches the filters removed, each with the reason and its rank by meaning (`semantic_rank`, 1 is closest). One that failed on cold storage is always included when there is one |
 | `refusal` | `null`, or a sentence when nobody can take the load |
 | `search` | `candidates_searched` and `viable_after_filters`: how wide the search was and how many survived |
 

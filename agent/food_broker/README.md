@@ -44,7 +44,12 @@ recipients, a 6-hour spinach offer left this many viable recipients after the fi
 | 40 | 3 |
 | 80 | 12 |
 
-A pool of 15 gives one choice and no fallback, even though good recipients exist further down the list. So the
+A pool of 15 gives one choice and no fallback, even though good recipients exist further down the list.
+The closest recipients by meaning are often the wrong ones. For that spinach offer the three nearest were all
+removed: two could not collect in time, and Greenline Community Pantry (an invented case in the challenge corpus)
+wrote that its families ask for fresh greens and that it has no refrigeration of any kind. The first recipients
+that pass the filters sit at positions 50, 54 and 63 in the search. [demo-tracks.txt](../../docs/evidence/demo-tracks.txt)
+shows it, with each recipient's rank by meaning. So the
 pool is wide and the filters do the narrowing. The challenge brief warns that at least one organization looks
 perfect and cannot store the food; the offline selfcheck plants that decoy and fails if it gets through.
 

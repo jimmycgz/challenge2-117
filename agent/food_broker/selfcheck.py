@@ -42,11 +42,28 @@ def main():
     big = apply_constraints(CANDIDATES, hours_remaining=48, needs_cold=True, pallets=5)
     assert "Third Ward Community Table" not in [v["name"] for v in big["viable"]]
 
+    ok_pre = build_match_brief("x", 6, out["viable"], out["eliminated"], pallets=0.5)
+
     # Nothing viable must produce an explicit refusal, not a guess.
     none = apply_constraints(CANDIDATES, hours_remaining=1, needs_cold=True, pallets=0.5)
     brief = build_match_brief("10 crates of spinach", 1, none["viable"], none["eliminated"])
     assert brief["organization_and_why"] is None and brief["refusal"], brief
     assert brief["rejected_but_close"], "refusal must show the closest rejections"
+
+    decoy = [r for r in ok_pre["rejected_but_close"] if r["name"] == "Greenline Community Pantry"]
+    assert decoy and decoy[0]["semantic_rank"] == 1 and "no cold storage" in decoy[0]["because"], \
+        "the no-cold-storage decoy must appear in rejected_but_close with its semantic rank"
+
+    # The rule must do real work: put the no-cold-storage decoy at semantic rank 5, behind four recipients that fail
+    # only on the clock. Without the rule the three nearest rejections would all be clock failures.
+    far = [row(f"Slow{i}", "walk-in", 10, 24, 0.1 + i / 100) for i in range(4)] + [
+        row("Looks Perfect But Warm", "none", 10, 2, 0.5)]
+    far_out = apply_constraints(far, hours_remaining=6, needs_cold=True, pallets=0.5)
+    far_brief = build_match_brief("x", 6, far_out["viable"], far_out["eliminated"], pallets=0.5)
+    shown = {r["name"]: r for r in far_brief["rejected_but_close"]}
+    assert "Looks Perfect But Warm" in shown, "a no-cold-storage rejection must always be shown when there is one"
+    assert shown["Looks Perfect But Warm"]["semantic_rank"] == 5, shown
+    assert len(far_brief["rejected_but_close"]) == 3
 
     # The Match Brief on the challenge sheet: six labelled parts, and three ranked options.
     SIX = ["organization_and_why", "what_they_can_take", "the_clock", "whose_neighborhood",

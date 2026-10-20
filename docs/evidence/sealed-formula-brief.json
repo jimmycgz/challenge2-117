@@ -25,7 +25,7 @@
     "populations_served": "Families with children",
     "tract": "Nearest census tract: 13% of residents below the poverty line, 54% of households without a vehicle, 0% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
   },
-  "outreach_message": "Hello Feeding America team,\n\na distributor in Chicago has two pallets of infant formula. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 5760 hours from now, which leaves you roughly 5732 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "outreach_message": "Hello Feeding America team,\n\na distributor in Chicago has 48 cases of infant formula. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 5760 hours from now, which leaves you roughly 5732 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
   "next_two_options": [
     {
       "rank": 2,
@@ -37,10 +37,10 @@
     },
     {
       "rank": 3,
-      "name": "Greater Chicago Food Depository",
-      "address": "4100 W ANN LURIE PL, CHICAGO, IL 60632",
-      "why": "walk-in cold storage, takes up to 23 pallets, collects within 36h",
-      "margin_hours": 5724,
+      "name": "Top Box Foods",
+      "address": "222 MERCHANDISE MART PLZ, CHICAGO, IL 60654",
+      "why": "walk-in cold storage, takes up to 17 pallets, collects within 14h",
+      "margin_hours": 5746,
       "needs_driver": false
     }
   ],
@@ -63,10 +63,10 @@
     },
     {
       "rank": 3,
-      "name": "Greater Chicago Food Depository",
-      "address": "4100 W ANN LURIE PL, CHICAGO, IL 60632",
-      "why": "walk-in cold storage, takes up to 23 pallets, collects within 36h",
-      "margin_hours": 5724,
+      "name": "Top Box Foods",
+      "address": "222 MERCHANDISE MART PLZ, CHICAGO, IL 60654",
+      "why": "walk-in cold storage, takes up to 17 pallets, collects within 14h",
+      "margin_hours": 5746,
       "needs_driver": false
     }
   ],
@@ -80,7 +80,7 @@
       "because": "capacity 1 pallet, load is 2"
     },
     {
-      "name": "Jm Foundation",
+      "name": "Mano A Mano Unidos Ltd",
       "because": "capacity 1 pallet, load is 2"
     }
   ],

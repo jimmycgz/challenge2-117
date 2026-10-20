@@ -148,7 +148,7 @@ def apply_constraints(
         carry `eliminated_because`. Viable is ordered by margin first, then semantic distance.
     """
     viable, eliminated = [], []
-    for c in candidates:
+    for semantic_rank, c in enumerate(candidates, 1):
         cold = c.get("cold_storage", "none")
         reasons = []
 
@@ -167,12 +167,14 @@ def apply_constraints(
             reasons.append(f"needs {lead:g}h to collect, food has {hours_remaining:g}h")
 
         if reasons:
-            eliminated.append({**c, "eliminated_because": "; ".join(reasons)})
+            eliminated.append({**c, "eliminated_because": "; ".join(reasons),
+                               "semantic_rank": semantic_rank})
             continue
 
         needs_driver = needs_cold and not c.get("refrigerated_transport", False)
         viable.append({
             **c,
+            "semantic_rank": semantic_rank,
             "margin_hours": margin,
             "needs_driver": needs_driver,
             "why_viable": (
@@ -303,7 +305,15 @@ def build_match_brief(
         plainly: an honest "nobody can take this" beats a confident wrong answer.
     """
     eliminated = eliminated or []
-    rejected = [{"name": e["name"], "because": e["eliminated_because"]} for e in eliminated[:3]]
+    # The closest rejections by meaning, but always including one that failed on cold storage when there is
+    # one: that is the case where the search looked right and the recipient could not store the food.
+    cold_failed = [e for e in eliminated if "no cold storage" in e["eliminated_because"]]
+    others = [e for e in eliminated if e not in cold_failed]
+    picked = cold_failed[:1]
+    picked += others[: 3 - len(picked)]
+    shown = sorted(picked, key=lambda e: e.get("semantic_rank", 0))
+    rejected = [{"name": e["name"], "because": e["eliminated_because"],
+                 "semantic_rank": e.get("semantic_rank")} for e in shown]
     if not viable:
         return {
             "organization_and_why": None, "what_they_can_take": None,

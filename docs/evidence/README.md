@@ -12,6 +12,8 @@ organization has.
 | [curl-transcript.md](curl-transcript.md) | The service answering with no credentials: health check, chat page redirect, the tool calls for two questions |
 | [spinach-answer.md](spinach-answer.md), [spinach-brief.json](spinach-brief.json) | A full answer for ten crates of spinach, and the structured Match Brief behind it |
 | [sealed-formula-answer.md](sealed-formula-answer.md), [sealed-formula-brief.json](sealed-formula-brief.json) | The sealed infant formula case: the agent used the donor's 8-month expiry, not the 1-hour table figure |
+| [farm-potatoes-answer.md](farm-potatoes-answer.md), [farm-potatoes-brief.json](farm-potatoes-brief.json) | Five tons of potatoes: a farm-track load handled by the same corpus |
+| [no-match-bakery-answer.md](no-match-bakery-answer.md) | Cream-filled pastries that must leave in one hour: the agent says nobody can take them and shows why |
 | [demo-tracks.txt](demo-tracks.txt) | A retail, a farm and an essentials posting through the same corpus and search, with what the filters removed and why |
 | [mcp-walk-in-answer.md](mcp-walk-in-answer.md) | A free-form data question answered through Google's managed BigQuery MCP server on the live service: two `execute_sql` calls, 13 of 192 recipients |
 | [selfcheck.txt](selfcheck.txt) | The offline check passing |
