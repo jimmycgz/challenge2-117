@@ -9,250 +9,541 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f4f4f5;
-      --slide-bg: #ffffff;
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --surface-subtle: #f8fafc;
+      --surface-hover: #f4f4f5;
+      --border: #e4e4e7;
+      --border-strong: #d4d4d8;
       --text: #09090b;
       --text-secondary: #3f3f46;
       --text-muted: #71717a;
-      --border: #e4e4e7;
-      --accent: #059669;
+
+      --accent: #10b981;
+      --accent-dark: #059669;
       --accent-soft: #ecfdf5;
       --accent-border: #a7f3d0;
+
+      --blue: #0284c7;
+      --blue-soft: #e0f2fe;
+      --blue-border: #bae6fd;
+
       --amber: #d97706;
       --amber-soft: #fffbeb;
       --amber-border: #fde68a;
+
       --red: #e11d48;
       --red-soft: #fff1f2;
       --red-border: #fecdd3;
-      --blue: #2563eb;
-      --blue-soft: #eff6ff;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
+      background: #f1f5f9;
       color: var(--text);
+      line-height: 1.4;
       -webkit-font-smoothing: antialiased;
-      padding: 32px 20px 80px;
+      letter-spacing: -0.011em;
     }
 
+    /* TOP SITE-STYLE BAR */
     .deck-toolbar {
-      max-width: 1120px;
-      margin: 0 auto 24px;
-      background: #18181b;
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 54px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: 13.5px;
-    }
-    .deck-toolbar button {
-      background: #10b981;
-      color: #fff;
-      border: none;
-      padding: 9px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
+      gap: 10px;
     }
 
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--text);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .slide-Jump-nav {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .jump-pill {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    .jump-pill:hover {
+      background: var(--surface-hover);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      border: 1px solid var(--accent-border);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .btn-print {
+      background: var(--text);
+      color: #fff;
+      border: 1px solid var(--text);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 12.5px;
+      cursor: pointer;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn-print:hover { opacity: 0.9; }
+
+    /* SLIDE CANVAS (16:9 WIDESCREEN FEEL MATCHING SITE SPLASH) */
     .slide {
-      width: 1120px;
-      min-height: 630px;
-      margin: 0 auto 36px;
-      background: var(--slide-bg);
+      width: 1180px;
+      min-height: 664px;
+      margin: 26px auto;
+      background: radial-gradient(circle at 50% 0%, #ecfdf5 0%, #fafafa 48%, #ffffff 100%);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-      padding: 42px 50px;
+      border-radius: var(--radius-lg);
+      padding: 34px 44px 26px;
+      box-shadow: var(--shadow-lg);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
+      overflow: hidden;
       page-break-after: always;
     }
 
     .slide-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
-      margin-bottom: 20px;
+      align-items: center;
+      margin-bottom: 12px;
     }
+
     .slide-kicker {
-      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11.5px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
+      letter-spacing: 0.06em;
+      color: var(--accent-dark);
+      background: var(--surface);
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-border);
+      box-shadow: var(--shadow-xs);
     }
+
+    .slide-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .judge-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      border: 1px solid var(--blue-border);
+    }
+
     .slide-num {
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-muted);
-      background: #f4f4f5;
-      padding: 4px 12px;
+      background: var(--surface);
+      padding: 4px 10px;
       border-radius: 999px;
+      border: 1px solid var(--border);
     }
 
     h1 {
-      font-size: 31px;
+      font-size: 29px;
       font-weight: 800;
       letter-spacing: -0.03em;
-      line-height: 1.16;
-      margin-bottom: 10px;
+      line-height: 1.15;
+      margin-bottom: 6px;
+      color: var(--text);
     }
+
     .subtitle {
-      font-size: 15.5px;
+      font-size: 14px;
       color: var(--text-secondary);
-      line-height: 1.48;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       max-width: 980px;
     }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    /* GRIDS & VISUAL CARDS */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-2-asym { display: grid; grid-template-columns: 1.05fr 1.25fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 
     .card {
-      background: #fafafa;
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
     }
+
     .card.highlight {
-      background: var(--accent-soft);
+      background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%);
       border-color: var(--accent-border);
     }
+
     .card.warn {
-      background: var(--amber-soft);
+      background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%);
       border-color: var(--amber-border);
     }
+
     .card.danger {
-      background: var(--red-soft);
+      background: linear-gradient(180deg, #fff1f2 0%, #ffffff 100%);
       border-color: var(--red-border);
     }
-    .card h3 {
-      font-size: 15.5px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--text);
-    }
-    .card p, .card li {
-      font-size: 13.5px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    .card ul { padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
 
-    .quote-banner {
-      background: #18181b;
+    .card.dark {
+      background: #09090b;
       color: #ffffff;
-      border-radius: 14px;
-      padding: 18px 24px;
-      font-size: 16.5px;
-      line-height: 1.48;
-      margin-bottom: 20px;
-    }
-    .quote-banner span {
-      color: #34d399;
-      font-weight: 700;
+      border-color: #27272a;
     }
 
-    /* SAMPLE MATCH BRIEF CARD ON SLIDE 2 */
-    .brief-preview {
-      background: #ffffff;
-      border: 2px solid var(--accent);
-      border-radius: 14px;
-      padding: 16px 20px;
-      box-shadow: 0 6px 18px rgba(5, 150, 105, 0.08);
-    }
-    .brief-top {
-      display: flex;
-      justify-content: space-between;
+    /* TIME & STATUS PILLS (FROM FRONTEND/INDEX.HTML) */
+    .pill {
+      display: inline-flex;
       align-items: center;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-    }
-    .brief-badge {
-      background: var(--accent-soft);
-      color: var(--accent);
+      gap: 5px;
       font-size: 11px;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px;
+      letter-spacing: 0.01em;
     }
-    .sms-box {
-      background: #f8fafc;
-      border-left: 3px solid var(--accent);
-      padding: 8px 12px;
-      font-size: 12.5px;
-      color: var(--text-secondary);
-      font-style: italic;
-      margin-top: 8px;
-      border-radius: 0 8px 8px 0;
-    }
+    .pill.green { background: var(--accent-soft); color: var(--accent-dark); border: 1px solid var(--accent-border); }
+    .pill.amber { background: var(--amber-soft); color: var(--amber); border: 1px solid var(--amber-border); }
+    .pill.red { background: var(--red-soft); color: var(--red); border: 1px solid var(--red-border); }
+    .pill.blue { background: var(--blue-soft); color: var(--blue); border: 1px solid var(--blue-border); }
+    .pill.dark { background: #18181b; color: #fff; }
 
+    /* KPI STATS */
     .stat-big {
       font-size: 28px;
       font-weight: 800;
       letter-spacing: -0.03em;
       color: var(--text);
-    }
-    .stat-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-top: 3px;
+      line-height: 1.05;
     }
 
+    .stat-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* OPENING SCENARIO BANNER */
+    .scenario-bar {
+      background: #09090b;
+      color: #f8fafc;
+      border-radius: var(--radius-md);
+      padding: 13px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .scenario-quote {
+      font-size: 13.5px;
+      font-weight: 500;
+      line-height: 1.42;
+    }
+
+    .scenario-quote span {
+      color: #34d399;
+      font-weight: 700;
+    }
+
+    /* VISUAL COMPARISON FLOW */
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 11px;
+      border-radius: 8px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      font-size: 12.5px;
+      font-weight: 500;
+      margin-top: 7px;
+    }
+
+    .flow-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+
+    /* UI MOCKUP MATCH CARD (SLIDE 2) */
+    .ui-window {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .ui-window-bar {
+      background: #18181b;
+      color: #fff;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    .ui-dots { display: flex; gap: 5px; }
+    .ui-dots span { width: 8px; height: 8px; border-radius: 50%; background: #52525b; }
+    .ui-dots span:nth-child(1) { background: #f43f5e; }
+    .ui-dots span:nth-child(2) { background: #f59e0b; }
+    .ui-dots span:nth-child(3) { background: #10b981; }
+
+    .brief-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .brief-cell {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 11px;
+    }
+
+    .brief-num {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-dark);
+      margin-bottom: 2px;
+    }
+
+    .brief-val {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .brief-sub {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* CLOCK TIMELINE BAR */
+    .clock-bar-wrap {
+      margin-top: 5px;
+      background: #e4e4e7;
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+    }
+    .clock-bar-collect { width: 50%; background: var(--accent); }
+    .clock-bar-buffer { width: 50%; background: #a7f3d0; }
+
+    /* SMS OUTREACH BOX */
+    .sms-bubble {
+      margin: 0 12px 12px;
+      background: #f0fdf4;
+      border: 1px dashed var(--accent-dark);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 11.8px;
+      color: #064e3b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* FUNNEL & HORIZONTAL BARS */
+    .bar-row {
+      display: grid;
+      grid-template-columns: 155px 1fr 70px;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+
+    .bar-track {
+      height: 12px;
+      background: #f1f5f9;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    /* COMPACT VISUAL TABLE */
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px;
-      margin-top: 6px;
-    }
-    th, td {
+      font-size: 12px;
+      background: var(--surface);
+      border-radius: 10px;
+      overflow: hidden;
       border: 1px solid var(--border);
-      padding: 9px 12px;
-      text-align: left;
     }
+
     th {
-      background: #f4f4f5;
+      background: #f8fafc;
+      text-align: left;
+      padding: 8px 12px;
       font-weight: 700;
-      font-size: 11.5px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
-    tr.row-accent td {
-      background: var(--accent-soft);
-      font-weight: 600;
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    .row-accent { background: var(--accent-soft); }
+
+    .mini-meter {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+    .mini-meter-bar {
+      height: 7px;
+      border-radius: 99px;
+      background: var(--accent);
+      display: inline-block;
     }
 
     .slide-footer {
       border-top: 1px solid var(--border);
-      padding-top: 12px;
-      margin-top: 16px;
+      padding-top: 10px;
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      align-items: center;
+      font-size: 11.5px;
       color: var(--text-muted);
     }
 
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      background: #f4f4f5;
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: #09090b;
+    }
+
     @media print {
-      body { background: #fff; padding: 0; }
+      body { background: #fff; }
       .deck-toolbar { display: none; }
       .slide {
-        box-shadow: none;
-        border: none;
         margin: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
         width: 100%;
         height: 100vh;
       }
@@ -261,356 +552,687 @@
 </head>
 <body>
 
+  <!-- SITE-MATCHED TOPBAR -->
   <div class="deck-toolbar">
-    <div><strong>RescueBroker Pitch Deck</strong> · Turning 45 Minutes of Phone Tag into a 20-Second Food Rescue Dispatch</div>
-    <button onclick="window.print()">Export / Print to PDF (8 Slides)</button>
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <span class="brand-name">RescueBroker</span>
+      <span class="pill green">Chicago · Track 1 (Retail &amp; Multi-Track)</span>
+    </div>
+
+    <div class="slide-Jump-nav">
+      <a class="jump-pill" href="#s1">1 · Problem</a>
+      <a class="jump-pill" href="#s2">2 · Match Brief UI</a>
+      <a class="jump-pill" href="#s3">3 · 7 Questions</a>
+      <a class="jump-pill" href="#s4">4 · Vector + Filter</a>
+      <a class="jump-pill" href="#s5">5 · 3 Tracks</a>
+      <a class="jump-pill" href="#s6">6 · 4 Traps Caught</a>
+      <a class="jump-pill" href="#s7">7 · Equity Audit</a>
+      <a class="jump-pill" href="#s8">8 · Limits &amp; Day 2</a>
+    </div>
+
+    <div class="toolbar-right">
+      <span class="status-pill"><span class="dot"></span> Cloud Run Live (~20s)</span>
+      <button class="btn-print" onclick="window.print()">Export / Print PDF (8 Slides)</button>
+    </div>
   </div>
 
-  <!-- SLIDE 1: THE HUMAN PROBLEM -->
-  <section class="slide">
+  <!-- ===================================================================== -->
+  <!-- SLIDE 1: THE PROBLEM, METRO CHOICE & DATA PROVENANCE -->
+  <!-- ===================================================================== -->
+  <section class="slide" id="s1">
     <div>
       <div class="slide-header">
-        <span class="slide-kicker">1 · Thursday, 2:10 PM at a Chicago Food Rescue Desk</span>
-        <span class="slide-num">Slide 1 / 8</span>
-      </div>
-      <h1>Good Food Is Thrown Away Because the Clock Runs Out Before a Human Can Make the Match</h1>
-
-      <div class="quote-banner">
-        “We coordinate food rescue in Chicago. A grocer just offered us <span>ten crates of fresh spinach</span> that must leave their loading dock within <span>six hours</span> and stay cold. Here is who we would call—and what we don't know about them.”
+        <span class="slide-kicker"><span class="dot"></span> 1 · Chicago Metro · Track 1: Retail &amp; Grocer Rescue</span>
+        <div class="slide-meta">
+          <span class="judge-badge">Judge Check #1 · Metro, Track &amp; Data Provenance</span>
+          <span class="slide-num">Slide 1 / 8</span>
+        </div>
       </div>
 
-      <div class="grid-2" style="margin-bottom: 16px;">
+      <h1>Move Surplus Food Before the Loading Dock Clock Runs Out</h1>
+
+      <!-- REQUIRED CHALLENGE OPENING SCENARIO -->
+      <div class="scenario-bar">
+        <div class="scenario-quote">
+          “We coordinate food rescue in <span>Chicago</span>. A grocer just offered us <span>10 crates of fresh spinach</span> that must leave their dock within <span>6 hours</span> and stay cold. Here is who we’d call—and what we don’t know about them.”
+        </div>
+        <span class="pill amber" style="flex-shrink:0;">⏱ 6h Dock Deadline</span>
+      </div>
+
+      <!-- BEFORE VS AFTER VISUAL CARDS -->
+      <div class="grid-2" style="margin-bottom: 14px;">
         <div class="card danger">
-          <h3>❌ Today’s Reality: 45 Minutes of Phone Tag</h3>
-          <ul>
-            <li>A coordinator sits with a ringing phone, a spreadsheet of 183 real Chicago charities, and a group text of volunteer drivers.</li>
-            <li>Before sending a van, they must answer <strong>four questions in the same minute</strong>: Who needs fresh greens? Who actually has a working cooler? Can they collect before 8 PM? Do they have a refrigerated van, or do we send a volunteer?</li>
-            <li>By the time a human calls down the spreadsheet, the store’s dock closes and 400 lbs of spinach goes to the compactor.</li>
-          </ul>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="pill red">❌ Today: 45 Minutes of Phone Tag</span>
+            <span style="font-size:11.5px; font-weight:700; color:var(--red);">Dock Closes → Compactor</span>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:var(--red-soft); color:var(--red);">1</div>
+            <div><strong>4 Questions at Once:</strong> Who needs greens? Has a working cooler? Can pick up before 8 PM? Has a refrigerated van?</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:var(--red-soft); color:var(--red);">2</div>
+            <div><strong>Manual Spreadsheet Calls:</strong> Calling down 183 charities one by one while volunteer drivers wait on group text.</div>
+          </div>
         </div>
+
         <div class="card highlight">
-          <h3>✅ With RescueBroker: A Verified Dispatch in About 20 Seconds</h3>
-          <ul>
-            <li>The coordinator pastes the grocer’s text—or snaps a photo of the pallet tag.</li>
-            <li>RescueBroker checks USDA shelf life, searches every pantry in Chicago by meaning, filters out anyone without cooler space or time to collect, and outputs an actionable <strong>6-Part Match Brief</strong> with a ready-to-send SMS and backup list.</li>
-            <li><strong>Transparent Data Provenance:</strong> <strong>183 real IRS-registered Chicago charities</strong> (plus <strong>9 built-in safety test decoys</strong> planted by the challenge); USDA shelf life &amp; Census need are real; cooler sizes &amp; pickup hours are generated.</li>
-          </ul>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="pill green">✅ RescueBroker: Verified Match Brief in ~20s</span>
+            <span style="font-size:11.5px; font-weight:700; color:var(--accent-dark);">19.9s – 22.5s Live Cloud Run</span>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:var(--accent-soft); color:var(--accent-dark);">1</div>
+            <div><strong>Vector Search + Hard Constraints:</strong> Embeds offer meaning, checks USDA shelf life, and filters 80 nearest charities by cooler, pallets &amp; clock.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:var(--accent-soft); color:var(--accent-dark);">2</div>
+            <div><strong>Ready to Act:</strong> Outputs #1 match, +3h time buffer, driver alert, ready-to-send SMS, and 2 backups if they say no.</div>
+          </div>
         </div>
       </div>
 
+      <!-- DATA PROVENANCE & WHY CHICAGO VISUAL ROW -->
       <div class="grid-4">
-        <div class="card"><div class="stat-big">183 + 9</div><div class="stat-label">Real IRS Charities + 9 Safety Test Decoys</div></div>
-        <div class="card"><div class="stat-big">6 of 183</div><div class="stat-label">Real Charities w/ Walk-In Cooler (3.3%)</div></div>
-        <div class="card"><div class="stat-big">~20 sec</div><div class="stat-label">End-to-End Dispatch Brief Speed</div></div>
-        <div class="card"><div class="stat-big">41 / 42</div><div class="stat-label">Safety &amp; Accuracy Checks Passed</div></div>
-      </div>
-    </div>
-    <div class="slide-footer">
-      <span>RescueBroker · Built for Food Rescue Dispatchers &amp; Pantry Coordinators</span>
-      <span>Judge Check #1: Names/addresses/income (IRS), shelf life (USDA) &amp; Census tracts are real; storage/capacity/pickup windows are generated.</span>
-    </div>
-  </section>
-
-  <!-- SLIDE 2: THE USER EXPERIENCE & ACTUAL MATCH BRIEF -->
-  <section class="slide">
-    <div>
-      <div class="slide-header">
-        <span class="slide-kicker">2 · What the Coordinator Actually Sees on Screen</span>
-        <span class="slide-num">Slide 2 / 8</span>
-      </div>
-      <h1>A Coordinator’s Ticking-Clock Command Center—Plus the 6-Part Match Brief</h1>
-      <p class="subtitle">
-        When you are juggling expiring food offers at 4 PM, scrolling through a developer chat log is a liability. We built the <strong>RescueBroker Dispatch Console</strong> around the actual 6-Part Match Brief a coordinator acts on:
-      </p>
-
-      <div class="grid-2">
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <div class="card">
-            <h3>1. Live Countdown Queue &amp; Pantry Map</h3>
-            <p>Sorts offers by clock urgency (<strong>Red &le;2h</strong>, <strong>Amber &le;6h</strong>), plots the <strong>183 real Chicago charities</strong> on the map (clearly separating the 9 planted test cases), and checks live <strong>openFDA recalls</strong>.</p>
-          </div>
-          <div class="card">
-            <h3>2. One-Click “They Said No” &amp; “Why Not X?”</h3>
-            <p>If the #1 pantry doesn't answer, clicking <strong>“Recipient Declined — Next Option”</strong> instantly promotes Backup #2 (<em>Love Of Angels</em>) with a new SMS. Asking <em>“Why not the big food bank downtown?”</em> explains the exact constraint they failed.</p>
-          </div>
-          <div class="card">
-            <h3>3. Side-by-Side AI Copilot (Voice, Text &amp; Photo)</h3>
-            <p>Connected live to Cloud Run so staff can paste texts, dictate by voice, scan a crate label photo, or ask city-wide database questions.</p>
-          </div>
-        </div>
-
-        <!-- ACTUAL SPINACH MATCH BRIEF VISUAL -->
-        <div class="brief-preview">
-          <div class="brief-top">
-            <div>
-              <span class="brief-badge">Live Output · 10 Crates Spinach (6h Clock)</span>
-              <h3 style="margin-top:6px; font-size:17px;">1. Who &amp; Why: Habibi Care (or Shakespear Rose)</h3>
-              <p style="font-size:12.5px; color:var(--text-muted);">4845 N Washtenaw Ave, Chicago, IL 60625 (Real IRS Record)</p>
-            </div>
-          </div>
-          <ul style="font-size:12.8px; color:var(--text-secondary); padding-left:18px; display:flex; flex-direction:column; gap:5px;">
-            <li><strong>2. What They Can Take:</strong> Domestic cold storage · Takes up to <strong>1 pallet</strong> (offer is 0.5 pallets). <em>Confirm by phone before truck rolls.</em></li>
-            <li><strong>3. The Clock &amp; Driver Action:</strong> <strong>6h remaining</strong> · Collects within <strong>3h</strong> = <strong style="color:var(--accent);">+3h safety buffer</strong>. <strong style="color:var(--amber);">⚠️ Needs Volunteer Driver</strong> (no refrigerated van).</li>
-            <li><strong>4. Whose Neighborhood It Helps:</strong> Serves 165 households/wk (Families w/ children) · Nearest tract: <strong>13% poverty, 5% no-vehicle, 12% assistance</strong>.</li>
-            <li><strong>6. Next Two Backups:</strong> <strong>#2 Love Of Angels</strong> (collects in 4h, +2h buffer) · <strong>#3 Good Food Pantry</strong> (collects in 3h, +3h buffer).</li>
-            <li><strong>Rejected Decoy Caught:</strong> <strong style="color:var(--red);">Greenline Community Pantry</strong> (Ranked #3 by meaning — <em>removed: no cold storage; needs 12h vs 6h clock</em>).</li>
-          </ul>
-          <div class="sms-box">
-            <strong>5. Ready-to-Send SMS:</strong> “Hello Habibi Care team, A grocer in Chicago has ten crates of spinach... leaves you roughly 3 hours of slack to collect. We can arrange a driver, since it has to stay cold. Can you take it?”
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="slide-footer">
-      <span>Verbatim output captured from our live Cloud Run service (docs/evidence/spinach-answer.md)</span>
-      <span>Answers all 7 Coordinator Questions in a single scannable view</span>
-    </div>
-  </section>
-
-  <!-- SLIDE 3: AN AFTERNOON WITH RESCUEBROKER (6-TURN USER JOURNEY) -->
-  <section class="slide">
-    <div>
-      <div class="slide-header">
-        <span class="slide-kicker">3 · A Real Afternoon Workflow (All 7 Coordinator Questions)</span>
-        <span class="slide-num">Slide 3 / 8</span>
-      </div>
-      <h1>Built for the Messy Second Half of the Afternoon—When Pantries Say No</h1>
-      <p class="subtitle">
-        A tool that only gives a single match is a search box. RescueBroker stays with the coordinator across every follow-up phone call until the food is claimed:
-      </p>
-
-      <div class="grid-3" style="margin-bottom: 18px;">
         <div class="card">
-          <div class="stat-big" style="color:var(--accent); font-size:22px;">2:10 PM · The Offer</div>
-          <p style="margin-top:6px;"><strong>Coordinator pastes:</strong> <em>“10 crates of spinach, harvested yesterday, dock closes in 6 hours, needs cold.”</em></p>
-          <p style="margin-top:6px;"><strong>RescueBroker:</strong> Checks USDA shelf life, filters 192 charities, and briefs <strong>Habibi Care</strong> (+3h buffer, needs volunteer driver).</p>
-        </div>
-        <div class="card highlight">
-          <div class="stat-big" style="color:var(--accent); font-size:22px;">2:14 PM · “They Said No”</div>
-          <p style="margin-top:6px;"><strong>Coordinator clicks/types:</strong> <em>“They said no. Who’s next?”</em> (and then <em>“They said no too!”</em>)</p>
-          <p style="margin-top:6px;"><strong>RescueBroker:</strong> Skips declined pantries, promotes <strong>Love Of Angels</strong> (#2) and then <strong>Good Food Pantry</strong> (#3) with fresh SMS messages.</p>
-        </div>
-        <div class="card">
-          <div class="stat-big" style="color:var(--accent); font-size:22px;">2:18 PM · “Why Not X?”</div>
-          <p style="margin-top:6px;"><strong>Coordinator asks:</strong> <em>“Why them and not the big food bank downtown?”</em></p>
-          <p style="margin-top:6px;"><strong>RescueBroker:</strong> Looks up <strong>Americas Food Bank</strong> (ranked #29 by meaning) and explains it was removed because it needs <strong>41 hours notice</strong> against a 6-hour clock.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>⚡ Why It Responds in About 20 Seconds (And Why We Chose Correctness Over Raw Speed)</h3>
-        <p>
-          Early prototypes that passed 80 charities back and forth between multiple AI chatbots took <strong>76 to 86 seconds per step</strong>—far too slow while a grocer is on hold. Keeping the physical safety rules in fast, offline-tested code with Google’s <code>gemini-3-flash-preview</code> at low thinking delivers answers in <strong>about 20 seconds</strong> on the live service (<strong>19.9s</strong>, <strong>22.5s</strong>, and <strong>20.3s</strong>, one sample each). We chose that model for correctness, not speed: it passed <strong>41 of 42</strong> test checks against <strong>38 of 42</strong> for <code>gemini-2.5-flash</code>, which was quicker on Cloud Run (~13s) and ran SQL it should have refused in one of three runs.
-        </p>
-      </div>
-    </div>
-    <div class="slide-footer">
-      <span>Full 6-turn live conversation captured in docs/evidence/follow-ups-transcript.md</span>
-      <span>Powered by Vertex AI Gemini, Python ADK, BigQuery Vector Search &amp; Google Managed BigQuery MCP</span>
-    </div>
-  </section>
-
-  <!-- SLIDE 4: WHY MEANING IS NOT ENOUGH -->
-  <section class="slide">
-    <div>
-      <div class="slide-header">
-        <span class="slide-kicker">4 · The Moment That Matters Most for Trust (Judge Check #2)</span>
-        <span class="slide-num">Slide 4 / 8</span>
-      </div>
-      <h1>Why Smart Search Alone Spoils Food—and How We Catch the Decoy</h1>
-      <p class="subtitle">
-        If an AI sends ten crates of perishable spinach to a pantry with no refrigerator, the food spoils and the coordinator never trusts the tool again. Look at what happened inside our 6-hour spinach search:
-      </p>
-
-      <div class="grid-3" style="margin-bottom: 18px;">
-        <div class="card danger">
-          <h3>❌ The Top 3 “Best” Matches Were All Wrong</h3>
-          <ul>
-            <li>All three closest matches by meaning needed <strong>12 to 21 hours</strong> to collect—the spinach only had 6 hours.</li>
-            <li><strong>3rd Closest by Meaning (Greenline Community Pantry):</strong> A built-in test decoy whose bio begs for <em>“fresh greens”</em>—while having <strong>no refrigeration of any kind</strong>.</li>
-          </ul>
+          <span class="pill green" style="margin-bottom:6px;">REAL DATA (50%)</span>
+          <div class="stat-big">183 Orgs</div>
+          <div class="stat-label"><strong>IRS EOBMF</strong> names, addresses, NTEE &amp; income · <strong>USDA</strong> 661 items · <strong>ACS</strong> 1,004 tracts</div>
         </div>
         <div class="card warn">
-          <h3>🔎 Why We Search 80 Charities Instead of 15</h3>
-          <ul>
-            <li>Because physical rules eliminate most matches, searching only the top 15 charities left just <strong>1 viable option</strong> (and 40 left <strong>3</strong>).</li>
-            <li>Searching the top <strong>80</strong> gives the coordinator <strong>12 viable pantries</strong>—leaving 9 backups when pantries don’t answer the phone.</li>
-          </ul>
+          <span class="pill amber" style="margin-bottom:6px;">GENERATED + PLANTED</span>
+          <div class="stat-big">Ops + 9 Decoys</div>
+          <div class="stat-label">Cooler, pallets &amp; pickup hours are <strong>generated</strong> (+<strong>9 planted teaching cases</strong> at city center)</div>
         </div>
-        <div class="card highlight">
-          <h3>✅ Why a Van &amp; 3h Buffer Beats a 1h Squeeze</h3>
-          <ul>
-            <li>The closest charity by meaning that passed the filters (11th) only had a <strong>household kitchen fridge</strong> and <strong>1 hour of slack</strong>.</li>
-            <li>RescueBroker prioritizes a <strong>comfortable 2–3 hour buffer</strong> and <strong>sturdy commercial/vehicle cooling</strong> over raw text similarity.</li>
-          </ul>
+        <div class="card">
+          <span class="pill blue" style="margin-bottom:6px;">WHY CHICAGO?</span>
+          <div class="stat-big">20% No-Car</div>
+          <div class="stat-label">1 of only 3 high-spread metros (&ge;20% no-vehicle) where transit access separates neighborhoods</div>
         </div>
-      </div>
-
-      <div class="card">
-        <h3>🧪 Verified by an Automated “Broken Filter” Test</h3>
-        <p>
-          Every Match Brief automatically surfaces the closest rejected matches—always including a cold-storage failure when one exists so the coordinator can see the trap it avoided. Our offline test suite even includes a check that intentionally switches off the cooler rule to prove the test catches the decoy (which caught a real sorting bug in our first version).
-        </p>
+        <div class="card">
+          <span class="pill dark" style="margin-bottom:6px;">SAFETY BENCHMARK</span>
+          <div class="stat-big">41 / 42</div>
+          <div class="stat-label">Automated checks passed on <code>gemini-3-flash-preview</code> · ~20s live dispatch speed</div>
+        </div>
       </div>
     </div>
+
     <div class="slide-footer">
-      <span>Measured Pool Study: docs/evidence/pool-study.txt (15 &rarr; 1 viable, 40 &rarr; 3 viable, 80 &rarr; 12 viable)</span>
-      <span>Rank verification: docs/evidence/demo-tracks.txt</span>
+      <span>RescueBroker · Chicago Surplus Food Dispatch Console &amp; ADK Agent</span>
+      <span>Provenance: IRS 990 (17 U.S.C. § 105), USDA FoodKeeper (CC0) &amp; US Census ACS are real; operational capacity is synthetic.</span>
     </div>
   </section>
 
-  <!-- SLIDE 5: ONE SYSTEM FOR EVERY KIND OF SURPLUS -->
-  <section class="slide">
+  <!-- ===================================================================== -->
+  <!-- SLIDE 2: THE UI & THE 7-ELEMENT MATCH BRIEF ARTIFACT -->
+  <!-- ===================================================================== -->
+  <section class="slide" id="s2">
     <div>
       <div class="slide-header">
-        <span class="slide-kicker">5 · One Tool Across Every Type of Donation</span>
-        <span class="slide-num">Slide 5 / 8</span>
+        <span class="slide-kicker"><span class="dot"></span> 2 · Output Artifact · The Coordinator’s Match Brief</span>
+        <div class="slide-meta">
+          <span class="judge-badge">Impact &amp; Insight (30 pts) · Justified Custom UI + ADK Web</span>
+          <span class="slide-num">Slide 2 / 8</span>
+        </div>
       </div>
-      <h1>Grocer Produce, Five Tons of Farm Potatoes &amp; Infant Formula—One Workflow</h1>
+
+      <h1>Designed for a 4 PM Ticking Clock—Not a Developer Chat Log</h1>
       <p class="subtitle">
-        Coordinators don’t want three separate software tools for grocery stores, farms, and family shelters. Because RescueBroker matches on meaning and physical capacity, one system handles all three tracks:
+        We started on <code>adk web</code> to unblock our agent, then built the <strong>RescueBroker Dispatch Console</strong> (<code>frontend/index.html</code>) for internal rescue staff—putting a live countdown queue, Chicago pantry map, and the required <strong>Match Brief</strong> on one screen:
       </p>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Type of Donation</th>
-            <th>What the Donor Offered</th>
-            <th>What Makes It Hard</th>
-            <th>How RescueBroker Handled It (From 80 Candidates)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="row-accent">
-            <td>🛒 <strong>Neighborhood Grocer</strong></td>
-            <td><strong>10 crates of fresh spinach</strong><br/>(0.5 pallets · 6 hours left · Needs cold)</td>
-            <td>Hours, not days. Most pantries lack a refrigerated van.</td>
-            <td><strong>12 viable matches:</strong> Picked <strong>Habibi Care / Shakespear Rose</strong> (3–4h pickup, +2–3h buffer), flagged volunteer driver need, and rejected the no-cooler decoy.</td>
-          </tr>
-          <tr>
-            <td>🚜 <strong>Regional Farm</strong></td>
-            <td><strong>5 tons of potatoes in the field</strong><br/>(~5 pallets · 3 days left · Room temp)</td>
-            <td>Almost no neighborhood pantry can fit 5 pallets at once.</td>
-            <td><strong>10 viable matches:</strong> Filtered out 169 small pantries and routed to <strong>Lakeview Pantry / Anso Child Development</strong> (7–12 pallets room + loading dock).</td>
-          </tr>
-          <tr>
-            <td>🍼 <strong>Critical Family Supplies</strong></td>
-            <td><strong>48 cases of sealed infant formula</strong><br/>(2 pallets · 8 months until expiration)</td>
-            <td>Strict safety rules and a narrow set of family/infant clinics.</td>
-            <td><strong>26 viable matches:</strong> Routed to child/family programs while overriding a misleading 1-hour database rule (see Slide 6).</td>
-          </tr>
-          <tr>
-            <td>🛑 <strong>Impossible Deadline</strong></td>
-            <td><strong>40 trays of cream-filled pastries</strong><br/>(Must leave dock in <strong>1 hour</strong> · Needs cold)</td>
-            <td>A bad tool guesses and sends a driver to a closed door.</td>
-            <td><strong>0 viable matches (Safe Refusal):</strong> Refused to guess; told the coordinator nobody can collect within 1 hour and listed the closest kitchens (which need 2+ hours).</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="grid-2-asym">
+        <!-- LEFT: WHY THIS INTERFACE WORKS FOR COORDINATORS -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="pill red">1 · Ticking Countdown Queue</span>
+              <span style="font-size:11px; color:var(--text-muted);">Red &le;2h · Amber &le;6h</span>
+            </div>
+            <p style="font-size:12.5px; color:var(--text-secondary); margin-top:6px;">
+              Prioritizes expiring loads first, plots <strong>183 real charities</strong> on an interactive map (separating the 9 planted test decoys), and checks live <strong>openFDA recalls</strong>.
+            </p>
+          </div>
+
+          <div class="card highlight">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="pill green">2 · 1-Click “They Said No” Promotion</span>
+              <span style="font-size:11px; color:var(--accent-dark);">Instant Re-Route</span>
+            </div>
+            <p style="font-size:12.5px; color:var(--text-secondary); margin-top:6px;">
+              When #1 doesn’t answer, clicking <strong>“Recipient Declined”</strong> promotes Backup #2 (<em>Love Of Angels</em>) and drafts a fresh text in one click.
+            </p>
+          </div>
+
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="pill blue">3 · Live Cloud Run AI Copilot</span>
+              <span style="font-size:11px; color:var(--blue);">Text · Voice · Photo</span>
+            </div>
+            <p style="font-size:12.5px; color:var(--text-secondary); margin-top:6px;">
+              Connected to Cloud Run ADK for messy donor texts, crate-label photo scanning, <em>“Why not X?”</em> questions, and multi-stop driver routes.
+            </p>
+          </div>
+        </div>
+
+        <!-- RIGHT: VISUAL MATCH BRIEF MOCKUP MATCHING SITE UI -->
+        <div class="ui-window">
+          <div class="ui-window-bar">
+            <div class="ui-dots"><span></span><span></span><span></span></div>
+            <span>Verbatim Match Brief · 10 Crates Spinach (0.5 Pallets · 6h Clock)</span>
+            <span class="pill green" style="font-size:10px; padding:1px 7px;">Verified Fit</span>
+          </div>
+
+          <div class="brief-grid">
+            <div class="brief-cell">
+              <div class="brief-num">1 · Organization &amp; Address</div>
+              <div class="brief-val">Habibi Care <span style="font-weight:500; font-size:11px; color:var(--text-muted);">(Tied #1 w/ Shakespear Rose)</span></div>
+              <div class="brief-sub">📍 4845 N Washtenaw Ave, Chicago 60625 (Real IRS)</div>
+            </div>
+
+            <div class="brief-cell">
+              <div class="brief-num">2 · Storage &amp; Capacity Fit</div>
+              <div class="brief-val">Domestic Cooler · 1.0 Pallet Room</div>
+              <div class="brief-sub">Offer is 0.5 pallets · <em>Confirm by phone first</em></div>
+            </div>
+
+            <div class="brief-cell">
+              <div class="brief-num">3 · The Clock &amp; Driver Action</div>
+              <div class="brief-val" style="color:var(--accent-dark);">6h Left vs 3h Pickup = +3h Buffer</div>
+              <div class="clock-bar-wrap">
+                <div class="clock-bar-collect" title="3h Pickup"></div>
+                <div class="clock-bar-buffer" title="+3h Margin"></div>
+              </div>
+              <div class="brief-sub" style="color:var(--amber); font-weight:600; margin-top:4px;">⚠️ Needs Volunteer Driver (No cold van)</div>
+            </div>
+
+            <div class="brief-cell">
+              <div class="brief-num">4 · Who It Helps (ACS Tract)</div>
+              <div class="brief-val">165 Households/wk · Families w/ Kids</div>
+              <div class="brief-sub">Tract: <strong>13%</strong> poverty · <strong>5%</strong> no-car · <strong>12%</strong> assist</div>
+            </div>
+
+            <div class="brief-cell">
+              <div class="brief-num">6 · Next Two Backups Ready</div>
+              <div class="brief-val">#2 Love Of Angels · #3 Good Food Pantry</div>
+              <div class="brief-sub">4h pickup (+2h buffer) · 3h pickup (+3h buffer)</div>
+            </div>
+
+            <div class="brief-cell" style="background:var(--red-soft); border-color:var(--red-border);">
+              <div class="brief-num" style="color:var(--red);">Caught Semantic Decoy (#3 by Meaning)</div>
+              <div class="brief-val" style="color:var(--red);">✗ Greenline Community Pantry</div>
+              <div class="brief-sub" style="color:#9f1239;">Removed: <strong>No refrigeration</strong> &amp; needs 12h vs 6h</div>
+            </div>
+          </div>
+
+          <div class="sms-bubble">
+            <div>
+              <strong>5 · Ready-to-Send SMS:</strong> “Hello Habibi Care team, A grocer in Chicago has 10 crates of spinach (0.5 pallets, 6h clock)... leaves you ~3h of slack. We can arrange a volunteer driver. Can you take it?”
+            </div>
+            <span class="pill dark" style="flex-shrink:0;">Copy SMS</span>
+          </div>
+        </div>
+      </div>
     </div>
+
     <div class="slide-footer">
-      <span>All four scenarios run live through the exact same corpus and pipeline with zero custom rulebooks.</span>
-      <span>Live transcripts &amp; screenshots in docs/evidence/</span>
+      <span>Verbatim output from live Cloud Run service: <code>docs/evidence/spinach-answer.md</code></span>
+      <span>Every single field required by the Challenge 2 Match Brief spec in one card</span>
     </div>
   </section>
 
-  <!-- SLIDE 6: REAL-WORLD COMMON SENSE -->
-  <section class="slide">
+  <!-- ===================================================================== -->
+  <!-- SLIDE 3: ANSWERING ALL 7 COORDINATOR QUESTIONS ACROSS AN AFTERNOON -->
+  <!-- ===================================================================== -->
+  <section class="slide" id="s3">
     <div>
       <div class="slide-header">
-        <span class="slide-kicker">6 · Operational Common Sense Built In</span>
-        <span class="slide-num">Slide 6 / 8</span>
+        <span class="slide-kicker"><span class="dot"></span> 3 · Multi-Turn Coordinator Workflow</span>
+        <div class="slide-meta">
+          <span class="judge-badge">All 7 Challenge Coordinator Questions Answered</span>
+          <span class="slide-num">Slide 3 / 8</span>
+        </div>
       </div>
-      <h1>Four Real-World Mistakes Our System Catches So Coordinators Don’t Get Burned</h1>
+
+      <h1>An Agent for the Whole Afternoon—Not Just a Single Search Box</h1>
       <p class="subtitle">
-        In food rescue, small data traps ruin deliveries and burn out volunteers. Here are four practical safeguards we built after inspecting the real tables:
+        A coordinator doesn’t ask one question and go home. RescueBroker handles all <strong>7 coordinator questions</strong> from the challenge prompt across live follow-up calls (<code>docs/evidence/follow-ups-transcript.md</code>):
+      </p>
+
+      <!-- VISUAL 4-STAGE AFTERNOON TIMELINE -->
+      <div class="grid-4" style="margin-bottom: 14px;">
+        <div class="card">
+          <span class="pill green">2:10 PM · Turn 1</span>
+          <h3 style="font-size:14px; margin:7px 0 4px;">“Who can take 10 crates before 8 PM?”</h3>
+          <p style="font-size:12px; color:var(--text-secondary);">
+            Calls <code>lookup_shelf_life</code> (spinach = 120h cold, capped by <strong>6h donor clock</strong>) + <code>find_matching_recipients</code>. Recommends <strong>Habibi Care</strong> (+3h buffer, needs driver) + SMS.
+          </p>
+          <div style="margin-top:8px; font-size:11px; font-weight:700; color:var(--accent-dark);">✓ Answers Q1, Q4, Q5, Q6, Q7</div>
+        </div>
+
+        <div class="card highlight">
+          <span class="pill amber">2:14 PM · Turns 2 &amp; 3</span>
+          <h3 style="font-size:14px; margin:7px 0 4px;">“They said no. Who’s next?” (×2)</h3>
+          <p style="font-size:12px; color:var(--text-secondary);">
+            Passes <code>exclude_recipient_ids</code> to skip declined pantries without re-embedding from scratch. Promotes <strong>#2 Love Of Angels</strong>, then <strong>#3 Good Food Pantry</strong> with fresh SMS texts.
+          </p>
+          <div style="margin-top:8px; font-size:11px; font-weight:700; color:var(--accent-dark);">✓ Answers Q3 (Graceful Fallback)</div>
+        </div>
+
+        <div class="card">
+          <span class="pill blue">2:18 PM · Turn 4</span>
+          <h3 style="font-size:14px; margin:7px 0 4px;">“Why not the big food bank downtown?”</h3>
+          <p style="font-size:12px; color:var(--text-secondary);">
+            Calls <code>explain_recipient</code> against the same 6h spinach offer: finds <strong>Americas Food Bank</strong> (#29 by meaning) and reports it failed <strong>0 pallets room &amp; 41h pickup notice</strong>.
+          </p>
+          <div style="margin-top:8px; font-size:11px; font-weight:700; color:var(--blue);">✓ Answers Q2 (Defends Tradeoff)</div>
+        </div>
+
+        <div class="card">
+          <span class="pill dark">2:22 PM · Turns 5 &amp; 6</span>
+          <h3 style="font-size:14px; margin:7px 0 4px;">City-Wide SQL + Safety Refusal</h3>
+          <p style="font-size:12px; color:var(--text-secondary);">
+            Uses <strong>Google Managed BigQuery MCP</strong> to answer <em>“How many real orgs have walk-in coolers?”</em> (<strong>6 of 183</strong>) and refuses a prompt-injection request to list/update tables.
+          </p>
+          <div style="margin-top:8px; font-size:11px; font-weight:700; color:var(--text);">✓ Read-Only Guard Verified</div>
+        </div>
+      </div>
+
+      <!-- ARCHITECTURE & MODEL CHOICE VISUAL BAR -->
+      <div class="card dark" style="padding:14px 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="pill green">⚡ Why It Responds in About 20 Seconds</span>
+            <span style="font-size:12.5px; font-weight:700; color:#e4e4e7;">Chosen for Correctness (41/42), Not Raw Speed</span>
+          </div>
+          <span style="font-size:11.5px; color:#a1a1aa;"><code>docs/evidence/model-call-timings.txt</code></span>
+        </div>
+
+        <div class="grid-3" style="gap:12px;">
+          <div style="background:#18181b; border:1px solid #27272a; border-radius:8px; padding:9px 12px;">
+            <div style="font-size:11px; color:#f43f5e; font-weight:700;">❌ Multi-LLM Agent Chain Prototype</div>
+            <div style="font-size:18px; font-weight:800; color:#fff; margin:2px 0;">76 – 86 sec / turn</div>
+            <div style="font-size:11px; color:#a1a1aa;">Passing 80 rows between sub-agents timed out while a grocer waited on hold.</div>
+          </div>
+
+          <div style="background:#18181b; border:1px solid #27272a; border-radius:8px; padding:9px 12px;">
+            <div style="font-size:11px; color:#f59e0b; font-weight:700;">⚠️ gemini-2.5-flash (Faster, Less Safe)</div>
+            <div style="font-size:18px; font-weight:800; color:#fff; margin:2px 0;">~13 sec · 38 / 42 checks</div>
+            <div style="font-size:11px; color:#a1a1aa;">Quicker on Cloud Run, but ran SQL it should have refused in 1 of 3 injection runs.</div>
+          </div>
+
+          <div style="background:#064e3b; border:1px solid #059669; border-radius:8px; padding:9px 12px;">
+            <div style="font-size:11px; color:#6ee7b7; font-weight:700;">✅ gemini-3-flash-preview (Low Thinking)</div>
+            <div style="font-size:18px; font-weight:800; color:#fff; margin:2px 0;">~20 sec · 41 / 42 checks</div>
+            <div style="font-size:11px; color:#d1fae5;">Live Cloud Run: <strong>19.9s</strong> spinach, <strong>22.5s</strong> follow-up, <strong>20.3s</strong> farm · 0 injection leaks.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Stack: Python ADK · Vertex AI Gemini · BigQuery <code>VECTOR_SEARCH</code> + <code>AI.EMBED</code> · Managed BigQuery MCP · Cloud Run</span>
+      <span>Custom Tools: <code>lookup_shelf_life</code>, <code>find_matching_recipients</code>, <code>explain_recipient</code></span>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SLIDE 4: WHY VECTOR SEARCH ALONE FAILS & POOL STUDY VISUAL -->
+  <!-- ===================================================================== -->
+  <section class="slide" id="s4">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker"><span class="dot"></span> 4 · Technical Execution · Vector Search + Physical Filtering</span>
+        <div class="slide-meta">
+          <span class="judge-badge">Judge Check #2 · Why Semantic Top-K Alone Spoils Food</span>
+          <span class="slide-num">Slide 4 / 8</span>
+        </div>
+      </div>
+
+      <h1>Meaning Is Not Capacity: How We Catch the No-Cooler Decoy</h1>
+      <p class="subtitle">
+        Keyword search fails because <em>“10 crates of spinach”</em> and <em>“we need fresh greens”</em> share zero words. We embed meaning with BigQuery <code>AI.EMBED</code> + <code>VECTOR_SEARCH</code>—then prove why vector search is only the <strong>candidate generator</strong>:
+      </p>
+
+      <div class="grid-2" style="margin-bottom: 14px;">
+        <!-- LEFT: POOL STUDY VISUAL BARS -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="pill blue">Why We Pull top_k = 80 Candidates</span>
+            <span style="font-size:11px; color:var(--text-muted);">6h Spinach Offer (192 Orgs)</span>
+          </div>
+          <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
+            Physical rules eliminate <strong>85%</strong> of semantic hits. Pulling only 15 leaves zero backup depth when pantries don’t answer the phone:
+          </p>
+
+          <div class="bar-row">
+            <div><strong>top_k = 15</strong> <span style="color:var(--text-muted);">(Too narrow)</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:8%; background:var(--red);"></div></div>
+            <div style="font-weight:800; color:var(--red);">1 viable</div>
+          </div>
+
+          <div class="bar-row">
+            <div><strong>top_k = 40</strong> <span style="color:var(--text-muted);">(No backups)</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:25%; background:var(--amber);"></div></div>
+            <div style="font-weight:800; color:var(--amber);">3 viable</div>
+          </div>
+
+          <div class="bar-row">
+            <div><strong>top_k = 80</strong> <span style="color:var(--accent-dark);">(Our setting)</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--accent);"></div></div>
+            <div style="font-weight:800; color:var(--accent-dark);">12 viable</div>
+          </div>
+
+          <div style="margin-top:12px; padding:9px 11px; background:var(--surface-subtle); border-radius:8px; border:1px solid var(--border); font-size:11.8px; color:var(--text-secondary);">
+            <strong>🧪 Automated Broken-Filter Selfcheck:</strong> <code>selfcheck.py</code> deliberately turns off the cooler rule to verify <em>Greenline Community Pantry</em> leaps into the top results—proving our filter catches the trap.
+          </div>
+        </div>
+
+        <!-- RIGHT: WHAT HAPPENED TO THE TOP SEMANTIC HITS -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="pill red">Inside the 6h Spinach Search</span>
+            <span style="font-size:11px; color:var(--text-muted);">Semantic Rank vs. Reality</span>
+          </div>
+
+          <div class="flow-step" style="background:var(--red-soft); border-color:var(--red-border);">
+            <div class="flow-icon" style="background:#fff; color:var(--red);">#1–3</div>
+            <div>
+              <strong style="color:var(--red);">Top 3 by Meaning → ALL REJECTED</strong><br/>
+              <span style="font-size:11.5px; color:#9f1239;">Need 12–21h notice vs 6h clock. <strong>#3 Greenline Community Pantry</strong> (planted decoy) begs for <em>“fresh greens”</em> with <strong>no cooler at all</strong>.</span>
+            </div>
+          </div>
+
+          <div class="flow-step" style="background:var(--amber-soft); border-color:var(--amber-border);">
+            <div class="flow-icon" style="background:#fff; color:var(--amber);">#11</div>
+            <div>
+              <strong style="color:var(--amber);">11th by Meaning → Passed Over (Thin Margin)</strong><br/>
+              <span style="font-size:11.5px; color:#92400e;">First survivor, but only has a <strong>household fridge</strong> and <strong>+1h slack</strong> (5h pickup vs 6h clock).</span>
+            </div>
+          </div>
+
+          <div class="flow-step" style="background:var(--accent-soft); border-color:var(--accent-border);">
+            <div class="flow-icon" style="background:#fff; color:var(--accent-dark);">#50+</div>
+            <div>
+              <strong style="color:var(--accent-dark);">50th, 54th &amp; 63rd by Meaning → Our Top 3 Picks</strong><br/>
+              <span style="font-size:11.5px; color:#065f46;">Ranked by <strong>safety buffer (+2h to +3h slack)</strong> and sturdier cold chain over raw text similarity.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RANKING FORMULA BAR -->
+      <div class="card highlight" style="padding:10px 16px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-size:12.5px;">
+          <strong>How We Rank Survivors:</strong> Once a charity passes storage, pallet, and clock filters, we rank on <strong>pickup time buffer + cooler tier + transport</strong> first, using semantic distance only after operational safety is secured.
+        </div>
+        <span class="pill green" style="flex-shrink:0;">Zero Spoiled Loads</span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Measured Pool Study: <code>docs/evidence/pool-study.txt</code></span>
+      <span>Rank verification across all tracks: <code>docs/evidence/demo-tracks.txt</code></span>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SLIDE 5: ONE ARCHITECTURE ACROSS ALL 3 TRACKS + SAFE REFUSAL -->
+  <!-- ===================================================================== -->
+  <section class="slide" id="s5">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker"><span class="dot"></span> 5 · Multi-Track Proof · Retail, Farm, Essentials &amp; Safe Refusal</span>
+        <div class="slide-meta">
+          <span class="judge-badge">One Corpus &amp; Pipeline Across All 3 Challenge Tracks</span>
+          <span class="slide-num">Slide 5 / 8</span>
+        </div>
+      </div>
+
+      <h1>Four Real Scenarios, Zero Custom Rulebooks</h1>
+      <p class="subtitle">
+        A rule-based system needs a separate rulebook for grocery stores, farms, and infant clinics. Because RescueBroker combines semantic embeddings with physical constraints, one pipeline handles all four cases:
+      </p>
+
+      <div class="grid-4" style="margin-bottom: 14px;">
+        <!-- TRACK 1: GROCER -->
+        <div class="card highlight" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span class="pill green">🛒 Track 1 · Retail</span>
+              <span style="font-size:11px; font-weight:700; color:var(--accent-dark);">12 / 80 Viable</span>
+            </div>
+            <h3 style="font-size:15px; margin-bottom:4px;">10 Crates Fresh Spinach</h3>
+            <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">0.5 pallets · 6h left · Cold required</p>
+            <div class="flow-step" style="font-size:11.5px;">
+              <div><strong>Top Pick:</strong> Habibi Care / Shakespear Rose (3h pickup, <strong>+3h buffer</strong>)</div>
+            </div>
+            <div class="flow-step" style="font-size:11.5px;">
+              <div><strong>Action:</strong> Flags volunteer driver needed &amp; catches <em>Greenline</em> decoy.</div>
+            </div>
+          </div>
+          <div style="margin-top:10px; font-size:11px; color:var(--accent-dark); font-weight:700;">✓ 19.9s Live on Cloud Run</div>
+        </div>
+
+        <!-- TRACK 2: FARM -->
+        <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span class="pill amber">🚜 Track 2 · Farm</span>
+              <span style="font-size:11px; font-weight:700; color:var(--amber);">10 / 80 Viable</span>
+            </div>
+            <h3 style="font-size:15px; margin-bottom:4px;">5 Tons Field Potatoes</h3>
+            <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">~5 pallets · 72h left · Hardy root veg</p>
+            <div class="flow-step" style="font-size:11.5px;">
+              <div><strong>Top Pick:</strong> Lakeview Pantry / Anso Child Dev (<strong>7–12 pallets room</strong>)</div>
+            </div>
+            <div class="flow-step" style="font-size:11.5px;">
+              <div><strong>Action:</strong> Keeps root veg at room temp; filters out 169 small pantries.</div>
+            </div>
+          </div>
+          <div style="margin-top:10px; font-size:11px; color:var(--amber); font-weight:700;">✓ 20.3s Live on Cloud Run</div>
+        </div>
+
+        <!-- TRACK 3: CRITICAL SUPPLIES -->
+        <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span class="pill blue">🍼 Track 3 · Essentials</span>
+              <span style="font-size:11px; font-weight:700; color:var(--blue);">26 / 80 Viable</span>
+            </div>
+            <h3 style="font-size:15px; margin-bottom:4px;">48 Cases Infant Formula</h3>
+            <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">2 pallets · Sealed · 8 months left</p>
+            <div class="flow-step" style="font-size:11.5px;">
+              <div><strong>Top Pick:</strong> Family &amp; infant nutrition programs with 2+ pallet room</div>
+            </div>
+            <div class="flow-step" style="font-size:11.5px;">
+              <div><strong>Action:</strong> Overrides misleading 1h opened-bottle USDA row.</div>
+            </div>
+          </div>
+          <div style="margin-top:10px; font-size:11px; color:var(--blue); font-weight:700;">✓ Caught 1h Shelf-Life Trap</div>
+        </div>
+
+        <!-- EDGE CASE: IMPOSSIBLE CLOCK -->
+        <div class="card danger" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span class="pill red">🛑 Impossible Clock</span>
+              <span style="font-size:11px; font-weight:700; color:var(--red);">0 / 80 Viable</span>
+            </div>
+            <h3 style="font-size:15px; margin-bottom:4px;">40 Trays Cream Pastries</h3>
+            <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">Must leave dock in <strong>1 hour</strong> · Cold</p>
+            <div class="flow-step" style="font-size:11.5px; background:#fff;">
+              <div><strong>Safe Refusal:</strong> Fastest pickup in Chicago is <strong>2.0 hours</strong> (5 orgs).</div>
+            </div>
+            <div class="flow-step" style="font-size:11.5px; background:#fff;">
+              <div><strong>Action:</strong> Refuses to guess; names closest kitchens that missed on time.</div>
+            </div>
+          </div>
+          <div style="margin-top:10px; font-size:11px; color:var(--red); font-weight:700;">✓ Prevents Wasted Driver Run</div>
+        </div>
+      </div>
+
+      <!-- SUMMARY METRIC BAR -->
+      <div class="card" style="padding:10px 16px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:12.5px;"><strong>Pinned Unit Conversions (Never Guessed by LLM):</strong> <code>20 crates = 1 pallet</code> · <code>1 ton = 1 pallet</code> · Domestic fridge capped at <code>&le;1 pallet</code></span>
+        <span class="pill dark">Deterministic Python Enforcement</span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>All four transcripts captured from live service in <code>docs/evidence/</code></span>
+      <span>Verified end-to-end by <code>PYTHONPATH=agent python3 -m food_broker.selfcheck</code></span>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SLIDE 6: DATA VALIDATION — 4 REAL TRAPS CAUGHT IN THE TABLES -->
+  <!-- ===================================================================== -->
+  <section class="slide" id="s6">
+    <div>
+      <div class="slide-header">
+        <span class="slide-kicker"><span class="dot"></span> 6 · Rigor &amp; Judgment · Data Validation Discoveries</span>
+        <div class="slide-meta">
+          <span class="judge-badge">Rigor &amp; Judgment (25 pts) · Validating the Corpus Before Building</span>
+          <span class="slide-num">Slide 6 / 8</span>
+        </div>
+      </div>
+
+      <h1>Four Data Traps We Found by Inspecting the Tables First</h1>
+      <p class="subtitle">
+        Assuming “no SQL error means no problem” ruins deliveries. Here are four concrete anomalies we found in <code>shelf_life</code> and <code>recipients</code>—and the guardrails we built:
       </p>
 
       <div class="grid-2">
         <div class="card highlight">
-          <h3>🍼 1. Knowing Sealed Formula Lasts 8 Months—Not 1 Hour</h3>
-          <p>The federal shelf-life table lists infant formula at <strong>1 hour</strong>—because that is the figure for <em>prepared formula in an opened bottle</em>! A naive tool rejects 48 sealed cases with 8 months left on the box. RescueBroker warns on any table figure under 2 hours and uses the donor’s sealed expiration date.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="pill green">🍼 Trap 1 · The 1-Hour Infant Formula Rule</span>
+            <code>lookup_shelf_life</code>
+          </div>
+          <h3 style="font-size:15px; margin-bottom:4px;">Opened Bottle (1h) vs. Sealed Case (8 Months)</h3>
+          <p style="font-size:12.5px; color:var(--text-secondary);">
+            USDA FoodKeeper lists <code>Liquid infant formula = 1 hour</code>—the rule for an <em>opened bottle warmed for a baby</em>. A naive agent rejects 48 sealed cases with 8 months left. Our <code>_shelf_caution</code> flags any table value <strong>&le;2 hours</strong> and honors the donor’s sealed expiry.
+          </p>
         </div>
+
         <div class="card highlight">
-          <h3>🧊 2. A Kitchen Fridge Is Not a Walk-In Cooler</h3>
-          <p>Many church pantries list “domestic cold storage”—meaning a standard household refrigerator. Other tools see “has cold storage” and try to send them 4 pallets of produce. We cap household fridges at <strong>1 pallet max</strong> and reserve multi-pallet cold loads for commercial coolers.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="pill green">🧊 Trap 2 · Kitchen Fridge vs. Walk-In Cooler</span>
+            <code>_storage_compatible</code>
+          </div>
+          <h3 style="font-size:15px; margin-bottom:4px;">Capping Domestic Cold Storage at 1 Pallet Max</h3>
+          <p style="font-size:12.5px; color:var(--text-secondary);">
+            Many church pantries list <code>domestic</code> cold storage (a household kitchen fridge) alongside multi-pallet dry capacity, and frozen goods need a freezer. We cap domestic fridges at <strong>&le;1 pallet</strong>, reserve larger cold loads for commercial coolers, and require <code>walk_in_cooler_and_freezer</code> for frozen food.
+          </p>
         </div>
-        <div class="card">
-          <h3>🕒 3. Trusting Verified Pickup Hours Over Vague Bio Text</h3>
-          <p>Because charity profiles were generated independently from numeric columns, a written bio can claim <em>“we can be there within a couple of hours”</em> while its operational record requires <strong>19 hours notice</strong>. RescueBroker strips timing claims from bio quotes and strictly enforces the numeric pickup window.</p>
+
+        <div class="card warn">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="pill amber">🕒 Trap 3 · Contradictory Bio Timing Claims</span>
+            <code>_excerpt</code>
+          </div>
+          <h3 style="font-size:15px; margin-bottom:4px;">Written Bio Says “2 Hours” · Column Says 19 Hours</h3>
+          <p style="font-size:12.5px; color:var(--text-secondary);">
+            We found <strong>12 planted/generated profiles</strong> whose written text claims <em>“within a couple of hours”</em> or <em>“same-day pickup”</em> while their numeric <code>pickup_window_hours</code> is <strong>7 to 36 hours</strong>. We strip timing sentences from profile quotes and enforce the numeric column.
+          </p>
         </div>
+
         <div class="card">
-          <h3>📊 4. Instant Answers Across the Whole City</h3>
-          <p>When a coordinator asks a general question—<em>“Not counting the 9 invented teaching cases, how many recipients have walk-in cold storage?”</em>—RescueBroker queries the live database in read-only mode and answers: <strong>only 6 out of 183 real charities (3.3%)</strong>.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="pill blue">🔒 Trap 4 · Separating Planted Decoys in City Queries</span>
+            <code>BigQuery MCP</code>
+          </div>
+          <h3 style="font-size:15px; margin-bottom:4px;">Only 6 of 183 Real Charities Have a Walk-In Cooler (3.3%)</h3>
+          <p style="font-size:12.5px; color:var(--text-secondary);">
+            The corpus mixes <strong>183 real IRS charities</strong> with <strong>9 planted teaching cases</strong> (`profile_source = 'planted'`). Our prompt and SQL rules explicitly filter `profile_source != 'planted'` on corpus counts so planted decoys never distort city statistics.
+          </p>
         </div>
       </div>
     </div>
+
     <div class="slide-footer">
-      <span>Practical judgment that protects volunteer time, donor relationships, and food safety</span>
-      <span>Every Match Brief also reminds staff to confirm cooler space by phone before rolling a truck</span>
+      <span>Every trap is locked down by regression tests in <code>agent/food_broker/selfcheck.py</code></span>
+      <span>Bias rule: Operational constraints (halal, infant, cooler) stay in embeddings; demographics never rank recipients</span>
     </div>
   </section>
 
-  <!-- SLIDE 7: THE EQUITY AUDIT -->
-  <section class="slide">
+  <!-- ===================================================================== -->
+  <!-- SLIDE 7: THE 10-POSTING EQUITY AUDIT (3 VIEWS + VISUAL CHARTS) -->
+  <!-- ===================================================================== -->
+  <section class="slide" id="s7">
     <div>
       <div class="slide-header">
-        <span class="slide-kicker">7 · Auditing Our Impact Across Chicago (Judge Check #3)</span>
-        <span class="slide-num">Slide 7 / 8</span>
+        <span class="slide-kicker"><span class="dot"></span> 7 · Outcome Audit · Where Did the Food Actually Go?</span>
+        <div class="slide-meta">
+          <span class="judge-badge">Judge Check #3 · 10-Posting Equity Audit (9 Planted Excluded)</span>
+          <span class="slide-num">Slide 7 / 8</span>
+        </div>
       </div>
-      <h1>Did the Food Go Where the Need Is—or Where the Loading Docks Are?</h1>
+
+      <h1>Did Food Go Where the Need Is—or Where the Loading Docks Are?</h1>
       <p class="subtitle">
-        We never use neighborhood demographics to rank who “deserves” food. Instead, we excluded the <strong>9 invented teaching cases</strong> (placed at the city center by formula) and audited all 10 offers across the <strong>183 real IRS charities</strong> (on 68 census tracts) three ways:
+        We excluded the <strong>9 planted teaching cases</strong> (placed at the city center by formula) and audited all 10 postings across the <strong>183 real IRS charities</strong> (on 68 census tracts) three ways:
       </p>
 
       <table>
         <thead>
           <tr>
             <th>How We Count the Matches</th>
-            <th>Count</th>
-            <th>Neighborhood Poverty (Mean / Median)</th>
-            <th>Households w/o a Car (Mean / Median)</th>
-            <th>On Food / Cash Assistance (Mean / Median)</th>
+            <th>Sample</th>
+            <th>Tract Poverty (Mean / Med)</th>
+            <th>No Vehicle (Mean / Med)</th>
+            <th>Public Assistance (Mean / Med)</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>Chicago Metro Overall</strong> (population-weighted)</td>
+            <td><strong>Chicago Metro Baseline</strong> (pop-weighted)</td>
             <td>1,004 tracts</td>
             <td><strong>15%</strong> / —</td>
             <td><strong>20%</strong> / —</td>
             <td><strong>18%</strong> / —</td>
           </tr>
           <tr>
-            <td><strong>All 183 Real Chicago Charities in Directory</strong></td>
+            <td><strong>All 183 Real Charities in Directory</strong></td>
             <td>183 charities</td>
             <td><strong>19%</strong> / 16%</td>
             <td><strong>28%</strong> / 27%</td>
             <td><strong>19%</strong> / 12%</td>
           </tr>
           <tr class="row-accent">
-            <td><strong>View 1: Counted Once Per Donation Offer</strong></td>
+            <td><strong>View 1 · Counted Once Per Offer</strong></td>
             <td>10 offers</td>
-            <td><strong>22%</strong> / 16%</td>
-            <td><strong>30%</strong> / 23%</td>
+            <td>
+              <div class="mini-meter"><span class="mini-meter-bar" style="width:44px;"></span> <strong>22%</strong> / 16%</div>
+            </td>
+            <td>
+              <div class="mini-meter"><span class="mini-meter-bar" style="width:60px;"></span> <strong>30%</strong> / 23%</div>
+            </td>
             <td><strong>19%</strong> / 11%</td>
           </tr>
           <tr>
-            <td><strong>View 2: Counted Per Unique Charity Reached</strong></td>
+            <td><strong>View 2 · Per Unique Charity Reached</strong></td>
             <td>8 charities</td>
             <td><strong>16%</strong> / 10%</td>
             <td><strong>24%</strong> / 20%</td>
             <td><strong>15%</strong> / 6%</td>
           </tr>
-          <tr class="row-accent">
-            <td><strong>View 3: Weighted by Pallets of Food Moved</strong></td>
+          <tr style="background:var(--amber-soft);">
+            <td><strong>View 3 · Weighted by Pallets Moved</strong></td>
             <td>37.5 pallets</td>
             <td><strong>14%</strong> / —</td>
             <td><strong>32%</strong> / —</td>
-            <td><strong>9%</strong> / —</td>
+            <td><strong style="color:var(--red);">9%</strong> / — <span class="pill red" style="font-size:10px; padding:1px 6px;">vs 19% dir</span></td>
           </tr>
           <tr>
-            <td><strong>Charities w/ a Dock or 5+ Pallets Room</strong></td>
+            <td><strong>Charities w/ Dock or 5+ Pallets Room</strong></td>
             <td>14 charities</td>
             <td><strong>17%</strong> / 14%</td>
             <td><strong>29%</strong> / 27%</td>
@@ -620,57 +1242,110 @@
       </table>
 
       <div class="grid-2" style="margin-top: 12px;">
-        <div class="card">
-          <h3>💡 Discovery #1: One Fast Pantry Won 3 Times</h3>
-          <p>Counted per offer (View 1), matches sit close to the directory (higher mean poverty at 22% and no-car at 30%, slightly lower medians)—because <strong>one fast pantry</strong> in a high-need area (<em>Shakespear Rose</em>, 45% poverty / 52% no car) won 3 short-clock grocery offers. Counted once per unique charity (View 2), matches sit lower on all three measures.</p>
+        <div class="card highlight">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="pill green">Finding 1 · Why Per-Offer Mean Is Higher (22% Pov / 30% No-Car)</span>
+          </div>
+          <p style="font-size:12px; color:var(--text-secondary);">
+            <strong>One fast pantry</strong> (<em>Shakespear Rose Community Table</em>, in a <strong>45% poverty / 52% no-vehicle</strong> tract) won <strong>3 of the 10 offers</strong> because short-clock grocery loads reward fast pickup. Counted once per unique charity (View 2), averages sit lower (<strong>16% / 24% / 15%</strong>).
+          </p>
         </div>
-        <div class="card">
-          <h3>💡 Discovery #2: Big Farm Loads Can Go to Only a Few Charities</h3>
-          <p>Farm offers make up <strong>30 of the 37.5 pallets</strong>. Weighted by volume (View 3), public assistance is <strong>9% against a 19% directory mean</strong>—because big farm loads can go to only a few charities (only 14 of 183 have a dock or room for 5+ pallets, and only 10 have room for 10+ pallets).</p>
+
+        <div class="card warn">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="pill amber">Finding 2 · Why Volume Skews to Warehouse Tracts (9% Assist)</span>
+          </div>
+          <p style="font-size:12px; color:var(--text-secondary);">
+            Farm loads make up <strong>30 of the 37.5 pallets</strong>, and only <strong>14 of 183 real charities</strong> have a dock or room for 5+ pallets (only 10 fit 10+ pallets). Big loads go where the docks are—proving why <strong>load splitting</strong> is our #1 upgrade.
+          </p>
         </div>
       </div>
     </div>
+
     <div class="slide-footer">
-      <span>Note: With 10 offers across 68 ZIP-level tracts (and raw posting queries in the offline audit), 10 offers cannot separate a real skew from noise.</span>
-      <span>Full audit: agent/food_broker/EQUITY-AUDIT.md</span>
+      <span>Statistical caveat: 10 offers across 68 ZIP-centroid tracts cannot separate a real skew from small-sample noise.</span>
+      <span>Full reproducible SQL &amp; methodology: <code>agent/food_broker/EQUITY-AUDIT.md</code></span>
     </div>
   </section>
 
-  <!-- SLIDE 8: HONEST LIMITS & WHAT'S NEXT -->
-  <section class="slide">
+  <!-- ===================================================================== -->
+  <!-- SLIDE 8: HONEST LIMITATIONS & DAY-2 ROADMAP (INTAKE AGENT LOOP) -->
+  <!-- ===================================================================== -->
+  <section class="slide" id="s8">
     <div>
       <div class="slide-header">
-        <span class="slide-kicker">8 · Honest Limits Today &amp; How We Scale Tomorrow (Judge Check #4)</span>
-        <span class="slide-num">Slide 8 / 8</span>
+        <span class="slide-kicker"><span class="dot"></span> 8 · Honest Boundaries Today &amp; Day-2 Architecture</span>
+        <div class="slide-meta">
+          <span class="judge-badge">Judge Check #4 · Limitations &amp; Closing the Data Loop</span>
+          <span class="slide-num">Slide 8 / 8</span>
+        </div>
       </div>
-      <h1>What a Coordinator Needs to Know Today—and What We Build Next</h1>
+
+      <h1>What Our System Can’t Do Today—and How We Close the Loop Next</h1>
       <p class="subtitle">
-        A tool that dispatches real trucks and volunteers is only trustworthy if it is completely upfront about its boundaries.
+        A tool that dispatches real trucks and volunteers earns trust by stating its boundaries plainly—and building the right next step:
       </p>
 
       <div class="grid-2">
+        <!-- LEFT: 4 HONEST LIMITATIONS -->
         <div class="card warn">
-          <h3>⚠️ Four Honest Realities of Today’s System</h3>
-          <ul>
-            <li><strong>Who Is Real vs. What Is Generated:</strong> The <strong>183 charity names, addresses, and tax incomes</strong> are real IRS records (plus <strong>9 invented teaching cases</strong>). However, every pantry’s <strong>cooler type, pallet room, and pickup hours are generated</strong> because no public national database exists—so RescueBroker always tells staff to confirm by phone before rolling a truck.</li>
-            <li><strong>Home Storage vs. Commercial Cold Chain:</strong> USDA shelf-life numbers are consumer home guidance, not a commercial refrigeration guarantee.</li>
-            <li><strong>ZIP-Code Center Points:</strong> Charity locations are ZIP-level centroids (and postings have no donor address), so census figures describe the surrounding area rather than the exact block.</li>
-            <li><strong>No Delivery Memory or Load Splitting Yet:</strong> Without delivery history, one fast pantry wins repeated short-clock offers, and loads larger than any single cooler are safely refused rather than split.</li>
-          </ul>
+          <span class="pill amber" style="margin-bottom:10px;">⚠️ 4 Honest Limitations Today</span>
+
+          <div class="flow-step" style="background:#fff;">
+            <div class="flow-icon" style="background:var(--amber-soft); color:var(--amber);">1</div>
+            <div><strong>Generated Operational Profiles:</strong> IRS names, addresses &amp; income are real, but cooler types, pallet room, and pickup windows are synthetic—so every brief says <em>confirm by phone first</em>.</div>
+          </div>
+
+          <div class="flow-step" style="background:#fff;">
+            <div class="flow-icon" style="background:var(--amber-soft); color:var(--amber);">2</div>
+            <div><strong>Consumer vs. Commercial Cold Chain:</strong> USDA FoodKeeper figures are home-storage guidance, not a commercial cold-chain guarantee.</div>
+          </div>
+
+          <div class="flow-step" style="background:#fff;">
+            <div class="flow-icon" style="background:var(--amber-soft); color:var(--amber);">3</div>
+            <div><strong>ZIP-Centroid Coordinates &amp; No Donor Address:</strong> Recipient coords are ZIP centroids (`ST_DISTANCE` joins nearest tract internal point only; no donor-to-pantry drive time in BigQuery).</div>
+          </div>
+
+          <div class="flow-step" style="background:#fff;">
+            <div class="flow-icon" style="background:var(--amber-soft); color:var(--amber);">4</div>
+            <div><strong>No Delivery History or Load Splitting Yet:</strong> One fast pantry won 3 times, and a 5-ton farm load can’t be split across three 2-pallet neighborhood pantries yet.</div>
+          </div>
         </div>
+
+        <!-- RIGHT: 3 DAY-2 UPGRADES (FEATURING THE INTAKE AGENT) -->
         <div class="card highlight">
-          <h3>🚀 Three Practical Upgrades for Day Two</h3>
-          <ul>
-            <li><strong>1. Fair Rotation &amp; Delivery Memory:</strong> Record who received food earlier today so one fast pantry isn’t called three times in a row while neighboring pantries wait.</li>
-            <li><strong>2. Automatic Load Splitting for Big Farm Offers:</strong> When a farmer offers 5 tons of produce and no single neighborhood pantry has a big enough cooler, automatically split the delivery across 2 or 3 pantries and draft separate texts.</li>
-            <li><strong>3. 2-Minute Pantry Self-Check-In:</strong> Let local pantry managers text or talk to RescueBroker to update their real cooler space and pallet-jack access—replacing generated profiles with verified local knowledge.</li>
-          </ul>
+          <span class="pill green" style="margin-bottom:10px;">🚀 What We Build with Another 4 Hours</span>
+
+          <div class="flow-step" style="background:#fff; border-color:var(--accent-border);">
+            <div class="flow-icon" style="background:var(--accent-soft); color:var(--accent-dark);">1</div>
+            <div>
+              <strong>Conversational Pantry Intake Agent (Closes the Synthetic Data Loop):</strong><br/>
+              <span style="font-size:11.8px; color:var(--text-secondary);">Pantry managers talk to an intake agent that asks <em>“Can you take a pallet, or by hand?”</em>, writes <code>profile_text</code>, and runs <code>AI.EMBED</code> into BigQuery immediately—replacing synthetic rows with verified capacity.</span>
+            </div>
+          </div>
+
+          <div class="flow-step" style="background:#fff; border-color:var(--accent-border);">
+            <div class="flow-icon" style="background:var(--accent-soft); color:var(--accent-dark);">2</div>
+            <div>
+              <strong>Multi-Pantry Load Splitting for Farm Surplus:</strong><br/>
+              <span style="font-size:11.8px; color:var(--text-secondary);">Automatically split a 5-pallet farm load across three 2-pallet high-need neighborhood pantries and draft coordinated SMS messages—solving the 9% volume skew found in our audit.</span>
+            </div>
+          </div>
+
+          <div class="flow-step" style="background:#fff; border-color:var(--accent-border);">
+            <div class="flow-icon" style="background:var(--accent-soft); color:var(--accent-dark);">3</div>
+            <div>
+              <strong>Firestore Claim Locking &amp; Fair Rotation Memory:</strong><br/>
+              <span style="font-size:11.8px; color:var(--text-secondary);">Transactional reservation lock so two drivers never claim the same pallet, plus daily rotation so <em>Shakespear Rose</em> isn’t called three times in one afternoon.</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
     <div class="slide-footer">
-      <span>RescueBroker · Helping Chicago Food Rescue Coordinators Beat the Clock</span>
-      <span>Thank You · Agents for Impact 2026</span>
+      <span>RescueBroker · Built for Chicago Food Rescue Coordinators · Agents for Impact 2026</span>
+      <span>Repo: <code>github.com/jimmycgz/challenge2-117</code> · Evidence: <code>docs/evidence/</code></span>
     </div>
   </section>
 
