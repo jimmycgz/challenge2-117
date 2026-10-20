@@ -11,22 +11,22 @@
   "ranked": [],
   "rejected_but_close": [
     {
+      "name": "Chicago Food Rescue",
+      "because": "needs 8h to collect, food has 1h",
+      "semantic_rank": 1,
+      "profile_source": "generated"
+    },
+    {
+      "name": "Burrito Brigade Chicago",
+      "because": "needs 8h to collect, food has 1h",
+      "semantic_rank": 2,
+      "profile_source": "generated"
+    },
+    {
       "name": "Lakeshore Mutual Aid Collective",
       "because": "no cold storage; needs 12h to collect, food has 1h",
-      "semantic_rank": 1,
+      "semantic_rank": 14,
       "profile_source": "planted"
-    },
-    {
-      "name": "Cedar Street Produce Alliance",
-      "because": "needs 12h to collect, food has 1h",
-      "semantic_rank": 2,
-      "profile_source": "planted"
-    },
-    {
-      "name": "Collective Chicago",
-      "because": "needs 6h to collect, food has 1h",
-      "semantic_rank": 3,
-      "profile_source": "generated"
     }
   ],
   "refusal": "No candidate can take this load in time. The closest rejections are listed with the reason each was eliminated.",

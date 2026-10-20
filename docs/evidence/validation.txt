@@ -1,0 +1,95 @@
+Notebook validation evidence: Section 13 of notebooks/c2_01_load_explore.ipynb
+================================================================================
+Written:      2026-10-20 14:13:07 EDT
+Checks run:   2026-10-20 14:12:54 EDT to 2026-10-20 14:13:07 EDT
+Identity:     <lab-account> (read with `gcloud config get-value account` before the first query)
+Dataset:      <lab-project-id>.a4i_food, read only (every statement was a SELECT; nothing was written)
+What was run: the 25 checks in the notebook's Section 13 code cell (cell 56), with its SQL and pass criteria copied unchanged,
+  run against the loaded BigQuery tables. The metro box comes from the notebook's METROS dict: Chicago, latitude 41.64 to 42.03,
+  longitude -87.94 to -87.52.
+Data under test: the four tables were created 2026-10-20 10:10 EDT (14:10 UTC in BigQuery's table metadata) by load jobs from
+  the published snapshot gs://class-demo/a4i-2026/challenge-2-food-equity/chicago/ (see scripts/load.sh). They were not built by
+  running the notebook.
+Scripts:      kept outside this repo (run_section13.py, write_evidence.py)
+
+RESULT: 23 PASS, 2 FAIL, 0 NOT RUN, of 25 checks
+
+Status  Check                                    Observed; expected
+--------------------------------------------------------------------------------
+PASS    recipients: has rows                     192 in corpus (183 real + 9 planted); expected generated > 60
+PASS    recipients: ids unique                   192 distinct ids of 192; expected equal
+PASS    recipients: profiles usable              0 too short; expected 0
+PASS    recipients: archetype spread             15 archetypes; expected >= 6
+PASS    recipients: planted present              9 planted cases; expected >= 8
+PASS    recipients: cold storage mix             48 with real refrigeration; expected 0 < x < 192
+PASS    recipients: profiles varied              100.0% distinct (192 of 192); expected > 90%
+FAIL    recipients: text matches flags           2 rows where cold_storage disagrees with the text, 0 freezer mentions reported
+                                                 only; expected 0
+PASS    recipients: no ICO column                in-care-of name excluded; expected no ICO column
+PASS    recipients: all located                  0 without coordinates; expected 0
+PASS    recipients: inside the metro             0 outside the Chicago box; expected 0
+PASS    shelf life: has rows                     661 products; expected > 500
+PASS    shelf life: some parsed                  468 with a figure; expected > 50
+PASS    shelf life: no false zeros               0 zero-hour rows; expected 0
+PASS    surplus: has rows                        10 postings; expected >= 8
+PASS    surplus: all three tracks                3 tracks; expected 3
+FAIL    surplus: sealed goods keep their clock   1 sealed posting(s) with under a day left; expected 0
+PASS    tracts: has rows                         1,004 tracts; expected > 20
+PASS    tracts: rates in range                   0 bad poverty, 0 bad vehicle, mean poverty 17.0%; expected 0 and 0
+PASS    tracts: geo_id well formed               0 not 11 digits; expected 0
+PASS    tracts: no race columns                  none present; expected none
+PASS    cross: organizations located             192 with coordinates; expected > 0
+PASS    cross: postings resolve                  9 of 10 postings matched to a shelf life; expected 0 < x <= 10
+PASS    recipients: shaped like a city           plurality is neighborhood_pantry at 30%; expected a small-pantry type under 55%
+PASS    recipients: size reaches capacity        income vs households r=0.42, vs pallets r=0.37; expected r > 0.15
+--------------------------------------------------------------------------------
+Fault case for 'inside the metro', which passed: the same query with the Dallas box from METROS counts 192 of 192 recipients
+  outside it, and with the Chicago box cut to latitude 41.64 to 41.80 it counts 130. So the check can fail, and its 0 means
+  something.
+
+Rows behind the two failures
+--------------------------------------------------------------------------------
+Posting 8: "48 cases of sealed infant formula, 8 months to expiry". foodkeeper_product = Formula, shelf_life_hours = 1.0,
+  hours_remaining = 1.0.
+Third Ward Community Table: cold_storage = walk-in; text: "Neighborhood food distribution serving local families. We have a
+  fridge. It is not big but it works. We take fresh produce weekly. Open Tuesday, Thursday."
+Lakeshore Mutual Aid Collective: cold_storage = none; text: "Neighborhood food distribution serving local families. Chilled
+  holding for short-term storage of temperature-sensitive goods. We take fresh produce weekly. Open Tuesday, Thursday."
+No other recipient was surfaced. The check found 0 freezer mentions to report, and by design it leaves out Harborview Neighbors
+  Trust, the one contradiction the notebook plants on purpose. Its search space is the notebook's own phrase patterns over the
+  other 191 rows; a contradiction worded outside those patterns would not show up.
+Both recipients are planted teaching cases (profile_source = 'planted', recipient_id 190 and 192). The notebook's planting code
+  (cell 31) gives Third Ward cold_storage 'domestic' with 1 pallet and Lakeshore 'commercial', with the comment that the flags
+  follow the words. The loaded table has 'walk-in' with 3 pallets and 'none' with 3 pallets. Posting 8 is the same story: the
+  notebook (cell 47) resolves it to "Liquid concentrate or ready-to-feed formula", pantry, 168 hours, and the table has Formula,
+  1 hour. So the snapshot does not match the committed notebook for these three rows. We did not find out which version of the
+  notebook built it.
+
+What it told us and what we did
+--------------------------------------------------------------------------------
+1. Sealed goods keep their clock (FAIL). The table says 48 cases of sealed infant formula, 8 months to expiry, have 1 hour left,
+  because the snapshot matched it to FoodKeeper's prepared-formula row (pantry 1.0 hours, refrigerated 24.0 hours).
+   - The agent does not read hours_remaining from this table. Its instructions (agent.py, step 2) have it call
+     lookup_shelf_life, take the smaller of the donor's deadline and the shelf life, and trust the donor's figure when the
+     result has a caution or the posting says the product is sealed or gives its own expiry.
+   - lookup_shelf_life returns the exact FoodKeeper name match first. Run against these tables, lookup_shelf_life("Formula",
+     "pantry") returned 1.0 hours with a caution, and lookup_shelf_life("Formula", "refrigerated") returned 24.0 hours with no
+     caution.
+   - _shelf_caution adds that caution to any figure of 2 hours or less. Its text says the figure is probably for an opened or
+     prepared container, and to use the donor's figure if the posting says sealed or gives its own expiry.
+   - So the code catches the 1-hour pantry figure. The 24-hour refrigerated figure carries no caution, and there the only guard
+     is the 'sealed' rule in the prompt, not code.
+   - Our scripts that do read the table clock (equity_audit.py, and check_invariants.py through it) override posting 8 to 168
+     hours with CLOCK_OVERRIDE = {8: 168} and print both figures. demo_tracks.py uses 168.
+
+2. Text matches flags (FAIL, 2 rows). Our hard filter, apply_constraints in tools.py, reads the cold_storage column and never
+  the profile text, so it believes the flag.
+   - Lakeshore Mutual Aid Collective (flag none, text describes chilled holding) is removed from every cold load as "no cold
+     storage". That is a missed recipient, not a bad match.
+   - Third Ward Community Table (flag walk-in, text says "We have a fridge") stays viable for cold food. We ran
+     apply_constraints on its row: a 2-pallet cold load with 24 hours left keeps it as "walk-in cold storage, takes up to 3
+     pallets". A 0.5-pallet load with 6 hours left removes it, but only because it needs 12 hours to collect.
+   - With the notebook's intended flag, 'domestic', the filter would remove it for any load over 1 pallet
+     (DOMESTIC_FRIDGE_PALLETS = 1). As loaded, it is a bad match the filter cannot catch.
+   - tools.py has no planted-row filter, so the live agent can return either one. demo_tracks.py labels planted rows "[invented
+     teaching case]", and equity_audit.py leaves all nine out. We have not changed the filter; this file records the gap.

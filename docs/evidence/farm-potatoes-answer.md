@@ -1,40 +1,54 @@
-<!-- markdownlint-disable MD029 MD030 MD032 MD036 -->
+<!-- markdownlint-disable MD001 MD009 MD022 MD029 MD030 MD031 MD032 MD036 -->
 <!-- The answer below is the model's output verbatim, so it keeps its own list spacing. -->
 
 # Answer to: A farm south of Chicago has 5 tons of potatoes still in the field. They can load pallets if someone collects within 3 days.
 
-Captured 13:52 EDT on 2026-10-20. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
+Captured 14:14 EDT on 2026-10-20. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says; nothing here is a claim about what a real organization has.
 
 Tool calls, in order:
 
 ```text
-lookup_shelf_life({"storage_state": "pantry", "product_name": "Potatoes"})
-find_matches({"donor_description": "A farm south of Chicago", "load_description": "5 tons of potatoes", "needs_cold": false, "pallets": 5, "hours_remaining": 72})
+lookup_shelf_life({"product_name": "Potatoes", "storage_state": "pantry"})
+find_matches({"search_text": "large capacity warehouse pantry food bank able to take 5 pallets of fresh potatoes shelf stable hardy produce bulk root vegetables", "needs_frozen": false, "needs_cold": false, "top_k": 80, "donor_description": "A farm south of Chicago", "pallets": 5, "hours_remaining": 72, "load_description": "5 tons of potatoes"})
 ```
 
 ---
 
-5 tons of potatoes is about 5 pallets at roughly a ton a pallet; potatoes are hardy whole root vegetables, so they do not require cold storage, and the donor's 72-hour deadline sets the clock (USDA FoodKeeper pantry shelf life is 1,440 hours, which is consumer guidance, not a cold-chain guarantee).
+Potatoes are whole root vegetables, so they do not need cold storage; 5 tons is about 5 pallets at roughly a ton per pallet, and the donor's 3-day window (72 hours) sets the clock over the FoodKeeper pantry shelf life (1,440 hours).
 
-1. Who, and why - Maple Street Produce Alliance, Chicago, IL (note: an invented teaching case in the challenge data). "Fresh produce hub with walk-in refrigeration and our own reefer truck."
-2. What they can actually take - Profile on file indicates capacity for up to 10 pallets (load is 5 pallets), walk-in storage, and a loading dock (confirm operational details by phone before dispatch).
-3. The clock - Food has 72 hours remaining; recipient collection lead time is 12 hours, giving a comfortable margin of 60 hours. They have refrigerated transport on file, so no separate driver is needed.
-4. Whose neighborhood it helps - Serves roughly 600 households weekly (general public). Nearest census tract figures: 9% poverty rate, 11% no-vehicle rate, 12% on assistance.
-5. The outreach message -
-Hello Maple Street Produce Alliance team,
+1. **Who, and why**
+   - **Organization:** Greater Chicago Food Depository (4100 W Ann Lurie Pl, Chicago, IL 60632)
+   - **Why:** "Regional hub. We are the first call when a distributor has a full truckload to move. Refrigerated and frozen storage on site. Dock receiving; we can take full pallets." (Note: Operational details are generated from the profile on file; confirm by phone before dispatch).
 
-A farm south of Chicago has 5 tons of potatoes on 5 pallets. The farm can load pallets if collected within 3 days (72 hours). From what we have on file, you have the capacity to handle this load, which leaves roughly 60 hours of slack to collect.
+2. **What they can actually take**
+   - **Capacity:** Can take up to 23 pallets (profile on file); load is 5 pallets.
+   - **Storage & Infrastructure:** Walk-in cold storage, frozen storage, loading dock, and refrigerated transport on file. Service days: Monday, Wednesday, Friday.
 
-Can you take this load? If yes, please let us know when you can collect and a phone number for pickup. If not, a quick no helps us move to the next recipient.
+3. **The clock**
+   - **Hours food has:** 72 hours (donor's 3-day deadline set the clock).
+   - **Collection lead time:** 36 hours.
+   - **Margin:** 36 hours.
+   - **Driver needed:** No, they have transport on file.
 
-Thank you,
-[Coordinator name]
+4. **Whose neighborhood it helps**
+   - **Service scale & population:** Serves ~3,486 households per week; general public, no proof of residence required.
+   - **Tract figures:** Nearest census tract has 15% of residents below the poverty line, 12% of households without a vehicle, and 16% on food or cash assistance (ACS; ZIP-level approximation).
 
-6. The next two options -
-- Option 2: Anso Child Development, 9101 S WESTERN AVE STE 9, CHICAGO, IL 60643 (takes up to 7 pallets, collects within 19 hours, 53 hours margin).
-- Option 3: Dion S Chicago Dream Inc Nfp, 6235 S HOMAN AVE, CHICAGO, IL 60629 (takes up to 11 pallets, collects within 9 hours, 63 hours margin).
+5. **The outreach message**
+   Hello Greater Chicago Food Depository team,
 
-Rejected close matches:
-- Boys To Men Nfp Inc: ranked 1st by meaning, removed: needs 77h to collect, food has 72h.
-- Loop Da Loop Nfp: ranked 11th by meaning, removed: needs 103h to collect, food has 72h.
-- Burrito Brigade Chicago: ranked 12th by meaning, removed: capacity 3 pallets, load is 5.
+   A farm south of Chicago has 5 tons of potatoes. It is still good but has to move soon. From what we have on file you have the storage and dock capacity for it. The food needs to leave by about 72 hours from now, which leaves you roughly 36 hours of slack to collect. You are set up to collect it yourselves.
+
+   Can you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.
+
+   Thank you,  
+   [Coordinator name]
+
+6. **The next two options**
+   - **Option 2:** Feeding America (161 N Clark St Ste 700, Chicago, IL 60601) – Walk-in cold storage, takes up to 24 pallets, collects within 28 hours (44h margin).
+   - **Option 3:** Top Box Foods (222 Merchandise Mart Plz, Chicago, IL 60654) – Walk-in cold storage, takes up to 17 pallets, collects within 14 hours (58h margin).
+
+   *Close semantic matches removed by filters:*
+   - Ridgeway Avenue Food Ministry (an invented teaching case): ranked 3rd by meaning, removed: capacity 3 pallets, load is 5.
+   - Lolas Community Kitchen: ranked 5th by meaning, removed: capacity 0 pallets, load is 5.
+   - Boys To Men Nfp Inc: ranked 9th by meaning, removed: needs 77h to collect, food has 72h.

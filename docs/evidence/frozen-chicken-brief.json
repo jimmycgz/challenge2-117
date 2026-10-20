@@ -1,0 +1,109 @@
+{
+  "organization_and_why": {
+    "name": "New Hope House Northwest",
+    "address": "6125 W FOSTER AVE, CHICAGO, IL 60630",
+    "profile_source": "generated",
+    "why": "commercial cold storage, takes up to 2 pallets, collects within 15h",
+    "profile_excerpt": "Congregate lunch and home-delivered meals for adults 60 and over. Reach-in coolers, a freezer, and a chilling cabinet for portioning. Delivery vans run weekday mornings and can divert for a pickup."
+  },
+  "what_they_can_take": {
+    "load_pallets": 0.25,
+    "max_pallets": 2,
+    "cold_storage": "commercial",
+    "frozen_storage": true,
+    "loading_dock": false,
+    "refrigerated_transport": true,
+    "service_days": "Monday, Wednesday, Friday"
+  },
+  "the_clock": {
+    "hours_remaining": 24,
+    "collection_lead_hours": 15,
+    "margin_hours": 9,
+    "needs_driver": false
+  },
+  "whose_neighborhood": {
+    "households_per_week": 320,
+    "populations_served": "General public, no proof of residence required",
+    "tract": "Nearest census tract: 7% of residents below the poverty line, 21% of households without a vehicle, 12% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
+  },
+  "outreach_message": "Hello New Hope House Northwest team,\n\nA grocer in Chicago has 6 cases of frozen chicken. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 24 hours from now, which leaves you roughly 9 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "next_two_options": [
+    {
+      "rank": 2,
+      "meaning_rank": 37,
+      "name": "On 3Rd Affordable Food Outreach Service Truck",
+      "address": "11057 S FAIRFIELD AVE STE A, CHICAGO, IL 60655",
+      "profile_source": "generated",
+      "why": "commercial cold storage, takes up to 1 pallet, collects within 12h",
+      "margin_hours": 12,
+      "needs_driver": false
+    },
+    {
+      "rank": 3,
+      "meaning_rank": 38,
+      "name": "Top Box Foods",
+      "address": "222 MERCHANDISE MART PLZ, CHICAGO, IL 60654",
+      "profile_source": "generated",
+      "why": "walk-in cold storage, takes up to 17 pallets, collects within 14h",
+      "margin_hours": 10,
+      "needs_driver": false
+    }
+  ],
+  "ranked": [
+    {
+      "rank": 1,
+      "meaning_rank": 33,
+      "name": "New Hope House Northwest",
+      "address": "6125 W FOSTER AVE, CHICAGO, IL 60630",
+      "profile_source": "generated",
+      "why": "commercial cold storage, takes up to 2 pallets, collects within 15h",
+      "margin_hours": 9,
+      "needs_driver": false
+    },
+    {
+      "rank": 2,
+      "meaning_rank": 37,
+      "name": "On 3Rd Affordable Food Outreach Service Truck",
+      "address": "11057 S FAIRFIELD AVE STE A, CHICAGO, IL 60655",
+      "profile_source": "generated",
+      "why": "commercial cold storage, takes up to 1 pallet, collects within 12h",
+      "margin_hours": 12,
+      "needs_driver": false
+    },
+    {
+      "rank": 3,
+      "meaning_rank": 38,
+      "name": "Top Box Foods",
+      "address": "222 MERCHANDISE MART PLZ, CHICAGO, IL 60654",
+      "profile_source": "generated",
+      "why": "walk-in cold storage, takes up to 17 pallets, collects within 14h",
+      "margin_hours": 10,
+      "needs_driver": false
+    }
+  ],
+  "rejected_but_close": [
+    {
+      "name": "Chicago Food Rescue",
+      "because": "no freezer",
+      "semantic_rank": 2,
+      "profile_source": "generated"
+    },
+    {
+      "name": "Maple Street Produce Alliance",
+      "because": "no freezer",
+      "semantic_rank": 3,
+      "profile_source": "planted"
+    },
+    {
+      "name": "Lakeshore Mutual Aid Collective",
+      "because": "no cold storage; no freezer",
+      "semantic_rank": 7,
+      "profile_source": "planted"
+    }
+  ],
+  "refusal": null,
+  "search": {
+    "candidates_searched": 80,
+    "viable_after_filters": 18
+  }
+}

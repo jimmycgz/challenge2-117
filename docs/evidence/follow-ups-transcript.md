@@ -1,9 +1,9 @@
-<!-- markdownlint-disable MD029 MD030 MD032 MD036 -->
+<!-- markdownlint-disable MD009 MD029 MD030 MD032 MD036 -->
 <!-- The answers below are the model's output verbatim, so they keep their own list spacing. -->
 
 # One conversation, six turns
 
-Captured 13:52 EDT on 2026-10-20 from the deployed service, in a single session. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says. Names and ranks can differ from run to run.
+Captured 13:52 EDT on 2026-10-20 from the deployed service (revision food-broker-00010-9jc, before the frozen-food filter), in a single session. The recipient names and addresses are real (IRS data), except nine invented teaching cases the challenge adds to the corpus, which have no real street or ZIP. Their cold storage, pallet capacity and pickup times are generated, as the README says. Names and ranks can differ from run to run.
 
 ## You: A grocer in Chicago has ten crates of spinach, harvested yesterday, that must leave the dock within 6 hours and stay cold.
 

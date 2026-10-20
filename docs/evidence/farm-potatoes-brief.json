@@ -1,109 +1,109 @@
 {
   "organization_and_why": {
-    "name": "Maple Street Produce Alliance",
-    "address": "Chicago, IL",
-    "profile_source": "planted",
-    "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
-    "profile_excerpt": "Fresh produce hub with walk-in refrigeration and our own reefer truck. Roughly 600 households weekly, and perishables move through us in under two days."
+    "name": "Greater Chicago Food Depository",
+    "address": "4100 W ANN LURIE PL, CHICAGO, IL 60632",
+    "profile_source": "generated",
+    "why": "walk-in cold storage, takes up to 23 pallets, collects within 36h",
+    "profile_excerpt": "Regional hub. We are the first call when a distributor has a full truckload to move. Refrigerated and frozen storage on site. Dock receiving; we can take full pallets."
   },
   "what_they_can_take": {
     "load_pallets": 5,
-    "max_pallets": 10,
+    "max_pallets": 23,
     "cold_storage": "walk-in",
-    "frozen_storage": false,
+    "frozen_storage": true,
     "loading_dock": true,
     "refrigerated_transport": true,
     "service_days": "Monday, Wednesday, Friday"
   },
   "the_clock": {
     "hours_remaining": 72,
-    "collection_lead_hours": 12,
-    "margin_hours": 60,
+    "collection_lead_hours": 36,
+    "margin_hours": 36,
     "needs_driver": false
   },
   "whose_neighborhood": {
-    "households_per_week": 600,
-    "populations_served": "General public",
-    "tract": "Nearest census tract: 9% of residents below the poverty line, 11% of households without a vehicle, 12% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
+    "households_per_week": 3486,
+    "populations_served": "General public, no proof of residence required",
+    "tract": "Nearest census tract: 15% of residents below the poverty line, 12% of households without a vehicle, 16% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
   },
-  "outreach_message": "Hello Maple Street Produce Alliance team,\n\nA farm south of Chicago has 5 tons of potatoes. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 72 hours from now, which leaves you roughly 60 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "outreach_message": "Hello Greater Chicago Food Depository team,\n\nA farm south of Chicago has 5 tons of potatoes. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 72 hours from now, which leaves you roughly 36 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
   "next_two_options": [
     {
       "rank": 2,
-      "meaning_rank": 3,
-      "name": "Anso Child Development",
-      "address": "9101 S WESTERN AVE STE 9, CHICAGO, IL 60643",
+      "meaning_rank": 2,
+      "name": "Feeding America",
+      "address": "161 N CLARK ST STE 700, CHICAGO, IL 60601",
       "profile_source": "generated",
-      "why": "walk-in cold storage, takes up to 7 pallets, collects within 19h",
-      "margin_hours": 53,
+      "why": "walk-in cold storage, takes up to 24 pallets, collects within 28h",
+      "margin_hours": 44,
       "needs_driver": false
     },
     {
       "rank": 3,
       "meaning_rank": 4,
-      "name": "Dion S Chicago Dream Inc Nfp",
-      "address": "6235 S HOMAN AVE, CHICAGO, IL 60629",
+      "name": "Top Box Foods",
+      "address": "222 MERCHANDISE MART PLZ, CHICAGO, IL 60654",
       "profile_source": "generated",
-      "why": "walk-in cold storage, takes up to 11 pallets, collects within 9h",
-      "margin_hours": 63,
+      "why": "walk-in cold storage, takes up to 17 pallets, collects within 14h",
+      "margin_hours": 58,
       "needs_driver": false
     }
   ],
   "ranked": [
     {
       "rank": 1,
-      "meaning_rank": 2,
-      "name": "Maple Street Produce Alliance",
-      "address": "Chicago, IL",
-      "profile_source": "planted",
-      "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
-      "margin_hours": 60,
+      "meaning_rank": 1,
+      "name": "Greater Chicago Food Depository",
+      "address": "4100 W ANN LURIE PL, CHICAGO, IL 60632",
+      "profile_source": "generated",
+      "why": "walk-in cold storage, takes up to 23 pallets, collects within 36h",
+      "margin_hours": 36,
       "needs_driver": false
     },
     {
       "rank": 2,
-      "meaning_rank": 3,
-      "name": "Anso Child Development",
-      "address": "9101 S WESTERN AVE STE 9, CHICAGO, IL 60643",
+      "meaning_rank": 2,
+      "name": "Feeding America",
+      "address": "161 N CLARK ST STE 700, CHICAGO, IL 60601",
       "profile_source": "generated",
-      "why": "walk-in cold storage, takes up to 7 pallets, collects within 19h",
-      "margin_hours": 53,
+      "why": "walk-in cold storage, takes up to 24 pallets, collects within 28h",
+      "margin_hours": 44,
       "needs_driver": false
     },
     {
       "rank": 3,
       "meaning_rank": 4,
-      "name": "Dion S Chicago Dream Inc Nfp",
-      "address": "6235 S HOMAN AVE, CHICAGO, IL 60629",
+      "name": "Top Box Foods",
+      "address": "222 MERCHANDISE MART PLZ, CHICAGO, IL 60654",
       "profile_source": "generated",
-      "why": "walk-in cold storage, takes up to 11 pallets, collects within 9h",
-      "margin_hours": 63,
+      "why": "walk-in cold storage, takes up to 17 pallets, collects within 14h",
+      "margin_hours": 58,
       "needs_driver": false
     }
   ],
   "rejected_but_close": [
     {
+      "name": "Ridgeway Avenue Food Ministry",
+      "because": "capacity 3 pallets, load is 5",
+      "semantic_rank": 3,
+      "profile_source": "planted"
+    },
+    {
+      "name": "Lolas Community Kitchen",
+      "because": "capacity 0 pallets, load is 5",
+      "semantic_rank": 5,
+      "profile_source": "generated"
+    },
+    {
       "name": "Boys To Men Nfp Inc",
       "because": "needs 77h to collect, food has 72h",
-      "semantic_rank": 1,
-      "profile_source": "generated"
-    },
-    {
-      "name": "Loop Da Loop Nfp",
-      "because": "needs 103h to collect, food has 72h",
-      "semantic_rank": 11,
-      "profile_source": "generated"
-    },
-    {
-      "name": "Burrito Brigade Chicago",
-      "because": "capacity 3 pallets, load is 5",
-      "semantic_rank": 12,
+      "semantic_rank": 9,
       "profile_source": "generated"
     }
   ],
   "refusal": null,
   "search": {
     "candidates_searched": 80,
-    "viable_after_filters": 13
+    "viable_after_filters": 12
   }
 }

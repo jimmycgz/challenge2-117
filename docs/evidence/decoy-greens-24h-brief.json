@@ -1,0 +1,109 @@
+{
+  "organization_and_why": {
+    "name": "Maple Street Produce Alliance",
+    "address": "Chicago, IL",
+    "profile_source": "planted",
+    "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
+    "profile_excerpt": "Fresh produce hub with walk-in refrigeration and our own reefer truck. Roughly 600 households weekly, and perishables move through us in under two days."
+  },
+  "what_they_can_take": {
+    "load_pallets": 0.25,
+    "max_pallets": 10,
+    "cold_storage": "walk-in",
+    "frozen_storage": false,
+    "loading_dock": true,
+    "refrigerated_transport": true,
+    "service_days": "Monday, Wednesday, Friday"
+  },
+  "the_clock": {
+    "hours_remaining": 24,
+    "collection_lead_hours": 12,
+    "margin_hours": 12,
+    "needs_driver": false
+  },
+  "whose_neighborhood": {
+    "households_per_week": 600,
+    "populations_served": "General public",
+    "tract": "Nearest census tract: 9% of residents below the poverty line, 11% of households without a vehicle, 12% on food or cash assistance (ACS; recipient location is ZIP-level, so this is the area, not the exact block)."
+  },
+  "outreach_message": "Hello Maple Street Produce Alliance team,\n\nA local grocer has 8 crates of fresh salad greens and spinach. It is still good but has to move soon. From what we have on file you have the storage for it. The food needs to leave by about 24 hours from now, which leaves you roughly 12 hours of slack to collect. You are set up to collect it yourselves.\n\nCan you take it? If you can, tell us the time you can collect and a phone number for pickup. If not, a quick no helps us move to the next place.\n\nThank you,\n[Coordinator name]",
+  "next_two_options": [
+    {
+      "rank": 2,
+      "meaning_rank": 4,
+      "name": "Cedar Street Produce Alliance",
+      "address": "Chicago, IL",
+      "profile_source": "planted",
+      "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
+      "margin_hours": 12,
+      "needs_driver": false
+    },
+    {
+      "rank": 3,
+      "meaning_rank": 6,
+      "name": "Chicago Food Rescue",
+      "address": "2426 W DAKIN ST 2, CHICAGO, IL 60618",
+      "profile_source": "generated",
+      "why": "vehicle cold storage, takes up to 2 pallets, collects within 8h",
+      "margin_hours": 16,
+      "needs_driver": false
+    }
+  ],
+  "ranked": [
+    {
+      "rank": 1,
+      "meaning_rank": 2,
+      "name": "Maple Street Produce Alliance",
+      "address": "Chicago, IL",
+      "profile_source": "planted",
+      "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
+      "margin_hours": 12,
+      "needs_driver": false
+    },
+    {
+      "rank": 2,
+      "meaning_rank": 4,
+      "name": "Cedar Street Produce Alliance",
+      "address": "Chicago, IL",
+      "profile_source": "planted",
+      "why": "walk-in cold storage, takes up to 10 pallets, collects within 12h",
+      "margin_hours": 12,
+      "needs_driver": false
+    },
+    {
+      "rank": 3,
+      "meaning_rank": 6,
+      "name": "Chicago Food Rescue",
+      "address": "2426 W DAKIN ST 2, CHICAGO, IL 60618",
+      "profile_source": "generated",
+      "why": "vehicle cold storage, takes up to 2 pallets, collects within 8h",
+      "margin_hours": 16,
+      "needs_driver": false
+    }
+  ],
+  "rejected_but_close": [
+    {
+      "name": "Greenline Community Pantry",
+      "because": "no cold storage",
+      "semantic_rank": 1,
+      "profile_source": "planted"
+    },
+    {
+      "name": "Care & Care",
+      "because": "capacity 0 pallets, load is 0.25",
+      "semantic_rank": 15,
+      "profile_source": "generated"
+    },
+    {
+      "name": "Martha & Me Inc Nfp",
+      "because": "capacity 0 pallets, load is 0.25",
+      "semantic_rank": 17,
+      "profile_source": "generated"
+    }
+  ],
+  "refusal": null,
+  "search": {
+    "candidates_searched": 80,
+    "viable_after_filters": 45
+  }
+}
